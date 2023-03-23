@@ -4,6 +4,9 @@ lint = [
     "ruff>=0.0.258",
     "black>=23.1.0",
 ]
+dev = [
+    "requests>=2.28.2",
+]
 
 [project]
 name = "ipyobsplot"
