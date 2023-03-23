@@ -14,7 +14,9 @@ class ObsPlot(anywidget.AnyWidget):
     _esm = bundler_output_dir / "index.js"
     _css = bundler_output_dir / "index.css"
     spec = traitlets.Dict().tag(sync=True)
-    s = traitlets.Dict().tag(sync=True)
+
+    def __init__(self, spec):
+        super().__init__(spec=spec)
 
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
