@@ -1,13 +1,12 @@
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import * as arrow from "apache-arrow"
-//document.body.append(Plot.plot(options));
 
 
 export function render(view) {
-    let spec = () => view.model.get("s");
+    let spec = () => view.model.get("spec");
     view.el.appendChild(generate_plot(spec()));
-    view.model.on('change:s', () => _onValueChanged(view, view.el));
+    view.model.on('change:spec', () => _onValueChanged(view, view.el));
 }
 
 function parse_spec(spec) {
@@ -67,7 +66,7 @@ function generate_plot(spec) {
 function _onValueChanged(view, el) {
     let plot = el.querySelector(".ipyobsplot-plot")
     el.removeChild(plot)
-    let spec = () => view.model.get("s");
+    let spec = () => view.model.get("spec");
     el.appendChild(generate_plot(spec()));
 
 }
