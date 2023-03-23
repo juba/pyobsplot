@@ -5,9 +5,9 @@ import * as arrow from "apache-arrow"
 
 
 export function render(view) {
-    let spec = () => view.model.get("spec");
+    let spec = () => view.model.get("s");
     view.el.appendChild(generate_plot(spec()));
-    view.model.on('change:spec', () => _onValueChanged(view, view.el));
+    view.model.on('change:s', () => _onValueChanged(view, view.el));
 }
 
 function parse_spec(spec) {
@@ -50,8 +50,10 @@ function parse_spec(spec) {
 function generate_plot(spec) {
     let plot = document.createElement("div");
     plot.classList.add("ipyobsplot-plot");
-    let parsed_spec = parse_spec(spec)
-    let svg = Plot.plot(parsed_spec)
+    let svg = parse_spec(spec)
+    if (!(svg instanceof Element)) {
+        svg = svg.plot()
+    }
     plot.appendChild(svg)
     return plot
 }
@@ -59,7 +61,7 @@ function generate_plot(spec) {
 function _onValueChanged(view, el) {
     let plot = el.querySelector(".ipyobsplot-plot")
     el.removeChild(plot)
-    let spec = () => view.model.get("spec");
+    let spec = () => view.model.get("s");
     el.appendChild(generate_plot(spec()));
 
 }

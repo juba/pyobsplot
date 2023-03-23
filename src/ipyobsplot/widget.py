@@ -13,9 +13,9 @@ bundler_output_dir = pathlib.Path("static")
 class ObsPlot(anywidget.AnyWidget):
     _esm = bundler_output_dir / "index.js"
     _css = bundler_output_dir / "index.css"
-    spec = traitlets.Dict().tag(sync=True)
+    s = traitlets.Dict().tag(sync=True)
 
-    @traitlets.validate("spec")
+    @traitlets.validate("s")
     def _validate_spec(self, proposal):
         spec = proposal["value"]
         spec = parse_spec(spec)
