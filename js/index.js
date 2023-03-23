@@ -50,10 +50,16 @@ function parse_spec(spec) {
 function generate_plot(spec) {
     let plot = document.createElement("div");
     plot.classList.add("ipyobsplot-plot");
-    let svg = parse_spec(spec)
-    if (!(svg instanceof Element)) {
-        svg = svg.plot()
+    let svg;
+    if (spec["ipyobsplot-type"] == "function") {
+        svg = parse_spec(spec)
+        if (!(svg instanceof Element)) {
+            svg = svg.plot()
+        }
+    } else {
+        svg = Plot.plot(parse_spec(spec))
     }
+
     plot.appendChild(svg)
     return plot
 }
