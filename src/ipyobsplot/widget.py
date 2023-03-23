@@ -1,7 +1,10 @@
 import pathlib
 import anywidget
 import traitlets
-from random import random
+import pandas as pd
+import polars as pl
+
+from data import pd_to_arrow, pl_to_arrow
 
 # bundler yields hello_widget/static/{index.js,styles.css}
 bundler_output_dir = pathlib.Path("static")
@@ -14,11 +17,23 @@ class ObsPlot(anywidget.AnyWidget):
 
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
-        prop = proposal["value"]
-        # if prop["length"] is None:
-        #    raise traitlets.TraitError("Missing length")
-        # prop["alea"] = random()
-        return prop
+        spec = proposal["value"]
+        spec = parse_spec(spec)
+        return spec
+
+
+def parse_spec(spec):
+    if spec is None:
+        return None
+    if isinstance(spec, list) or isinstance(spec, tuple):
+        return [parse_spec(s) for s in spec]
+    if isinstance(spec, dict):
+        return {k: parse_spec(v) for k, v in spec.items()}
+    if isinstance(spec, pd.DataFrame):
+        return {"ipyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
+    if isinstance(spec, pl.DataFrame):
+        return {"ipyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+    return spec
 
 
 class JSModule(type):

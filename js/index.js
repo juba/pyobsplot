@@ -1,22 +1,10 @@
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
+import * as arrow from "apache-arrow"
 //document.body.append(Plot.plot(options));
 
 
 export function render(view) {
-    // let getCount = () => view.model.get("count");
-    // let button = document.createElement("button");
-    // button.classList.add("counter-button");
-    // button.innerHTML = `The count is ${getCount()}`;
-    // button.addEventListener("click", () => {
-    //     view.model.set("count", getCount() + 1);
-    //     view.model.save_changes();
-    // });
-    // view.model.on("change:count", () => {
-    //     button.innerHTML = `count is ${getCount()}`;
-    // });
-    //view.el.appendChild(button);
-
     let spec = () => view.model.get("spec");
     view.el.appendChild(generate_plot(spec()));
     view.model.on('change:spec', () => _onValueChanged(view, view.el));
@@ -28,6 +16,9 @@ function parse_spec(spec) {
     }
     if (Array.isArray(spec)) {
         return spec.map(d => parse_spec(d))
+    }
+    if (spec["ipyobsplot-type"] == "DataFrame") {
+        return arrow.tableFromIPC(spec["value"])
     }
     if (typeof spec === 'string' || spec instanceof String) {
         return spec
