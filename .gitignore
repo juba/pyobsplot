@@ -1,0 +1,10 @@
+__pypackages__
+__pycache__
+node_modules/
+build/
+dist/
+.pdm.toml
+.vscode/
+static/*
+test.ipynb
+esbuild

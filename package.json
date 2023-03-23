@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@observablehq/plot": "^0.6.4",
+    "d3": "^7.8.2"
+  }
+}

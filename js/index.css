@@ -1,0 +1,11 @@
+.counter-button {
+    background-color: #ea580c;
+}
+
+.counter-button:hover {
+    background-color: #0000FF;
+}
+
+.ipyobsplot-plot {
+    color: #000;
+}
