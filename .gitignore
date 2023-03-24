@@ -8,3 +8,7 @@ dist/
 static/*
 test.ipynb
 esbuild
+*_files/
+*_cache/
+.env
+.ipynb_checkpoints/
