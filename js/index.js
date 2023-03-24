@@ -56,6 +56,9 @@ function parse_spec(spec) {
     if (spec["ipyobsplot-type"] == "js") {
         return eval(spec["value"])
     }
+    if (spec["ipyobsplot-type"] == "datetime") {
+        return new Date(spec["value"])
+    }
     let ret = {}
     for (const [key, value] of Object.entries(spec)) {
         ret[key] = parse_spec(value)
@@ -90,6 +93,5 @@ function _onValueChanged(view, el) {
     el.removeChild(plot)
     let spec = () => view.model.get("spec");
     el.appendChild(generate_plot(spec()));
-
 }
 

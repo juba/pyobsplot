@@ -1,4 +1,5 @@
 import pathlib
+import datetime
 import anywidget
 import traitlets
 import pandas as pd
@@ -43,6 +44,8 @@ def parse_spec(spec):
         return {"ipyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
     if isinstance(spec, pl.DataFrame):
         return {"ipyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+    if isinstance(spec, datetime.date) or isinstance(spec, datetime.datetime):
+        return {"ipyobsplot-type": "datetime", "value": spec.isoformat()}
     if (
         callable(spec)
         and isinstance(spec(), dict)
