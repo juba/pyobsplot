@@ -12,4 +12,5 @@ esbuild
 *_cache/
 .env
 .ipynb_checkpoints/
+.python-version
 test*
