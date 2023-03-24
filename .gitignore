@@ -12,3 +12,4 @@ esbuild
 *_cache/
 .env
 .ipynb_checkpoints/
+test*
