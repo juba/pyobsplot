@@ -1,5 +1,5 @@
 __version__ = "0.1.0"
 
-from .widget import ObsPlot, Plot, d3, Math, js  # noqa:F401
+from .widget import Obsplot, Plot, d3, Math, js  # noqa:F401
 
-__all__ = ["ObsPlot", "Plot", "d3", "Math", "js", "__version__"]
+__all__ = ["Obsplot", "Plot", "d3", "Math", "js", "__version__"]
