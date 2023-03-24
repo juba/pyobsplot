@@ -53,6 +53,9 @@ function parse_spec(spec) {
     if (spec["ipyobsplot-type"] == "function-object") {
         return get_fun(spec["module"], spec["method"])
     }
+    if (spec["ipyobsplot-type"] == "js") {
+        return eval(spec["value"])
+    }
     let ret = {}
     for (const [key, value] of Object.entries(spec)) {
         ret[key] = parse_spec(value)

@@ -84,3 +84,7 @@ class d3(metaclass=JSModule):
 
 class Math(metaclass=JSModule):
     pass
+
+
+def js(txt):
+    return {"ipyobsplot-type": "js", "value": txt}
