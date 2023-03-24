@@ -4,7 +4,9 @@ import traitlets
 import pandas as pd
 import polars as pl
 
-from data import pd_to_arrow, pl_to_arrow
+from ipywidgets import Layout
+
+from .data import pd_to_arrow, pl_to_arrow
 
 # bundler yields hello_widget/static/{index.js,styles.css}
 bundler_output_dir = pathlib.Path("static")
@@ -15,7 +17,15 @@ class ObsPlot(anywidget.AnyWidget):
     _css = bundler_output_dir / "index.css"
     spec = traitlets.Dict().tag(sync=True)
 
-    def __init__(self, spec):
+    def __init__(self, *args, **kwargs):
+        if len(args) == 1 and len(kwargs) == 0:
+            spec = args[0]
+        elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
+            spec = kwargs["spec"]
+        elif len(args) == 0 and len(kwargs) > 0:
+            spec = kwargs
+        else:
+            ValueError("Incorrect ObsPlot arguments")
         super().__init__(spec=spec)
 
     @traitlets.validate("spec")
