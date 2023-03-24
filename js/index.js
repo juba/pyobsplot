@@ -57,7 +57,7 @@ function generate_plot(spec) {
         out = parse_spec(spec);
         if (spec["ipyobsplot-type"] == "function") {
             if (!(out instanceof Element)) {
-                out = svg.plot()
+                out = out.plot()
             }
         } else {
             out = Plot.plot(out)
