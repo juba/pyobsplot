@@ -10,7 +10,7 @@ from .data import pd_to_arrow, pl_to_arrow
 bundler_output_dir = pathlib.Path("static")
 
 
-class ObsPlot(anywidget.AnyWidget):
+class Obsplot(anywidget.AnyWidget):
     _esm = bundler_output_dir / "index.js"
     _css = bundler_output_dir / "index.css"
     spec = traitlets.Dict().tag(sync=True)
