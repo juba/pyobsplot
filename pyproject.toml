@@ -6,6 +6,10 @@ lint = [
 ]
 dev = [
     "requests>=2.28.2",
+    "altair>=4.2.2",
+    "vega-datasets>=0.9.0",
+    "jupyterlab>=3.6.2",
+    "watchfiles>=0.18.1",
 ]
 
 [project]
@@ -17,9 +21,8 @@ authors = [
 ]
 dependencies = [
     "anywidget>=0.2.0",
-    "watchfiles>=0.18.1",
     "pandas>=1.5.3",
-    "polars>=0.16.14",
+    "polars>=0.16.14"
 ]
 requires-python = ">=3.10"
 readme = "README.md"
