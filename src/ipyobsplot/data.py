@@ -1,18 +1,52 @@
+"""
+Functions for DataFrame objects conversion to Arrow IPC bytes.
+"""
+
+
 import io
 import pandas as pd
 import polars as pl
 import pyarrow as pa
 import pyarrow.feather as pf
 
+from typing import Any
 
-def pd_to_arrow(df: pd.DataFrame) -> str:
+
+def pd_to_arrow(df: pd.DataFrame) -> bytes:
+    """Convert a pandas DataFrame to Arrow IPC bytes.
+
+    Args:
+        df (pd.DataFrame): pandas DataFrame to convert.
+
+    Returns:
+        bytes: Arrow IPC bytes
+    """
     f = io.BytesIO()
     df.to_feather(f, compression="uncompressed")
     return f.getvalue()
 
 
-def pl_to_arrow(df: pl.DataFrame) -> str:
-    def arrow_schema_no_big(pa_schema):
+def pl_to_arrow(df: pl.DataFrame) -> bytes:
+    """Convert a polars DataFrame to Arrow IPC bytes.
+
+    Args:
+        df (pl.DataFrame): polars DataFrame to convert.
+
+    Returns:
+        bytes: Arrow IPC bytes.
+    """
+
+    def arrow_schema_no_big(pa_schema: Any) -> Any:
+        """Transform a pyarrow schema by converting large strings to strings,
+        float64 to float32 and int64 to int32. This is needed because JavaScript
+        apache-arrow library doesn't support large types yet.
+
+        Args:
+            pa_schema (Any): schema to convert.
+
+        Returns:
+            Any: conversion result.
+        """
         pa_schema_no_big = []
         for col_name, pa_dtype in zip(pa_schema.names, pa_schema.types):
             if pa_dtype == pa.large_string():
