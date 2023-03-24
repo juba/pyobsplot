@@ -37,14 +37,14 @@ function parse_spec(spec) {
     if (Array.isArray(spec)) {
         return spec.map(d => parse_spec(d))
     }
-    if (spec["ipyobsplot-type"] == "DataFrame") {
-        return arrow.tableFromIPC(spec["value"])
-    }
     if (typeof spec === 'string' || spec instanceof String) {
         return spec
     }
     if (Object.entries(spec).length == 0) {
         return spec
+    }
+    if (spec["ipyobsplot-type"] == "DataFrame") {
+        return arrow.tableFromIPC(spec["value"])
     }
     if (spec["ipyobsplot-type"] == "function") {
         let fun = get_fun(spec["module"], spec["method"])
@@ -58,6 +58,9 @@ function parse_spec(spec) {
     }
     if (spec["ipyobsplot-type"] == "datetime") {
         return new Date(spec["value"])
+    }
+    if (spec["ipyobsplot-type"] == "GeoJson") {
+        return spec["value"]
     }
     let ret = {}
     for (const [key, value] of Object.entries(spec)) {

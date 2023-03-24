@@ -38,6 +38,12 @@ def parse_spec(spec):
         return None
     if isinstance(spec, list) or isinstance(spec, tuple):
         return [parse_spec(s) for s in spec]
+    if (
+        isinstance(spec, dict)
+        and "type" in spec
+        and spec["type"] == "FeatureCollection"
+    ):
+        return {"ipyobsplot-type": "GeoJson", "value": spec}
     if isinstance(spec, dict):
         return {k: parse_spec(v) for k, v in spec.items()}
     if isinstance(spec, pd.DataFrame):
