@@ -10,6 +10,7 @@ dev = [
     "vega-datasets>=0.9.0",
     "jupyterlab>=3.6.2",
     "watchfiles>=0.18.1",
+    "topojson>=1.5",
 ]
 
 [project]
