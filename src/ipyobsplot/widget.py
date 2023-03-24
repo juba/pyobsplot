@@ -4,8 +4,6 @@ import traitlets
 import pandas as pd
 import polars as pl
 
-from ipywidgets import Layout
-
 from .data import pd_to_arrow, pl_to_arrow
 
 # bundler yields hello_widget/static/{index.js,styles.css}
