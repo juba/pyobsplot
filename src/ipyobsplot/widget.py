@@ -46,6 +46,14 @@ def parse_spec(spec):
         return {"ipyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
     if isinstance(spec, pl.DataFrame):
         return {"ipyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+    if (
+        callable(spec)
+        and isinstance(spec(), dict)
+        and spec()["ipyobsplot-type"] == "function"
+    ):
+        out = spec()
+        out["ipyobsplot-type"] = "function-object"
+        return out
     return spec
 
 
@@ -74,5 +82,5 @@ class d3(metaclass=JSModule):
     pass
 
 
-def js(str):
+class Math(metaclass=JSModule):
     pass

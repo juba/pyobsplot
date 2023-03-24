@@ -9,6 +9,27 @@ export function render(view) {
     view.model.on('change:spec', () => _onValueChanged(view, view.el));
 }
 
+function get_fun(mod, method) {
+    let fun
+    switch (mod) {
+        case "Plot":
+            fun = Plot[method]
+            break;
+        case "d3":
+            fun = d3[method]
+            break;
+        case "Math":
+            fun = Math[method]
+            break;
+        default:
+            throw new Error(`Invalid module: ${mod}`)
+    }
+    if (fun === undefined) {
+        throw new Error(`${mod}.${method} is not defined`)
+    }
+    return fun
+}
+
 function parse_spec(spec) {
     if (spec === null) {
         return null
@@ -26,21 +47,11 @@ function parse_spec(spec) {
         return spec
     }
     if (spec["ipyobsplot-type"] == "function") {
-        let fun;
-        switch (spec["module"]) {
-            case "Plot":
-                fun = Plot[spec["method"]]
-                break;
-            case "d3":
-                fun = d3[spec["method"]]
-                break;
-            default:
-                throw new Error(`Invalid module: ${spec["module"]}`)
-        }
-        if (fun === undefined) {
-            throw new Error(`${spec["module"]}.${spec["method"]} is not defined`)
-        }
+        let fun = get_fun(spec["module"], spec["method"])
         return fun.call(null, ...parse_spec(spec["args"]));
+    }
+    if (spec["ipyobsplot-type"] == "function-object") {
+        return get_fun(spec["module"], spec["method"])
     }
     let ret = {}
     for (const [key, value] of Object.entries(spec)) {
