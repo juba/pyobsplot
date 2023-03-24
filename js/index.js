@@ -35,7 +35,10 @@ function parse_spec(spec) {
                 fun = d3[spec["method"]]
                 break;
             default:
-                console.error("Invalid module : ", spec["module"])
+                throw new Error(`Invalid module: ${spec["module"]}`)
+        }
+        if (fun === undefined) {
+            throw new Error(`${spec["module"]}.${spec["method"]} is not defined`)
         }
         return fun.call(null, ...parse_spec(spec["args"]));
     }
@@ -49,17 +52,22 @@ function parse_spec(spec) {
 function generate_plot(spec) {
     let plot = document.createElement("div");
     plot.classList.add("ipyobsplot-plot");
-    let svg;
-    if (spec["ipyobsplot-type"] == "function") {
-        svg = parse_spec(spec)
-        if (!(svg instanceof Element)) {
-            svg = svg.plot()
+    let out
+    try {
+        out = parse_spec(spec);
+        if (spec["ipyobsplot-type"] == "function") {
+            if (!(out instanceof Element)) {
+                out = svg.plot()
+            }
+        } else {
+            out = Plot.plot(out)
         }
-    } else {
-        svg = Plot.plot(parse_spec(spec))
+    } catch (error) {
+        out = document.createElement("pre")
+        out.classList.add("ipyobsplot-error")
+        out.textContent = error
     }
-
-    plot.appendChild(svg)
+    plot.appendChild(out)
     return plot
 }
 

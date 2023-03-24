@@ -8,4 +8,14 @@
 
 .ipyobsplot-plot {
     color: #000;
+    background-color: white;
+}
+
+.ipyobsplot-error {
+    color: #CC0000;
+    padding-left: 1em;
+}
+
+.ipyobsplot-error::before {
+    content: "⚠ ";
 }
