@@ -30,10 +30,14 @@ class Obsplot(anywidget.AnyWidget):
     spec = traitlets.Dict().tag(sync=True)
 
     def __init__(self, *args, **kwargs):
+        """Obsplot widget constructor."""
+        # Only one arg -> spec passed as dict
         if len(args) == 1 and len(kwargs) == 0:
             spec = args[0]
+        # Only one kwarg called sped
         elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
             spec = kwargs["spec"]
+        # Only kwargs -> spec is kwargs
         elif len(args) == 0 and len(kwargs) > 0:
             spec = kwargs
         else:
