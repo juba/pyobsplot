@@ -1,3 +1,20 @@
+[project]
+name = "pyobsplot"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Julien Barnier", email = "julien@nozav.org"},
+]
+dependencies = [
+    "anywidget>=0.2.0",
+    "pandas>=1.5.3",
+    "polars>=0.16.14",
+    "pyarrow>=11.0.0",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 lint = [
@@ -12,23 +29,14 @@ dev = [
     "watchfiles>=0.18.1",
     "topojson>=1.5",
 ]
-
-[project]
-name = "pyobsplot"
-version = "0.1.0"
-description = ""
-authors = [
-    {name = "Julien Barnier", email = "julien@nozav.org"},
+test = [
+    "pytest>=7.2.2",
 ]
-dependencies = [
-    "anywidget>=0.2.0",
-    "pandas>=1.5.3",
-    "polars>=0.16.14"
-]
-requires-python = ">=3.10"
-readme = "README.md"
-license = {text = "MIT"}
 
 [build-system]
 requires = ["pdm-pep517>=1.0"]
 build-backend = "pdm.pep517.api"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+pythonpath = "src"
