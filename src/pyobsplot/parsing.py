@@ -60,7 +60,7 @@ def parse_spec(spec: Any) -> Any:
 class JSModule(type):
     """metaclass to allow JavaScript module and methods handling."""
 
-    def __getattr__(cls: type, name: str) -> function:
+    def __getattr__(cls: type, name: str) -> callable:
         """Intercept methods calling and returns a parsed and typed dict object."""
 
         def wrapper(*args, **kwargs) -> dict:
