@@ -47,5 +47,8 @@ class Obsplot(anywidget.AnyWidget):
         # Init widget
         super().__init__(spec=spec)
 
-        # Parse spec and generate plot
+    @traitlets.validate("spec")
+    def _validate_spec(self, proposal):
+        spec = proposal["value"]
         spec = parse_spec(spec)
+        return spec
