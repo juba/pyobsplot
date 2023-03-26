@@ -13,4 +13,4 @@ esbuild
 .env
 .ipynb_checkpoints/
 .python-version
-test*
+examples/test*
