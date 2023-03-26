@@ -43,23 +43,26 @@ function parse_spec(spec) {
     if (Object.entries(spec).length == 0) {
         return spec
     }
-    if (spec["ipyobsplot-type"] == "DataFrame") {
+    if (spec["pyobsplot-type"] == "DataFrame") {
         return arrow.tableFromIPC(spec["value"])
     }
-    if (spec["ipyobsplot-type"] == "function") {
+    if (spec["pyobsplot-type"] == "function") {
         let fun = get_fun(spec["module"], spec["method"])
         return fun.call(null, ...parse_spec(spec["args"]));
     }
-    if (spec["ipyobsplot-type"] == "function-object") {
+    if (spec["pyobsplot-type"] == "function-object") {
         return get_fun(spec["module"], spec["method"])
     }
-    if (spec["ipyobsplot-type"] == "js") {
-        return eval(spec["value"])
+    if (spec["pyobsplot-type"] == "js") {
+        // Use indirect eval to avoid bundling issues
+        // See https://esbuild.github.io/content-types/#direct-eval
+        let indirect_eval = eval
+        return indirect_eval(spec["value"])
     }
-    if (spec["ipyobsplot-type"] == "datetime") {
+    if (spec["pyobsplot-type"] == "datetime") {
         return new Date(spec["value"])
     }
-    if (spec["ipyobsplot-type"] == "GeoJson") {
+    if (spec["pyobsplot-type"] == "GeoJson") {
         return spec["value"]
     }
     let ret = {}
@@ -71,11 +74,11 @@ function parse_spec(spec) {
 
 function generate_plot(spec) {
     let plot = document.createElement("div");
-    plot.classList.add("ipyobsplot-plot");
+    plot.classList.add("pyobsplot-plot");
     let out
     try {
         out = parse_spec(spec);
-        if (spec["ipyobsplot-type"] == "function") {
+        if (spec["pyobsplot-type"] == "function") {
             if (!(out instanceof Element)) {
                 out = out.plot()
             }
@@ -84,7 +87,7 @@ function generate_plot(spec) {
         }
     } catch (error) {
         out = document.createElement("pre")
-        out.classList.add("ipyobsplot-error")
+        out.classList.add("pyobsplot-error")
         out.textContent = error
     }
     plot.appendChild(out)
@@ -92,7 +95,7 @@ function generate_plot(spec) {
 }
 
 function _onValueChanged(view, el) {
-    let plot = el.querySelector(".ipyobsplot-plot")
+    let plot = el.querySelector(".pyobsplot-plot")
     el.removeChild(plot)
     let spec = () => view.model.get("spec");
     el.appendChild(generate_plot(spec()));

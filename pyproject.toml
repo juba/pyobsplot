@@ -14,7 +14,7 @@ dev = [
 ]
 
 [project]
-name = "ipyobsplot"
+name = "pyobsplot"
 version = "0.1.0"
 description = ""
 authors = [

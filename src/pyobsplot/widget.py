@@ -43,22 +43,22 @@ def parse_spec(spec):
         and "type" in spec
         and spec["type"] == "FeatureCollection"
     ):
-        return {"ipyobsplot-type": "GeoJson", "value": spec}
+        return {"pyobsplot-type": "GeoJson", "value": spec}
     if isinstance(spec, dict):
         return {k: parse_spec(v) for k, v in spec.items()}
     if isinstance(spec, pd.DataFrame):
-        return {"ipyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
+        return {"pyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
     if isinstance(spec, pl.DataFrame):
-        return {"ipyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+        return {"pyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
     if isinstance(spec, datetime.date) or isinstance(spec, datetime.datetime):
-        return {"ipyobsplot-type": "datetime", "value": spec.isoformat()}
+        return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
     if (
         callable(spec)
         and isinstance(spec(), dict)
-        and spec()["ipyobsplot-type"] == "function"
+        and spec()["pyobsplot-type"] == "function"
     ):
         out = spec()
-        out["ipyobsplot-type"] = "function-object"
+        out["pyobsplot-type"] = "function-object"
         return out
     return spec
 
@@ -71,7 +71,7 @@ class JSModule(type):
                     f"kwargs must not be passed to f{cls.__name__}.{name} : {kwargs}"
                 )
             return {
-                "ipyobsplot-type": "function",
+                "pyobsplot-type": "function",
                 "module": cls.__name__,
                 "method": name,
                 "args": args,
@@ -93,4 +93,4 @@ class Math(metaclass=JSModule):
 
 
 def js(txt):
-    return {"ipyobsplot-type": "js", "value": txt}
+    return {"pyobsplot-type": "js", "value": txt}

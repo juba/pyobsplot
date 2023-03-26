@@ -1,4 +1,4 @@
-# ipyobsplot
+# pyobsplot
 
 
 ## Bundling
@@ -12,8 +12,9 @@
 
 ## TODO
 
-- anonymous functions in specs
 - move pandas, polars and others to optional dependencies
+- cache data sources
+- see why output is lost when notebooks are closed
 
 ## Quarto
 

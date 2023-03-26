@@ -6,16 +6,16 @@
     background-color: #0000FF;
 }
 
-.ipyobsplot-plot {
+.pyobsplot-plot {
     color: #000;
     background-color: white;
 }
 
-.ipyobsplot-error {
+.pyobsplot-error {
     color: #CC0000;
     padding-left: 1em;
 }
 
-.ipyobsplot-error::before {
+.pyobsplot-error::before {
     content: "⚠ ";
 }
