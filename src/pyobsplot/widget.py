@@ -43,9 +43,4 @@ class Obsplot(anywidget.AnyWidget):
         else:
             ValueError("Incorrect ObsPlot arguments")
         super().__init__(spec=spec)
-
-    @traitlets.validate("spec")
-    def _validate_spec(self, proposal):
-        spec = proposal["value"]
         spec = parse_spec(spec)
-        return spec
