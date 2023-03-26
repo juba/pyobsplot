@@ -25,7 +25,7 @@ class Obsplot(anywidget.AnyWidget):
     """
 
     _esm = bundler_output_dir / "index.js"
-    _css = bundler_output_dir / "index.css"
+    _css = bundler_output_dir / "styles.css"
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
 
