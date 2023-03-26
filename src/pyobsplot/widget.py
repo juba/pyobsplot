@@ -31,6 +31,7 @@ class Obsplot(anywidget.AnyWidget):
 
     def __init__(self, *args, **kwargs):
         """Obsplot widget constructor."""
+
         # Only one dict arg -> spec passed as dict
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             spec = args[0]
@@ -42,5 +43,9 @@ class Obsplot(anywidget.AnyWidget):
             spec = kwargs
         else:
             ValueError("Incorrect ObsPlot arguments")
+
+        # Init widget
         super().__init__(spec=spec)
+
+        # Parse spec and generate plot
         spec = parse_spec(spec)
