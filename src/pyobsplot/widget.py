@@ -42,7 +42,7 @@ class Obsplot(anywidget.AnyWidget):
         elif len(args) == 0 and len(kwargs) > 0:
             spec = kwargs
         else:
-            ValueError("Incorrect ObsPlot arguments")
+            raise ValueError("Incorrect ObsPlot arguments")
 
         # Init widget
         super().__init__(spec=spec)
