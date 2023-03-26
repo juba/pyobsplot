@@ -4,7 +4,7 @@ import * as d3 from "d3"
 import * as arrow from "apache-arrow"
 
 // Main function : recursively parse a JSON specification 
-export default function parse_spec(spec) {
+export function parse_spec(spec) {
     // If null, return null
     if (spec === null) {
         return null
@@ -59,7 +59,7 @@ export default function parse_spec(spec) {
 
 
 // Returns JavaScript method object from module and method names
-function get_fun(mod, method) {
+export function get_fun(mod, method) {
     let fun
     switch (mod) {
         case "Plot":

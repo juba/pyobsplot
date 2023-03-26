@@ -1,7 +1,7 @@
 /* Main widget */
 
 import * as Plot from "@observablehq/plot"
-import parse_spec from "./parsing"
+import { parse_spec } from "./parsing"
 
 // Main render function
 export function render(view) {
