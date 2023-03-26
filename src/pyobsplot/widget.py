@@ -31,8 +31,8 @@ class Obsplot(anywidget.AnyWidget):
 
     def __init__(self, *args, **kwargs):
         """Obsplot widget constructor."""
-        # Only one arg -> spec passed as dict
-        if len(args) == 1 and len(kwargs) == 0:
+        # Only one dict arg -> spec passed as dict
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             spec = args[0]
         # Only one kwarg called sped
         elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
