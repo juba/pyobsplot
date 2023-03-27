@@ -7,7 +7,7 @@ import pathlib
 import anywidget
 import traitlets
 
-from .parsing import parse_spec
+from .parsing import SpecParser
 
 # Output directory of esbuild
 bundler_output_dir = pathlib.Path("static")
@@ -50,5 +50,5 @@ class Obsplot(anywidget.AnyWidget):
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
         spec = proposal["value"]
-        spec = parse_spec(spec)
+        spec = SpecParser().parse(spec)
         return spec

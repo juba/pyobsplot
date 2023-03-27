@@ -11,56 +11,60 @@ from typing import Any
 from .data import pd_to_arrow, pl_to_arrow
 
 
-def parse_spec(spec: Any) -> Any:
-    """Recursively parse a Plot specification to check and convert its elements.
+class SpecParser:
+    def __init__(self):
+        self.data = []
 
-    Args:
-        spec (Any): a complete specification or part of a specification.
+    def parse(self, spec: Any) -> Any:
+        """Recursively parse a Plot specification to check and convert its elements.
 
-    Returns:
-        Any: parsed specification or part of a specification.
-    """
-    if spec is None:
-        return None
-    # If list or tuple, recursively parse elements
-    if isinstance(spec, list) or isinstance(spec, tuple):
-        return [parse_spec(s) for s in spec]
-    # If Geojson, don't parse, add type and returns as is
-    if (
-        isinstance(spec, dict)
-        and "type" in spec
-        and spec["type"] == "FeatureCollection"
-    ):
-        return {"pyobsplot-type": "GeoJson", "value": spec}
-    # If dict, parse recursively
-    if isinstance(spec, dict):
-        return {k: parse_spec(v) for k, v in spec.items()}
-    # If pandas DataFrame, add type and serialize to Arrow IPC
-    if isinstance(spec, pd.DataFrame):
-        return {"pyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
-    # If polars DataFrame, add type and serialize to Arrow IPC
-    if isinstance(spec, pl.DataFrame):
-        return {"pyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
-    # If pandas Series, convert to DataFrame and parse
-    if isinstance(spec, pd.Series):
-        return parse_spec(pd.DataFrame(spec))
-    # If polars Series, convert to DataFrame and parse
-    if isinstance(spec, pl.Series):
-        return parse_spec(pl.DataFrame(spec))
-    # If date or datetime, add tupe and convert to isoformat.
-    if isinstance(spec, datetime.date) or isinstance(spec, datetime.datetime):
-        return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
-    # Handling of JavaScript methods as objects, such as "Math.sin"
-    # Manually call the parsed result ans add a special "function-object" type
-    if (
-        callable(spec)
-        and isinstance(spec(), dict)
-        and spec()["pyobsplot-type"] == "function"
-    ):
-        out = spec()
-        out["pyobsplot-type"] = "function-object"
-        return out
-    return spec
+        Args:
+            spec (Any): a complete specification or part of a specification.
+
+        Returns:
+            Any: parsed specification or part of a specification.
+        """
+        if spec is None:
+            return None
+        # If list or tuple, recursively parse elements
+        if isinstance(spec, list) or isinstance(spec, tuple):
+            return [self.parse(s) for s in spec]
+        # If Geojson, don't parse, add type and returns as is
+        if (
+            isinstance(spec, dict)
+            and "type" in spec
+            and spec["type"] == "FeatureCollection"
+        ):
+            return {"pyobsplot-type": "GeoJson", "value": spec}
+        # If dict, parse recursively
+        if isinstance(spec, dict):
+            return {k: self.parse(v) for k, v in spec.items()}
+        # If pandas DataFrame, add type and serialize to Arrow IPC
+        if isinstance(spec, pd.DataFrame):
+            return {"pyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
+        # If polars DataFrame, add type and serialize to Arrow IPC
+        if isinstance(spec, pl.DataFrame):
+            return {"pyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+        # If pandas Series, convert to DataFrame and parse
+        if isinstance(spec, pd.Series):
+            return self.parse(pd.DataFrame(spec))
+        # If polars Series, convert to DataFrame and parse
+        if isinstance(spec, pl.Series):
+            return self.parse(pl.DataFrame(spec))
+        # If date or datetime, add tupe and convert to isoformat.
+        if isinstance(spec, datetime.date) or isinstance(spec, datetime.datetime):
+            return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
+        # Handling of JavaScript methods as objects, such as "Math.sin"
+        # Manually call the parsed result ans add a special "function-object" type
+        if (
+            callable(spec)
+            and isinstance(spec(), dict)
+            and spec()["pyobsplot-type"] == "function"
+        ):
+            out = spec()
+            out["pyobsplot-type"] = "function-object"
+            return out
+        return spec
 
 
 class JSModule(type):
