@@ -5,63 +5,63 @@ import * as d3 from "d3"
 import * as arrow from "apache-arrow"
 
 // Main function : recursively parse a JSON specification 
-export function parse_spec(spec, data) {
+export function parse_spec(code, data) {
     // If null, return null
-    if (spec === null) {
+    if (code === null) {
         return null
     }
     // If Array, recursively parse elements
-    if (Array.isArray(spec)) {
-        return spec.map(d => parse_spec(d, data))
+    if (Array.isArray(code)) {
+        return code.map(d => parse_spec(d, data))
     }
     // If a string, returns as is
-    if (typeof spec === 'string' || spec instanceof String) {
-        return spec
+    if (typeof code === 'string' || code instanceof String) {
+        return code
     }
     // If not dict-like, returns as is
-    if (Object.entries(spec).length == 0) {
-        return spec
+    if (Object.entries(code).length == 0) {
+        return code
     }
     // If DataFrame type, deserialize Arrow IPC
-    if (spec["pyobsplot-type"] == "DataFrame") {
-        return arrow.tableFromIPC(spec["value"])
+    if (code["pyobsplot-type"] == "DataFrame") {
+        return arrow.tableFromIPC(code["value"])
     }
     // If DataFrame-ref type, deserialize Arrow IPC from cache
-    if (spec["pyobsplot-type"] == "DataFrame-ref") {
-        return arrow.tableFromIPC(data[spec["value"]])
+    if (code["pyobsplot-type"] == "DataFrame-ref") {
+        return arrow.tableFromIPC(data[code["value"]])
     }
     // If a JS function with arguments type, get function from name and call it
-    if (spec["pyobsplot-type"] == "function") {
-        let fun = get_fun(spec["module"], spec["method"])
-        return fun.call(null, ...parse_spec(spec["args"], data));
+    if (code["pyobsplot-type"] == "function") {
+        let fun = get_fun(code["module"], code["method"])
+        return fun.call(null, ...parse_spec(code["args"], data));
     }
     // If a JS function object type, get function from name and call it
-    if (spec["pyobsplot-type"] == "function-object") {
-        return get_fun(spec["module"], spec["method"])
+    if (code["pyobsplot-type"] == "function-object") {
+        return get_fun(code["module"], code["method"])
     }
     // If JavaScript code, eval it
-    if (spec["pyobsplot-type"] == "js") {
+    if (code["pyobsplot-type"] == "js") {
         // Use indirect eval to avoid bundling issues
         // See https://esbuild.github.io/content-types/#direct-eval
         let indirect_eval = eval
-        return indirect_eval(spec["value"])
+        return indirect_eval(code["value"])
     }
     // If datetime, create a new Date object form iso format
-    if (spec["pyobsplot-type"] == "datetime") {
-        return new Date(spec["value"])
+    if (code["pyobsplot-type"] == "datetime") {
+        return new Date(code["value"])
     }
     // If Geojson, returns as is
-    if (spec["pyobsplot-type"] == "GeoJson") {
-        return spec["value"]
+    if (code["pyobsplot-type"] == "GeoJson") {
+        return code["value"]
     }
     // If GeoJson-ref, returns as is from cache
-    if (spec["pyobsplot-type"] == "GeoJson-ref") {
-        return data[spec["value"]]
+    if (code["pyobsplot-type"] == "GeoJson-ref") {
+        return data[code["value"]]
     }
 
     // If dict-like with entries, parse entries recursively
     let ret = {}
-    for (const [key, value] of Object.entries(spec)) {
+    for (const [key, value] of Object.entries(code)) {
         ret[key] = parse_spec(value, data)
     }
     return ret

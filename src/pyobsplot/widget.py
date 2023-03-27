@@ -52,6 +52,6 @@ class Obsplot(anywidget.AnyWidget):
     def _validate_spec(self, proposal):
         spec = proposal["value"]
         parser = SpecParser()
-        parsed_spec = parser.parse(spec)
-        spec = {"data": parser.serialize_data(), "spec": parsed_spec}
+        code = parser.parse(spec)
+        spec = {"data": parser.serialize_data(), "code": code}
         return spec
