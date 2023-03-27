@@ -15,6 +15,12 @@ class SpecParser:
     def __init__(self):
         self.data = []
 
+    def cached(self, data):
+        index = [i for i, d in enumerate(self.data) if d is data]
+        if len(index) == 1:
+            return index[0]
+        return None
+
     def parse(self, spec: Any) -> Any:
         """Recursively parse a Plot specification to check and convert its elements.
 
@@ -29,22 +35,43 @@ class SpecParser:
         # If list or tuple, recursively parse elements
         if isinstance(spec, list) or isinstance(spec, tuple):
             return [self.parse(s) for s in spec]
-        # If Geojson, don't parse, add type and returns as is
+        # If Geojson, handle caching, don't parse, add type and returns as is
         if (
             isinstance(spec, dict)
             and "type" in spec
             and spec["type"] == "FeatureCollection"
         ):
-            return {"pyobsplot-type": "GeoJson", "value": spec}
+            index = self.cached(spec)
+            if index is None:
+                self.data.append(spec)
+                return {"pyobsplot-type": "GeoJson-ref", "value": (len(self.data) - 1)}
+            else:
+                return {"pyobsplot-type": "GeoJson-ref", "value": index}
         # If dict, parse recursively
         if isinstance(spec, dict):
             return {k: self.parse(v) for k, v in spec.items()}
-        # If pandas DataFrame, add type and serialize to Arrow IPC
+        # If pandas DataFrame, handle caching, add type and serialize to Arrow IPC
         if isinstance(spec, pd.DataFrame):
-            return {"pyobsplot-type": "DataFrame", "value": pd_to_arrow(spec)}
-        # If polars DataFrame, add type and serialize to Arrow IPC
+            index = self.cached(spec)
+            if index is None:
+                self.data.append(spec)
+                return {
+                    "pyobsplot-type": "DataFrame-ref",
+                    "value": (len(self.data) - 1),
+                }
+            else:
+                return {"pyobsplot-type": "DataFrame-ref", "value": index}
+        # If polars DataFrame, handle caching, add type and serialize to Arrow IPC
         if isinstance(spec, pl.DataFrame):
-            return {"pyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+            index = self.cached(spec)
+            if index is None:
+                self.data.append(spec)
+                return {
+                    "pyobsplot-type": "DataFrame-ref",
+                    "value": (len(self.data) - 1),
+                }
+            else:
+                return {"pyobsplot-type": "DataFrame-ref", "value": index}
         # If pandas Series, convert to DataFrame and parse
         if isinstance(spec, pd.Series):
             return self.parse(pd.DataFrame(spec))
@@ -65,6 +92,17 @@ class SpecParser:
             out["pyobsplot-type"] = "function-object"
             return out
         return spec
+
+    def serialize_data(self):
+        result = []
+        for d in self.data:
+            if isinstance(d, pl.DataFrame):
+                result.append(pl_to_arrow(d))
+            elif isinstance(d, pd.DataFrame):
+                result.append(pd_to_arrow(d))
+            else:
+                result.append(d)
+        return result
 
 
 class JSModule(type):

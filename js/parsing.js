@@ -5,14 +5,14 @@ import * as d3 from "d3"
 import * as arrow from "apache-arrow"
 
 // Main function : recursively parse a JSON specification 
-export function parse_spec(spec) {
+export function parse_spec(spec, data) {
     // If null, return null
     if (spec === null) {
         return null
     }
     // If Array, recursively parse elements
     if (Array.isArray(spec)) {
-        return spec.map(d => parse_spec(d))
+        return spec.map(d => parse_spec(d, data))
     }
     // If a string, returns as is
     if (typeof spec === 'string' || spec instanceof String) {
@@ -22,14 +22,18 @@ export function parse_spec(spec) {
     if (Object.entries(spec).length == 0) {
         return spec
     }
-    // If DataFrame type, deserialize from Arrow IPC
+    // If DataFrame type, deserialize Arrow IPC
     if (spec["pyobsplot-type"] == "DataFrame") {
         return arrow.tableFromIPC(spec["value"])
+    }
+    // If DataFrame-ref type, deserialize Arrow IPC from cache
+    if (spec["pyobsplot-type"] == "DataFrame-ref") {
+        return arrow.tableFromIPC(data[spec["value"]])
     }
     // If a JS function with arguments type, get function from name and call it
     if (spec["pyobsplot-type"] == "function") {
         let fun = get_fun(spec["module"], spec["method"])
-        return fun.call(null, ...parse_spec(spec["args"]));
+        return fun.call(null, ...parse_spec(spec["args"], data));
     }
     // If a JS function object type, get function from name and call it
     if (spec["pyobsplot-type"] == "function-object") {
@@ -50,10 +54,15 @@ export function parse_spec(spec) {
     if (spec["pyobsplot-type"] == "GeoJson") {
         return spec["value"]
     }
+    // If GeoJson-ref, returns as is from cache
+    if (spec["pyobsplot-type"] == "GeoJson-ref") {
+        return data[spec["value"]]
+    }
+
     // If dict-like with entries, parse entries recursively
     let ret = {}
     for (const [key, value] of Object.entries(spec)) {
-        ret[key] = parse_spec(value)
+        ret[key] = parse_spec(value, data)
     }
     return ret
 }

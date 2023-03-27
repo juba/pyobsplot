@@ -6,6 +6,7 @@ Obsplot widget handling.
 import pathlib
 import anywidget
 import traitlets
+import random
 
 from .parsing import SpecParser
 
@@ -35,7 +36,7 @@ class Obsplot(anywidget.AnyWidget):
         # Only one dict arg -> spec passed as dict
         if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             spec = args[0]
-        # Only one kwarg called sped
+        # Only one kwarg called spec
         elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
             spec = kwargs["spec"]
         # Only kwargs -> spec is kwargs
@@ -50,5 +51,7 @@ class Obsplot(anywidget.AnyWidget):
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
         spec = proposal["value"]
-        spec = SpecParser().parse(spec)
+        parser = SpecParser()
+        parsed_spec = parser.parse(spec)
+        spec = {"data": parser.serialize_data(), "spec": parsed_spec}
         return spec

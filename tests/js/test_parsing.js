@@ -62,4 +62,10 @@ describe('parse_spec', function () {
     it('should return correct results for DataFrames', function () {
         // FIXME: add tests        
     });
+    it('should return correct results for cached elements', function () {
+        assert.equal(
+            parse_spec({ "pyobsplot-type": "GeoJson-ref", "value": 0 }, ["foobar"]),
+            "foobar"
+        )
+    });
 });

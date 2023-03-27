@@ -20,8 +20,8 @@ function generate_plot(spec) {
     let out
     try {
         // Parse specification
-        out = parse_spec(spec);
-        if (spec["pyobsplot-type"] == "function") {
+        out = parse_spec(spec["spec"], spec["data"]);
+        if (spec["spec"]["pyobsplot-type"] == "function") {
             if (!(out instanceof Element)) {
                 // If spec root is a JS function and the result is not
                 // an Element, call plot() on it.
