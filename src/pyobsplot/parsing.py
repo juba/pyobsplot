@@ -41,6 +41,12 @@ def parse_spec(spec: Any) -> Any:
     # If polars DataFrame, add type and serialize to Arrow IPC
     if isinstance(spec, pl.DataFrame):
         return {"pyobsplot-type": "DataFrame", "value": pl_to_arrow(spec)}
+    # If pandas Series, convert to DataFrame and parse
+    if isinstance(spec, pd.Series):
+        return parse_spec(pd.DataFrame(spec))
+    # If polars Series, convert to DataFrame and parse
+    if isinstance(spec, pl.Series):
+        return parse_spec(pl.DataFrame(spec))
     # If date or datetime, add tupe and convert to isoformat.
     if isinstance(spec, datetime.date) or isinstance(spec, datetime.datetime):
         return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
