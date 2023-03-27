@@ -6,16 +6,31 @@ import datetime
 import pandas as pd
 import polars as pl
 
-from typing import Any
+from typing import Any, Optional
 
 from .data import pd_to_arrow, pl_to_arrow
 
 
 class SpecParser:
-    def __init__(self):
+    """
+    Class implementing plot specification parsing.
+    """
+
+    def __init__(self) -> None:
+        """
+        SpecParser constructor.
+        """
         self.data = []
 
-    def cached(self, data):
+    def cache_index(self, data: Any) -> Optional[int]:
+        """Returns the index of a data object in the data cache.
+
+        Args:
+            data (Any): a data object (DataFeame, GeoJson...)
+
+        Returns:
+            Optional[int]: index of the data object in the cache, or None if absent.
+        """
         index = [i for i, d in enumerate(self.data) if d is data]
         if len(index) == 1:
             return index[0]
@@ -41,7 +56,7 @@ class SpecParser:
             and "type" in spec
             and spec["type"] == "FeatureCollection"
         ):
-            index = self.cached(spec)
+            index = self.cache_index(spec)
             if index is None:
                 self.data.append(spec)
                 return {"pyobsplot-type": "GeoJson-ref", "value": (len(self.data) - 1)}
@@ -52,7 +67,7 @@ class SpecParser:
             return {k: self.parse(v) for k, v in spec.items()}
         # If pandas DataFrame, handle caching, add type and serialize to Arrow IPC
         if isinstance(spec, pd.DataFrame):
-            index = self.cached(spec)
+            index = self.cache_index(spec)
             if index is None:
                 self.data.append(spec)
                 return {
@@ -63,7 +78,7 @@ class SpecParser:
                 return {"pyobsplot-type": "DataFrame-ref", "value": index}
         # If polars DataFrame, handle caching, add type and serialize to Arrow IPC
         if isinstance(spec, pl.DataFrame):
-            index = self.cached(spec)
+            index = self.cache_index(spec)
             if index is None:
                 self.data.append(spec)
                 return {
@@ -93,13 +108,21 @@ class SpecParser:
             return out
         return spec
 
-    def serialize_data(self):
+    def serialize_data(self) -> list:
+        """Serialize data in the data cache.
+
+        Returns:
+            list: list of serialized data objects.
+        """
         result = []
         for d in self.data:
+            # If polars DataFrame, serialize to Arrow IPC
             if isinstance(d, pl.DataFrame):
                 result.append(pl_to_arrow(d))
+            # If pandas DataFrame, serialize to Arrow IPC
             elif isinstance(d, pd.DataFrame):
                 result.append(pd_to_arrow(d))
+            # Else, keep as is
             else:
                 result.append(d)
         return result
