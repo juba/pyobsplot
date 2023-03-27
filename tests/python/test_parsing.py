@@ -13,7 +13,7 @@ from pyobsplot.parsing import SpecParser, js
 from pyobsplot.data import pd_to_arrow, pl_to_arrow
 
 
-class TestParseSpec:
+class TestSpecParser:
     def test_parse_none(self):
         assert SpecParser().parse(None) is None
 
