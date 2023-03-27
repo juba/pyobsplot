@@ -1,20 +1,36 @@
 # pyobsplot
 
 
+## TODO
+
+- move pandas, polars and others to optional dependencies
+- widget tests if possible
+- exception not rethrown in pytest
+- see why output is lost when notebooks are closed -> VSCode fault, see https://github.com/microsoft/vscode-jupyter/issues/4404. See how pydeck handles this.
+
+
 ## Bundling
 
 ```shell
 # Once
-./esbuild --format=esm --bundle --outdir=static js/* 
+./esbuild --format=esm --bundle --outdir=static js/index.js js/styles.css
 # Watching
-./esbuild --format=esm --bundle --outdir=static js/* --watch
+./esbuild --format=esm --bundle --outdir=static js/index.js js/styles.css --watch
 ```
 
-## TODO
+## Tests
 
-- move pandas, polars and others to optional dependencies
-- cache data sources
-- see why output is lost when notebooks are closed
+Run Python tests:
+
+```shell
+pdm run pytest
+```
+
+Run JavaScript tests:
+
+```shell
+npm run test
+```
 
 ## Quarto
 
