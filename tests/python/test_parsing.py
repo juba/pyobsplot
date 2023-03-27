@@ -48,6 +48,20 @@ class TestParseSpec:
             "value": pl_to_arrow(df_pl),
         }
 
+    def test_parse_spec_series(self):
+        df_pd = pd.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})
+        series_pd = df_pd["x"]
+        df_pl = pl.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})
+        series_pl = df_pl.get_column("x")
+        assert parse_spec(series_pd) == {
+            "pyobsplot-type": "DataFrame",
+            "value": pd_to_arrow(pd.DataFrame(df_pd["x"])),
+        }
+        assert parse_spec(series_pl) == {
+            "pyobsplot-type": "DataFrame",
+            "value": pl_to_arrow(pl.DataFrame(df_pl.get_column("x"))),
+        }
+
     def test_parse_spec_datetime(self):
         assert parse_spec(datetime.date(2023, 1, 1)) == {
             "pyobsplot-type": "datetime",
