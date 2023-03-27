@@ -1,7 +1,7 @@
 [project]
 name = "pyobsplot"
 version = "0.1.0"
-description = ""
+description = "Observable Plot integration as widgets in Jupyter notebooks."
 authors = [
     {name = "Julien Barnier", email = "julien@nozav.org"},
 ]
@@ -14,6 +14,11 @@ dependencies = [
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
 [tool.pdm]
 [tool.pdm.dev-dependencies]
