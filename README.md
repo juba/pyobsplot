@@ -3,7 +3,6 @@
 
 ## TODO
 
-- move pandas, polars and others to optional dependencies
 - widget tests if possible
 - exception not rethrown in pytest
 - see why output is lost when notebooks are closed -> VSCode fault, see https://github.com/microsoft/vscode-jupyter/issues/4404. See how pydeck handles this.
@@ -31,6 +30,21 @@ Run JavaScript tests:
 ```shell
 npm run test
 ```
+
+For visual regression tests, first install the requirements:
+
+```shell
+cd tests/ui
+npm install
+```
+
+And run tests with:
+
+```shell
+npm run test
+```
+
+See `ipywidgets` UI tests setup : https://github.com/jupyter-widgets/ipywidgets/tree/main/ui-tests
 
 ## Quarto
 

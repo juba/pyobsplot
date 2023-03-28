@@ -5,10 +5,17 @@
     "d3": "^7.8.2"
   },
   "scripts": {
-    "test": "mocha tests/js"
+    "test": "mocha tests/js",
+    "uistart": "pdm run jupyter lab --config ./tests/ui/jupyter_server_config.py",
+    "uistart:detached": "jlpm start&",
+    "uitest": "playwright test --config tests/ui/playwright.config.js",
+    "uitest:debug": "PWDEBUG=1 playwright test --config tests/ui/playwright.config.js",
+    "uitest:report": "http-server ./tests/ui/playwright-report -a localhost -o",
+    "uitest:update": "playwright test  --config tests/ui/playwright.config.js --update-snapshots"
   },
   "devDependencies": {
+    "@jupyterlab/galata": "^4.5.2",
+    "@playwright/test": "^1.32.1",
     "mocha": "^10.2.0"
-  },
-  "type": "module"
+  }
 }

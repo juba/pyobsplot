@@ -14,3 +14,7 @@ esbuild
 .ipynb_checkpoints/
 .python-version
 examples/test*
+**/test-results/
+**/playwright-report/
+**/playwright/.cache/
+*-snapshots/
