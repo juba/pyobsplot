@@ -1,0 +1,42 @@
+project:
+  type: website
+
+execute:
+  freeze: auto
+
+website:
+  title: "pyobsplot"
+  site-url: "https://juba.github.io/pyobsplot"
+  favicon: favicon.png
+  repo-url: https://github.com/juba/pyobsplot/
+  repo-subdir: "doc"
+  repo-actions: [edit, issue]
+  sidebar:
+    search: true
+    style: "docked"
+    contents:
+      - href: index.qmd
+        text: Introduction
+      - getting_started.qmd
+      - usage.qmd
+      - section: "Gallery"
+        contents:
+          - gallery_marks.qmd
+          - gallery_transforms.qmd
+          - gallery_geo.qmd
+      - contributing.qmd
+    tools:
+      - icon: github
+        href: https://github.com/juba/pyobsplot/
+
+
+
+
+format:
+  bookup-html:
+    embed-fonts: true
+    toc: true
+    css: styles.css
+
+
+

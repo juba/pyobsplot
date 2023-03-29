@@ -1,0 +1,21 @@
+---
+title: "Usage"
+---
+
+## From JavaScript to Python
+
+- Javascript modules
+
+## Alternative syntaxes
+
+## DataFrames and Series
+
+## datetime objects
+
+## Quarto
+
+For plots to be computed and displayed when compiling from an `ipynb` file, you have to add `--execute` :
+
+```shell
+quarto render test.ipynb --execute --to html
+```

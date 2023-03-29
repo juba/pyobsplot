@@ -1,0 +1,49 @@
+---
+title: "Contributing"
+---
+
+
+## Bundling
+
+```shell
+# Once
+npm run bundle
+# Watching
+npm run watch
+```
+
+## Tests
+
+Run Python tests:
+
+```shell
+npm run pytest
+```
+
+Run JavaScript tests:
+
+```shell
+npm run jstest
+```
+
+For visual regression tests, first install the requirements:
+
+```shell
+cd tests/ui
+npm install
+```
+
+Start a test jupyter instance with:
+
+```shell
+npm run uistart
+```
+
+And run tests with:
+
+```shell
+# Create / update reference snapshots
+npm run uitest:update
+# Compare with reference snapshots
+npm run uitest
+```

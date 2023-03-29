@@ -1,0 +1,69 @@
+/*-- scss:defaults --*/
+
+$body-bg: #1c1f2b;
+$body-color: #cad2dd;
+$footer-bg: #1c1f2b;
+$footer-fg: #cad2dd;
+
+
+/*-- scss:rules --*/
+
+:root {
+    --link-color: #c1ff42;
+
+    --toc-active-color: #c1ff42;
+    --toc-border-color: #555;
+
+    --sidebar-fg: #ccd1e2;
+    --sidebar-bg-docked: #2d3143;
+    --sidebar-border: transparent;
+    --sidebar-active-link-color: #c1ff42;
+    --sidebar-part-color: #ccd1e2;
+    --sidebar-input-border: #5d6173;
+
+    --figure-img-border: 1px solid #5d6173;
+    --figure-img-shadow: none;
+
+    --code-block-color: #9dbed8;
+    --code-block-bg: #2d3143;
+    --code-color: #9dbed8;
+    --code-bg: #2d3143;
+
+    --hl-code-comments: #8e8d8c;
+
+    --header-footer-border: #2d3143;
+
+    --table-tr-border: #50616e;
+    --table-out-borders: #AAA;
+    --table-tr-hover: #242838;
+
+    --reader-toggle-bg: #2d3143;
+    --reader-toggle-border: #5d6173;
+
+    --callout-color: #000;
+    --callout-warning-bg: #ffe99f;
+    --callout-warning-title: #af8300;
+    --callout-note-bg: #b4d3ff;
+    --callout-note-title: #2f65b8;
+    --callout-important-bg: #f8bcc0;
+    --callout-important-title: #900;
+    --callout-caution-bg: #ffdabd;
+    --callout-caution-title: #be7200;
+    --callout-tip-bg: #bafcde;
+    --callout-tip-title: #050;
+
+    --listing-card-border: #5d6173;
+    --listing-card-shadow: rgba(255, 255, 255, 0.04);
+    --listing-card-shadow-hover: rgba(255, 255, 255, 0.08);
+
+}
+
+.table,
+.dataTable {
+    --bs-table-accent-bg: #35394b;
+    --bs-table-striped-bg: #2d3143;
+}
+
+body {
+    color-scheme: dark;
+}

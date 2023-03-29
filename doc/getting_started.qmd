@@ -1,0 +1,91 @@
+---
+title: "Getting started"
+---
+
+## Installation
+
+`pyobsplot` can be installed with `pip`:
+
+```shell
+pip install pyobsplot
+```
+
+
+## Usage
+
+To use `pyobsplot`, you must import at least its `Obsplot` and `Plot` classes with:
+
+```{python}
+from pyobsplot import Obsplot, Plot
+
+```
+
+To create a plot, you have to call `Obsplot` and pass a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
+
+So, starting with a very simple DataFrame:
+
+```{python}
+import polars as pl
+
+data = pl.DataFrame(
+    {
+        "x": [1, 5, 2, 4, 6, 2, 4],
+        "y": [2, 1, 3, 4, 5, 1, 2],
+        "type": ["T1", "T2", "T1", "T2", "T1", "T1", "T2"],
+    }
+)
+```
+
+If your JavaScript plot function looks like this:
+
+```javascript
+Plot(
+    {
+        grid: true,
+        marks: [Plot.dot(data, {x: "x", y: "y", fill: "type", r: 5})]
+    }
+)
+```
+
+Then you can reproduce the plot with:
+
+```{python}
+Obsplot(
+    {
+        "grid": True,
+        "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
+    }
+)
+```
+
+The syntax is almost identical, except that dictionary keys must be quoted, and JavaScript `true` must be replaced by Python `True`.
+
+You can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:
+
+```{python}
+penguins = pl.read_csv("data/penguins.csv")
+
+Obsplot(
+    {
+        "grid": True,
+        "color": {"legend": True},
+        "marks": [
+            Plot.dot(
+                penguins,
+                {"x": "flipper_length_mm", "y": "body_mass_g", "fill": "island"},
+            )
+        ],
+    }
+)
+```
+
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to `Obsplot`:
+
+```{python}
+Obsplot(Plot.auto(penguins, {"x": "flipper_length_mm"}))
+```
+
+# Learn more
+
+To go further, see the [usage](usage.qmd) page.
+
