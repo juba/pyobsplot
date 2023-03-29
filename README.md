@@ -12,9 +12,9 @@
 
 ```shell
 # Once
-./esbuild --format=esm --bundle --outdir=static js/index.js js/styles.css
+npm run bundle
 # Watching
-./esbuild --format=esm --bundle --outdir=static js/index.js js/styles.css --watch
+npm run watch
 ```
 
 ## Tests
@@ -22,13 +22,13 @@
 Run Python tests:
 
 ```shell
-pdm run pytest
+npm run pytest
 ```
 
 Run JavaScript tests:
 
 ```shell
-npm run test
+npm run jstest
 ```
 
 For visual regression tests, first install the requirements:
@@ -38,13 +38,17 @@ cd tests/ui
 npm install
 ```
 
+Start a test jupyter instance with:
+
+```shell
+npm run uistart
+```
+
 And run tests with:
 
 ```shell
-npm run test
+npm run uitest
 ```
-
-See `ipywidgets` UI tests setup : https://github.com/jupyter-widgets/ipywidgets/tree/main/ui-tests
 
 ## Quarto
 

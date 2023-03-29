@@ -7,7 +7,8 @@
   "scripts": {
     "bundle": "./esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css",
     "watch": "./esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css --watch",
-    "test": "mocha tests/js",
+    "pytest": "poetry run pytest",
+    "jstest": "mocha tests/js",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
     "uistart:detached": "jlpm start&",
     "uitest": "playwright test --config tests/ui/playwright.config.js",
