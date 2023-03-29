@@ -19,8 +19,8 @@
   "devDependencies": {
     "@jupyterlab/galata": "^4.5.2",
     "@playwright/test": "^1.32.1",
-    "mocha": "^10.2.0",
-    "esbuild": "^0.17.14"
+    "esbuild": "^0.17.14",
+    "mocha": "^10.2.0"
   },
   "type": "module"
 }
