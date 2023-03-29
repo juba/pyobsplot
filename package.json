@@ -5,8 +5,8 @@
     "d3": "^7.8.2"
   },
   "scripts": {
-    "bundle": "./esbuild --format=esm --bundle --outdir=static js/index.js js/styles.css",
-    "watch": "./esbuild --format=esm --bundle --outdir=static js/index.js js/styles.css --watch",
+    "bundle": "./esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css",
+    "watch": "./esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css --watch",
     "test": "mocha tests/js",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
     "uistart:detached": "jlpm start&",
