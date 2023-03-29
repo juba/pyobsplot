@@ -1,7 +1,7 @@
 /* Main widget */
 
 import * as Plot from "@observablehq/plot"
-import { parse_spec } from "./parsing"
+import { parse_spec, unserialize_data } from "./parsing"
 
 // Main render function
 export function render(view) {
@@ -20,7 +20,9 @@ function generate_plot(spec) {
     let out
     try {
         // Parse specification
+        spec["data"] = unserialize_data(spec["data"])
         out = parse_spec(spec["code"], spec["data"]);
+        console.log(out)
         if (spec["code"]["pyobsplot-type"] == "function") {
             if (!(out instanceof Element)) {
                 // If spec root is a JS function and the result is not

@@ -4,6 +4,19 @@ import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import * as arrow from "apache-arrow"
 
+export function unserialize_data(data) {
+    let result = Array()
+    for (let d of data) {
+        if (d["pyobsplot-type"] == "DataFrame") {
+            result.push(arrow.tableFromIPC(d["value"]))
+        } else {
+            result.push(d)
+        }
+    }
+    return result
+}
+
+
 // Main function : recursively parse a JSON specification 
 export function parse_spec(code, data) {
     // If null, return null
@@ -28,7 +41,7 @@ export function parse_spec(code, data) {
     }
     // If DataFrame-ref type, deserialize Arrow IPC from cache
     if (code["pyobsplot-type"] == "DataFrame-ref") {
-        return arrow.tableFromIPC(data[code["value"]])
+        return data[code["value"]]
     }
     // If a JS function with arguments type, get function from name and call it
     if (code["pyobsplot-type"] == "function") {

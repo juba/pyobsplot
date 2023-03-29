@@ -118,10 +118,10 @@ class SpecParser:
         for d in self.data:
             # If polars DataFrame, serialize to Arrow IPC
             if isinstance(d, pl.DataFrame):
-                result.append(pl_to_arrow(d))
+                result.append({"pyobsplot-type": "DataFrame", "value": pl_to_arrow(d)})
             # If pandas DataFrame, serialize to Arrow IPC
             elif isinstance(d, pd.DataFrame):
-                result.append(pd_to_arrow(d))
+                result.append({"pyobsplot-type": "DataFrame", "value": pd_to_arrow(d)})
             # Else, keep as is
             else:
                 result.append(d)
