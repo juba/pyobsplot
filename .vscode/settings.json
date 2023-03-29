@@ -1,0 +1,9 @@
+{
+  "python.testing.pytestArgs": [
+    "tests/python"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.linting.enabled": false,
+  "jupyter.notebookFileRoot": "${fileDirname}"
+}
