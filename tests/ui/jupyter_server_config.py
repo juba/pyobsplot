@@ -1,5 +1,7 @@
 from tempfile import mkdtemp
 
+c = get_config()  # noqa
+
 c.ServerApp.port = 8888
 c.ServerApp.open_browser = False
 c.ServerApp.root_dir = mkdtemp(prefix="galata-test-")
