@@ -1,12 +1,8 @@
 import { expect, galata, test } from '@jupyterlab/galata';
-//import { expect, } from '@playwright/test';
 
 import * as path from 'path';
 
-const notebook = 'tests.ipynb';
-//test.use({ tmpPath: 'pyobsplot-tests' });
-
-test.describe('Widget Visual Regression', () => {
+test.describe('Visual Regression', () => {
 
     // test.beforeAll(async ({ request, tmpPath }) => {
     //     const contents = galata.newContentsHelper(request);
@@ -29,10 +25,11 @@ test.describe('Widget Visual Regression', () => {
     //     await contents.deleteDirectory(tmpPath);
     // });
 
-    test('Run notebook tests.ipynb and capture cell outputs', async ({
+    test('tests.ipynb outputs', async ({
         page,
         tmpPath,
     }) => {
+        const notebook = 'tests.ipynb';
         await page.notebook.openByPath(`${notebook}`);
         await page.notebook.activate(notebook);
 
