@@ -177,7 +177,7 @@ class TestSpecParser:
         assert parser.serialize_data()[0] == geo
         assert parser.serialize_data()[1] == geo2
 
-    def test_parse_caching_geojson(self):
+    def test_parse_caching_mixed(self):
         geo = {"type": "FeatureCollection", "x": 1, "y": "foo"}
         df_pl = pl.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})
         df_pd = pd.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})
