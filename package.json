@@ -10,11 +10,11 @@
     "pytest": "poetry run pytest",
     "jstest": "mocha tests/js",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
-    "uistart:detached": "jlpm start&",
     "uitest": "playwright test --config tests/ui/playwright.config.cjs",
     "uitest:debug": "PWDEBUG=1 playwright test --config tests/ui/playwright.config.cjs",
     "uitest:report": "http-server ./tests/ui/playwright-report -a localhost -o",
-    "uitest:update": "playwright test  --config tests/ui/playwright.config.cjs --update-snapshots"
+    "uitest:update": "playwright test  --config tests/ui/playwright.config.cjs --update-snapshots",
+    "uitest:ui": "playwright test  --config tests/ui/playwright.config.cjs --ui"
   },
   "devDependencies": {
     "@jupyterlab/galata": "^4.5.2",
