@@ -5,8 +5,8 @@
     "d3": "^7.8.2"
   },
   "scripts": {
-    "bundle": "./esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css",
-    "watch": "./esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css --watch",
+    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css",
+    "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css --watch",
     "pytest": "poetry run pytest",
     "jstest": "mocha tests/js",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
@@ -19,7 +19,8 @@
   "devDependencies": {
     "@jupyterlab/galata": "^4.5.2",
     "@playwright/test": "^1.32.1",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "esbuild": "^0.17.14"
   },
   "type": "module"
 }
