@@ -15,8 +15,14 @@ Obsplot({
     "grid": True,
     "color": {"legend": True},
     "marks": [
-        Plot.dot(penguins, {"x": "flipper_length_mm", "y": "body_mass_g", "fill": "species"}),
-        Plot.density(penguins, {"x": "flipper_length_mm", "y": "body_mass_g", "stroke": "species"})
+        Plot.dot(
+            penguins, 
+            {"x": "flipper_length_mm", "y": "body_mass_g", "fill": "species"}
+        ),
+        Plot.density(
+            penguins, 
+            {"x": "flipper_length_mm", "y": "body_mass_g", "stroke": "species"}
+        )
     ]
 })
 ```
