@@ -4,42 +4,77 @@
     "href": "usage.html",
     "title": "Usage",
     "section": "",
-    "text": "Javascript modules"
+    "text": "For a quick usage introduction, see getting started."
   },
   {
     "objectID": "usage.html#from-javascript-to-python",
     "href": "usage.html#from-javascript-to-python",
     "title": "Usage",
-    "section": "",
-    "text": "Javascript modules"
+    "section": "From JavaScript to Python",
+    "text": "From JavaScript to Python\nConverting a plot specification from JavaScript to Python should be straightforward most of the time:\n\nall dictionary keys must be quoted (so x: becomes \"x\":)\nJavaScript true and false must be replaced by True and False\nJavaScript null must be replaced by None\n\nSo for example, the following JavaScript code:\nPlot(\n    {\n        color: {legend: true}\n        grid: false,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nBecomes:\n\nObsplot(\n    {\n        \"color\": {\"legend\": True}\n        \"grid\": False,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\nIt is possible to directly call JavaScript methods from the Plot, d3 and Math modules. You must first import the corresponding class.\n\nfrom pyobsplot import Obsplot, Plot, d3\n\nObsplot({\n        \"x\": {\n            \"axis\": None\n        },\n        \"marks\": [\n            Plot.lineY(d3.cumsum({ \"length\": 100 }, d3.randomNormal()))\n        ]\n})\n\n\n\n\nIf your specification includes JavaScript code such as anonymous functions, you can pass it as a string by using the js method (after importing it):\n\nfrom pyobsplot import Obsplot, Plot, d3, js\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nObsplot({\n    \"grid\": True,\n    \"marks\": [\n        Plot.dot(data, {\n            \"x\": \"x\", \"y\": \"y\", \"r\": 8,\n            \"stroke\": \"red\", \"fill\": \"red\",\n            \"fillOpacity\": js(\"d =&gt; d.type == 'T1' ? 1 : 0\")\n        })\n    ]\n})"
   },
   {
     "objectID": "usage.html#alternative-syntaxes",
     "href": "usage.html#alternative-syntaxes",
     "title": "Usage",
     "section": "Alternative syntaxes",
-    "text": "Alternative syntaxes"
+    "text": "Alternative syntaxes\nAs we’ve already seen, the most common syntax for a plot specification is to pass it as a dictionary :\n\nObsplot({\n    \"grid\": True,\n    \"color\": {\"legend\": True}\n    \"marks\": [\n        Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\"})\n    ],\n})\n\nBut it is also possible to pass top level arguments as kwargs to Obsplot, which would give the following:\n\nObsplot(\n    grid = True,\n    color = {\"legend\": True},\n    marks = [\n        Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\"})\n    ],\n)\n\nFinally, for the simplest cases, you can also pass a mark method directly to Obsplot. The JavaScript plot() method will be called automatically to display the plot:\n\nimport random\nObsplot(\n    Plot.tickX(\n        [random.gauss(0,1) for i in range(1000)], \n        {\"stroke\": \"red\", \"opacity\": 0.2}\n    )\n)"
   },
   {
     "objectID": "usage.html#dataframes-and-series",
     "href": "usage.html#dataframes-and-series",
     "title": "Usage",
     "section": "DataFrames and Series",
-    "text": "DataFrames and Series"
+    "text": "DataFrames and Series\nPandas and polars DataFrames can be passed directly to Obsplot. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.\n\nimport polars as pl\nfrom datetime import date\n\ndf = pl.DataFrame({\n    \"Date\": [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3), date(2023, 1, 4)],\n    \"Value\": [4.2, 3.8, 4.5, 4.7]\n})\n\nObsplot({\n    \"x\": {\"grid\": True},\n    \"y\": {\"domain\": [0, 5]},\n    \"marks\": [Plot.dot(df, {\"x\": \"Date\", \"y\": \"Value\"})]\n})\n\n\n\n\nIf you pass a pandas or polars Series object, it will be automatically converted to a DataFrame with one column:\n\nvalue = df.get_column(\"Value\")\n\nObsplot(\n    Plot.tickX(value, {\"x\": \"Value\"})\n)\n\n\n\n\npyobsplot implements a simple caching mechanism for some data objects: it currently works for DataFrames and for GeoJson objects.\nSometimes the same data object is used several times in a plot specification, such as:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nObsplot({\n  \"height\": 600,\n  \"grid\": True,\n  \"facet\": {\n    \"data\": penguins,\n    \"x\": \"sex\",\n    \"y\": \"species\",\n    \"marginRight\": 80\n  },\n  \"marks\": [\n    Plot.frame({\"facet\": False}),\n    Plot.dot(penguins, {\n      \"x\": \"culmen_depth_mm\",\n      \"y\": \"culmen_length_mm\",\n      \"r\": 1.5,\n      \"fill\": \"#ccc\",\n      \"facet\": \"exclude\"\n    }),\n    Plot.dot(penguins, {\n       \"x\": \"culmen_depth_mm\",\n       \"y\": \"culmen_length_mm\",\n       \"facet\": True\n    })\n  ]\n})\n\n\n\n\nIn this case, caching ensures that the penguins DataFrame is only serialized and transmitted once instead of three times."
   },
   {
     "objectID": "usage.html#datetime-objects",
     "href": "usage.html#datetime-objects",
     "title": "Usage",
     "section": "datetime objects",
-    "text": "datetime objects"
+    "text": "datetime objects\ndatetime.date and datetime.datetime Python objects are automatically serialized and converted to JavaScript Date objects.\nThat makes the following two specifications equivalent:\n\nObsplot({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01')\"), js(\"new Date('2022-01-01')\")]}, \n    \"grid\": True\n})\n\n\n\n\n\nfrom datetime import date\nObsplot({\n    \"x\": {\"domain\": [date(2021,1,1), date(2022,1,1)]}, \n    \"grid\": True\n})\n\n\n\n\nAs well as the two following ones, using datetime:\n\nObsplot({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01T07:00:00')\"), js(\"new Date('2021-01-01T08:00:00')\")]}, \n    \"grid\": True\n})\n\n\n\n\n\nfrom datetime import datetime\nObsplot({\n    \"x\": {\"domain\": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, \n    \"grid\": True\n})"
+  },
+  {
+    "objectID": "usage.html#interactivity",
+    "href": "usage.html#interactivity",
+    "title": "Usage",
+    "section": "Interactivity",
+    "text": "Interactivity\nThe fact that Obsplot are Jupyter widgets allow for basic interactivity. More specifically, you can set the spec attribute of an existing Obsplot to another plot specification and it will update it.\nThis allows to do things like the following, where a plot is updated depending on the value of a Jupyter IntSlider widget:\n\ndef generate_spec(length):\n    return {\n        \"x\": {\n            \"axis\": None\n        },\n        \"y\": {\n            \n        },\n        \"marks\": [\n            Plot.lineY(d3.cumsum({ \"length\": length }, d3.randomNormal()))\n        ]\n    }\n\n\ndef change_spec(change):\n    new_length = change['new']\n    p.spec = generate_spec(new_length)\n\n\nw = IntSlider(value = 100, min = 0, max = 1000)\np = Obsplot(generate_spec(w.value))\nw.observe(change_spec, names='value')\ndisplay(w)\np"
   },
   {
     "objectID": "usage.html#quarto",
     "href": "usage.html#quarto",
     "title": "Usage",
     "section": "Quarto",
-    "text": "Quarto\nFor plots to be computed and displayed when compiling from an ipynb file, you have to add --execute :\nquarto render test.ipynb --execute --to html"
+    "text": "Quarto\nObsplot plots are compatible with quarto HTML formats: plots will be inserted as SVG or &lt;figure&gt; elements.\nIf your source document is a jupyter notebook (and not a .qmd file), then you have to use the --execute argument to force plot computation and to make them visible in the output:\nquarto render test.ipynb --execute --to html\nUnfortunately, as widgets, Obsplot plots are currently not available in any other quarto formats such as PDF."
+  },
+  {
+    "objectID": "development.html",
+    "href": "development.html",
+    "title": "Development",
+    "section": "",
+    "text": "If you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the repository\nInstall Python dependencies with : poetry install\nInstall JavaScript dependencies with : npm install\n\npyobsplot uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot. JavaScript and CSS source code is in js/."
+  },
+  {
+    "objectID": "development.html#install-fom-source",
+    "href": "development.html#install-fom-source",
+    "title": "Development",
+    "section": "",
+    "text": "If you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the repository\nInstall Python dependencies with : poetry install\nInstall JavaScript dependencies with : npm install\n\npyobsplot uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot. JavaScript and CSS source code is in js/."
+  },
+  {
+    "objectID": "development.html#javascript-modification-and-bundling",
+    "href": "development.html#javascript-modification-and-bundling",
+    "title": "Development",
+    "section": "JavaScript modification and bundling",
+    "text": "JavaScript modification and bundling\nEach time JavaScript or CSS code is modified in the js/ directory, it must be bundled with one of the following scripts:\n# Bundle only once\nnpm run bundle\n# Bundle and watch for code change\nnpm run watch\nThe result is put into src/pyobsplot/static."
+  },
+  {
+    "objectID": "development.html#tests",
+    "href": "development.html#tests",
+    "title": "Development",
+    "section": "Tests",
+    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\nTo run Python tests, use:\nnpm run pytest\nTo run JavaScript tests, use:\nnpm run jstest\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest"
   },
   {
     "objectID": "getting_started.html",
@@ -61,27 +96,6 @@
     "title": "Getting started",
     "section": "Usage",
     "text": "Usage\nTo use pyobsplot, you must import at least its Obsplot and Plot classes with:\n\nfrom pyobsplot import Obsplot, Plot\n\nTo create a plot, you have to call Obsplot and pass a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nObsplot(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n\n\n\nThe syntax is almost identical, except that dictionary keys must be quoted, and JavaScript true must be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nObsplot(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\n\n\n\nFor the simplest cases, you can also create your plot directly by passing a Plot mark method to Obsplot:\n\nObsplot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}))"
-  },
-  {
-    "objectID": "contributing.html",
-    "href": "contributing.html",
-    "title": "Contributing",
-    "section": "",
-    "text": "# Once\nnpm run bundle\n# Watching\nnpm run watch"
-  },
-  {
-    "objectID": "contributing.html#bundling",
-    "href": "contributing.html#bundling",
-    "title": "Contributing",
-    "section": "",
-    "text": "# Once\nnpm run bundle\n# Watching\nnpm run watch"
-  },
-  {
-    "objectID": "contributing.html#tests",
-    "href": "contributing.html#tests",
-    "title": "Contributing",
-    "section": "Tests",
-    "text": "Tests\nRun Python tests:\nnpm run pytest\nRun JavaScript tests:\nnpm run jstest\nFor visual regression tests, first install the requirements:\ncd tests/ui\nnpm install\nStart a test jupyter instance with:\nnpm run uistart\nAnd run tests with:\n# Create / update reference snapshots\nnpm run uitest:update\n# Compare with reference snapshots\nnpm run uitest"
   },
   {
     "objectID": "index.html",

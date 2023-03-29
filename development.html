@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>pyobsplot - Contributing</title>
+<title>pyobsplot - Development</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -76,7 +110,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./contributing.html">Contributing</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./development.html">Development</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -154,8 +188,8 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./contributing.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Contributing</span></a>
+  <a href="./development.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Development</span></a>
   </div>
 </li>
     </ul>
@@ -168,17 +202,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#bundling" id="toc-bundling" class="nav-link active" data-scroll-target="#bundling">Bundling</a></li>
+  <li><a href="#install-fom-source" id="toc-install-fom-source" class="nav-link active" data-scroll-target="#install-fom-source">Install fom source</a></li>
+  <li><a href="#javascript-modification-and-bundling" id="toc-javascript-modification-and-bundling" class="nav-link" data-scroll-target="#javascript-modification-and-bundling">JavaScript modification and bundling</a></li>
   <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests">Tests</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/pyobsplot/edit/main/doc/contributing.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/pyobsplot/edit/main/doc/development.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Contributing</h1>
+<h1 class="title">Development</h1>
 </div>
 
 
@@ -193,29 +228,42 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="bundling" class="level2">
-<h2 class="anchored" data-anchor-id="bundling">Bundling</h2>
-<pre class="shell"><code># Once
-npm run bundle
-# Watching
-npm run watch</code></pre>
+<section id="install-fom-source" class="level2">
+<h2 class="anchored" data-anchor-id="install-fom-source">Install fom source</h2>
+<p>If you want to build <code>pyobsplot</code> from source, you’ll have to follow these steps:</p>
+<ul>
+<li>Install <a href="https://nodejs.org/en">node.js</a></li>
+<li>Install <a href="https://python-poetry.org">poetry</a> dependency management system</li>
+<li>Clone the repository</li>
+<li>Install Python dependencies with : <code>poetry install</code></li>
+<li>Install JavaScript dependencies with : <code>npm install</code></li>
+</ul>
+<p><code>pyobsplot</code> uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot</code>. JavaScript and CSS source code is in <code>js/</code>.</p>
+</section>
+<section id="javascript-modification-and-bundling" class="level2">
+<h2 class="anchored" data-anchor-id="javascript-modification-and-bundling">JavaScript modification and bundling</h2>
+<p>Each time JavaScript or CSS code is modified in the <code>js/</code> directory, it must be bundled with one of the following scripts:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle only once</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run bundle</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and watch for code change</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run watch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The result is put into <code>src/pyobsplot/static</code>.</p>
 </section>
 <section id="tests" class="level2">
 <h2 class="anchored" data-anchor-id="tests">Tests</h2>
-<p>Run Python tests:</p>
-<pre class="shell"><code>npm run pytest</code></pre>
-<p>Run JavaScript tests:</p>
-<pre class="shell"><code>npm run jstest</code></pre>
-<p>For visual regression tests, first install the requirements:</p>
-<pre class="shell"><code>cd tests/ui
-npm install</code></pre>
-<p>Start a test jupyter instance with:</p>
-<pre class="shell"><code>npm run uistart</code></pre>
-<p>And run tests with:</p>
-<pre class="shell"><code># Create / update reference snapshots
-npm run uitest:update
-# Compare with reference snapshots
-npm run uitest</code></pre>
+<p><code>pyobsplot</code> comes with three types of tests : Python test, JavaScript tests and Visual regression tests.</p>
+<p>To run Python tests, use:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run pytest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To run JavaScript tests, use:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run jstest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Visual regression tests allow to test if generated plots stay the same. They use the <a href="https://github.com/jupyterlab/jupyterlab/tree/master/galata">galata</a> framework. To run them you first have to start a specific Jupyter instance with:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uistart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you use visual regression tests for the first time, you have to generate reference images with:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create / update reference images</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest:update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After that, you can test that currently generated images are the same as the reference one with:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare with reference images</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
