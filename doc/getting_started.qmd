@@ -6,7 +6,7 @@ title: "Getting started"
 
 `pyobsplot` can be installed with `pip`:
 
-```shell
+```sh
 pip install pyobsplot
 ```
 
