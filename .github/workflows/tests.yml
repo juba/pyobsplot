@@ -21,6 +21,9 @@ jobs:
           python-version: "3.10"
           cache: "poetry"
 
+      - name: Install dependencies
+        run: poetry install
+
       - name: Run pytest
         run: poetry run pytest
 
