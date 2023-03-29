@@ -1,0 +1,22 @@
+/* css styles */
+
+#quarto-sidebar .sidebar-title {
+    font-size: 1.8rem;
+}
+
+#quarto-sidebar .sidebar-title .sidebar-tools-main {
+    display: flex;
+    margin-top: 0.3em;
+}
+
+#quarto-sidebar .quarto-navigation-tool {
+    font-size: 1.2rem;
+}
+
+#quarto-document-content {
+    margin-top: -1em;
+}
+
+#quarto-document-content pre.sourceCode code {
+    font-size: 0.8rem;
+}
