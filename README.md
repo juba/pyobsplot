@@ -2,12 +2,6 @@
 
 This is a work in progress, not suitable for use right now.
 
-## TODO
-
-- widget tests if possible
-- exception not rethrown in pytest
-- see why output is lost when notebooks are closed -> VSCode fault, see https://github.com/microsoft/vscode-jupyter/issues/4404. See how pydeck handles this.
-
 
 ## Bundling
 
