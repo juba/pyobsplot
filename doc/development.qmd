@@ -1,0 +1,65 @@
+---
+title: "Development"
+---
+
+
+## Install fom source
+
+If you want to build `pyobsplot` from source, you'll have to follow these steps:
+
+- Install [node.js](https://nodejs.org/en)
+- Install [poetry](https://python-poetry.org) dependency management system
+- Clone the repository
+- Install Python dependencies with : `poetry install`
+- Install JavaScript dependencies with : `npm install`
+
+`pyobsplot` uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot`. JavaScript and CSS source code is in `js/`.
+
+## JavaScript modification and bundling
+
+Each time JavaScript or CSS code is modified in the `js/` directory, it must be bundled with one of the following scripts:
+
+```sh
+# Bundle only once
+npm run bundle
+# Bundle and watch for code change
+npm run watch
+```
+
+The result is put into `src/pyobsplot/static`. 
+
+## Tests
+
+`pyobsplot` comes with three types of tests : Python test, JavaScript tests and Visual regression tests.
+
+To run Python tests, use:
+
+```sh
+npm run pytest
+```
+
+To run JavaScript tests, use:
+
+```sh
+npm run jstest
+```
+
+Visual regression tests allow to test if generated plots stay the same. They use the [galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) framework. To run them you first have to start a specific Jupyter instance with:
+
+```sh
+npm run uistart
+```
+
+If you use visual regression tests for the first time, you have to generate reference images with:
+
+```sh
+# Create / update reference images
+npm run uitest:update
+```
+
+After that, you can test that currently generated images are the same as the reference one with:
+
+```sh
+# Compare with reference images
+npm run uitest
+```
