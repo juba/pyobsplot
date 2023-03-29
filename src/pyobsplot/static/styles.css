@@ -1,0 +1,18 @@
+/* js/styles.css */
+.counter-button {
+  background-color: #ea580c;
+}
+.counter-button:hover {
+  background-color: #0000FF;
+}
+.pyobsplot-plot {
+  color: #000;
+  background-color: white;
+}
+.pyobsplot-error {
+  color: #CC0000;
+  padding-left: 1em;
+}
+.pyobsplot-error::before {
+  content: "\26a0  ";
+}
