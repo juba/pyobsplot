@@ -24,7 +24,7 @@ website:
           - gallery_marks.qmd
           - gallery_transforms.qmd
           - gallery_geo.qmd
-      - contributing.qmd
+      - development.qmd
     tools:
       - icon: github
         href: https://github.com/juba/pyobsplot/
