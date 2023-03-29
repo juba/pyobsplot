@@ -51,9 +51,10 @@ Features:
 
 - Syntax as close as possible to the JavaScript one
 - [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and data type conversions
+- Works offline, no iframe or dependency to Observable runtime
 - Caching mechanism of data objects if they are used several times in the same plot
 - Custom JavaScript code can be passed as strings with the `js` method
-- Python `date` and `datetime` objects are automatically converted to JavaScript `Date` objects.
+- Python `date` and `datetime` objects are automatically converted to JavaScript `Date` objects
 - Plots can be defined with a dictionary, a call to a `Plot` mark function, or with `kwargs`. See [alternative syntaxes](usage.qmd#alternative-syntaxes).
 - Works with Jupyter notebooks and Quarto HTML documents
 
