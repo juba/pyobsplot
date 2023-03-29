@@ -47,6 +47,9 @@ npm run uistart
 And run tests with:
 
 ```shell
+# Create / update reference snapshots
+npm run uitest:update
+# Compare with reference snapshots
 npm run uitest
 ```
 
