@@ -1,47 +1,33 @@
-[project]
+[tool.poetry]
 name = "pyobsplot"
 version = "0.1.0"
-description = "Observable Plot integration as widgets in Jupyter notebooks."
-authors = [
-    {name = "Julien Barnier", email = "julien@nozav.org"},
-]
-dependencies = [
-    "pandas>=1.5.3",
-    "polars>=0.16.14",
-    "pyarrow>=11.0.0",
-    "jupyterlab>=3.6.2",
-    "ipywidgets>=8.0.6",
-    "anywidget>=0.2.0",
-]
-requires-python = ">=3.10"
+description = "Observable Plot as Jupyter widget"
+authors = ["Julien Barnier <julien@nozav.org>"]
+license = "MIT"
 readme = "README.md"
-license = {text = "MIT"}
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
 
-[tool.pdm]
-[tool.pdm.dev-dependencies]
-lint = [
-    "ruff>=0.0.258",
-    "black>=23.1.0",
-]
-dev = [
-    "requests>=2.28.2",
-    "altair>=4.2.2",
-    "vega-datasets>=0.9.0",
-    "watchfiles>=0.18.1",
-    "topojson>=1.5",
-]
-test = [
-    "pytest>=7.2.2",
-]
+[tool.poetry.dependencies]
+python = "^3.10"
+anywidget = "^0.2.0"
+pandas = "^1.5.3"
+polars = "^0.16.16"
+pyarrow = "^11.0.0"
+jupyterlab = "^3.6.2"
+ipywidgets = "^8.0.6"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.259"
+black = "^23.1.0"
+pytest = "^7.2.2"
+requests = "^2.28.2"
+watchfiles = "^0.19.0"
+altair = "^4.2.2"
+topojson = "^1.5"
+vega-datasets = "^0.9.0"
 
 [build-system]
-requires = ["pdm-pep517>=1.0"]
-build-backend = "pdm.pep517.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 testpaths = "tests"
