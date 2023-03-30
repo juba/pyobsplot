@@ -66,6 +66,19 @@ def arrow_schema_no_big(pa_schema: Any) -> Any:
         # Float64 to Float32
         elif pa_dtype == pa.float64():
             pa_schema_no_big.append(pa.field(col_name, pa.float32()))
+        # Large strings in dictionaries to string (for polars Categorical)
+        elif pa_dtype == pa.dictionary(pa.uint32(), pa.large_string(), ordered=False):
+            pa_schema_no_big.append(
+                pa.field(
+                    col_name, pa.dictionary(pa.uint32(), pa.string(), ordered=False)
+                )
+            )
+        elif pa_dtype == pa.dictionary(pa.uint32(), pa.large_string(), ordered=True):
+            pa_schema_no_big.append(
+                pa.field(
+                    col_name, pa.dictionary(pa.uint32(), pa.string(), ordered=True)
+                )
+            )
         else:
             pa_schema_no_big.append(pa.field(col_name, pa_dtype))
     return pa.schema(pa_schema_no_big)
