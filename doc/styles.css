@@ -20,3 +20,11 @@
 #quarto-document-content pre.sourceCode code {
     font-size: 0.8rem;
 }
+
+#TOC {
+    margin-top: 2em;
+}
+
+#quarto-sidebar #quarto-search form {
+    background-color: #fff;
+}
