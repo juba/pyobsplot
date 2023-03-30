@@ -17,7 +17,14 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: 1.3.294
+          version: 1.3.296
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install --production=false
 
       - name: Install poetry
         run: pipx install poetry
@@ -27,6 +34,9 @@ jobs:
         with:
           python-version: "3.10"
           cache: "poetry"
+
+      - name: Bundle
+        run: npm run bundle
 
       - name: Install dependencies
         run: poetry install
