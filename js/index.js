@@ -22,7 +22,6 @@ function generate_plot(spec) {
         // Parse specification
         spec["data"] = unserialize_data(spec["data"])
         out = parse_spec(spec["code"], spec["data"]);
-        console.log(out)
         if (spec["code"]["pyobsplot-type"] == "function") {
             if (!(out instanceof Element)) {
                 // If spec root is a JS function and the result is not
