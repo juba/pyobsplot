@@ -48,7 +48,10 @@ class TestSpecParser:
             "value": 0,
         }
         assert parser_pd.data == [df_pd]
-        assert parser_pd.serialize_data()[0] == pd_to_arrow(df_pd)
+        assert parser_pd.serialize_data()[0] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pd_to_arrow(df_pd),
+        }
         parser_pl = SpecParser()
         parsed_pl = parser_pl.parse(df_pl)
         assert parsed_pl == {
@@ -56,7 +59,10 @@ class TestSpecParser:
             "value": 0,
         }
         assert parser_pl.data == [df_pl]
-        assert parser_pl.serialize_data()[0] == pl_to_arrow(df_pl)
+        assert parser_pl.serialize_data()[0] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pl_to_arrow(df_pl),
+        }
 
     def test_parse_series(self):
         df_pd = pd.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})
@@ -70,7 +76,10 @@ class TestSpecParser:
             "value": 0,
         }
         assert parser_pd.data[0].equals(pd.DataFrame(df_pd["x"]))
-        assert parser_pd.serialize_data()[0] == pd_to_arrow(pd.DataFrame(df_pd["x"]))
+        assert parser_pd.serialize_data()[0] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pd_to_arrow(pd.DataFrame(df_pd["x"])),
+        }
         parser_pl = SpecParser()
         parsed_pl = parser_pl.parse(series_pl)
         assert parsed_pl == {
@@ -78,9 +87,10 @@ class TestSpecParser:
             "value": 0,
         }
         assert parser_pl.data[0].frame_equal(pl.DataFrame(df_pl.get_column("x")))
-        assert parser_pl.serialize_data()[0] == pl_to_arrow(
-            pl.DataFrame(df_pl.get_column("x"))
-        )
+        assert parser_pl.serialize_data()[0] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pl_to_arrow(pl.DataFrame(df_pl.get_column("x"))),
+        }
 
     def test_parse_datetime(self):
         assert SpecParser().parse(datetime.date(2023, 1, 1)) == {
@@ -138,8 +148,14 @@ class TestSpecParser:
         assert parsed["z"] == {"pyobsplot-type": "DataFrame-ref", "value": 0}
         assert parsed["u"] == {"pyobsplot-type": "DataFrame-ref", "value": 0}
         assert parsed["w"] == {"pyobsplot-type": "DataFrame-ref", "value": 1}
-        assert parser.serialize_data()[0] == pl_to_arrow(df_pl)
-        assert parser.serialize_data()[1] == pl_to_arrow(df_pl2)
+        assert parser.serialize_data()[0] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pl_to_arrow(df_pl),
+        }
+        assert parser.serialize_data()[1] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pl_to_arrow(df_pl2),
+        }
 
     def test_parse_caching_pandas(self):
         df_pd = pd.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})
@@ -156,8 +172,14 @@ class TestSpecParser:
         assert parsed["z"] == {"pyobsplot-type": "DataFrame-ref", "value": 0}
         assert parsed["u"] == {"pyobsplot-type": "DataFrame-ref", "value": 0}
         assert parsed["w"] == {"pyobsplot-type": "DataFrame-ref", "value": 1}
-        assert parser.serialize_data()[0] == pd_to_arrow(df_pd)
-        assert parser.serialize_data()[1] == pd_to_arrow(df_pd2)
+        assert parser.serialize_data()[0] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pd_to_arrow(df_pd),
+        }
+        assert parser.serialize_data()[1] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pd_to_arrow(df_pd2),
+        }
 
     def test_parse_caching_geojson(self):
         geo = {"type": "FeatureCollection", "x": 1, "y": "foo"}
@@ -195,8 +217,14 @@ class TestSpecParser:
         assert parsed["v"] == {"pyobsplot-type": "DataFrame-ref", "value": 1}
         assert parsed["w"] == {"pyobsplot-type": "DataFrame-ref", "value": 2}
         assert parser.serialize_data()[0] == geo
-        assert parser.serialize_data()[1] == pl_to_arrow(df_pl)
-        assert parser.serialize_data()[2] == pd_to_arrow(df_pd)
+        assert parser.serialize_data()[1] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pl_to_arrow(df_pl),
+        }
+        assert parser.serialize_data()[2] == {
+            "pyobsplot-type": "DataFrame",
+            "value": pd_to_arrow(df_pd),
+        }
 
 
 class TestJsModules:
