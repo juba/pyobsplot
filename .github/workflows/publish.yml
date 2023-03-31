@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
 
-name: Publish documentation
+name: Documentation
 
 jobs:
   build-deploy:

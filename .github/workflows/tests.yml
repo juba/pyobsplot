@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
 
-name: Run tests
+name: Tests
 
 jobs:
   run-pytest:
