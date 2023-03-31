@@ -9,7 +9,7 @@
     "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css",
     "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css --watch",
     "pytest": "poetry run pytest",
-    "jstest": "mocha tests/js",
+    "jstest": "mocha -r jsdom-global/register tests/js",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
     "uitest": "playwright test --config tests/ui/playwright.config.cjs",
     "uitest:debug": "PWDEBUG=1 playwright test --config tests/ui/playwright.config.cjs",
@@ -21,6 +21,8 @@
     "@jupyterlab/galata": "^4.5.2",
     "@playwright/test": "^1.32.1",
     "esbuild": "^0.17.14",
+    "jsdom": "21.1.1",
+    "jsdom-global": "3.0.2",
     "mocha": "^10.2.0"
   },
   "type": "module"
