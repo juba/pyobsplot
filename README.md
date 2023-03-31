@@ -1,7 +1,8 @@
 # pyobsplot
 
 [![PyPI](https://img.shields.io/pypi/v/pyobsplot.svg?color=green)](https://pypi.org/project/pyobsplot)
-
+[![Tests](https://github.com/juba/pyobsplot/actions/workflows/tests.yml/badge.svg)](https://github.com/juba/pyobsplot/actions/workflows/tests.yml)
+[![Documentation](https://github.com/juba/pyobsplot/actions/workflows/publish.yml/badge.svg)](https://github.com/juba/pyobsplot/actions/workflows/publish.yml)
 
 `pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in Jupyter notebooks. Plots are produced as [widgets](https://ipywidgets.readthedocs.io/en/latest/index.html) from Python code with a syntax as close as possible to the JavaScript one.
 
