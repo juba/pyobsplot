@@ -1,5 +1,8 @@
 # pyobsplot
 
+[![PyPI](https://img.shields.io/pypi/v/pyobsplot.svg?color=green)](https://pypi.org/project/pyobsplot)
+
+
 `pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in Jupyter notebooks. Plots are produced as [widgets](https://ipywidgets.readthedocs.io/en/latest/index.html) from Python code with a syntax as close as possible to the JavaScript one.
 
 It allows to do things like :
@@ -30,6 +33,8 @@ Obsplot({
 
 
 ## Installation and usage
+
+> **Warning**: this project is at a very early stage. There will be bugs, and please take a look at the limitations listed below.
 
 `pyobsplot` can be installed with `pip`:
 
