@@ -79,6 +79,7 @@ Obsplot({
 ```
 
 
+
 ## Alternative syntaxes
 
 As we've already seen, the most common syntax for a plot specification is to pass it as a dictionary :

@@ -2,4 +2,216 @@
 title: "Transforms"
 ---
 
-TODO
+[Transforms](https://observablehq.com/@observablehq/plot-transforms?collection=@observablehq/plot) provide methods to manipulate and compute on data while plotting them.
+
+
+[Group transform](https://observablehq.com/@observablehq/plot-group?collection=@observablehq/plot) allows to compute summary values before plotting them. It is often used to make bar charts.
+
+```{python}
+import polars as pl
+from pyobsplot import Obsplot, Plot, d3, Math, js
+
+penguins = pl.read_csv("data/penguins.csv")
+
+Obsplot(
+    {
+        "y": {"grid": True, "percent": True},
+        "marks": [
+            Plot.barY(
+                penguins,
+                Plot.groupZ(
+                    {"y": "proportion-facet"}, {"fill": "sex", "fx": "species"}
+                ),
+            ),
+            Plot.ruleY([0, 1]),
+        ],
+    }
+)
+```
+
+The [Dodge transform](https://observablehq.com/@observablehq/plot-dodge?collection=@observablehq/plot) allows to pack marks without overlapping. The following chart shows data about IPO offerings in the US.
+
+```{python}
+from datetime import datetime
+
+ipos = pl.read_csv("data/ipos.csv", try_parse_dates=True).filter(
+    pl.col("date") > datetime(1991, 1, 1)
+)
+
+
+Obsplot(
+    {
+        "insetRight": 10,
+        "height": 600,
+        "width": 600,
+        "marks": [
+            Plot.dot(
+                ipos, Plot.dodgeY({"x": "date", "r": "rMVOP", "fill": "currentColor"})
+            ),
+            Plot.text(
+                ipos,
+                Plot.dodgeY(
+                    {
+                        "filter": js("(d) => d.rMVOP > 5e3"),
+                        "x": "date",
+                        "r": "rMVOP",
+                        "text": js("d => (d.rMVOP / 1e3).toFixed()"),
+                        "fill": "white",
+                        "fontWeight": "bold",
+                    }
+                ),
+            ),
+        ],
+    }
+)
+```
+
+The [Hexbin transform](https://observablehq.com/@observablehq/plot-hexbin?collection=@observablehq/plot) aggregates two dimensional points into hexagonal bins.
+
+```{python}
+Obsplot(
+    {
+        "inset": 10,
+        "color": {"scheme": "ylgnbu", "legend": True, "label": "Count"},
+        "marks": [
+            Plot.hexagon(
+                penguins,
+                Plot.hexbin(
+                    {"r": "count", "fill": "count"},
+                    {
+                        "x": "culmen_length_mm",
+                        "y": "flipper_length_mm",
+                        "binWidth": 50,
+                    },
+                ),
+            ),
+            Plot.text(
+                penguins,
+                Plot.hexbin(
+                    {"text": "count"},
+                    {
+                        "x": "culmen_length_mm",
+                        "y": "flipper_length_mm",
+                        "fill": "black",
+                        "stroke": "white",
+                        "binWidth": 50,
+                    },
+                ),
+            ),
+        ],
+    }
+)
+```
+
+
+[Map transform](https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot) family can be used to normalize values.
+
+```{python}
+
+stocks = pl.read_csv("data/stocks.csv", try_parse_dates=True)
+
+Obsplot(
+    {
+        "marginRight": 40,
+        "y": {
+            "type": "log",
+            "grid": True,
+            "label": "↑ Change in price (%)",
+            "tickFormat": js('(f => x => f((x - 1) * 100))(d3.format("+d"))'),
+        },
+        "marks": [
+            Plot.ruleY([1]),
+            Plot.line(
+                stocks, Plot.normalizeY({"x": "Date", "y": "Close", "stroke": "Symbol"})
+            ),
+            Plot.text(
+                stocks,
+                Plot.selectLast(
+                    Plot.normalizeY(
+                        {
+                            "x": "Date",
+                            "y": "Close",
+                            "z": "Symbol",
+                            "text": "Symbol",
+                            "textAnchor": "start",
+                            "dx": 3,
+                        }
+                    )
+                ),
+            ),
+        ],
+    }
+)
+```
+
+Several group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the [Map transform](https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot) notebook.
+
+```{python}
+# Load and prepare data
+stateage = (
+    pl.read_csv("data/us-population-state-age.csv")
+    .melt(id_vars="name", variable_name="age", value_name="population")
+    .rename({"name": "state"})
+)
+# Compute list of age groups
+ages = stateage.get_column("age").unique(maintain_order=True).to_list()
+# Compute list of states sorted by the proportion of age ≥80
+states = (
+    stateage.with_columns(
+        (pl.col("population") / pl.col("population").sum().over("state")).alias(
+            "percent"
+        )
+    )
+    .filter(pl.col("age") == "≥80")
+    .sort(pl.col("percent"), descending=True)
+    .get_column("state")
+    .to_list()
+)
+
+# Plot.normalizeX default arguments
+xy = {"basis": "sum", "z": "state", "x": "population", "y": "state"}
+
+# Plot specification
+Obsplot(
+    {
+        "height": 660,
+        "grid": True,
+        "x": {"axis": "top", "label": "Percent (%) →", "transform": js("d => d * 100")},
+        "y": {
+            "domain": states,
+            "axis": None,
+        },
+        "color": {
+            "scheme": "spectral",
+            "domain": ages,
+            "legend": True,
+            "label": "Age group",
+        },
+        "marks": [
+            Plot.ruleX([0]),
+            Plot.ruleY(
+                stateage,
+                Plot.groupY({"x1": "min", "x2": "max"}, Plot.normalizeX(xy)),
+            ),
+            Plot.dot(
+                stateage,
+                Plot.normalizeX({**xy, "fill": "age"}),
+            ),
+            Plot.text(
+                stateage,
+                Plot.selectMinX(
+                    Plot.normalizeX(
+                        {
+                            **xy,
+                            "textAnchor": "end",
+                            "dx": -6,
+                            "text": "state",
+                        }
+                    )
+                ),
+            ),
+        ],
+    }
+)
+```
+

@@ -1,5 +1,145 @@
 ---
-title: "Geo mark and mapping"
+title: "Mapping and spatial data"
 ---
 
-TODO
+```{python}
+import polars as pl
+from pyobsplot import Obsplot, Plot, js
+
+```
+
+The [Geo mark](https://observablehq.com/@observablehq/plot-geo?collection=@observablehq/plot) allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.
+
+This allows to create choropleth maps such as the following:
+
+```{python}
+import json
+
+# Load US counties from GeoJson
+# Source : https://eric.clst.org/tech/usgeojson/
+with open("data/us_counties.geojson", "r", encoding="windows-1252") as f:
+    counties = json.load(f)
+
+# Merge unemployment values as GeoJson features property
+unemployment = pl.read_csv("data/us-county-unemployment.csv")
+rates = {
+    id: unemp
+    for id, unemp in zip(unemployment.get_column("id"), unemployment.get_column("rate"))
+}
+for county in counties["features"]:
+    key = int(county["properties"]["GEO_ID"][-5:])
+    if key in rates:
+        county["properties"]["unemployment"] = rates[key]
+
+# Map
+Obsplot(
+    {
+        "marks": [Plot.geo(counties, {"fill": js("(d) => d.properties.unemployment")})],
+        # "marks": [Plot.geo(counties, {"stroke": "red"})],
+        "projection": "albers-usa",
+        "color": {
+            "type": "quantile",
+            "n": 8,
+            "scheme": "blues",
+            "label": "Unemployment (%)",
+            "legend": True,
+        },
+    }
+)
+```
+
+
+Geographic data in Observable notebooks are often stored in TopoJSON files. The [topojson package](https://mattijn.github.io/topojson/) can be useful for these kind of data.
+
+```{python}
+import topojson as tp
+
+# Import TopoJSON data
+with open("data/us-counties-10m.json", "r") as f:
+    counties = json.load(f)
+
+# Extract "nation" objects and convert to GeoJSON
+nation = tp.Topology(counties, object_name="nation").to_geojson(object_name="nation")
+nation = json.loads(nation)
+# Extract "states" objects and convert to GeoJSON
+states = tp.Topology(counties, object_name="states").to_geojson(object_name="states")
+states = json.loads(states)
+
+# Plot map
+Obsplot(
+    {
+        "marks": [
+            Plot.geo(states, {"strokeOpacity": 0.3}),
+            Plot.geo(nation),
+        ],
+        "projection": "albers",
+    }
+)
+```
+
+Of course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the [Mapping notebook](https://observablehq.com/@observablehq/plot-mapping?collection=@observablehq/plot).
+
+```{python}
+walmarts = pl.read_csv("data/walmarts.tsv", sep="\t")
+
+Obsplot(
+    {
+        "marks": [
+            Plot.density(
+                walmarts,
+                {"x": "longitude", "y": "latitude", "bandwidth": 12, "fill": "density"},
+            ),
+            Plot.dot(
+                walmarts,
+                {"x": "longitude", "y": "latitude", "r": 1, "fill": "currentColor"},
+            ),
+            Plot.geo(states, {"strokeOpacity": 0.3, "fill": None}),
+            Plot.geo(nation),
+        ],
+        "projection": "albers",
+        "color": {"scheme": "blues"},
+    }
+)
+```
+
+The [Raster mark](https://observablehq.com/@observablehq/plot-raster?collection=@observablehq/plot) creates an image from spatial data.
+
+Plot allows to do different type of spatial interpolations, such as *nearest*, which draws voronoi cells around values:
+
+```{python}
+ca55 = pl.read_csv("data/ca55-south.csv")
+
+
+def flare_map(interpolation):
+    return Obsplot(
+        {
+            "x": {"axis": None},
+            "y": {"axis": None},
+            "inset": 10,
+            "marginBottom": 2,
+            "height": 500,
+            "color": {"type": "diverging"},
+            "marks": [
+                Plot.raster(
+                    ca55,
+                    {
+                        "x": "LONGITUDE",
+                        "y": "LATITUDE",
+                        "fill": "MAG_IGRF90",
+                        "interpolate": interpolation,
+                    },
+                ),
+                Plot.frame(),
+            ],
+        }
+    )
+
+
+flare_map("nearest")
+```
+
+Or the more recent random walk interpolation:
+
+```{python}
+flare_map("random-walk")
+```
