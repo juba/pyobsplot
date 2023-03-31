@@ -4,6 +4,10 @@ import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import * as arrow from "apache-arrow"
 
+// Make Plot and d3 available in js()
+window.d3 = d3
+window.Plot = Plot
+
 export function unserialize_data(data) {
     let result = Array()
     for (let d of data) {
