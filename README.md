@@ -51,7 +51,7 @@ For usage instructions, see the [documentation website](https://juba.github.io/p
 
 ## Features and limitations
 
-Features:
+**Features:**
 
 - Syntax as close as possible to the JavaScript one
 - [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and data type conversions
@@ -62,7 +62,7 @@ Features:
 - Plots can be defined with a dictionary, a call to a `Plot` mark function, or with `kwargs`. See [alternative syntaxes](usage.qmd#alternative-syntaxes).
 - Works with Jupyter notebooks and Quarto HTML documents
 
-Limitations:
+**Limitations:**
 
 - When using notebooks inside VSCode, the cells output states are not saved between sessions. So when a notebook is closed and reopened, plots have to be recomputed to be displayed. This is currently a [VSCode limitation](https://github.com/juba/pyobsplot/issues/2).
 - Doesn't work in Quarto in formats other than HTML.
