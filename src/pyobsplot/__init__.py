@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .widget import Obsplot  # noqa:F401
 from .parsing import Plot, d3, Math, js  # noqa:F401
