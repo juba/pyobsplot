@@ -37,7 +37,7 @@ Obsplot(
 )
 ```
 
-It is possible to directly call JavaScript methods from the `Plot`, `d3` and `Math` modules. You must first import the corresponding class.
+It is possible to  replace JavaScript methods from the `Plot`, `d3` and `Math` modules with Python methods, but you must first import the corresponding classes.
 
 ```{python}
 from pyobsplot import Obsplot, Plot, d3
@@ -52,7 +52,7 @@ Obsplot({
 })
 ```
 
-If your specification includes JavaScript code such as anonymous functions, you can pass it as a string by using the `js` method (after importing it):
+If your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the `js` method (after importing it):
 
 ```{python}
 from pyobsplot import Obsplot, Plot, d3, js
