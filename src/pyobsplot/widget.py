@@ -13,7 +13,7 @@ from .parsing import SpecParser
 bundler_output_dir = pathlib.Path(__file__).parent / "static"
 
 
-class Obsplot(anywidget.AnyWidget):
+class ObsplotWidget(anywidget.AnyWidget):
     """Obsplot widget class.
 
     It inherits from anywidget.Anywidget.

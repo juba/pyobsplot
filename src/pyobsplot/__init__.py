@@ -10,7 +10,7 @@ except PackageNotFoundError:
     __version__ = "uninstalled"
 
 
-from .widget import Obsplot  # noqa:F401
+from .obsplot import Obsplot  # noqa:F401
 from .parsing import Plot, d3, Math, js  # noqa:F401
 
 __all__ = ["Obsplot", "Plot", "d3", "Math", "js", "__version__"]
