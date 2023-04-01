@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@observablehq/plot": "^0.6.4",
+    "@observablehq/plot": "^0.6.5",
     "anywidget": "^0.2.0",
     "apache-arrow": "^11.0.0",
     "d3": "^7.8.2"
