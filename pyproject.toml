@@ -2,9 +2,7 @@
 name = "pyobsplot"
 version = "0.1.3.9000"
 description = "Observable Plot as Jupyter widget"
-authors = [
-    { name = "Julien Barnier", email = "julien@nozav.org" }
-]
+authors = ["Julien Barnier <julien@nozav.org>"]
 license = "MIT"
 readme = "README.md"
 include = ["src/pyobsplot/static/*"]
