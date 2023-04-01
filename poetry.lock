@@ -1129,14 +1129,14 @@ files = [
 
 [[package]]
 name = "jupyterlab-server"
-version = "2.21.0"
+version = "2.22.0"
 description = "A set of server components for JupyterLab and JupyterLab like applications."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "jupyterlab_server-2.21.0-py3-none-any.whl", hash = "sha256:ff1e7a81deb2dcb433215d469000988590fd5a5733574aa2698d643a6c9b3ace"},
-    {file = "jupyterlab_server-2.21.0.tar.gz", hash = "sha256:b4f5b48eaae1be83e2fd6fb77ac49d9b639be4ca4bd2e05b5368d29632a93725"},
+    {file = "jupyterlab_server-2.22.0-py3-none-any.whl", hash = "sha256:f4a7263ada89958854631a64bed45285caeac482925233159709f643c5871490"},
+    {file = "jupyterlab_server-2.22.0.tar.gz", hash = "sha256:0f9f6752b0c534a7b22a6542b984fa6a2c18ab4d4e0a4c79f191138506a9a75f"},
 ]
 
 [package.dependencies]
@@ -1266,14 +1266,14 @@ files = [
 
 [[package]]
 name = "nbclassic"
-version = "0.5.3"
+version = "0.5.4"
 description = "Jupyter Notebook as a Jupyter Server extension."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "nbclassic-0.5.3-py3-none-any.whl", hash = "sha256:e849277872d9ffd8fe4b39a8038d01ba82d6a1def9ce11b1b3c26c9546ed5131"},
-    {file = "nbclassic-0.5.3.tar.gz", hash = "sha256:889772a7ba524eb781d2901f396540bcad41151e1f7e043f12ebc14a6540d342"},
+    {file = "nbclassic-0.5.4-py3-none-any.whl", hash = "sha256:df78e4ba143f35084ad060deec16cb1d4839dde47bfdbc4232beb7071a6d70ea"},
+    {file = "nbclassic-0.5.4.tar.gz", hash = "sha256:312b3f7d7ff2e6c261d51799bb12e6493498ab47d3469d3a01015d5533fd4d2b"},
 ]
 
 [package.dependencies]
@@ -1647,18 +1647,15 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "polars"
-version = "0.16.16"
+version = "0.16.17"
 description = "Blazingly fast DataFrame library"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "polars-0.16.16-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:44a65bb78711a8388bd7bf2cc97a88a37d8631c062f6c8197072798ec56c8621"},
-    {file = "polars-0.16.16-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:1d0a5a23aaa354310e99616a1605cebcf927e3fba84a3be0f994e0636d93e19d"},
-    {file = "polars-0.16.16-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7a0720c43c17198ea0ee6ae32c78ec88e5742c258c69cdf8afdeb3a06ee02019"},
-    {file = "polars-0.16.16-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:67537bbfb290a50848d0d012228d819c11d5ec8303542e90542446d494363abc"},
-    {file = "polars-0.16.16-cp37-abi3-win_amd64.whl", hash = "sha256:d526a33b54227b60adbd4dd5c9490939c0959bc483c08a4e8604e58366af756c"},
-    {file = "polars-0.16.16.tar.gz", hash = "sha256:2f1fbc70bd8e19c69caa1fd51f164812d40e2be3386d7d25f9d8c79d033fe98a"},
+    {file = "polars-0.16.17-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:16ea112c78c35ed7227b8d0269f632eb713e02e418f501ba6cf2b92bb4a2b501"},
+    {file = "polars-0.16.17-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8b0bacff0aba383caf3520f59557a04f093dd4c67678a6d0d2589050e2818834"},
+    {file = "polars-0.16.17.tar.gz", hash = "sha256:6741bd9bdc4c28b629160c008426bc4053e1f60e60067f347e276bc1cf42dec3"},
 ]
 
 [package.dependencies]
