@@ -10,7 +10,7 @@
     "d3": "^7.8.2"
   },
   "scripts": {
-    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget.js js/styles.css && esbuild --platform=node --bundle --packages=external --outdir=src/pyobsplot/static js/jsdom.js",
+    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget.js js/styles.css && esbuild --platform=node --bundle --packages=external --format=esm --outdir=src/pyobsplot/static/ js/jsdom.js",
     "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget.js js/styles.css --watch",
     "pytest": "poetry run pytest",
     "jstest": "mocha -r jsdom-global/register tests/js",
