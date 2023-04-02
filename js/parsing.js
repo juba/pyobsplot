@@ -3,8 +3,6 @@
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import * as arrow from "apache-arrow"
-import { toByteArray } from 'base64-js';
-
 
 export function unserialize_data(data, renderer) {
     let result = Array()
@@ -12,7 +10,7 @@ export function unserialize_data(data, renderer) {
         if (d["pyobsplot-type"] == "DataFrame") {
             let value = d["value"]
             if (renderer == "jsdom") {
-                value = toByteArray(value).buffer
+                value = Buffer.from(value, 'base64')
             }
             result.push(arrow.tableFromIPC(value))
         } else {
