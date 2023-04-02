@@ -6,6 +6,7 @@ from IPython.display import display
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
+from .utils import default_renderer, available_renderers
 
 
 class Obsplot:
@@ -17,7 +18,7 @@ class Obsplot:
     """
 
     # Default renderer
-    renderer = "widget"
+    renderer = default_renderer
 
     @staticmethod
     def set_renderer(renderer: str) -> None:
@@ -27,8 +28,10 @@ class Obsplot:
             renderer (str): renderer name.
 
         """
-        if renderer not in ["widget", "jsdom"]:
-            raise ValueError("Incorrect renderer.")
+        if renderer not in available_renderers:
+            raise ValueError(
+                f"Incorrect renderer. Must be one of {available_renderers}."
+            )
         Obsplot.renderer = renderer
 
     def __new__(cls, *args, **kwargs) -> None:
