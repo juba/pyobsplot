@@ -1,4 +1,5 @@
-/* Main widget */
+/* Widget rendering */
+
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import { generate_plot } from "./plot"
