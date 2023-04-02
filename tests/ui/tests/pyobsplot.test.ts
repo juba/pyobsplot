@@ -37,33 +37,12 @@ test.describe('Visual Regression', () => {
         await page.filebrowser.openDirectory('/');
     });
 
-    test('syntax.ipynb', async ({ page }) => {
-        await test_notebook(page, "syntax");
-    });
+    let notebooks = ["syntax", "dates", "errors", "complex_plots", "data_sources", "transforms", "geo"];
 
-    test('dates.ipynb', async ({ page }) => {
-        await test_notebook(page, "dates");
-    });
-
-    test('errors.ipynb', async ({ page }) => {
-        await test_notebook(page, "errors");
-    });
-
-    test('complex_plots.ipynb', async ({ page }) => {
-        await test_notebook(page, "complex_plots");
-    });
-
-    test('data_sources.ipynb', async ({ page }) => {
-        await test_notebook(page, "data_sources");
-    });
-
-    test('transforms.ipynb', async ({ page }) => {
-        await test_notebook(page, "transforms");
-    });
-
-    test('geo.ipynb', async ({ page }) => {
-        await test_notebook(page, "geo");
-    });
-
+    for (let notebook of notebooks) {
+        test(`${notebook}.ipynb`, async ({ page }) => {
+            await test_notebook(page, notebook);
+        });
+    }
 
 });
