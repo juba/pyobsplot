@@ -24,25 +24,13 @@ class ObsplotWidget(anywidget.AnyWidget):
     Python kwargs.
     """
 
-    _esm = bundler_output_dir / "index.js"
+    _esm = bundler_output_dir / "widget.js"
     _css = bundler_output_dir / "styles.css"
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, spec):
         """Obsplot widget constructor."""
-
-        # Only one dict arg -> spec passed as dict
-        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
-            spec = args[0]
-        # Only one kwarg called spec
-        elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
-            spec = kwargs["spec"]
-        # Only kwargs -> spec is kwargs
-        elif len(args) == 0 and len(kwargs) > 0:
-            spec = kwargs
-        else:
-            raise ValueError("Incorrect ObsPlot arguments")
 
         # Init widget
         super().__init__(spec=spec)
@@ -50,7 +38,7 @@ class ObsplotWidget(anywidget.AnyWidget):
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
         spec = proposal["value"]
-        parser = SpecParser()
+        parser = SpecParser("widget")
         code = parser.parse(spec)
         spec = {"data": parser.serialize_data(), "code": code}
         return spec

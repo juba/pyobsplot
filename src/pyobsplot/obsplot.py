@@ -2,9 +2,10 @@
 Obsplot main class.
 """
 
+from IPython.display import display
+
 from .widget import ObsplotWidget
-from IPython.display import HTML
-import subprocess
+from .jsdom import ObsplotJsdom
 
 
 class Obsplot:
@@ -17,9 +18,21 @@ class Obsplot:
         Obsplot.renderer = renderer
 
     def __new__(cls, *args, **kwargs):
+        # Only one dict arg -> spec passed as dict
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+            spec = args[0]
+        # Only one kwarg called spec
+        elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
+            spec = kwargs["spec"]
+        # Only kwargs -> spec is kwargs
+        elif len(args) == 0 and len(kwargs) > 0:
+            spec = kwargs
+        else:
+            raise ValueError("Incorrect ObsPlot arguments")
+        # Plot spec with the configured renderer
         if Obsplot.renderer == "widget":
-            return ObsplotWidget(*args, **kwargs)
+            return ObsplotWidget(spec)
         elif Obsplot.renderer == "jsdom":
-            raise NotImplementedError("Not implemented.")
+            display(ObsplotJsdom(spec).plot())
         else:
             raise ValueError("Incorrect renderer.")

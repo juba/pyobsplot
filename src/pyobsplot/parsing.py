@@ -3,6 +3,7 @@ Plot specification parsing.
 """
 
 import datetime
+import base64
 import pandas as pd
 import polars as pl
 
@@ -16,10 +17,14 @@ class SpecParser:
     Class implementing plot specification parsing.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, renderer: str = "widget") -> None:
         """
         SpecParser constructor.
+
+        Args:
+            renderer(str): type of renderer ("widget" or "jsdom").
         """
+        self.renderer = renderer
         self.data = []
 
     def cache_index(self, data: Any) -> Optional[int]:
@@ -118,10 +123,16 @@ class SpecParser:
         for d in self.data:
             # If polars DataFrame, serialize to Arrow IPC
             if isinstance(d, pl.DataFrame):
-                result.append({"pyobsplot-type": "DataFrame", "value": pl_to_arrow(d)})
+                value = pl_to_arrow(d)
+                if self.renderer == "jsdom":
+                    value = base64.standard_b64encode(value).decode("ascii")
+                result.append({"pyobsplot-type": "DataFrame", "value": value})
             # If pandas DataFrame, serialize to Arrow IPC
             elif isinstance(d, pd.DataFrame):
-                result.append({"pyobsplot-type": "DataFrame", "value": pd_to_arrow(d)})
+                value = pd_to_arrow(d)
+                if self.renderer == "jsdom":
+                    value = base64.standard_b64encode(value).decode("ascii")
+                result.append({"pyobsplot-type": "DataFrame", "value": value})
             # Else, keep as is
             else:
                 result.append(d)

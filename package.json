@@ -3,10 +3,11 @@
     "@observablehq/plot": "^0.6.5",
     "anywidget": "^0.2.0",
     "apache-arrow": "^11.0.0",
+    "base64-js": "^1.5.1",
     "d3": "^7.8.2"
   },
   "scripts": {
-    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css",
+    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget.js js/styles.css",
     "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/index.js js/styles.css --watch",
     "pytest": "poetry run pytest",
     "jstest": "mocha -r jsdom-global/register tests/js",

@@ -3,16 +3,18 @@
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import * as arrow from "apache-arrow"
+import { toByteArray } from 'base64-js';
 
-// Make Plot and d3 available in js()
-window.d3 = d3
-window.Plot = Plot
 
-export function unserialize_data(data) {
+export function unserialize_data(data, renderer) {
     let result = Array()
     for (let d of data) {
         if (d["pyobsplot-type"] == "DataFrame") {
-            result.push(arrow.tableFromIPC(d["value"]))
+            let value = d["value"]
+            if (renderer == "jsdom") {
+                value = toByteArray(value).buffer
+            }
+            result.push(arrow.tableFromIPC(value))
         } else {
             result.push(d)
         }
@@ -38,10 +40,6 @@ export function parse_spec(code, data) {
     // If not dict-like, returns as is
     if (Object.entries(code).length == 0) {
         return code
-    }
-    // If DataFrame type, deserialize Arrow IPC
-    if (code["pyobsplot-type"] == "DataFrame") {
-        return arrow.tableFromIPC(code["value"])
     }
     // If DataFrame-ref type, deserialize Arrow IPC from cache
     if (code["pyobsplot-type"] == "DataFrame-ref") {
