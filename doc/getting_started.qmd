@@ -2,6 +2,8 @@
 title: "Getting started"
 ---
 
+{{< include _setup.qmd >}}
+
 ## Installation
 
 `pyobsplot` can be installed with `pip`:

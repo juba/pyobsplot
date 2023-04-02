@@ -2,6 +2,8 @@
 title: "Marks"
 ---
 
+{{< include _setup.qmd >}}
+
 [Marks](https://observablehq.com/@observablehq/plot-marks?collection=@observablehq/plot) are the building blocks of Plot charts. 
 
 The following chart, taken from the [Cell Mark notebook](https://observablehq.com/@observablehq/plot-cell?collection=@observablehq/plot), shows the rating of every episode of *The Simpsons*.

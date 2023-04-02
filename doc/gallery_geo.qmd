@@ -2,6 +2,8 @@
 title: "Mapping and spatial data"
 ---
 
+{{< include _setup.qmd >}}
+
 ```{python}
 import polars as pl
 from pyobsplot import Obsplot, Plot, js

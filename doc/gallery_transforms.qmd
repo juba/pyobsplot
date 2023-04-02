@@ -2,6 +2,8 @@
 title: "Transforms"
 ---
 
+{{< include _setup.qmd >}}
+
 [Transforms](https://observablehq.com/@observablehq/plot-transforms?collection=@observablehq/plot) provide methods to manipulate and compute on data while plotting them.
 
 
@@ -185,7 +187,6 @@ Obsplot(
             "scheme": "spectral",
             "domain": ages,
             "legend": True,
-            "label": "Age group",
         },
         "marks": [
             Plot.ruleX([0]),
