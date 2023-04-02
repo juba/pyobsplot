@@ -6,7 +6,7 @@ Obsplot widget handling.
 import anywidget
 import traitlets
 
-from .obsplot import bundler_output_dir
+from .utils import bundler_output_dir
 from .parsing import SpecParser
 
 
