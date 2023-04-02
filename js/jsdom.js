@@ -1,6 +1,11 @@
+/* jsdom rendering */
+
+import * as Plot from "@observablehq/plot"
+import * as d3 from "d3"
 import { JSDOM } from "jsdom"
 import { generate_plot } from "./plot.js"
 
+// Create and initialize jsdom
 const jsdom = new JSDOM("")
 global.window = jsdom.window
 global.document = jsdom.window.document
@@ -10,6 +15,9 @@ global.Node = jsdom.window.Node
 global.NodeList = jsdom.window.NodeList
 global.HTMLCollection = jsdom.window.HTMLCollection
 
+// Make Plot and d3 available in js()
+global.d3 = d3
+global.Plot = Plot
 
 function plot(spec) {
 
