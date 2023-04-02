@@ -24,8 +24,9 @@ export function generate_plot(spec, renderer) {
     } catch (error) {
         // If an error occured, display it as output
         out = document.createElement("pre")
-        out.classList.add("pyobsplot-error")
-        out.textContent = error
+        out.style.color = "#CC0000"
+        out.style.padding = "1em 1.5em"
+        out.textContent = "⚠ " + error
     }
     return out
 }

@@ -28,12 +28,3 @@
 #quarto-sidebar #quarto-search form {
     background-color: #fff;
 }
-
-.pyobsplot-error {
-    color: #CC0000;
-    padding: .5em 1em;
-}
-
-.pyobsplot-error::before {
-    content: "⚠ ";
-}

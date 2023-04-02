@@ -2,11 +2,3 @@
     color: #000;
     background-color: white;
 }
-
-.pyobsplot-error {
-    color: #CC0000 !important;
-}
-
-.pyobsplot-error::before {
-    content: "⚠ ";
-}
