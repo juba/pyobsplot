@@ -4,8 +4,7 @@
 }
 
 .pyobsplot-error {
-    color: #CC0000;
-    padding: .5em 1em;
+    color: #CC0000 !important;
 }
 
 .pyobsplot-error::before {
