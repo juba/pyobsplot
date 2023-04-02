@@ -516,6 +516,10 @@ p {
         background-color: var(--code-block-bg);
         border-radius: 6px;
         padding: .8em 1.2em;
+
+        code {
+            overflow: auto;
+        }
     }
 
     pre.sourceCode {
@@ -527,6 +531,7 @@ p {
 
         code {
             color: inherit;
+            overflow: auto;
         }
     }
 
