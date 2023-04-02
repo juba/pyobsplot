@@ -3,14 +3,11 @@ Obsplot widget handling.
 """
 
 
-import pathlib
 import anywidget
 import traitlets
 
+from .obsplot import bundler_output_dir
 from .parsing import SpecParser
-
-# Output directory of esbuild
-bundler_output_dir = pathlib.Path(__file__).parent / "static"
 
 
 class ObsplotWidget(anywidget.AnyWidget):

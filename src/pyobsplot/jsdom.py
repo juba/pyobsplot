@@ -2,11 +2,11 @@
 Obsplot jsdom handling.
 """
 
-import pathlib
 import subprocess
 import json
 from IPython.display import HTML, SVG
 
+from .obsplot import bundler_output_dir
 from .parsing import SpecParser
 
 
@@ -27,7 +27,7 @@ class ObsplotJsdom:
         self.spec = spec
 
     def plot(self):
-        path = pathlib.Path(__file__).parent / ".." / ".." / "js" / "jsdom.js"
+        path = bundler_output_dir / "jsdom.js"
         p = subprocess.run(
             ["node", path],
             input=json.dumps(self.spec),

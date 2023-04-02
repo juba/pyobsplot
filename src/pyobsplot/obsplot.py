@@ -2,10 +2,14 @@
 Obsplot main class.
 """
 
+import pathlib
 from IPython.display import display
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
+
+# Output directory of esbuild
+bundler_output_dir = pathlib.Path(__file__).parent / "static"
 
 
 class Obsplot:
