@@ -6,6 +6,8 @@ import subprocess
 import json
 from IPython.display import HTML, SVG
 
+from typing import Any, Optional
+
 from .obsplot import bundler_output_dir
 from .parsing import SpecParser
 
@@ -20,14 +22,28 @@ class ObsplotJsdom:
     Python kwargs.
     """
 
-    def __init__(self, spec):
+    def __init__(self, spec: Any) -> None:
+        """
+        Constructor. Parse the spec given as argument.
+        """
+        # Create parser
         parser = SpecParser("jsdom")
+        # Parse spec code
         code = parser.parse(spec)
+        # Create spec object
         spec = {"data": parser.serialize_data(), "code": code}
         self.spec = spec
 
-    def plot(self):
+    def plot(self) -> Optional[HTML | SVG]:
+        """Generates the plot by calling node script.
+
+        Returns:
+            Optional[HTML | SVG]: either an HTML or SVG IPython.display object.
+        """
+
+        # Path to script
         path = bundler_output_dir / "jsdom.js"
+        # Run node script with JSON spec as input
         p = subprocess.run(
             ["node", path],
             input=json.dumps(self.spec),
@@ -36,9 +52,12 @@ class ObsplotJsdom:
         )
         if p.returncode != 0:
             raise RuntimeError("jsdom script error: " + p.stderr)
+        # Get script output
         out = p.stdout
+        # If output is svg, returns IPython.display.SVG
         if out[0:4] == "<svg":
             return SVG(out)
+        # Else, returns IPython.display.HTML
         else:
             out = "<div class='pyobsplot-plot'>" + p.stdout + "</div>"
             return HTML(out)
