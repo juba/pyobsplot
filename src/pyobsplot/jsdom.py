@@ -4,6 +4,7 @@ Obsplot jsdom handling.
 
 import subprocess
 import json
+import shutil
 from IPython.display import HTML, SVG
 
 from typing import Any, Optional
@@ -42,10 +43,14 @@ class ObsplotJsdom:
         """
 
         # Path to script
-        path = bundler_output_dir / "jsdom.js"
+        script_path = bundler_output_dir / "jsdom.js"
+        # Check for node executable
+        node = shutil.which("node")
+        if not node:
+            raise RuntimeError("node executable has not been found.")
         # Run node script with JSON spec as input
         p = subprocess.run(
-            ["node", path],
+            [node, script_path],
             input=json.dumps(self.spec),
             capture_output=True,
             encoding="Utf8",
