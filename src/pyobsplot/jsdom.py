@@ -9,7 +9,7 @@ from IPython.display import HTML, SVG
 
 from typing import Any, Optional
 
-from .utils import bundler_output_dir
+from .utils import exec_path
 from .parsing import SpecParser
 
 
@@ -42,15 +42,14 @@ class ObsplotJsdom:
             Optional[HTML | SVG]: either an HTML or SVG IPython.display object.
         """
 
-        # Path to script
-        script_path = bundler_output_dir / "jsdom.js"
         # Check for node executable
         node = shutil.which("node")
         if not node:
             raise RuntimeError("node executable has not been found.")
+        jsdom_path = exec_path("pyobsplot-jsdom")
         # Run node script with JSON spec as input
         p = subprocess.run(
-            [node, script_path],
+            jsdom_path,
             input=json.dumps(self.spec),
             capture_output=True,
             encoding="Utf8",

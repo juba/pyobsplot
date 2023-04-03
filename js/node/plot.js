@@ -30,3 +30,5 @@ export function generate_plot(spec, renderer) {
     }
     return out
 }
+
+export { parse_spec, get_fun } from "./parsing.js"

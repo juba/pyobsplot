@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* jsdom rendering */
 
 import * as Plot from "@observablehq/plot"

@@ -1,0 +1,28 @@
+{
+  "name": "pyobsplot",
+  "version": "0.2.0",
+  "description": "JavaScript component for pyobsplot Python package",
+  "main": "plot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julien Barnier",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juba/pyobsplot.git"
+  },
+  "homepage": "https://juba.github.io/pyobsplot",
+  "dependencies": {
+    "@observablehq/plot": "^0.6.5",
+    "apache-arrow": "^11.0.0",
+    "canvas": "^2.11.2",
+    "d3": "^7.8.4",
+    "jsdom": "^21.1.1",
+    "jsdom-global": "^3.0.2"
+  },
+  "bin": {
+    "pyobsplot-jsdom": "jsdom.js"
+  },
+  "type": "module"
+}

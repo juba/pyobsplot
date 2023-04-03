@@ -2,15 +2,12 @@
   "dependencies": {
     "@observablehq/plot": "^0.6.5",
     "anywidget": "^0.2.0",
-    "apache-arrow": "^11.0.0",
-    "canvas": "^2.11.0",
     "d3": "^7.8.2",
-    "jsdom": "21.1.1",
-    "jsdom-global": "3.0.2"
+    "pyobsplot": "file:js/node"
   },
   "scripts": {
-    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget.js js/styles.css && esbuild --platform=node --bundle --packages=external --format=esm --outdir=src/pyobsplot/static/ js/jsdom.js",
-    "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget.js js/styles.css --watch",
+    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* && npm install ./js/node",
+    "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* --watch",
     "pytest": "poetry run pytest",
     "jstest": "mocha -r jsdom-global/register tests/js",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",

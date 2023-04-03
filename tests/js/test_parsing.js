@@ -4,7 +4,7 @@ import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import * as assert from "assert"
 
-import { parse_spec, get_fun } from "../../js/parsing.js"
+import { parse_spec, get_fun } from "pyobsplot"
 
 
 describe('get_fun', function () {
