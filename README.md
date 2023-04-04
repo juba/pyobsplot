@@ -54,19 +54,18 @@ For usage instructions, see the [documentation website](https://juba.github.io/p
 **Features:**
 
 - Syntax as close as possible to the JavaScript one
+- Two renderers available: `widget`, which generates plots as Jupyter widgets, and `jsdom`, which generate SVG or HTML outputs
 - [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and data type conversions
 - Works offline, no iframe or dependency to Observable runtime
 - Caching mechanism of data objects if they are used several times in the same plot
 - Custom JavaScript code can be passed as strings with the `js` method
 - Python `date` and `datetime` objects are automatically converted to JavaScript `Date` objects
 - Plots can be defined with a dictionary, a call to a `Plot` mark function, or with `kwargs`. See [alternative syntaxes](usage.qmd#alternative-syntaxes).
-- Works with Jupyter notebooks and Quarto HTML documents
+- Works with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the `jsdom` renderer.
 
 **Limitations:**
 
-- When using notebooks inside VSCode, the cells output states are not saved between sessions. So when a notebook is closed and reopened, plots have to be recomputed to be displayed. This is currently a [VSCode limitation](https://github.com/juba/pyobsplot/issues/2).
-- Doesn't work in Quarto in formats other than HTML.
-- When exporting to HTML, the resulting documents can be quite big as each plot is embedded as a widget, with the data and the code needed to generate it (there is currently no way to embed SVG or HTML directly).
+- Plots with legends don't work in Quarto in formats other than HTML.
 - Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when you using mark-level faceting (with the `fx` and `fy` channels).
 
 
