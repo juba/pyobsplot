@@ -67,15 +67,18 @@ Obsplot(
 
 ## Installation and usage
 
+
 ::::{.callout-warning}
 This project is at an early stage. There will be bugs, and please take a look at the limitations listed below.
 ::::
-
 
 [Getting started](getting_started.qmd) gives installation instructions and a quick usage overview.
 
 [Usage](usage.qmd) gives more detailed usage instructions.
 
+If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
 ## Features and limitations
 
