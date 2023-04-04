@@ -22,7 +22,7 @@
     "jsdom-global": "^3.0.2"
   },
   "bin": {
-    "pyobsplot-jsdom": "jsdom.js"
+    "pyobsplot-jsdom": "main.js"
   },
   "type": "module"
 }
