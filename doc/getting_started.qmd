@@ -12,6 +12,14 @@ title: "Getting started"
 pip install pyobsplot
 ```
 
+If you want to use the [`jsdom` renderer](usage.qmd#renderers), you must have a working installation of [node.js](https://nodejs.org/en) and you must install the following package globally or locally:
+
+```sh
+# Install locally
+npm install pyobsplot
+# Install globally
+npm install -g pyobsplot
+```
 
 ## Usage
 
@@ -86,6 +94,19 @@ For the simplest cases, you can also create your plot directly by passing a `Plo
 ```{python}
 Obsplot(Plot.auto(penguins, {"x": "flipper_length_mm"}))
 ```
+
+By default, plots will be created as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/). This allows for [(very basic) interactivity](usage.qmd#interactivity), but also generates bigger files. An alternative is to use the [`jsdom` renderer](usage.qmd#renderers), which generates SVG or HTML outputs.
+
+To switch from one renderer to another, you can use:
+
+```{python}
+# | eval: false
+# Switch to widget renderer
+Obsplot.set_renderer("widget")
+# Switch to jsdom renderer
+Obsplot.set_renderer("jsdom")
+```
+
 
 # Learn more
 
