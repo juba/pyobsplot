@@ -8,6 +8,7 @@
   "scripts": {
     "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/*",
     "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* --watch",
+    "build": "npm run bundle && poetry build",
     "pytest": "poetry run pytest",
     "jstest": "cd js/pyobsplot-js && npm run test",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
