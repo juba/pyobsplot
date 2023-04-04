@@ -101,7 +101,7 @@ To switch from one renderer to another, you can use:
 
 ```{python}
 # | eval: false
-# Switch to widget renderer
+# Switch to widget renderer (default one)
 Obsplot.set_renderer("widget")
 # Switch to jsdom renderer
 Obsplot.set_renderer("jsdom")
