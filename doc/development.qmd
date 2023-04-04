@@ -12,13 +12,16 @@ If you want to build `pyobsplot` from source, you'll have to follow these steps:
 - Install [poetry](https://python-poetry.org) dependency management system
 - Clone the repository
 - Install Python dependencies with : `poetry install`
-- Install JavaScript dependencies with : `npm install`
+- Install main JavaScript dependencies with : `npm install`
+- Install `pyobsplot-js` dependencies with : `cd js/pyobsplot-js && npm install`
 
-`pyobsplot` uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot`. JavaScript and CSS source code is in `js/`.
+`pyobsplot` `widget` renderer uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot/widget.py`. JavaScript and CSS source code is in `js/widget`.
 
-## JavaScript modification and bundling
+`pyobsplot` `jsdom` renderer is provided by an npm package. Source code is in `js/pyobsplot-js`. Python source code is in `src/pyobsplot/jsdom.py`.
 
-Each time JavaScript or CSS code is modified in the `js/` directory, it must be bundled with one of the following scripts:
+## Widget JavaScript modification and bundling
+
+Each time widget JavaScript or CSS code is modified in the `js/widget` directory, it must be bundled with one of the following scripts:
 
 ```sh
 # Bundle only once
@@ -39,10 +42,13 @@ To run Python tests, use:
 npm run pytest
 ```
 
-To run JavaScript tests, use:
+To run JavaScript tests, use one of those:
 
 ```sh
+# From project root
 npm run jstest
+# Equivalent to
+cd js/pyobsplot-js && npm run test
 ```
 
 Visual regression tests allow to test if generated plots stay the same. They use the [galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) framework. To run them you first have to start a specific Jupyter instance with:
