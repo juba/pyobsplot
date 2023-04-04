@@ -31,7 +31,9 @@ def npm_bin(global_: bool) -> str:
         encoding="Utf8",
     )
     if p.returncode != 0:
-        raise RuntimeError("jsdom script error: " + p.stderr)
+        raise RuntimeError(
+            f"npm bin error (${p.returncode}): ${p.stderr} - ${p.stdout}"
+        )
     # Get script output
     out = p.stdout
     return out.strip()
