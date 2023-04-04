@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pyobsplot"
-version = "0.1.3.9000"
-description = "Observable Plot as Jupyter widget"
+version = "0.2.0"
+description = "Observable Plot in Jupyter notebooks"
 authors = ["Julien Barnier <julien@nozav.org>"]
 license = "MIT"
 readme = "README.md"
