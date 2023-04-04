@@ -63,5 +63,4 @@ class ObsplotJsdom:
             return SVG(out)
         # Else, returns IPython.display.HTML
         else:
-            out = "<div class='pyobsplot-plot'>" + p.stdout + "</div>"
             return HTML(out)
