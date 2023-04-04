@@ -55,7 +55,9 @@ class ObsplotJsdom:
             encoding="Utf8",
         )
         if p.returncode != 0:
-            raise RuntimeError("jsdom script error: " + p.stderr)
+            raise RuntimeError(
+                f"jsdom script error (${p.returncode}): ${p.stderr} - ${p.stdout}"
+            )
         # Get script output
         out = p.stdout
         # If output is svg, returns IPython.display.SVG
