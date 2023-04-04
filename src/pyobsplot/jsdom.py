@@ -9,7 +9,6 @@ from IPython.display import HTML, SVG
 
 from typing import Any, Optional
 
-from .utils import exec_path
 from .parsing import SpecParser
 
 
@@ -43,13 +42,12 @@ class ObsplotJsdom:
         """
 
         # Check for node executable
-        node = shutil.which("node")
-        if not node:
-            raise RuntimeError("node executable has not been found.")
-        jsdom_path = exec_path("pyobsplot-jsdom")
+        npx = shutil.which("npx")
+        if not npx:
+            raise RuntimeError("npx executable has not been found.")
         # Run node script with JSON spec as input
         p = subprocess.run(
-            jsdom_path,
+            ["npx", "pyobsplot"],
             input=json.dumps(self.spec),
             capture_output=True,
             encoding="Utf8",
