@@ -3,10 +3,10 @@
     "@observablehq/plot": "^0.6.5",
     "anywidget": "^0.2.0",
     "d3": "^7.8.2",
-    "pyobsplot": "file:js/node"
+    "pyobsplot": "file:js/pyobsplot-js"
   },
   "scripts": {
-    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* && npm install ./js/node",
+    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/*",
     "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* --watch",
     "pytest": "poetry run pytest",
     "jstest": "mocha -r jsdom-global/register tests/js",
