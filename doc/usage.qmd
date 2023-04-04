@@ -261,7 +261,7 @@ Obsplot({
 })
 ```
 
-In this case, caching ensures that the `penguins` DataFrame is only serialized and transmitted once instead of three times. 
+In this case, caching ensures that the `penguins` DataFrame is only serialized and transmitted once instead of twice. 
 
 ## datetime objects
 
