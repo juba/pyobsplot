@@ -2,7 +2,6 @@ __pycache__
 node_modules/
 build/
 dist/
-src/pyobsplot/static/*
 *_files/
 *_cache/
 .ipynb_checkpoints/
