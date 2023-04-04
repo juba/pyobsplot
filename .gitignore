@@ -7,7 +7,7 @@ src/pyobsplot/static/*
 *_cache/
 .ipynb_checkpoints/
 .python-version
-examples/
+examples/test.ipynb
 **/test-results/
 **/playwright-report/
 **/playwright/.cache/
