@@ -1,5 +1,8 @@
 ## pyobsplot (development version)
 
+## pyobsplot 0.2.1
+
+- fix: mixing renderers in Jupyter lab moves all outputs to widgets (#6)
 - Compatibility with Python 3.8
 
 ## pyobsplot 0.2.0
