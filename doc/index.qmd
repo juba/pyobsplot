@@ -21,11 +21,12 @@ penguins = pl.read_csv("data/penguins.csv")
 ```{python}
 Obsplot(
     {
+        "grid": True,
         "marks": [
             Plot.dot(
                 penguins, {"x": "flipper_length_mm", "y": "body_mass_g", "fill": "sex"}
             )
-        ]
+        ],
     }
 )
 ```
@@ -93,7 +94,7 @@ This project is at an early stage. There will be bugs, and please take a look at
 **Limitations:**
 
 - Plots with legends don't work in Quarto in formats other than HTML.
-- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when you using mark-level faceting (with the `fx` and `fy` channels).
+- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when using mark-level faceting (with the `fx` and `fy` channels).
 
 
 ## Credits
