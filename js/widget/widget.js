@@ -27,9 +27,9 @@ export function render(view) {
 function _onValueChanged(view, el) {
     // Remove current plot
     let plot = el.querySelector(".pyobsplot-plot")
-    el.removeChild(plot)
+    plot.replaceChildren()
     // Regenerate it
     let spec = () => view.model.get("spec");
-    el.appendChild(generate_plot(spec()));
+    plot.appendChild(generate_plot(spec()));
 }
 

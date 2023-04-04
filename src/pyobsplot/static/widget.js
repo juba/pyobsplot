@@ -39953,9 +39953,9 @@ function render(view) {
 }
 function _onValueChanged(view, el) {
   let plot2 = el.querySelector(".pyobsplot-plot");
-  el.removeChild(plot2);
+  plot2.replaceChildren();
   let spec = () => view.model.get("spec");
-  el.appendChild(generate_plot(spec()));
+  plot2.appendChild(generate_plot(spec()));
 }
 export {
   render
