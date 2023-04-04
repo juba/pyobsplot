@@ -310,32 +310,32 @@ This allows to do things like the following, where a plot is updated depending o
 
 ```{python}
 #| eval: false
-def generate_spec(length):
+def generate_plot_spec(opacity):
     return {
-        "x": {
-            "axis": None
-        },
-        "y": {
-            
-        },
-        "marks": [
-            Plot.lineY(d3.cumsum({ "length": length }, d3.randomNormal()))
+      "grid": True,
+      "marks": [
+            Plot.rectY(penguins, Plot.binX({"y": "count"}, {"x": "body_mass_g", "fill": "royalblue", "fillOpacity": opacity})),
+            Plot.ruleY([0])
         ]
     }
 
+plot = Obsplot(generate_plot_spec(1))
 
-def change_spec(change):
-    new_length = change['new']
-    p.spec = generate_spec(new_length)
+def update_plot(change):
+    new = change['new']
+    plot.spec = generate_plot_spec(new / 100)
 
 
-w = IntSlider(value = 100, min = 0, max = 1000)
-p = Obsplot(generate_spec(w.value))
-w.observe(change_spec, names='value')
+w = IntSlider(value = 100, min = 0, max = 100)
+w.observe(update_plot, names='value')
+
 display(w)
-p
+display(plot)
 ```
 
+You can see a live version of this example in the following Colab notebook:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
 
 ## Quarto
 
