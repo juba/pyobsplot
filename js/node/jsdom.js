@@ -4,6 +4,7 @@
 
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
+import * as canvas from canvas
 import { JSDOM } from "jsdom"
 import { generate_plot } from "./plot.js"
 
