@@ -1,5 +1,8 @@
 ## pyobsplot (development version)
 
+
+## pyobsplot 0.2.2
+
 - fix: plot not recreated correctly on widget value change
 - fix: add watchfiles to dependencies to prevent error in Colab
 
