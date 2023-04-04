@@ -60,13 +60,12 @@ For usage instructions, see the [documentation website](https://juba.github.io/p
 - Caching mechanism of data objects if they are used several times in the same plot
 - Custom JavaScript code can be passed as strings with the `js` method
 - Python `date` and `datetime` objects are automatically converted to JavaScript `Date` objects
-- Plots can be defined with a dictionary, a call to a `Plot` mark function, or with `kwargs`. See [alternative syntaxes](usage.qmd#alternative-syntaxes).
 - Works with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the `jsdom` renderer.
 
 **Limitations:**
 
 - Plots with legends don't work in Quarto in formats other than HTML.
-- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when you using mark-level faceting (with the `fx` and `fy` channels).
+- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when using mark-level faceting (with the `fx` and `fy` channels).
 
 
 
