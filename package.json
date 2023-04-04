@@ -9,7 +9,7 @@
     "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/*",
     "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* --watch",
     "pytest": "poetry run pytest",
-    "jstest": "mocha -r jsdom-global/register tests/js",
+    "jstest": "cd js/pyobsplot-js && npm run test",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
     "uitest": "playwright test --config tests/ui/playwright.config.cjs",
     "uitest:debug": "PWDEBUG=1 playwright test --config tests/ui/playwright.config.cjs",
@@ -20,8 +20,7 @@
   "devDependencies": {
     "@jupyterlab/galata": "^4.5.2",
     "@playwright/test": "^1.32.1",
-    "esbuild": "^0.17.14",
-    "mocha": "^10.2.0"
+    "esbuild": "^0.17.14"
   },
   "type": "module"
 }
