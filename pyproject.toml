@@ -12,7 +12,7 @@ include = ["src/pyobsplot/static/*"]
 homepage = "https://github.com/juba/pyobsplot"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 anywidget = "^0.2.0"
 pandas = "^1.5.3"
 polars = "^0.16.16"

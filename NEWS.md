@@ -1,5 +1,6 @@
 ## pyobsplot (development version)
 
+- Compatibility with Python 3.8
 
 ## pyobsplot 0.2.0
 

@@ -34,11 +34,11 @@ class ObsplotJsdom:
         spec = {"data": parser.serialize_data(), "code": code}
         self.spec = spec
 
-    def plot(self) -> Optional[HTML | SVG]:
+    def plot(self):
         """Generates the plot by calling node script.
 
         Returns:
-            Optional[HTML | SVG]: either an HTML or SVG IPython.display object.
+            Either an HTML or SVG IPython.display object.
         """
 
         # Check for node executable
