@@ -85,7 +85,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
     Jsdom renderer Creator class.
     """
 
-    def __init___(self, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         pass
 
     def __call__(self, *args, **kwargs):
