@@ -1,9 +1,0 @@
-```{python}
-# | include: false
-
-import polars as pl
-import pandas as pd
-from pyobsplot import Obsplot, Plot, d3, Math, js
-
-Obsplot.renderer = "jsdom"
-```

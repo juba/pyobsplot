@@ -2,12 +2,12 @@
 title: "Mapping and spatial data"
 ---
 
-{{< include _setup.qmd >}}
 
 ```{python}
 import polars as pl
 from pyobsplot import Obsplot, Plot, js
 
+op = Obsplot(renderer="jsdom")
 ```
 
 The [Geo mark](https://observablehq.com/@observablehq/plot-geo?collection=@observablehq/plot) allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.
@@ -34,7 +34,7 @@ for county in counties["features"]:
         county["properties"]["unemployment"] = rates[key]
 
 # Map
-Obsplot(
+op(
     {
         "marks": [Plot.geo(counties, {"fill": js("(d) => d.properties.unemployment")})],
         # "marks": [Plot.geo(counties, {"stroke": "red"})],
@@ -68,7 +68,7 @@ states = tp.Topology(counties, object_name="states").to_geojson(object_name="sta
 states = json.loads(states)
 
 # Plot map
-Obsplot(
+op(
     {
         "marks": [
             Plot.geo(states, {"strokeOpacity": 0.3}),
@@ -84,7 +84,7 @@ Of course other marks can be used in conjunction with geo marks. This example re
 ```{python}
 walmarts = pl.read_csv("data/walmarts.tsv", sep="\t")
 
-Obsplot(
+op(
     {
         "marks": [
             Plot.density(
@@ -113,7 +113,7 @@ ca55 = pl.read_csv("data/ca55-south.csv")
 
 
 def flare_map(interpolation):
-    return Obsplot(
+    return op(
         {
             "x": {"axis": None},
             "y": {"axis": None},

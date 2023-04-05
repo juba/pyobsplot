@@ -16,7 +16,9 @@ from pyobsplot import Obsplot, Plot
 
 penguins = pl.read_csv("data/penguins.csv")
 
-Obsplot({
+op = Obsplot()
+
+op({
     "grid": True,
     "color": {"legend": True},
     "marks": [

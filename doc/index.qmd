@@ -2,8 +2,6 @@
 title: "pyobsplot"
 ---
 
-{{< include _setup.qmd >}}
-
 ## Overview
 
 `pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in Jupyter notebooks. Plots are produced as [widgets](https://ipywidgets.readthedocs.io/en/latest/index.html) from Python code with a syntax as close as possible to the JavaScript one.
@@ -16,10 +14,24 @@ import polars as pl
 from pyobsplot import Obsplot, Plot
 
 penguins = pl.read_csv("data/penguins.csv")
+
+op = Obsplot(renderer="jsdom")
 ```
 
 ```{python}
-Obsplot(
+# | eval: false
+
+import polars as pl
+from pyobsplot import Obsplot, Plot
+
+penguins = pl.read_csv("data/penguins.csv")
+
+op = Obsplot()
+```
+
+
+```{python}
+op(
     {
         "grid": True,
         "marks": [
@@ -34,7 +46,7 @@ Obsplot(
 Or, for [a bit more complex example](https://observablehq.com/@observablehq/plot-facets?collection=@observablehq/plot#cell-148):
 
 ```{python}
-Obsplot(
+op(
     {
         "marginLeft": 75,
         "marginRight": 70,

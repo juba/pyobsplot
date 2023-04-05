@@ -2,8 +2,6 @@
 title: "Getting started"
 ---
 
-{{< include _setup.qmd >}}
-
 ## Installation
 
 `pyobsplot` can be installed with `pip`:
@@ -30,7 +28,20 @@ from pyobsplot import Obsplot, Plot
 
 ```
 
-To create a plot, you have to call `Obsplot` and pass a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
+The next step is to create a *plot generator object* with `Obsplot()`. Here we call it `op` but you can use any name you want:
+
+```{python}
+# | eval: false
+op = Obsplot()
+```
+
+```{python}
+# | echo: false
+op = Obsplot(renderer="jsdom")
+```
+
+
+To create a plot, you call your plot generator object and pass it a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
 
 So, starting with a very simple DataFrame:
 
@@ -60,7 +71,7 @@ Plot(
 Then you can reproduce the plot with:
 
 ```{python}
-Obsplot(
+op(
     {
         "grid": True,
         "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
@@ -68,14 +79,14 @@ Obsplot(
 )
 ```
 
-The syntax is almost identical, except that dictionary keys must be quoted, and JavaScript `true` must be replaced by Python `True`.
+The syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript `true` must be replaced by Python `True`.
 
 You can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:
 
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")
 
-Obsplot(
+op(
     {
         "grid": True,
         "color": {"legend": True},
@@ -89,22 +100,22 @@ Obsplot(
 )
 ```
 
-For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to `Obsplot`:
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method:
 
 ```{python}
-Obsplot(Plot.auto(penguins, {"x": "flipper_length_mm"}))
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
 ```
 
 By default, plots will be created as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/). This allows for [(very basic) interactivity](usage.qmd#interactivity), but also generates bigger files. An alternative is to use the [`jsdom` renderer](usage.qmd#renderers), which generates SVG or HTML outputs.
 
-To switch from one renderer to another, you can use:
+The renderer is determined by passing a `renderer` argument to `Obsplot()` when creating a generator object:
 
 ```{python}
 # | eval: false
 # Switch to widget renderer (default one)
-Obsplot.set_renderer("widget")
+opw = Obsplot(renderer="widget")
 # Switch to jsdom renderer
-Obsplot.set_renderer("jsdom")
+opj = Obsplot(renderer="jsdom")
 ```
 
 

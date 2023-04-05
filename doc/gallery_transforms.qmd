@@ -2,8 +2,6 @@
 title: "Transforms"
 ---
 
-{{< include _setup.qmd >}}
-
 [Transforms](https://observablehq.com/@observablehq/plot-transforms?collection=@observablehq/plot) provide methods to manipulate and compute on data while plotting them.
 
 
@@ -13,9 +11,11 @@ title: "Transforms"
 import polars as pl
 from pyobsplot import Obsplot, Plot, d3, Math, js
 
+op = Obsplot(renderer="jsdom")
+
 penguins = pl.read_csv("data/penguins.csv")
 
-Obsplot(
+op(
     {
         "y": {"grid": True, "percent": True},
         "marks": [
@@ -41,7 +41,7 @@ ipos = pl.read_csv("data/ipos.csv", try_parse_dates=True).filter(
 )
 
 
-Obsplot(
+op(
     {
         "insetRight": 10,
         "height": 600,
@@ -71,7 +71,7 @@ Obsplot(
 The [Hexbin transform](https://observablehq.com/@observablehq/plot-hexbin?collection=@observablehq/plot) aggregates two dimensional points into hexagonal bins.
 
 ```{python}
-Obsplot(
+op(
     {
         "inset": 10,
         "color": {"scheme": "ylgnbu", "legend": True, "label": "Count"},
@@ -112,7 +112,7 @@ Obsplot(
 
 stocks = pl.read_csv("data/stocks.csv", try_parse_dates=True)
 
-Obsplot(
+op(
     {
         "marginRight": 40,
         "y": {
@@ -174,7 +174,7 @@ states = (
 xy = {"basis": "sum", "z": "state", "x": "population", "y": "state"}
 
 # Plot specification
-Obsplot(
+op(
     {
         "height": 660,
         "grid": True,

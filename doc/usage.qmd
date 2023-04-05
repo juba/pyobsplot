@@ -2,9 +2,22 @@
 title: "Usage"
 ---
 
-{{< include _setup.qmd >}}
-
 For a quick usage introduction, see [getting started](getting_started.qmd).
+
+We start by importing the needed modules and create a plot generator object:
+
+```{python}
+#| include: false
+from pyobsplot import Obsplot, Plot, d3
+op = Obsplot(renderer="jsdom")
+```
+
+```{python}
+#| eval: false
+from pyobsplot import Obsplot, Plot
+op = Obsplot()
+```
+
 
 ## From JavaScript to Python
 
@@ -30,7 +43,7 @@ Becomes:
 
 ```{python}
 #| eval: false
-Obsplot({
+op({
     "color": {"legend": True}
     "grid": False,
     "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
@@ -42,7 +55,7 @@ It is possible to  replace JavaScript methods from the `Plot`, `d3` and `Math` m
 ```{python}
 from pyobsplot import Obsplot, Plot, d3
 
-Obsplot({
+op({
     "x": {
         "axis": None
     },
@@ -64,7 +77,7 @@ data = pl.DataFrame({
     "type": ["T1", "T2", "T1", "T2", "T1", "T1", "T2"],
 })
 
-Obsplot({
+op({
     "grid": True,
     "marks": [
         Plot.dot(data, {
@@ -136,7 +149,7 @@ The following table lists the differences between the two renderers.
 </tbody>
 </table>
 
-To use the `jsdom` renderer, you need a working [node.js](https://nodejs.org/en) installtion and you must install the npm `pyobsplot` package globally or locally:
+To use the `jsdom` renderer, you need a working [node.js](https://nodejs.org/en) installation and you must install the npm `pyobsplot` package globally or locally:
 
 ```sh
 # Install locally
@@ -145,14 +158,14 @@ npm install pyobsplot
 npm install -g pyobsplot
 ```
 
-After that, you can switch between both renderers with:
+After that, you can select which renderer to use when creating a plot generator object:
 
 ```{python}
 # | eval: false
 # Switch to widget renderer (the default one)
-Obsplot.set_renderer("widget")
+opw = Obsplot(renderer="widget")
 # Switch to jsdom renderer
-Obsplot.set_renderer("jsdom")
+opj = Obsplot(renderer="jsdom")
 ```
 
 
@@ -162,7 +175,7 @@ As we've already seen, the most common syntax for a plot specification is to pas
 
 ```{python}
 #| eval: false
-Obsplot({
+op({
     "grid": True,
     "color": {"legend": True}
     "marks": [
@@ -171,11 +184,11 @@ Obsplot({
 })
 ```
 
-But it is also possible to pass top level arguments as `kwargs` to `Obsplot`, which would give the following:
+But it is also possible to pass top level arguments as `kwargs` to the generator object, which would give the following:
 
 ```{python}
 #| eval: false
-Obsplot(
+op(
     grid = True,
     color = {"legend": True},
     marks = [
@@ -184,11 +197,11 @@ Obsplot(
 )
 ```
 
-Finally, for the simplest cases, you can also pass a mark method directly to `Obsplot`. The JavaScript `plot()` method will be called automatically to display the plot:
+Finally, for the simplest cases, you can also pass a mark method directly. The JavaScript `plot()` method will be called automatically to display the plot:
 
 ```{python}
 import random
-Obsplot(
+op(
     Plot.tickX(
         [random.gauss(0,1) for i in range(1000)], 
         {"stroke": "royalblue", "opacity": 0.2}
@@ -199,7 +212,7 @@ Obsplot(
 
 ## DataFrames and Series
 
-Pandas and polars DataFrames can be passed directly to `Obsplot`. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.
+Pandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.
 
 ```{python}
 import polars as pl
@@ -210,7 +223,7 @@ df = pl.DataFrame({
     "Value": [4.2, 3.8, 4.5, 4.7]
 })
 
-Obsplot({
+op({
     "x": {"grid": True},
     "y": {"domain": [0, 5]},
     "marks": [Plot.lineY(df, {"x": "Date", "y": "Value", "stroke": "royalblue"})]
@@ -222,7 +235,7 @@ If you pass a pandas or polars Series object, it will be automatically converted
 ```{python}
 value = df.get_column("Value")
 
-Obsplot(
+op(
     Plot.tickX(value, {"x": "Value", "stroke": "darkviolet"})
 )
 ```
@@ -234,7 +247,7 @@ Sometimes the same data object is used several times in a plot specification, su
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")
 
-Obsplot({
+op({
   "height": 600,
   "grid": True,
   "facet": {
@@ -270,7 +283,7 @@ In this case, caching ensures that the `penguins` DataFrame is only serialized a
 That makes the following two specifications equivalent:
 
 ```{python}
-Obsplot({
+op({
     "x": {"domain": [js("new Date('2021-01-01')"), js("new Date('2022-01-01')")]}, 
     "grid": True
 })
@@ -278,7 +291,7 @@ Obsplot({
 
 ```{python}
 from datetime import date
-Obsplot({
+op({
     "x": {"domain": [date(2021,1,1), date(2022,1,1)]}, 
     "grid": True
 })
@@ -287,7 +300,7 @@ Obsplot({
 As well as the two following ones, using `datetime`:
 
 ```{python}
-Obsplot({
+op({
     "x": {"domain": [js("new Date('2021-01-01T07:00:00')"), js("new Date('2021-01-01T08:00:00')")]}, 
     "grid": True
 })
@@ -295,7 +308,7 @@ Obsplot({
 
 ```{python}
 from datetime import datetime
-Obsplot({
+op({
     "x": {"domain": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, 
     "grid": True
 })
@@ -319,7 +332,7 @@ def generate_plot_spec(opacity):
         ]
     }
 
-plot = Obsplot(generate_plot_spec(1))
+plot = op(generate_plot_spec(1))
 
 def update_plot(change):
     new = change['new']

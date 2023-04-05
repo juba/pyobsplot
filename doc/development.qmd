@@ -2,8 +2,6 @@
 title: "Development"
 ---
 
-{{< include _setup.qmd >}}
-
 ## Install fom source
 
 If you want to build `pyobsplot` from source, you'll have to follow these steps:

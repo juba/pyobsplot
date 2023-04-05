@@ -1,7 +1,7 @@
 ## pyobsplot (development version)
 
+- Breaking change: new API, plots are now generated with a *plot generator object* created by calling `Obsplot()`. Thanks to [@fil](https://github.com/fil) for the idea.
 - fix: wrong __version__value
-
 
 ## pyobsplot 0.2.2
 
@@ -11,7 +11,7 @@
 
 ## pyobsplot 0.2.1
 
-- fix: mixing renderers in Jupyter lab moves all outputs to widgets (#6)
+- fix: mixing renderers in Jupyter lab moves all outputs to widgets
 - Compatibility with Python 3.8
 
 
