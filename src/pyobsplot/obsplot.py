@@ -3,10 +3,10 @@ Obsplot main class.
 """
 
 from IPython.display import display
+from typing import Any
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
-from .utils import default_renderer, available_renderers
 
 
 class Obsplot:
@@ -17,26 +17,11 @@ class Obsplot:
     with ObsplotJsdom depending on the renderer.
     """
 
-    # Default renderer
-    renderer = default_renderer
-
     @staticmethod
-    def set_renderer(renderer: str) -> None:
-        """Set the renderer for next Obsplot calls.
-
-        Args:
-            renderer (str): renderer name.
-
+    def get_spec(*args, **kwargs) -> dict:
         """
-        if renderer not in available_renderers:
-            raise ValueError(
-                f"Incorrect renderer. Must be one of {available_renderers}."
-            )
-        Obsplot.renderer = renderer
-
-    def __new__(cls, *args, **kwargs) -> None:
-        """
-        Constructor. Extract spec from args and kwargs, and call the configured renderer.
+        Extract plot specification from args and kwargs, taking into account
+        the alternative specification syntaxes.
         """
 
         # Only one dict arg -> spec passed as dict
@@ -50,11 +35,57 @@ class Obsplot:
             spec = kwargs
         else:
             raise ValueError("Incorrect ObsPlot arguments")
+        return spec
+
+    def __new__(cls, renderer: str = "widget", *args, **kwargs) -> Any:
+        """
+        Main Obsplot class constructor. Returns a Creator instance depending on the
+        renderer passed as argument.
+        """
+
+        available_renderers = ["widget", "jsdom"]
 
         # Plot spec with the configured renderer
-        if Obsplot.renderer == "widget":
-            return ObsplotWidget(spec)
-        elif Obsplot.renderer == "jsdom":
-            display(ObsplotJsdom(spec).plot())
+        if renderer == "widget":
+            return ObsplotWidgetCreator(*args, **kwargs)
+        elif renderer == "jsdom":
+            return ObsplotJsdomCreator(*args, **kwargs)
         else:
-            raise ValueError("Incorrect renderer.")
+            raise ValueError(
+                f"""
+                Incorrect renderer '{renderer}'. 
+                Available renderers are {available_renderers}
+                """
+            )
+
+
+class ObsplotWidgetCreator:
+    """
+    Widget renderer Creator class.
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def __call__(self, *args, **kwargs):
+        """
+        Method called whent an instance is called.
+        """
+        spec = Obsplot.get_spec(*args, **kwargs)
+        return ObsplotWidget(spec)
+
+
+class ObsplotJsdomCreator:
+    """
+    Jsdom renderer Creator class.
+    """
+
+    def __init___(self, *args, **kwargs) -> None:
+        pass
+
+    def __call__(self, *args, **kwargs):
+        """
+        Method called whent an instance is called.
+        """
+        spec = Obsplot.get_spec(*args, **kwargs)
+        display(ObsplotJsdom(spec).plot())
