@@ -1,5 +1,8 @@
 ## pyobsplot (development version)
 
+
+## pyobsplot 0.3.0
+
 - Breaking change: new API, plots are now generated with a *plot generator object* created by calling `Obsplot()`. Thanks to [@fil](https://github.com/fil) for the idea.
 - fix: wrong __version__value
 
