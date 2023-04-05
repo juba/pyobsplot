@@ -18,6 +18,7 @@ pandas = ">=1.2.0"
 polars = ">=0.16.0"
 pyarrow = "^11.0.0"
 ipywidgets = ">=8.0.0"
+nbformat = ">=5.7.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.259"
