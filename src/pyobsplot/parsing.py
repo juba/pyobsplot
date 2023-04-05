@@ -53,7 +53,7 @@ class SpecParser:
         if spec is None:
             return None
         # If list or tuple, recursively parse elements
-        if isinstance(spec, list) or isinstance(spec, tuple):
+        if isinstance(spec, (list, tuple)):
             return [self.parse(s) for s in spec]
         # If Geojson, handle caching, don't parse, add type and returns as is
         if (
