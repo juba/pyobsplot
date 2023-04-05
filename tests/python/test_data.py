@@ -2,7 +2,6 @@
 Tests for data Arrow serialization.
 """
 
-import pytest
 import io
 
 import pandas as pd
