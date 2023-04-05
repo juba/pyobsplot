@@ -12,7 +12,7 @@ async function test_notebook(page, notebook, renderer) {
 
     if (renderer) {
         // Replace first cell by Obsplot + set_renderer
-        await page.notebook.setCell(0, "code", `from pyobsplot import Obsplot, Plot, d3, Math, js; Obsplot.set_renderer('${renderer}'); print('${renderer}')`)
+        await page.notebook.setCell(0, "code", `from pyobsplot import Obsplot, Plot, d3, Math, js; op = Obsplot(renderer='${renderer}'); print('${renderer}')`)
     }
 
     await page.notebook.runCellByCell({
