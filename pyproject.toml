@@ -9,7 +9,6 @@ include = ["src/pyobsplot/static/*"]
 homepage = "https://github.com/juba/pyobsplot"
 documentation = "https://juba.github.io/pyobsplot"
 repository = "https://github.com/juba/pyobsplot"
-changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: Jupyter :: JupyterLab",
@@ -19,7 +18,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization"
 ]
 
-
+[tool.poetry.urls]
+changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
