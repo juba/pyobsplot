@@ -14,7 +14,7 @@ It allows to do things like :
 import polars as pl
 from pyobsplot import Obsplot, Plot
 
-penguins = pl.read_csv("data/penguins.csv")
+penguins = pl.read_csv("https://github.com/juba/pyobsplot/raw/main/doc/data/penguins.csv")
 
 op = Obsplot()
 
