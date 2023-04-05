@@ -17,26 +17,6 @@ class Obsplot:
     with ObsplotJsdom depending on the renderer.
     """
 
-    @staticmethod
-    def get_spec(*args, **kwargs) -> dict:
-        """
-        Extract plot specification from args and kwargs, taking into account
-        the alternative specification syntaxes.
-        """
-
-        # Only one dict arg -> spec passed as dict
-        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
-            spec = args[0]
-        # Only one kwarg called spec
-        elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
-            spec = kwargs["spec"]
-        # Only kwargs -> spec is kwargs
-        elif len(args) == 0 and len(kwargs) > 0:
-            spec = kwargs
-        else:
-            raise ValueError("Incorrect ObsPlot arguments")
-        return spec
-
     def __new__(cls, renderer: str = "widget", *args, **kwargs) -> Any:
         """
         Main Obsplot class constructor. Returns a Creator instance depending on the
@@ -59,7 +39,32 @@ class Obsplot:
             )
 
 
-class ObsplotWidgetCreator:
+class ObsplotCreator:
+    """
+    Creator class.
+    """
+
+    def get_spec(self, *args, **kwargs):
+        """
+        Extract plot specification from args and kwargs, taking into account
+        the alternative specification syntaxes.
+        """
+
+        # Only one dict arg -> spec passed as dict
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+            spec = args[0]
+        # Only one kwarg called spec
+        elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
+            spec = kwargs["spec"]
+        # Only kwargs -> spec is kwargs
+        elif len(args) == 0 and len(kwargs) > 0:
+            spec = kwargs
+        else:
+            raise ValueError("Incorrect ObsPlot arguments")
+        return spec
+
+
+class ObsplotWidgetCreator(ObsplotCreator):
     """
     Widget renderer Creator class.
     """
@@ -71,11 +76,11 @@ class ObsplotWidgetCreator:
         """
         Method called whent an instance is called.
         """
-        spec = Obsplot.get_spec(*args, **kwargs)
+        spec = self.get_spec(*args, **kwargs)
         return ObsplotWidget(spec)
 
 
-class ObsplotJsdomCreator:
+class ObsplotJsdomCreator(ObsplotCreator):
     """
     Jsdom renderer Creator class.
     """
@@ -87,5 +92,5 @@ class ObsplotJsdomCreator:
         """
         Method called whent an instance is called.
         """
-        spec = Obsplot.get_spec(*args, **kwargs)
+        spec = self.get_spec(*args, **kwargs)
         display(ObsplotJsdom(spec).plot())
