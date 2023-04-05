@@ -7,7 +7,7 @@ import json
 import shutil
 from IPython.display import HTML, SVG
 
-from typing import Any, Optional
+from typing import Any
 
 from .parsing import SpecParser
 
