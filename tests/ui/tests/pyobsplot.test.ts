@@ -9,8 +9,11 @@ async function test_notebook(page, notebook, renderer) {
 
     const captures = new Array<Buffer>();
     const cellCount = await page.notebook.getCellCount();
-    // Replace first cell by Obsplot + set_renderer
-    await page.notebook.setCell(0, "code", `from pyobsplot import Obsplot, Plot, d3, Math, js; Obsplot.set_renderer('${renderer}'); print('${renderer}')`)
+
+    if (renderer) {
+        // Replace first cell by Obsplot + set_renderer
+        await page.notebook.setCell(0, "code", `from pyobsplot import Obsplot, Plot, d3, Math, js; Obsplot.set_renderer('${renderer}'); print('${renderer}')`)
+    }
 
     await page.notebook.runCellByCell({
         onAfterCellRun: async (cellIndex: number) => {
@@ -24,7 +27,7 @@ async function test_notebook(page, notebook, renderer) {
     await page.notebook.save();
 
     for (let i = 0; i < (cellCount); i++) {
-        const image = `${renderer}-${notebook}-cell-${i}.png`;
+        const image = renderer ? `${renderer}-${notebook}-cell-${i}.png` : `${notebook}-cell-${i}.png`
         expect(captures[i]).toMatchSnapshot(image);
     }
 }
@@ -39,9 +42,8 @@ test.describe('Visual Regression', () => {
         await page.filebrowser.openDirectory('/');
     });
 
+    // notebooks to test with each renderer
     let notebooks = ["syntax", "dates", "errors", "complex_plots", "data_sources", "transforms", "geo"];
-
-    // check all renderers
     for (let renderer of ["widget", "jsdom"]) {
         // check all notebooks
         for (let notebook of notebooks) {
@@ -51,4 +53,13 @@ test.describe('Visual Regression', () => {
         }
     }
 
+    // notebooks mixing renderers
+    let mix_notebooks = ["mix_renderers"]
+    for (let notebook of mix_notebooks) {
+        test(`Mix / ${notebook}.ipynb`, async ({ page }) => {
+            await test_notebook(page, notebook, null);
+        });
+    }
+
 });
+
