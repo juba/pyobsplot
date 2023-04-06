@@ -12,7 +12,7 @@ title: "Getting started"
 pip install pyobsplot
 ```
 
-If you want to use the [`jsdom` renderer](usage.qmd#renderers), you must have a working installation of [node.js](https://nodejs.org/en) and you must install the following package globally or locally:
+If you want to use the [`jsdom` renderer](usage.qmd#renderers), you must have a working installation of [node.js](https://nodejs.org/en) and you must install `pyobsplot` npm package globally or locally:
 
 ```sh
 # Install locally
@@ -30,7 +30,7 @@ from pyobsplot import Plot
 
 ```
 
-To create a plot, you call the `Plot.plot` method and pass it a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
+To create a plot, call the `Plot.plot` method with a plot specification. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
 
 So, starting with a very simple DataFrame:
 
@@ -70,7 +70,7 @@ Plot.plot(
 
 The syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript `true` must be replaced by Python `True`.
 
-You can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:
+You can use [pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:
 
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")
@@ -90,7 +90,7 @@ Plot.plot(
 ```
 
 
-Calling `Plot.plot()` is the fastest way to generate a plot with the default settings. For further customization you have to import the `Obsplot` class and create a *plot generator object* by calling `Obsplot()`:
+Calling `Plot.plot()` is the fastest way to generate a plot with the default settings, but for further customization you can import the `Obsplot` class and create a *plot generator object*:
 
 ```{python}
 from pyobsplot import Obsplot, Plot
@@ -98,7 +98,7 @@ from pyobsplot import Obsplot, Plot
 op = Obsplot()
 ```
 
-You can then create plots by passing your plot specification to this generator object:
+You can then create plots by calling this generator object with your plot specification:
 
 ```{python}
 # | eval: false
@@ -111,7 +111,7 @@ op(
 )
 ```
 
-For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to your generator object:
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method:
 
 ```{python}
 op(Plot.auto(penguins, {"x": "flipper_length_mm"}))

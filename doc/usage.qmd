@@ -6,7 +6,7 @@ title: "Usage"
 
 For a quick usage introduction, see [getting started](getting_started.qmd).
 
-We start by importing the needed modules and create a plot generator object:
+We start by importing the needed classes and create a plot generator object:
 
 ```{python}
 #| eval: false
@@ -24,7 +24,7 @@ Converting a plot specification from JavaScript to Python should be straightforw
 - JavaScript `true` and `false` must be replaced by `True` and `False`
 - JavaScript `null` must be replaced by `None`
 
-So for example, the following JavaScript code:
+So the following JavaScript code:
 
 ```javascript
 Plot.plot(
@@ -57,6 +57,7 @@ op({
         "axis": None
     },
     "marks": [
+        Plot.ruleY([0], {"stroke": "royalblue"}),
         Plot.lineY(d3.cumsum({ "length": 100 }, d3.randomNormal()))
     ]
 })
@@ -237,9 +238,7 @@ op(
 )
 ```
 
-`pyobsplot` implements a simple caching mechanism for some data objects: it currently works for DataFrames and for GeoJson objects.
-
-Sometimes the same data object is used several times in a plot specification, such as:
+`pyobsplot` implements a simple caching mechanism for some data objects (it currently works for DataFrames and for GeoJson data). Sometimes the same data object is used several times in a plot specification:
 
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")

@@ -7,7 +7,7 @@ title: "pyobsplot"
 
 ## Overview
 
-`pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in Jupyter notebooks. Plots are produced as [widgets](https://ipywidgets.readthedocs.io/en/latest/index.html) from Python code with a syntax as close as possible to the JavaScript one.
+`pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are produced from Python code with a syntax as close as possible to the JavaScript one.
 
 
 ```{python}
@@ -15,10 +15,7 @@ import polars as pl
 from pyobsplot import Plot
 
 penguins = pl.read_csv("data/penguins.csv")
-```
 
-
-```{python}
 Plot.plot(
     {
         "grid": True,
