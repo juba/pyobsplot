@@ -6,7 +6,7 @@ dist/
 *_cache/
 .ipynb_checkpoints/
 .python-version
-examples/test.ipynb
+examples/test*
 **/test-results/
 **/playwright-report/
 **/playwright/.cache/
