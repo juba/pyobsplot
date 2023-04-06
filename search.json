@@ -1,5 +1,166 @@
 [
   {
+    "objectID": "gallery_transforms.html",
+    "href": "gallery_transforms.html",
+    "title": "Transforms",
+    "section": "",
+    "text": "Transforms provide methods to manipulate and compute on data while plotting them.\nGroup transform allows to compute summary values before plotting them. It is often used to make bar charts.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, Math, js\n\nop = Obsplot(renderer=\"jsdom\")\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop(\n    {\n        \"y\": {\"grid\": True, \"percent\": True},\n        \"marks\": [\n            Plot.barY(\n                penguins,\n                Plot.groupZ(\n                    {\"y\": \"proportion-facet\"}, {\"fill\": \"sex\", \"fx\": \"species\"}\n                ),\n            ),\n            Plot.ruleY([0, 1]),\n        ],\n    }\n)\n\n\n\n\nThe Dodge transform allows to pack marks without overlapping. The following chart shows data about IPO offerings in the US.\n\nfrom datetime import datetime\n\nipos = pl.read_csv(\"data/ipos.csv\", try_parse_dates=True).filter(\n    pl.col(\"date\") &gt; datetime(1991, 1, 1)\n)\n\n\nop(\n    {\n        \"insetRight\": 10,\n        \"height\": 600,\n        \"width\": 600,\n        \"marks\": [\n            Plot.dot(\n                ipos, Plot.dodgeY({\"x\": \"date\", \"r\": \"rMVOP\", \"fill\": \"currentColor\"})\n            ),\n            Plot.text(\n                ipos,\n                Plot.dodgeY(\n                    {\n                        \"filter\": js(\"(d) =&gt; d.rMVOP &gt; 5e3\"),\n                        \"x\": \"date\",\n                        \"r\": \"rMVOP\",\n                        \"text\": js(\"d =&gt; (d.rMVOP / 1e3).toFixed()\"),\n                        \"fill\": \"white\",\n                        \"fontWeight\": \"bold\",\n                    }\n                ),\n            ),\n        ],\n    }\n)\n\n\n\n\nThe Hexbin transform aggregates two dimensional points into hexagonal bins.\n\nop(\n    {\n        \"inset\": 10,\n        \"color\": {\"scheme\": \"ylgnbu\", \"legend\": True, \"label\": \"Count\"},\n        \"marks\": [\n            Plot.hexagon(\n                penguins,\n                Plot.hexbin(\n                    {\"r\": \"count\", \"fill\": \"count\"},\n                    {\n                        \"x\": \"culmen_length_mm\",\n                        \"y\": \"flipper_length_mm\",\n                        \"binWidth\": 50,\n                    },\n                ),\n            ),\n            Plot.text(\n                penguins,\n                Plot.hexbin(\n                    {\"text\": \"count\"},\n                    {\n                        \"x\": \"culmen_length_mm\",\n                        \"y\": \"flipper_length_mm\",\n                        \"fill\": \"black\",\n                        \"stroke\": \"white\",\n                        \"binWidth\": 50,\n                    },\n                ),\n            ),\n        ],\n    }\n)\n\n1020Count175180185190195200205210215220225230↑ flipper_length_mm3540455055culmen_length_mm →142611209111275101039322657181533115143211641752810189221734221\n\n\nMap transform family can be used to normalize values.\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nop(\n    {\n        \"marginRight\": 40,\n        \"y\": {\n            \"type\": \"log\",\n            \"grid\": True,\n            \"label\": \"↑ Change in price (%)\",\n            \"tickFormat\": js('(f =&gt; x =&gt; f((x - 1) * 100))(d3.format(\"+d\"))'),\n        },\n        \"marks\": [\n            Plot.ruleY([1]),\n            Plot.line(\n                stocks, Plot.normalizeY({\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\"})\n            ),\n            Plot.text(\n                stocks,\n                Plot.selectLast(\n                    Plot.normalizeY(\n                        {\n                            \"x\": \"Date\",\n                            \"y\": \"Close\",\n                            \"z\": \"Symbol\",\n                            \"text\": \"Symbol\",\n                            \"textAnchor\": \"start\",\n                            \"dx\": 3,\n                        }\n                    )\n                ),\n            ),\n        ],\n    }\n)\n\n\n\n\nSeveral group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the Map transform notebook.\n\n# Load and prepare data\nstateage = (\n    pl.read_csv(\"data/us-population-state-age.csv\")\n    .melt(id_vars=\"name\", variable_name=\"age\", value_name=\"population\")\n    .rename({\"name\": \"state\"})\n)\n# Compute list of age groups\nages = stateage.get_column(\"age\").unique(maintain_order=True).to_list()\n# Compute list of states sorted by the proportion of age ≥80\nstates = (\n    stateage.with_columns(\n        (pl.col(\"population\") / pl.col(\"population\").sum().over(\"state\")).alias(\n            \"percent\"\n        )\n    )\n    .filter(pl.col(\"age\") == \"≥80\")\n    .sort(pl.col(\"percent\"), descending=True)\n    .get_column(\"state\")\n    .to_list()\n)\n\n# Plot.normalizeX default arguments\nxy = {\"basis\": \"sum\", \"z\": \"state\", \"x\": \"population\", \"y\": \"state\"}\n\n# Plot specification\nop(\n    {\n        \"height\": 660,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Percent (%) →\", \"transform\": js(\"d =&gt; d * 100\")},\n        \"y\": {\n            \"domain\": states,\n            \"axis\": None,\n        },\n        \"color\": {\n            \"scheme\": \"spectral\",\n            \"domain\": ages,\n            \"legend\": True,\n        },\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.ruleY(\n                stateage,\n                Plot.groupY({\"x1\": \"min\", \"x2\": \"max\"}, Plot.normalizeX(xy)),\n            ),\n            Plot.dot(\n                stateage,\n                Plot.normalizeX({**xy, \"fill\": \"age\"}),\n            ),\n            Plot.text(\n                stateage,\n                Plot.selectMinX(\n                    Plot.normalizeX(\n                        {\n                            **xy,\n                            \"textAnchor\": \"end\",\n                            \"dx\": -6,\n                            \"text\": \"state\",\n                        }\n                    )\n                ),\n            ),\n        ],\n    }\n)\n\n&lt;1010-1920-2930-3940-4950-5960-6970-79≥8002468101214161820Percent (%) →ALAKAZARCACOCTDEDCFLGAHIIDILINIAKSKYLAMEMDMAMIMNMSMOMTNENVNHNJNMNYNCNDOHOKORPARISCSDTNTXUTVTVAWAWVWIWYPR"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "pyobsplot",
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop = Obsplot()\n\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nop(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "pyobsplot",
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop = Obsplot()\n\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nop(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "index.html#installation-and-usage",
+    "href": "index.html#installation-and-usage",
+    "title": "pyobsplot",
+    "section": "Installation and usage",
+    "text": "Installation and usage\n\n\n\n\n\n\nWarning\n\n\n\nThis project is at an early stage. There will be bugs, and please take a look at the limitations listed below.\n\n\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
+  },
+  {
+    "objectID": "index.html#features-and-limitations",
+    "href": "index.html#features-and-limitations",
+    "title": "pyobsplot",
+    "section": "Features and limitations",
+    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nTwo renderers available: widget, which generates plots as Jupyter widgets, and jsdom, which generate SVG or HTML outputs\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and data type conversions\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\nPlots can be defined with a dictionary, a call to a Plot mark function, or with kwargs. See alternative syntaxes.\nWorks with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the jsdom renderer.\n\nLimitations:\n\nPlots with legends don’t work in Quarto in formats other than HTML.\nSome faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn’t happen when using mark-level faceting (with the fx and fy channels)."
+  },
+  {
+    "objectID": "index.html#credits",
+    "href": "index.html#credits",
+    "title": "pyobsplot",
+    "section": "Credits",
+    "text": "Credits\n\nObservable Plot, developed by Mike Bostock and Philippe Rivière among others.\nThe widget is developed thanks to the anywidget framework.\nSome code from the jsdom renderer has been adapted from altair_saver.\nThis documentation website is generated by Quarto and the bookup custom format."
+  },
+  {
+    "objectID": "gallery_geo.html",
+    "href": "gallery_geo.html",
+    "title": "Mapping and spatial data",
+    "section": "",
+    "text": "import polars as pl\nfrom pyobsplot import Obsplot, Plot, js\n\nop = Obsplot(renderer=\"jsdom\")\n\nThe Geo mark allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.\nThis allows to create choropleth maps such as the following:\n\nimport json\n\n# Load US counties from GeoJson\n# Source : https://eric.clst.org/tech/usgeojson/\nwith open(\"data/us_counties.geojson\", \"r\", encoding=\"windows-1252\") as f:\n    counties = json.load(f)\n\n# Merge unemployment values as GeoJson features property\nunemployment = pl.read_csv(\"data/us-county-unemployment.csv\")\nrates = {\n    id: unemp\n    for id, unemp in zip(unemployment.get_column(\"id\"), unemployment.get_column(\"rate\"))\n}\nfor county in counties[\"features\"]:\n    key = int(county[\"properties\"][\"GEO_ID\"][-5:])\n    if key in rates:\n        county[\"properties\"][\"unemployment\"] = rates[key]\n\n# Map\nop(\n    {\n        \"marks\": [Plot.geo(counties, {\"fill\": js(\"(d) =&gt; d.properties.unemployment\")})],\n        # \"marks\": [Plot.geo(counties, {\"stroke\": \"red\"})],\n        \"projection\": \"albers-usa\",\n        \"color\": {\n            \"type\": \"quantile\",\n            \"n\": 8,\n            \"scheme\": \"blues\",\n            \"label\": \"Unemployment (%)\",\n            \"legend\": True,\n        },\n    }\n)\n\n3.344.555.56.27.4Unemployment (%)\n\n\nGeographic data in Observable notebooks are often stored in TopoJSON files. The topojson package can be useful for these kind of data.\n\nimport topojson as tp\n\n# Import TopoJSON data\nwith open(\"data/us-counties-10m.json\", \"r\") as f:\n    counties = json.load(f)\n\n# Extract \"nation\" objects and convert to GeoJSON\nnation = tp.Topology(counties, object_name=\"nation\").to_geojson(object_name=\"nation\")\nnation = json.loads(nation)\n# Extract \"states\" objects and convert to GeoJSON\nstates = tp.Topology(counties, object_name=\"states\").to_geojson(object_name=\"states\")\nstates = json.loads(states)\n\n# Plot map\nop(\n    {\n        \"marks\": [\n            Plot.geo(states, {\"strokeOpacity\": 0.3}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n    }\n)\n\n\n\n\nOf course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the Mapping notebook.\n\nwalmarts = pl.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\nop(\n    {\n        \"marks\": [\n            Plot.density(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"bandwidth\": 12, \"fill\": \"density\"},\n            ),\n            Plot.dot(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"r\": 1, \"fill\": \"currentColor\"},\n            ),\n            Plot.geo(states, {\"strokeOpacity\": 0.3, \"fill\": None}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n        \"color\": {\"scheme\": \"blues\"},\n    }\n)\n\n/tmp/ipykernel_2398/3427797743.py:1: DeprecationWarning: `sep` is deprecated as an argument to `read_csv`; use `separator` instead.\n  walmarts = pl.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\n\n\n\n\nThe Raster mark creates an image from spatial data.\nPlot allows to do different type of spatial interpolations, such as nearest, which draws voronoi cells around values:\n\nca55 = pl.read_csv(\"data/ca55-south.csv\")\n\n\ndef flare_map(interpolation):\n    return op(\n        {\n            \"x\": {\"axis\": None},\n            \"y\": {\"axis\": None},\n            \"inset\": 10,\n            \"marginBottom\": 2,\n            \"height\": 500,\n            \"color\": {\"type\": \"diverging\"},\n            \"marks\": [\n                Plot.raster(\n                    ca55,\n                    {\n                        \"x\": \"LONGITUDE\",\n                        \"y\": \"LATITUDE\",\n                        \"fill\": \"MAG_IGRF90\",\n                        \"interpolate\": interpolation,\n                    },\n                ),\n                Plot.frame(),\n            ],\n        }\n    )\n\n\nflare_map(\"nearest\")\n\n\n\n\nOr the more recent random walk interpolation:\n\nflare_map(\"random-walk\")"
+  },
+  {
+    "objectID": "development.html",
+    "href": "development.html",
+    "title": "Development",
+    "section": "",
+    "text": "If you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the repository\nInstall Python dependencies with : poetry install\nInstall main JavaScript dependencies with : npm install\nInstall pyobsplot-js dependencies with : cd js/pyobsplot-js && npm install\n\npyobsplot widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code is in js/widget.\npyobsplot jsdom renderer is provided by an npm package. Source code is in js/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
+  },
+  {
+    "objectID": "development.html#install-fom-source",
+    "href": "development.html#install-fom-source",
+    "title": "Development",
+    "section": "",
+    "text": "If you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the repository\nInstall Python dependencies with : poetry install\nInstall main JavaScript dependencies with : npm install\nInstall pyobsplot-js dependencies with : cd js/pyobsplot-js && npm install\n\npyobsplot widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code is in js/widget.\npyobsplot jsdom renderer is provided by an npm package. Source code is in js/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
+  },
+  {
+    "objectID": "development.html#widget-javascript-modification-and-bundling",
+    "href": "development.html#widget-javascript-modification-and-bundling",
+    "title": "Development",
+    "section": "Widget JavaScript modification and bundling",
+    "text": "Widget JavaScript modification and bundling\nEach time widget JavaScript or CSS code is modified in the js/widget directory, it must be bundled with one of the following scripts:\n# Bundle only once\nnpm run bundle\n# Bundle and watch for code change\nnpm run watch\nThe result is put into src/pyobsplot/static."
+  },
+  {
+    "objectID": "development.html#tests",
+    "href": "development.html#tests",
+    "title": "Development",
+    "section": "Tests",
+    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\nTo run Python tests, use:\nnpm run pytest\nTo run JavaScript tests, use one of those:\n# From project root\nnpm run jstest\n# Equivalent to\ncd js/pyobsplot-js && npm run test\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest"
+  },
+  {
+    "objectID": "development.html#debug-mode",
+    "href": "development.html#debug-mode",
+    "title": "Development",
+    "section": "debug mode",
+    "text": "debug mode\n“debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot) in the browser console. It is only available with the “widget” renderer.\nTo activate it, add debug=True when creating your plot generator object:\n\nop = Obsplot(render=\"widget\", debug=True)"
+  },
+  {
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
+  },
+  {
+    "objectID": "getting_started.html#installation",
+    "href": "getting_started.html#installation",
+    "title": "Getting started",
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
+  },
+  {
+    "objectID": "getting_started.html#usage",
+    "href": "getting_started.html#usage",
+    "title": "Getting started",
+    "section": "Usage",
+    "text": "Usage\nTo use pyobsplot, you must import at least its Obsplot and Plot classes with:\n\nfrom pyobsplot import Obsplot, Plot\n\nThe next step is to create a plot generator object with Obsplot(). Here we call it op but you can use any name you want:\n\nop = Obsplot()\n\nTo create a plot, you call your plot generator object and pass it a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n\n\n\nThe syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript true must be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\nBiscoeDreamTorgersen3,0003,5004,0004,5005,0005,5006,000↑ body_mass_g180190200210220230flipper_length_mm →\n\n\nFor the simplest cases, you can also create your plot directly by passing a Plot mark method:\n\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}))\n\n\n\n\nBy default, plots will be created as Jupyter widgets. This allows for (very basic) interactivity, but also generates bigger files. An alternative is to use the jsdom renderer, which generates SVG or HTML outputs.\nThe renderer is determined by passing a renderer argument to Obsplot() when creating a generator object:\n\n# Switch to widget renderer (default one)\nopw = Obsplot(renderer=\"widget\")\n# Switch to jsdom renderer\nopj = Obsplot(renderer=\"jsdom\")"
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "It is now possible to use Plot.plot() directly to create a plot with the widget renderer. This is not documented for the moment.\nAdd debug mode to output"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-development-version",
+    "href": "changelog.html#pyobsplot-development-version",
+    "title": "Changelog",
+    "section": "",
+    "text": "It is now possible to use Plot.plot() directly to create a plot with the widget renderer. This is not documented for the moment.\nAdd debug mode to output"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.0",
+    "href": "changelog.html#pyobsplot-0.3.0",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.0",
+    "text": "pyobsplot 0.3.0\n\nBreaking change: new API, plots are now generated with a plot generator object created by calling Obsplot(). Thanks to @fil for the idea.\nFix: wrong __version__value"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.2.2",
+    "href": "changelog.html#pyobsplot-0.2.2",
+    "title": "Changelog",
+    "section": "pyobsplot 0.2.2",
+    "text": "pyobsplot 0.2.2\n\nFix: plot not recreated correctly on widget value change\nFix: add watchfiles to dependencies to prevent error in Colab"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.2.1",
+    "href": "changelog.html#pyobsplot-0.2.1",
+    "title": "Changelog",
+    "section": "pyobsplot 0.2.1",
+    "text": "pyobsplot 0.2.1\n\nFix: mixing renderers in Jupyter lab moves all outputs to widgets\nCompatibility with Python 3.8"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.2.0",
+    "href": "changelog.html#pyobsplot-0.2.0",
+    "title": "Changelog",
+    "section": "pyobsplot 0.2.0",
+    "text": "pyobsplot 0.2.0\n\nNew jsdom renderer which allows to generate plots as SVG or HTML instead of widgets.\nUpdate Observable Plot to 0.6.5."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.1.3",
+    "href": "changelog.html#pyobsplot-0.1.3",
+    "title": "Changelog",
+    "section": "pyobsplot 0.1.3",
+    "text": "pyobsplot 0.1.3\n\nFirst released version"
+  },
+  {
+    "objectID": "gallery_marks.html",
+    "href": "gallery_marks.html",
+    "title": "Marks",
+    "section": "",
+    "text": "Marks are the building blocks of Plot charts.\nThe following chart, taken from the Cell Mark notebook, shows the rating of every episode of The Simpsons.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, Math, js\n\nop = Obsplot(renderer=\"jsdom\")\n\nsimpsons = pl.read_csv(\"data/simpsons.csv\")\n\nop(\n    {\n        \"height\": 640,\n        \"padding\": 0.05,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Season\"},\n        \"y\": {\"label\": \"Episode\"},\n        \"color\": {\"type\": \"linear\", \"scheme\": \"PiYG\"},\n        \"marks\": [\n            Plot.cell(\n                simpsons,\n                {\"x\": \"season\", \"y\": \"number_in_season\", \"fill\": \"imdb_rating\"},\n            ),\n            Plot.text(\n                simpsons,\n                {\n                    \"x\": \"season\",\n                    \"y\": \"number_in_season\",\n                    \"text\": \"imdb_rating\",\n                    \"title\": \"title\",\n                },\n            ),\n        ],\n    }\n)\n\n\n\n\nFaceting allows to easily produce multiple plots by partitioning data. The following facet plot is taken from the Facets notebook.\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"facet\": {\"marginRight\": 80},\n        \"marks\": [\n            Plot.frame({\"facet\": False}),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"r\": 1.5,\n                    \"fill\": \"#ccc\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                    \"facet\": \"exclude\",\n                },\n            ),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                },\n            ),\n        ],\n    }\n)\n\n\n\n\nSome marks allow for nice representation of complex data. The following plot, taken from the Arrow mark notebook, shows the evolution of inequality and population in various U.S. cities.\n\nmetros = pl.read_csv(\"data/metros.csv\")\n\nop(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"inset\": 10,\n        \"x\": {\"type\": \"log\", \"label\": \"Population →\"},\n        \"y\": {\"label\": \"↑ Inequality\", \"ticks\": 4},\n        \"color\": {\n            \"type\": \"diverging\",\n            \"scheme\": \"burd\",\n            \"label\": \"Change in inequality from 1980 to 2015\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"tickFormat\": \"+f\",\n        },\n        \"marks\": [\n            Plot.arrow(\n                metros,\n                {\n                    \"x1\": \"POP_1980\",\n                    \"y1\": \"R90_10_1980\",\n                    \"x2\": \"POP_2015\",\n                    \"y2\": \"R90_10_2015\",\n                    \"bend\": True,\n                    \"stroke\": js(\"d =&gt; d.R90_10_2015 - d.R90_10_1980\"),\n                },\n            ),\n            Plot.text(\n                metros,\n                {\n                    \"x\": \"POP_2015\",\n                    \"y\": \"R90_10_2015\",\n                    \"filter\": \"highlight\",\n                    \"text\": \"nyt_display\",\n                    \"fill\": \"currentColor\",\n                    \"stroke\": \"white\",\n                    \"dy\": -6,\n                },\n            ),\n        ],\n    }\n)\n\n−3−2−1+0+1+2+3Change in inequality from 1980 to 201545678↑ Inequality200k300k1M2M3M10M20MPopulation →New YorkChicagoHoustonWashington, D.C.San FranciscoSan JoseFairfield, Conn.Binghamton, N.Y.\n\n\nThe contour mark allows for nice representations of spatial data. The following example taken from the Contour mark notebook shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to pyobsplot specificities).\n\nvapor = (\n    pl.read_csv(\"data/vapor.csv\", has_header=False, null_values=\"99999.0\")\n    .transpose()\n    .melt(variable_name=\"column\", value_name=\"values\")\n)\n\nop(\n    {\n        \"projection\": \"equal-earth\",\n        \"color\": {\n            \"scheme\": \"blues\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"nice\": True,\n            \"label\": \"Water vapor (cm)\",\n        },\n        \"marks\": [\n            Plot.contour(\n                vapor,\n                {\n                    \"fill\": \"values\",\n                    \"width\": 360,\n                    \"height\": 180,\n                    \"x1\": -180,\n                    \"y1\": 90,\n                    \"x2\": 180,\n                    \"y2\": -90,\n                    \"interval\": 0.25,\n                    \"blur\": 0.5,\n                    \"interpolate\": \"barycentric\",\n                    \"stroke\": \"currentColor\",\n                    \"strokeWidth\": 0.5,\n                    \"clip\": \"sphere\",\n                },\n            ),\n            Plot.sphere(),\n        ],\n    }\n)\n\n0123456Water vapor (cm)"
+  },
+  {
     "objectID": "usage.html",
     "href": "usage.html",
     "title": "Usage",
@@ -54,159 +215,5 @@
     "title": "Usage",
     "section": "Quarto",
     "text": "Quarto\nObsplot plots are compatible with quarto HTML formats. If you use the jsdom renderer, plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.\nIf your source document is a jupyter notebook (and not a .qmd file), then you have to use the --execute argument to force plot computation and to make them visible in the output:\nquarto render test.ipynb --execute --to html"
-  },
-  {
-    "objectID": "gallery_marks.html",
-    "href": "gallery_marks.html",
-    "title": "Marks",
-    "section": "",
-    "text": "Marks are the building blocks of Plot charts.\nThe following chart, taken from the Cell Mark notebook, shows the rating of every episode of The Simpsons.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, Math, js\n\nop = Obsplot(renderer=\"jsdom\")\n\nsimpsons = pl.read_csv(\"data/simpsons.csv\")\n\nop(\n    {\n        \"height\": 640,\n        \"padding\": 0.05,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Season\"},\n        \"y\": {\"label\": \"Episode\"},\n        \"color\": {\"type\": \"linear\", \"scheme\": \"PiYG\"},\n        \"marks\": [\n            Plot.cell(\n                simpsons,\n                {\"x\": \"season\", \"y\": \"number_in_season\", \"fill\": \"imdb_rating\"},\n            ),\n            Plot.text(\n                simpsons,\n                {\n                    \"x\": \"season\",\n                    \"y\": \"number_in_season\",\n                    \"text\": \"imdb_rating\",\n                    \"title\": \"title\",\n                },\n            ),\n        ],\n    }\n)\n\n\n\n\nFaceting allows to easily produce multiple plots by partitioning data. The following facet plot is taken from the Facets notebook.\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"facet\": {\"marginRight\": 80},\n        \"marks\": [\n            Plot.frame({\"facet\": False}),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"r\": 1.5,\n                    \"fill\": \"#ccc\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                    \"facet\": \"exclude\",\n                },\n            ),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                },\n            ),\n        ],\n    }\n)\n\n\n\n\nSome marks allow for nice representation of complex data. The following plot, taken from the Arrow mark notebook, shows the evolution of inequality and population in various U.S. cities.\n\nmetros = pl.read_csv(\"data/metros.csv\")\n\nop(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"inset\": 10,\n        \"x\": {\"type\": \"log\", \"label\": \"Population →\"},\n        \"y\": {\"label\": \"↑ Inequality\", \"ticks\": 4},\n        \"color\": {\n            \"type\": \"diverging\",\n            \"scheme\": \"burd\",\n            \"label\": \"Change in inequality from 1980 to 2015\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"tickFormat\": \"+f\",\n        },\n        \"marks\": [\n            Plot.arrow(\n                metros,\n                {\n                    \"x1\": \"POP_1980\",\n                    \"y1\": \"R90_10_1980\",\n                    \"x2\": \"POP_2015\",\n                    \"y2\": \"R90_10_2015\",\n                    \"bend\": True,\n                    \"stroke\": js(\"d =&gt; d.R90_10_2015 - d.R90_10_1980\"),\n                },\n            ),\n            Plot.text(\n                metros,\n                {\n                    \"x\": \"POP_2015\",\n                    \"y\": \"R90_10_2015\",\n                    \"filter\": \"highlight\",\n                    \"text\": \"nyt_display\",\n                    \"fill\": \"currentColor\",\n                    \"stroke\": \"white\",\n                    \"dy\": -6,\n                },\n            ),\n        ],\n    }\n)\n\n−3−2−1+0+1+2+3Change in inequality from 1980 to 201545678↑ Inequality200k300k1M2M3M10M20MPopulation →New YorkChicagoHoustonWashington, D.C.San FranciscoSan JoseFairfield, Conn.Binghamton, N.Y.\n\n\nThe contour mark allows for nice representations of spatial data. The following example taken from the Contour mark notebook shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to pyobsplot specificities).\n\nvapor = (\n    pl.read_csv(\"data/vapor.csv\", has_header=False, null_values=\"99999.0\")\n    .transpose()\n    .melt(variable_name=\"column\", value_name=\"values\")\n)\n\nop(\n    {\n        \"projection\": \"equal-earth\",\n        \"color\": {\n            \"scheme\": \"blues\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"nice\": True,\n            \"label\": \"Water vapor (cm)\",\n        },\n        \"marks\": [\n            Plot.contour(\n                vapor,\n                {\n                    \"fill\": \"values\",\n                    \"width\": 360,\n                    \"height\": 180,\n                    \"x1\": -180,\n                    \"y1\": 90,\n                    \"x2\": 180,\n                    \"y2\": -90,\n                    \"interval\": 0.25,\n                    \"blur\": 0.5,\n                    \"interpolate\": \"barycentric\",\n                    \"stroke\": \"currentColor\",\n                    \"strokeWidth\": 0.5,\n                    \"clip\": \"sphere\",\n                },\n            ),\n            Plot.sphere(),\n        ],\n    }\n)\n\n0123456Water vapor (cm)"
-  },
-  {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
-    "section": "",
-    "text": "It is now possible to use Plot.plot() directly to create a plot with the widget renderer. This is not documented for the moment."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-development-version",
-    "href": "changelog.html#pyobsplot-development-version",
-    "title": "Changelog",
-    "section": "",
-    "text": "It is now possible to use Plot.plot() directly to create a plot with the widget renderer. This is not documented for the moment."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.0",
-    "href": "changelog.html#pyobsplot-0.3.0",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.0",
-    "text": "pyobsplot 0.3.0\n\nBreaking change: new API, plots are now generated with a plot generator object created by calling Obsplot(). Thanks to @fil for the idea.\nFix: wrong __version__value"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.2.2",
-    "href": "changelog.html#pyobsplot-0.2.2",
-    "title": "Changelog",
-    "section": "pyobsplot 0.2.2",
-    "text": "pyobsplot 0.2.2\n\nFix: plot not recreated correctly on widget value change\nFix: add watchfiles to dependencies to prevent error in Colab"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.2.1",
-    "href": "changelog.html#pyobsplot-0.2.1",
-    "title": "Changelog",
-    "section": "pyobsplot 0.2.1",
-    "text": "pyobsplot 0.2.1\n\nFix: mixing renderers in Jupyter lab moves all outputs to widgets\nCompatibility with Python 3.8"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.2.0",
-    "href": "changelog.html#pyobsplot-0.2.0",
-    "title": "Changelog",
-    "section": "pyobsplot 0.2.0",
-    "text": "pyobsplot 0.2.0\n\nNew jsdom renderer which allows to generate plots as SVG or HTML instead of widgets.\nUpdate Observable Plot to 0.6.5."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.1.3",
-    "href": "changelog.html#pyobsplot-0.1.3",
-    "title": "Changelog",
-    "section": "pyobsplot 0.1.3",
-    "text": "pyobsplot 0.1.3\n\nFirst released version"
-  },
-  {
-    "objectID": "development.html",
-    "href": "development.html",
-    "title": "Development",
-    "section": "",
-    "text": "If you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the repository\nInstall Python dependencies with : poetry install\nInstall main JavaScript dependencies with : npm install\nInstall pyobsplot-js dependencies with : cd js/pyobsplot-js && npm install\n\npyobsplot widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code is in js/widget.\npyobsplot jsdom renderer is provided by an npm package. Source code is in js/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
-  },
-  {
-    "objectID": "development.html#install-fom-source",
-    "href": "development.html#install-fom-source",
-    "title": "Development",
-    "section": "",
-    "text": "If you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the repository\nInstall Python dependencies with : poetry install\nInstall main JavaScript dependencies with : npm install\nInstall pyobsplot-js dependencies with : cd js/pyobsplot-js && npm install\n\npyobsplot widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code is in js/widget.\npyobsplot jsdom renderer is provided by an npm package. Source code is in js/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
-  },
-  {
-    "objectID": "development.html#widget-javascript-modification-and-bundling",
-    "href": "development.html#widget-javascript-modification-and-bundling",
-    "title": "Development",
-    "section": "Widget JavaScript modification and bundling",
-    "text": "Widget JavaScript modification and bundling\nEach time widget JavaScript or CSS code is modified in the js/widget directory, it must be bundled with one of the following scripts:\n# Bundle only once\nnpm run bundle\n# Bundle and watch for code change\nnpm run watch\nThe result is put into src/pyobsplot/static."
-  },
-  {
-    "objectID": "development.html#tests",
-    "href": "development.html#tests",
-    "title": "Development",
-    "section": "Tests",
-    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\nTo run Python tests, use:\nnpm run pytest\nTo run JavaScript tests, use one of those:\n# From project root\nnpm run jstest\n# Equivalent to\ncd js/pyobsplot-js && npm run test\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest"
-  },
-  {
-    "objectID": "gallery_transforms.html",
-    "href": "gallery_transforms.html",
-    "title": "Transforms",
-    "section": "",
-    "text": "Transforms provide methods to manipulate and compute on data while plotting them.\nGroup transform allows to compute summary values before plotting them. It is often used to make bar charts.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, Math, js\n\nop = Obsplot(renderer=\"jsdom\")\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop(\n    {\n        \"y\": {\"grid\": True, \"percent\": True},\n        \"marks\": [\n            Plot.barY(\n                penguins,\n                Plot.groupZ(\n                    {\"y\": \"proportion-facet\"}, {\"fill\": \"sex\", \"fx\": \"species\"}\n                ),\n            ),\n            Plot.ruleY([0, 1]),\n        ],\n    }\n)\n\n\n\n\nThe Dodge transform allows to pack marks without overlapping. The following chart shows data about IPO offerings in the US.\n\nfrom datetime import datetime\n\nipos = pl.read_csv(\"data/ipos.csv\", try_parse_dates=True).filter(\n    pl.col(\"date\") &gt; datetime(1991, 1, 1)\n)\n\n\nop(\n    {\n        \"insetRight\": 10,\n        \"height\": 600,\n        \"width\": 600,\n        \"marks\": [\n            Plot.dot(\n                ipos, Plot.dodgeY({\"x\": \"date\", \"r\": \"rMVOP\", \"fill\": \"currentColor\"})\n            ),\n            Plot.text(\n                ipos,\n                Plot.dodgeY(\n                    {\n                        \"filter\": js(\"(d) =&gt; d.rMVOP &gt; 5e3\"),\n                        \"x\": \"date\",\n                        \"r\": \"rMVOP\",\n                        \"text\": js(\"d =&gt; (d.rMVOP / 1e3).toFixed()\"),\n                        \"fill\": \"white\",\n                        \"fontWeight\": \"bold\",\n                    }\n                ),\n            ),\n        ],\n    }\n)\n\n\n\n\nThe Hexbin transform aggregates two dimensional points into hexagonal bins.\n\nop(\n    {\n        \"inset\": 10,\n        \"color\": {\"scheme\": \"ylgnbu\", \"legend\": True, \"label\": \"Count\"},\n        \"marks\": [\n            Plot.hexagon(\n                penguins,\n                Plot.hexbin(\n                    {\"r\": \"count\", \"fill\": \"count\"},\n                    {\n                        \"x\": \"culmen_length_mm\",\n                        \"y\": \"flipper_length_mm\",\n                        \"binWidth\": 50,\n                    },\n                ),\n            ),\n            Plot.text(\n                penguins,\n                Plot.hexbin(\n                    {\"text\": \"count\"},\n                    {\n                        \"x\": \"culmen_length_mm\",\n                        \"y\": \"flipper_length_mm\",\n                        \"fill\": \"black\",\n                        \"stroke\": \"white\",\n                        \"binWidth\": 50,\n                    },\n                ),\n            ),\n        ],\n    }\n)\n\n1020Count175180185190195200205210215220225230↑ flipper_length_mm3540455055culmen_length_mm →142611209111275101039322657181533115143211641752810189221734221\n\n\nMap transform family can be used to normalize values.\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nop(\n    {\n        \"marginRight\": 40,\n        \"y\": {\n            \"type\": \"log\",\n            \"grid\": True,\n            \"label\": \"↑ Change in price (%)\",\n            \"tickFormat\": js('(f =&gt; x =&gt; f((x - 1) * 100))(d3.format(\"+d\"))'),\n        },\n        \"marks\": [\n            Plot.ruleY([1]),\n            Plot.line(\n                stocks, Plot.normalizeY({\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\"})\n            ),\n            Plot.text(\n                stocks,\n                Plot.selectLast(\n                    Plot.normalizeY(\n                        {\n                            \"x\": \"Date\",\n                            \"y\": \"Close\",\n                            \"z\": \"Symbol\",\n                            \"text\": \"Symbol\",\n                            \"textAnchor\": \"start\",\n                            \"dx\": 3,\n                        }\n                    )\n                ),\n            ),\n        ],\n    }\n)\n\n\n\n\nSeveral group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the Map transform notebook.\n\n# Load and prepare data\nstateage = (\n    pl.read_csv(\"data/us-population-state-age.csv\")\n    .melt(id_vars=\"name\", variable_name=\"age\", value_name=\"population\")\n    .rename({\"name\": \"state\"})\n)\n# Compute list of age groups\nages = stateage.get_column(\"age\").unique(maintain_order=True).to_list()\n# Compute list of states sorted by the proportion of age ≥80\nstates = (\n    stateage.with_columns(\n        (pl.col(\"population\") / pl.col(\"population\").sum().over(\"state\")).alias(\n            \"percent\"\n        )\n    )\n    .filter(pl.col(\"age\") == \"≥80\")\n    .sort(pl.col(\"percent\"), descending=True)\n    .get_column(\"state\")\n    .to_list()\n)\n\n# Plot.normalizeX default arguments\nxy = {\"basis\": \"sum\", \"z\": \"state\", \"x\": \"population\", \"y\": \"state\"}\n\n# Plot specification\nop(\n    {\n        \"height\": 660,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Percent (%) →\", \"transform\": js(\"d =&gt; d * 100\")},\n        \"y\": {\n            \"domain\": states,\n            \"axis\": None,\n        },\n        \"color\": {\n            \"scheme\": \"spectral\",\n            \"domain\": ages,\n            \"legend\": True,\n        },\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.ruleY(\n                stateage,\n                Plot.groupY({\"x1\": \"min\", \"x2\": \"max\"}, Plot.normalizeX(xy)),\n            ),\n            Plot.dot(\n                stateage,\n                Plot.normalizeX({**xy, \"fill\": \"age\"}),\n            ),\n            Plot.text(\n                stateage,\n                Plot.selectMinX(\n                    Plot.normalizeX(\n                        {\n                            **xy,\n                            \"textAnchor\": \"end\",\n                            \"dx\": -6,\n                            \"text\": \"state\",\n                        }\n                    )\n                ),\n            ),\n        ],\n    }\n)\n\n&lt;1010-1920-2930-3940-4950-5960-6970-79≥8002468101214161820Percent (%) →ALAKAZARCACOCTDEDCFLGAHIIDILINIAKSKYLAMEMDMAMIMNMSMOMTNENVNHNJNMNYNCNDOHOKORPARISCSDTNTXUTVTVAWAWVWIWYPR"
-  },
-  {
-    "objectID": "getting_started.html",
-    "href": "getting_started.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
-  },
-  {
-    "objectID": "getting_started.html#installation",
-    "href": "getting_started.html#installation",
-    "title": "Getting started",
-    "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
-  },
-  {
-    "objectID": "getting_started.html#usage",
-    "href": "getting_started.html#usage",
-    "title": "Getting started",
-    "section": "Usage",
-    "text": "Usage\nTo use pyobsplot, you must import at least its Obsplot and Plot classes with:\n\nfrom pyobsplot import Obsplot, Plot\n\nThe next step is to create a plot generator object with Obsplot(). Here we call it op but you can use any name you want:\n\nop = Obsplot()\n\nTo create a plot, you call your plot generator object and pass it a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n\n\n\nThe syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript true must be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\nBiscoeDreamTorgersen3,0003,5004,0004,5005,0005,5006,000↑ body_mass_g180190200210220230flipper_length_mm →\n\n\nFor the simplest cases, you can also create your plot directly by passing a Plot mark method:\n\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}))\n\n\n\n\nBy default, plots will be created as Jupyter widgets. This allows for (very basic) interactivity, but also generates bigger files. An alternative is to use the jsdom renderer, which generates SVG or HTML outputs.\nThe renderer is determined by passing a renderer argument to Obsplot() when creating a generator object:\n\n# Switch to widget renderer (default one)\nopw = Obsplot(renderer=\"widget\")\n# Switch to jsdom renderer\nopj = Obsplot(renderer=\"jsdom\")"
-  },
-  {
-    "objectID": "gallery_geo.html",
-    "href": "gallery_geo.html",
-    "title": "Mapping and spatial data",
-    "section": "",
-    "text": "import polars as pl\nfrom pyobsplot import Obsplot, Plot, js\n\nop = Obsplot(renderer=\"jsdom\")\n\nThe Geo mark allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.\nThis allows to create choropleth maps such as the following:\n\nimport json\n\n# Load US counties from GeoJson\n# Source : https://eric.clst.org/tech/usgeojson/\nwith open(\"data/us_counties.geojson\", \"r\", encoding=\"windows-1252\") as f:\n    counties = json.load(f)\n\n# Merge unemployment values as GeoJson features property\nunemployment = pl.read_csv(\"data/us-county-unemployment.csv\")\nrates = {\n    id: unemp\n    for id, unemp in zip(unemployment.get_column(\"id\"), unemployment.get_column(\"rate\"))\n}\nfor county in counties[\"features\"]:\n    key = int(county[\"properties\"][\"GEO_ID\"][-5:])\n    if key in rates:\n        county[\"properties\"][\"unemployment\"] = rates[key]\n\n# Map\nop(\n    {\n        \"marks\": [Plot.geo(counties, {\"fill\": js(\"(d) =&gt; d.properties.unemployment\")})],\n        # \"marks\": [Plot.geo(counties, {\"stroke\": \"red\"})],\n        \"projection\": \"albers-usa\",\n        \"color\": {\n            \"type\": \"quantile\",\n            \"n\": 8,\n            \"scheme\": \"blues\",\n            \"label\": \"Unemployment (%)\",\n            \"legend\": True,\n        },\n    }\n)\n\n3.344.555.56.27.4Unemployment (%)\n\n\nGeographic data in Observable notebooks are often stored in TopoJSON files. The topojson package can be useful for these kind of data.\n\nimport topojson as tp\n\n# Import TopoJSON data\nwith open(\"data/us-counties-10m.json\", \"r\") as f:\n    counties = json.load(f)\n\n# Extract \"nation\" objects and convert to GeoJSON\nnation = tp.Topology(counties, object_name=\"nation\").to_geojson(object_name=\"nation\")\nnation = json.loads(nation)\n# Extract \"states\" objects and convert to GeoJSON\nstates = tp.Topology(counties, object_name=\"states\").to_geojson(object_name=\"states\")\nstates = json.loads(states)\n\n# Plot map\nop(\n    {\n        \"marks\": [\n            Plot.geo(states, {\"strokeOpacity\": 0.3}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n    }\n)\n\n\n\n\nOf course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the Mapping notebook.\n\nwalmarts = pl.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\nop(\n    {\n        \"marks\": [\n            Plot.density(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"bandwidth\": 12, \"fill\": \"density\"},\n            ),\n            Plot.dot(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"r\": 1, \"fill\": \"currentColor\"},\n            ),\n            Plot.geo(states, {\"strokeOpacity\": 0.3, \"fill\": None}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n        \"color\": {\"scheme\": \"blues\"},\n    }\n)\n\n/tmp/ipykernel_2866/3427797743.py:1: DeprecationWarning: `sep` is deprecated as an argument to `read_csv`; use `separator` instead.\n  walmarts = pl.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\n\n\n\n\nThe Raster mark creates an image from spatial data.\nPlot allows to do different type of spatial interpolations, such as nearest, which draws voronoi cells around values:\n\nca55 = pl.read_csv(\"data/ca55-south.csv\")\n\n\ndef flare_map(interpolation):\n    return op(\n        {\n            \"x\": {\"axis\": None},\n            \"y\": {\"axis\": None},\n            \"inset\": 10,\n            \"marginBottom\": 2,\n            \"height\": 500,\n            \"color\": {\"type\": \"diverging\"},\n            \"marks\": [\n                Plot.raster(\n                    ca55,\n                    {\n                        \"x\": \"LONGITUDE\",\n                        \"y\": \"LATITUDE\",\n                        \"fill\": \"MAG_IGRF90\",\n                        \"interpolate\": interpolation,\n                    },\n                ),\n                Plot.frame(),\n            ],\n        }\n    )\n\n\nflare_map(\"nearest\")\n\n\n\n\nOr the more recent random walk interpolation:\n\nflare_map(\"random-walk\")"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "pyobsplot",
-    "section": "",
-    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop = Obsplot()\n\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nop(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
-  },
-  {
-    "objectID": "index.html#overview",
-    "href": "index.html#overview",
-    "title": "pyobsplot",
-    "section": "",
-    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop = Obsplot()\n\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nop(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
-  },
-  {
-    "objectID": "index.html#installation-and-usage",
-    "href": "index.html#installation-and-usage",
-    "title": "pyobsplot",
-    "section": "Installation and usage",
-    "text": "Installation and usage\n\n\n\n\n\n\nWarning\n\n\n\nThis project is at an early stage. There will be bugs, and please take a look at the limitations listed below.\n\n\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
-  },
-  {
-    "objectID": "index.html#features-and-limitations",
-    "href": "index.html#features-and-limitations",
-    "title": "pyobsplot",
-    "section": "Features and limitations",
-    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nTwo renderers available: widget, which generates plots as Jupyter widgets, and jsdom, which generate SVG or HTML outputs\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and data type conversions\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\nPlots can be defined with a dictionary, a call to a Plot mark function, or with kwargs. See alternative syntaxes.\nWorks with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the jsdom renderer.\n\nLimitations:\n\nPlots with legends don’t work in Quarto in formats other than HTML.\nSome faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn’t happen when using mark-level faceting (with the fx and fy channels)."
-  },
-  {
-    "objectID": "index.html#credits",
-    "href": "index.html#credits",
-    "title": "pyobsplot",
-    "section": "Credits",
-    "text": "Credits\n\nObservable Plot, developed by Mike Bostock and Philippe Rivière among others.\nThe widget is developed thanks to the anywidget framework.\nSome code from the jsdom renderer has been adapted from altair_saver.\nThis documentation website is generated by Quarto and the bookup custom format."
   }
 ]

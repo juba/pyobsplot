@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://juba.github.io/pyobsplot/usage.html</loc>
-    <lastmod>2023-04-06T09:03:40.107Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_marks.html</loc>
-    <lastmod>2023-04-06T09:03:52.919Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
-    <lastmod>2023-04-06T09:03:53.347Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/development.html</loc>
-    <lastmod>2023-04-06T09:03:54.015Z</lastmod>
-  </url>
-  <url>
     <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
-    <lastmod>2023-04-06T09:04:05.947Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
-    <lastmod>2023-04-06T09:04:14.368Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
-    <lastmod>2023-04-06T09:04:30.400Z</lastmod>
+    <lastmod>2023-04-06T10:15:26.535Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/index.html</loc>
-    <lastmod>2023-04-06T09:04:36.868Z</lastmod>
+    <lastmod>2023-04-06T10:15:34.372Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
+    <lastmod>2023-04-06T10:15:52.309Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/development.html</loc>
+    <lastmod>2023-04-06T10:15:55.822Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
+    <lastmod>2023-04-06T10:16:04.978Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
+    <lastmod>2023-04-06T10:16:05.414Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_marks.html</loc>
+    <lastmod>2023-04-06T10:16:17.627Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/usage.html</loc>
+    <lastmod>2023-04-06T10:16:39.313Z</lastmod>
   </url>
 </urlset>

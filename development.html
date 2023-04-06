@@ -211,6 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#install-fom-source" id="toc-install-fom-source" class="nav-link active" data-scroll-target="#install-fom-source">Install fom source</a></li>
   <li><a href="#widget-javascript-modification-and-bundling" id="toc-widget-javascript-modification-and-bundling" class="nav-link" data-scroll-target="#widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</a></li>
   <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests">Tests</a></li>
+  <li><a href="#debug-mode" id="toc-debug-mode" class="nav-link" data-scroll-target="#debug-mode">debug mode</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/pyobsplot/edit/main/doc/development.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -275,6 +276,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>After that, you can test that currently generated images are the same as the reference one with:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare with reference images</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="debug-mode" class="level2">
+<h2 class="anchored" data-anchor-id="debug-mode">debug mode</h2>
+<p>“debug mode” outputs the computed JavaScript plot structure (the one passed to <code>Plot.plot</code>) in the browser console. It is only available with the “widget” renderer.</p>
+<p>To activate it, add <code>debug=True</code> when creating your plot generator object:</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(render<span class="op">=</span><span class="st">"widget"</span>, debug<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
