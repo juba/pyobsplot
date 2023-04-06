@@ -38,6 +38,7 @@ format:
     embed-fonts: true
     toc: true
     css: styles.css
+    highlight-style: gruvbox
 
 
 
