@@ -68,8 +68,8 @@ For usage instructions, see the [documentation website](https://juba.github.io/p
 
 **Limitations:**
 
-- Plots with legends don't work in Quarto in formats other than HTML.
-- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when using mark-level faceting (with the `fx` and `fy` channels).
+- Plots with legends don't work in Quarto in formats other than HTML. (#9)
+- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when using mark-level faceting (with the `fx` and `fy` channels). (#3)
 
 
 
