@@ -50,8 +50,11 @@ class ObsplotCreator:
         the alternative specification syntaxes.
         """
 
+        # Only one arg which is already a widget output -> returns it as is
+        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], (ObsplotWidget)):
+            spec = "widget"
         # Only one dict arg -> spec passed as dict
-        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+        elif len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
             spec = args[0]
         # Only one kwarg called spec
         elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
@@ -59,8 +62,11 @@ class ObsplotCreator:
         # Only kwargs -> spec is kwargs
         elif len(args) == 0 and len(kwargs) > 0:
             spec = kwargs
+        # No arguments given
+        elif len(args) == 0 and len(kwargs) == 0:
+            raise ValueError("Missing plot specification")
         else:
-            raise ValueError("Incorrect ObsPlot arguments")
+            raise ValueError("Incorrect plot specification")
         return spec
 
 
@@ -72,11 +78,13 @@ class ObsplotWidgetCreator(ObsplotCreator):
     def __init__(self, *args, **kwargs) -> None:
         pass
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> ObsplotWidget:
         """
         Method called whent an instance is called.
         """
         spec = self.get_spec(*args, **kwargs)
+        if spec == "widget":
+            return args[0]
         return ObsplotWidget(spec)
 
 
@@ -88,9 +96,11 @@ class ObsplotJsdomCreator(ObsplotCreator):
     def __init__(self, *args, **kwargs) -> None:
         pass
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> None:
         """
         Method called whent an instance is called.
         """
         spec = self.get_spec(*args, **kwargs)
+        if spec == "widget":
+            raise ValueError("Incorrect plot specification")
         display(ObsplotJsdom(spec).plot())

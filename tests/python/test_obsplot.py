@@ -5,20 +5,21 @@ Tests for Obsplot main class.
 import pytest
 
 import pyobsplot
-from pyobsplot import Obsplot
+from pyobsplot import Obsplot, Plot
 
 
-class TestWidget:
+class TestInit:
     def test_renderers(self):
         op = Obsplot()
         ow = Obsplot(renderer="widget")
         oj = Obsplot(renderer="jsdom")
-        assert type(op) == pyobsplot.obsplot.ObsplotWidgetCreator
-        assert type(ow) == pyobsplot.obsplot.ObsplotWidgetCreator
-        assert type(oj) == pyobsplot.obsplot.ObsplotJsdomCreator
+        assert isinstance(op, pyobsplot.obsplot.ObsplotWidgetCreator)
+        assert isinstance(ow, pyobsplot.obsplot.ObsplotWidgetCreator)
+        assert isinstance(oj, pyobsplot.obsplot.ObsplotJsdomCreator)
         with pytest.raises(ValueError):
             Obsplot(renderer="foobar")
 
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     def test_init(self):
         op = Obsplot()
         ow = Obsplot(renderer="widget")
@@ -29,3 +30,22 @@ class TestWidget:
             ow("foo")
         with pytest.raises(ValueError):
             oj("foo")
+        with pytest.raises(ValueError):
+            oj()
+        spec = Plot.lineY([1, 2])
+        assert isinstance(op(spec), pyobsplot.obsplot.ObsplotWidget)
+        assert isinstance(ow(spec), pyobsplot.obsplot.ObsplotWidget)
+        assert oj(spec) is None
+
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
+    def test_plot_plot(self):
+        spec = Plot.lineY([1, 2])
+        ow = Obsplot(renderer="widget")
+        oj = Obsplot(renderer="jsdom")
+        plot = Plot.plot(spec)
+        assert isinstance(plot, pyobsplot.obsplot.ObsplotWidget)
+        ow_plot = ow(plot)
+        assert isinstance(ow_plot, pyobsplot.obsplot.ObsplotWidget)
+        assert ow_plot.spec == plot.spec
+        with pytest.raises(ValueError):
+            oj(plot)

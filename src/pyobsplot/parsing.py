@@ -139,45 +139,6 @@ class SpecParser:
         return result
 
 
-class JSModule(type):
-    """metaclass to allow JavaScript module and methods handling."""
-
-    def __getattr__(cls: type, name: str) -> callable:
-        """Intercept methods calling and returns a parsed and typed dict object."""
-
-        def wrapper(*args, **kwargs) -> dict:
-            if kwargs:
-                raise ValueError(
-                    f"kwargs must not be passed to {cls.__name__}.{name} : {kwargs}"
-                )
-            return {
-                "pyobsplot-type": "function",
-                "module": cls.__name__,
-                "method": name,
-                "args": args,
-            }
-
-        return wrapper
-
-
-class Plot(metaclass=JSModule):
-    """JSModule class to allow Plot objects in specification."""
-
-    pass
-
-
-class d3(metaclass=JSModule):
-    """JSModule class to allow d3 objects in specification."""
-
-    pass
-
-
-class Math(metaclass=JSModule):
-    """JSModule class to allow Math objects in specification."""
-
-    pass
-
-
 def js(txt: str) -> dict:
     """Tag a string as JavaScript code.
 

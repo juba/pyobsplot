@@ -8,7 +8,7 @@ import pandas as pd
 import polars as pl
 import datetime
 
-from pyobsplot import parsing
+from pyobsplot import jsmodules
 from pyobsplot.parsing import SpecParser, js
 from pyobsplot.data import pd_to_arrow, pl_to_arrow
 
@@ -103,26 +103,26 @@ class TestSpecParser:
         }
 
     def test_parse_js(self):
-        assert SpecParser().parse(parsing.Plot.foo()) == {
+        assert SpecParser().parse(jsmodules.Plot.foo()) == {
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "foo",
             "args": [],
         }
-        assert SpecParser().parse(parsing.d3.bar(1, "baz")) == {
+        assert SpecParser().parse(jsmodules.d3.bar(1, "baz")) == {
             "pyobsplot-type": "function",
             "module": "d3",
             "method": "bar",
             "args": [1, "baz"],
         }
-        assert SpecParser().parse(parsing.Math.random) == {
+        assert SpecParser().parse(jsmodules.Math.random) == {
             "pyobsplot-type": "function-object",
             "module": "Math",
             "method": "random",
             "args": (),
         }
         with pytest.raises(ValueError):
-            SpecParser().parse(parsing.d3.bar(1, x="baz")) == {
+            SpecParser().parse(jsmodules.d3.bar(1, x="baz")) == {
                 "pyobsplot-type": "function",
                 "module": "d3",
                 "method": "bar",
@@ -229,25 +229,25 @@ class TestSpecParser:
 
 class TestJsModules:
     def test_js_modules(self):
-        assert parsing.Plot.foo() == {
+        assert jsmodules.Plot.foo() == {
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "foo",
             "args": (),
         }
-        assert parsing.d3.bar() == {
+        assert jsmodules.d3.bar() == {
             "pyobsplot-type": "function",
             "module": "d3",
             "method": "bar",
             "args": (),
         }
-        assert parsing.Math.baz() == {
+        assert jsmodules.Math.baz() == {
             "pyobsplot-type": "function",
             "module": "Math",
             "method": "baz",
             "args": (),
         }
-        assert parsing.Math.baz() == {
+        assert jsmodules.Math.baz() == {
             "pyobsplot-type": "function",
             "module": "Math",
             "method": "baz",
@@ -255,13 +255,13 @@ class TestJsModules:
         }
 
     def test_js_modules_args(self):
-        assert parsing.Plot.foo(1, "bar") == {
+        assert jsmodules.Plot.foo(1, "bar") == {
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "foo",
             "args": (1, "bar"),
         }
-        assert parsing.Plot.foo([1, 2], {"x": "foo"}) == {
+        assert jsmodules.Plot.foo([1, 2], {"x": "foo"}) == {
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "foo",
@@ -270,12 +270,12 @@ class TestJsModules:
 
     def test_js_modules_kwargs(self):
         with pytest.raises(ValueError, match="kwargs must not be passed to d3\\.foo.*"):
-            parsing.d3.foo(x=1)
+            jsmodules.d3.foo(x=1)
         with pytest.raises(ValueError, match="kwargs must not be passed to d3\\.bar.*"):
-            parsing.d3.bar(12, x=1)
+            jsmodules.d3.bar(12, x=1)
 
     def test_js(self):
-        assert parsing.js("d => d.foo") == {
+        assert js("d => d.foo") == {
             "pyobsplot-type": "js",
             "value": "d => d.foo",
         }
