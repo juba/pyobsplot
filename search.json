@@ -11,14 +11,14 @@
     "href": "index.html",
     "title": "pyobsplot",
     "section": "",
-    "text": "import pyobsplot\nfrom pyobsplot import Plot, Obsplot, d3, Math, js\n\npyobsplot.jsmodules._plot_renderer = \"jsdom\"\n\nop = Obsplot(renderer=\"jsdom\")"
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
   },
   {
     "objectID": "index.html#overview",
     "href": "index.html#overview",
     "title": "pyobsplot",
-    "section": "Overview",
-    "text": "Overview\npyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks. Plots are produced as widgets from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins, {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"sex\"}\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
   },
   {
     "objectID": "index.html#installation-and-usage",
@@ -88,14 +88,14 @@
     "href": "getting_started.html",
     "title": "Getting started",
     "section": "",
-    "text": "import pyobsplot\nfrom pyobsplot import Plot, Obsplot, d3, Math, js\n\npyobsplot.jsmodules._plot_renderer = \"jsdom\"\n\nop = Obsplot(renderer=\"jsdom\")"
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
   },
   {
     "objectID": "getting_started.html#installation",
     "href": "getting_started.html#installation",
     "title": "Getting started",
-    "section": "Installation",
-    "text": "Installation\npyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the following package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
   },
   {
     "objectID": "getting_started.html#usage",
@@ -165,7 +165,7 @@
     "href": "usage.html",
     "title": "Usage",
     "section": "",
-    "text": "import pyobsplot\nfrom pyobsplot import Plot, Obsplot, d3, Math, js\n\npyobsplot.jsmodules._plot_renderer = \"jsdom\"\n\nop = Obsplot(renderer=\"jsdom\")\nFor a quick usage introduction, see getting started.\nWe start by importing the needed modules and create a plot generator object:\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()"
+    "text": "For a quick usage introduction, see getting started.\nWe start by importing the needed modules and create a plot generator object:\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()"
   },
   {
     "objectID": "usage.html#from-javascript-to-python",
