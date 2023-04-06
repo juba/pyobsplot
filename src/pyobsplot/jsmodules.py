@@ -1,5 +1,9 @@
-from .obsplot import ObsplotWidgetCreator
+from .obsplot import ObsplotWidgetCreator, ObsplotJsdomCreator
 from .widget import ObsplotWidget
+
+# Default renderer for Plot.plot() calls.
+# Not documented, only internal use for documentation generation
+_plot_renderer = "widget"
 
 
 class JSModule(type):
@@ -42,7 +46,10 @@ class Plot(metaclass=JSModule):
         Plot.plot static method. If called directly, create an ObsplotWidget
         with args and kwargs.
         """
-        op = ObsplotWidgetCreator()
+        if _plot_renderer == "widget":
+            op = ObsplotWidgetCreator()
+        if _plot_renderer == "jsdom":
+            op = ObsplotJsdomCreator()
         return op(*args, **kwargs)
 
 
