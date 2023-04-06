@@ -22,7 +22,7 @@ class ObsplotJsdom:
     Python kwargs.
     """
 
-    def __init__(self, spec: Any) -> None:
+    def __init__(self, spec: Any, debug: bool = False) -> None:
         """
         Constructor. Parse the spec given as argument.
         """
@@ -31,7 +31,7 @@ class ObsplotJsdom:
         # Parse spec code
         code = parser.parse(spec)
         # Create spec object
-        spec = {"data": parser.serialize_data(), "code": code}
+        spec = {"data": parser.serialize_data(), "code": code, "debug": debug}
         self.spec = spec
 
     def plot(self):

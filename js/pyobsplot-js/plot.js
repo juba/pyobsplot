@@ -19,6 +19,11 @@ export function generate_plot(spec, renderer) {
                 out = out.plot()
             }
         } else {
+            if (spec["debug"]) {
+                console.log("--- start pyobsplot debugging output ---")
+                console.log(out)
+                console.log("--- end pyobsplot debugging output ---")
+            }
             out = Plot.plot(out)
         }
     } catch (error) {

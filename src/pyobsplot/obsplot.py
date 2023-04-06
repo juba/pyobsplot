@@ -17,7 +17,7 @@ class Obsplot:
     with ObsplotJsdom depending on the renderer.
     """
 
-    def __new__(cls, renderer: str = "widget", *args, **kwargs) -> Any:
+    def __new__(cls, renderer: str = "widget", debug: bool = False) -> Any:
         """
         Main Obsplot class constructor. Returns a Creator instance depending on the
         renderer passed as argument.
@@ -27,9 +27,11 @@ class Obsplot:
 
         # Plot spec with the configured renderer
         if renderer == "widget":
-            return ObsplotWidgetCreator(*args, **kwargs)
+            return ObsplotWidgetCreator(debug)
         elif renderer == "jsdom":
-            return ObsplotJsdomCreator(*args, **kwargs)
+            if debug:
+                raise ValueError("debug mode is not available with jsdom renderer")
+            return ObsplotJsdomCreator()
         else:
             raise ValueError(
                 f"""
@@ -75,8 +77,8 @@ class ObsplotWidgetCreator(ObsplotCreator):
     Widget renderer Creator class.
     """
 
-    def __init__(self, *args, **kwargs) -> None:
-        pass
+    def __init__(self, debug: bool = False) -> None:
+        self._debug = debug
 
     def __call__(self, *args, **kwargs) -> ObsplotWidget:
         """
@@ -85,7 +87,7 @@ class ObsplotWidgetCreator(ObsplotCreator):
         spec = self.get_spec(*args, **kwargs)
         if spec == "widget":
             return args[0]
-        return ObsplotWidget(spec)
+        return ObsplotWidget(spec, debug=self._debug)
 
 
 class ObsplotJsdomCreator(ObsplotCreator):
@@ -93,7 +95,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
     Jsdom renderer Creator class.
     """
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self) -> None:
         pass
 
     def __call__(self, *args, **kwargs) -> None:

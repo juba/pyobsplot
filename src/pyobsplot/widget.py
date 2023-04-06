@@ -26,9 +26,9 @@ class ObsplotWidget(anywidget.AnyWidget):
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
 
-    def __init__(self, spec):
+    def __init__(self, spec, debug: bool = False):
         """Obsplot widget constructor."""
-
+        self._debug = debug
         # Init widget
         super().__init__(spec=spec)
 
@@ -37,5 +37,5 @@ class ObsplotWidget(anywidget.AnyWidget):
         spec = proposal["value"]
         parser = SpecParser("widget")
         code = parser.parse(spec)
-        spec = {"data": parser.serialize_data(), "code": code}
+        spec = {"data": parser.serialize_data(), "code": code, "debug": self._debug}
         return spec

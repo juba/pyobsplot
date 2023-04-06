@@ -2,6 +2,7 @@
 
 
 - It is now possible to use Plot.plot() directly to create a plot with the widget renderer. This is not documented for the moment.
+- Add debug mode to output 
   
 
 ## pyobsplot 0.3.0
