@@ -19,10 +19,10 @@ import geopandas as gpd
 import pandas as pd
 
 # Load US counties from TopoJson with geopandas
-counties = gpd.read_file("../doc/data/us-counties-10m.json", layer="counties")
+counties = gpd.read_file("data/us-counties-10m.json", layer="counties")
 counties["id"] = pd.to_numeric(counties["id"])
 # Merge unemployment values
-unemployment = pd.read_csv("../doc/data/us-county-unemployment.csv")
+unemployment = pd.read_csv("data/us-county-unemployment.csv")
 counties = pd.merge(counties, unemployment.loc[:, ("id", "rate")], on="id", how="left")
 
 # Convert geodataframe to GeoJson
@@ -50,8 +50,8 @@ Of course other marks can be used in conjunction with geo marks. This example re
 
 ```{python}
 # Load US states from TopoJson with geopandas and convert to GeoJson
-states = gpd.read_file("../doc/data/us-counties-10m.json", layer="states").to_json()
-nation = gpd.read_file("../doc/data/us-counties-10m.json", layer="nation").to_json()
+states = gpd.read_file("data/us-counties-10m.json", layer="states").to_json()
+nation = gpd.read_file("data/us-counties-10m.json", layer="nation").to_json()
 
 walmarts = pd.read_csv("data/walmarts.tsv", sep="\t")
 
