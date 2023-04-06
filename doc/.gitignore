@@ -1,3 +1,6 @@
 /.quarto/
 _site/
 _freeze/
+site_libs/
+*_files/
+*.html
