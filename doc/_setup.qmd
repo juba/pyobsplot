@@ -1,0 +1,8 @@
+```{python}
+import pyobsplot
+from pyobsplot import Plot, Obsplot, d3, Math, js
+
+pyobsplot.jsmodules._plot_renderer = "jsdom"
+
+op = Obsplot(renderer="jsdom")
+```

@@ -2,19 +2,16 @@
 title: "Usage"
 ---
 
+{{< include _setup.qmd >}}
+
 For a quick usage introduction, see [getting started](getting_started.qmd).
 
 We start by importing the needed modules and create a plot generator object:
 
 ```{python}
-#| include: false
-from pyobsplot import Obsplot, Plot, d3
-op = Obsplot(renderer="jsdom")
-```
-
-```{python}
 #| eval: false
 from pyobsplot import Obsplot, Plot
+
 op = Obsplot()
 ```
 
@@ -30,7 +27,7 @@ Converting a plot specification from JavaScript to Python should be straightforw
 So for example, the following JavaScript code:
 
 ```javascript
-Plot(
+Plot.plot(
     {
         color: {legend: true}
         grid: false,

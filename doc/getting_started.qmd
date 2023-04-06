@@ -2,6 +2,8 @@
 title: "Getting started"
 ---
 
+{{< include _setup.qmd >}}
+
 ## Installation
 
 `pyobsplot` can be installed with `pip`:
@@ -21,27 +23,14 @@ npm install -g pyobsplot
 
 ## Usage
 
-To use `pyobsplot`, you must import at least its `Obsplot` and `Plot` classes with:
+To use `pyobsplot`, you must import at least its `Plot` class with:
 
 ```{python}
-from pyobsplot import Obsplot, Plot
+from pyobsplot import Plot
 
 ```
 
-The next step is to create a *plot generator object* with `Obsplot()`. Here we call it `op` but you can use any name you want:
-
-```{python}
-# | eval: false
-op = Obsplot()
-```
-
-```{python}
-# | echo: false
-op = Obsplot(renderer="jsdom")
-```
-
-
-To create a plot, you call your plot generator object and pass it a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
+To create a plot, you call the `Plot.plot` method and pass it a plot specification as argument. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
 
 So, starting with a very simple DataFrame:
 
@@ -60,7 +49,7 @@ data = pl.DataFrame(
 If your JavaScript plot function looks like this:
 
 ```javascript
-Plot(
+Plot.plot(
     {
         grid: true,
         marks: [Plot.dot(data, {x: "x", y: "y", fill: "type", r: 5})]
@@ -71,7 +60,7 @@ Plot(
 Then you can reproduce the plot with:
 
 ```{python}
-op(
+Plot.plot(
     {
         "grid": True,
         "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
@@ -86,7 +75,7 @@ You can use pandas and polars DataFrames as data sources, they are automatically
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")
 
-op(
+Plot.plot(
     {
         "grid": True,
         "color": {"legend": True},
@@ -100,7 +89,29 @@ op(
 )
 ```
 
-For the simplest cases, you can also create your plot directly by passing a `Plot` mark method:
+
+Calling `Plot.plot()` is the fastest way to generate a plot with the default settings. For further customization you have to import the `Obsplot` class and create a *plot generator object* by calling `Obsplot()`:
+
+```{python}
+from pyobsplot import Obsplot, Plot
+
+op = Obsplot()
+```
+
+You can then create plots by passing your plot specification to this generator object:
+
+```{python}
+# | eval: false
+
+op(
+    {
+        "grid": True,
+        "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
+    }
+)
+```
+
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to your generator object:
 
 ```{python}
 op(Plot.auto(penguins, {"x": "flipper_length_mm"}))

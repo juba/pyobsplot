@@ -12,13 +12,11 @@ It allows to do things like :
 
 ```python
 import polars as pl
-from pyobsplot import Obsplot, Plot
+from pyobsplot import Plot
 
 penguins = pl.read_csv("https://github.com/juba/pyobsplot/raw/main/doc/data/penguins.csv")
 
-op = Obsplot()
-
-op({
+Plot.plot({
     "grid": True,
     "color": {"legend": True},
     "marks": [
@@ -39,7 +37,7 @@ op({
 
 ## Installation and usage
 
-> **Warning**: this project is at a very early stage. There will be bugs, and please take a look at the limitations listed below.
+> **Warning**: this project is at an early stage. There will be bugs, and the API may change.
 
 `pyobsplot` can be installed with `pip`:
 
