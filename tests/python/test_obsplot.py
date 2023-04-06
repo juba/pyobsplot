@@ -29,7 +29,7 @@ class TestInit:
         op = Obsplot(renderer="widget", debug=True)
         assert op._debug
         op = Obsplot(renderer="jsdom")
-        assert op._debug is None
+        assert "_debug" not in op.__dict__
         with pytest.raises(ValueError):
             op = Obsplot(renderer="jsdom", debug=True)
 
