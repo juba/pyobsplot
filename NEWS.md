@@ -1,20 +1,23 @@
 ## pyobsplot (development version)
 
 
+- It is now possible to use Plot.plot() directly to create a plot with the widget renderer. This is not documented for the moment.
+  
+
 ## pyobsplot 0.3.0
 
 - Breaking change: new API, plots are now generated with a *plot generator object* created by calling `Obsplot()`. Thanks to [@fil](https://github.com/fil) for the idea.
-- fix: wrong __version__value
+- Fix: wrong __version__value
 
 ## pyobsplot 0.2.2
 
-- fix: plot not recreated correctly on widget value change
-- fix: add watchfiles to dependencies to prevent error in Colab
+- Fix: plot not recreated correctly on widget value change
+- Fix: add watchfiles to dependencies to prevent error in Colab
 
 
 ## pyobsplot 0.2.1
 
-- fix: mixing renderers in Jupyter lab moves all outputs to widgets
+- Fix: mixing renderers in Jupyter lab moves all outputs to widgets
 - Compatibility with Python 3.8
 
 
