@@ -29,6 +29,7 @@ class TestSpecParser:
     def test_parse_geojson(self):
         df = pd.DataFrame({"x": [1, 2], "y": [1, 3]})
         parser = SpecParser()
+        # Geojson as dict
         parsed = parser.parse({"type": "FeatureCollection", "val": df})
         assert parsed == {"pyobsplot-type": "GeoJson-ref", "value": 0}
         assert parser.data == [
@@ -37,6 +38,13 @@ class TestSpecParser:
                 "val": df,
             }
         ]
+        # Geojson as string
+        parsed = parser.parse('{"type": "FeatureCollection", "val": [1, 2]}')
+        assert parsed == {"pyobsplot-type": "GeoJson-ref", "value": 1}
+        assert parser.data[1] == {
+            "type": "FeatureCollection",
+            "val": [1, 2],
+        }
 
     def test_parse_dataframe(self):
         df_pd = pd.DataFrame({"x": [1, 2], "y": ["foo", "bar"]})

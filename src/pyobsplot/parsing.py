@@ -3,6 +3,7 @@ Plot specification parsing.
 """
 
 import datetime
+import json
 import base64
 import pandas as pd
 import polars as pl
@@ -55,7 +56,10 @@ class SpecParser:
         # If list or tuple, recursively parse elements
         if isinstance(spec, (list, tuple)):
             return [self.parse(s) for s in spec]
-        # If Geojson, handle caching, don't parse, add type and returns as is
+        # If Geojson as string, parse as dict and continue parsing
+        if isinstance(spec, str) and spec[0:28] == '{"type": "FeatureCollection"':
+            spec = json.loads(spec)
+        # If Geojson as dict, handle caching, don't parse, add type and returns as is
         if (
             isinstance(spec, dict)
             and "type" in spec
