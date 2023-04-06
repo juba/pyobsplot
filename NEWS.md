@@ -2,14 +2,14 @@
 
 
 - GeoJson data passed as `string` instead of `dict` is serialized correctly.
-- It is now possible to use Plot.plot() directly to create a plot with the widget renderer.
+- It is now possible to use `Plot.plot()` directly to create a plot with the widget renderer.
 - Add debug mode to output 
   
 
 ## pyobsplot 0.3.0
 
 - Breaking change: new API, plots are now generated with a *plot generator object* created by calling `Obsplot()`. Thanks to [@fil](https://github.com/fil) for the idea.
-- Fix: wrong __version__value
+- Fix: wrong `__version__` value
 
 ## pyobsplot 0.2.2
 
