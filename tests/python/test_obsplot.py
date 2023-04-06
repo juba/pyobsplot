@@ -19,6 +19,20 @@ class TestInit:
         with pytest.raises(ValueError):
             Obsplot(renderer="foobar")
 
+    def test_debug(self):
+        op = Obsplot()
+        assert op._debug is False
+        op = Obsplot(debug=True)
+        assert op._debug
+        op = Obsplot(renderer="widget")
+        assert op._debug is False
+        op = Obsplot(renderer="widget", debug=True)
+        assert op._debug
+        op = Obsplot(renderer="jsdom")
+        assert op._debug is None
+        with pytest.raises(ValueError):
+            op = Obsplot(renderer="jsdom", debug=True)
+
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     def test_init(self):
         op = Obsplot()
