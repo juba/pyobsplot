@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
-    <lastmod>2023-04-05T17:59:03.259Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/index.html</loc>
-    <lastmod>2023-04-05T17:59:10.347Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
-    <lastmod>2023-04-05T17:59:25.427Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/development.html</loc>
-    <lastmod>2023-04-05T17:59:26.035Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
-    <lastmod>2023-04-05T17:59:33.827Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
-    <lastmod>2023-04-05T17:59:34.175Z</lastmod>
+    <loc>https://juba.github.io/pyobsplot/usage.html</loc>
+    <lastmod>2023-04-06T08:55:33.868Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/gallery_marks.html</loc>
-    <lastmod>2023-04-05T17:59:44.463Z</lastmod>
+    <lastmod>2023-04-06T08:55:48.288Z</lastmod>
   </url>
   <url>
-    <loc>https://juba.github.io/pyobsplot/usage.html</loc>
-    <lastmod>2023-04-05T18:00:02.931Z</lastmod>
+    <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
+    <lastmod>2023-04-06T08:55:48.760Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/development.html</loc>
+    <lastmod>2023-04-06T08:55:49.572Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
+    <lastmod>2023-04-06T08:56:02.892Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
+    <lastmod>2023-04-06T08:56:12.200Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
+    <lastmod>2023-04-06T08:56:30.853Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/index.html</loc>
+    <lastmod>2023-04-06T08:56:38.161Z</lastmod>
   </url>
 </urlset>
