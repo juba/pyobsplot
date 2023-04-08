@@ -4,7 +4,10 @@ title: "Marks"
 
 {{< include _setup.qmd >}}
 
+
 [Marks](https://observablehq.com/@observablehq/plot-marks?collection=@observablehq/plot) are the building blocks of Plot charts. 
+
+## Cell mark
 
 The following chart, taken from the [Cell Mark notebook](https://observablehq.com/@observablehq/plot-cell?collection=@observablehq/plot), shows the rating of every episode of *The Simpsons*.
 
@@ -41,6 +44,8 @@ Plot.plot(
 )
 
 ```
+
+## Faceting
 
 *Faceting* allows to easily produce multiple plots by partitioning data. The following facet plot is taken from the [Facets notebook](https://observablehq.com/@observablehq/plot-facets?collection=@observablehq/plot).
 
@@ -79,6 +84,8 @@ Plot.plot(
     }
 )
 ```
+
+## Arrow mark
 
 Some marks allow for nice representation of complex data. The following plot, taken from the [Arrow mark notebook](https://observablehq.com/@observablehq/plot-arrow?collection=@observablehq/plot), shows the evolution of inequality and population in various U.S. cities.
 
@@ -129,6 +136,8 @@ Plot.plot(
 )
 ```
 
+## Contour mark
+
 The contour mark allows for nice representations of spatial data. The following example taken from the [Contour mark notebook](https://observablehq.com/@observablehq/plot-contour?collection=@observablehq/plot) shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to `pyobsplot` specificities).
 
 ```{python}
@@ -140,6 +149,7 @@ vapor = (
 
 Plot.plot(
     {
+        "width": 850,
         "projection": "equal-earth",
         "color": {
             "scheme": "blues",

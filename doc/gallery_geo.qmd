@@ -4,7 +4,7 @@ title: "Mapping and spatial data"
 
 {{< include _setup.qmd >}}
 
-
+## Geo mark
 
 The [Geo mark](https://observablehq.com/@observablehq/plot-geo?collection=@observablehq/plot) allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.
 
@@ -42,7 +42,6 @@ Plot.plot(
 ```
 
 
-
 Of course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the [Mapping notebook](https://observablehq.com/@observablehq/plot-mapping?collection=@observablehq/plot).
 
 ```{python}
@@ -71,6 +70,8 @@ Plot.plot(
     }
 )
 ```
+
+## Raster mark
 
 The [Raster mark](https://observablehq.com/@observablehq/plot-raster?collection=@observablehq/plot) creates an image from spatial data.
 

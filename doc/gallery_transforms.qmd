@@ -8,6 +8,8 @@ title: "Transforms"
 [Transforms](https://observablehq.com/@observablehq/plot-transforms?collection=@observablehq/plot) provide methods to manipulate and compute on data while plotting them.
 
 
+## Group transform
+
 [Group transform](https://observablehq.com/@observablehq/plot-group?collection=@observablehq/plot) allows to compute summary values before plotting them. It is often used to make bar charts.
 
 ```{python}
@@ -31,6 +33,8 @@ Plot.plot(
     }
 )
 ```
+
+## Dodge transform
 
 The [Dodge transform](https://observablehq.com/@observablehq/plot-dodge?collection=@observablehq/plot) allows to pack marks without overlapping. The following chart shows data about IPO offerings in the US.
 
@@ -69,6 +73,8 @@ Plot.plot(
 )
 ```
 
+## Hexbin transform
+
 The [Hexbin transform](https://observablehq.com/@observablehq/plot-hexbin?collection=@observablehq/plot) aggregates two dimensional points into hexagonal bins.
 
 ```{python}
@@ -106,6 +112,8 @@ Plot.plot(
 )
 ```
 
+
+## Map transform
 
 [Map transform](https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot) family can be used to normalize values.
 
@@ -146,6 +154,9 @@ Plot.plot(
     }
 )
 ```
+
+
+## Transforms composition
 
 Several group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the [Map transform](https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot) notebook.
 
