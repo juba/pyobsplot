@@ -2,19 +2,19 @@
 title: "Marks"
 ---
 
+{{< include _setup.qmd >}}
+
 [Marks](https://observablehq.com/@observablehq/plot-marks?collection=@observablehq/plot) are the building blocks of Plot charts. 
 
 The following chart, taken from the [Cell Mark notebook](https://observablehq.com/@observablehq/plot-cell?collection=@observablehq/plot), shows the rating of every episode of *The Simpsons*.
 
 ```{python}
 import polars as pl
-from pyobsplot import Obsplot, Plot, d3, Math, js
-
-op = Obsplot(renderer="jsdom")
+from pyobsplot import Plot, d3, Math, js
 
 simpsons = pl.read_csv("data/simpsons.csv")
 
-op(
+Plot.plot(
     {
         "height": 640,
         "padding": 0.05,
@@ -47,7 +47,7 @@ op(
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")
 
-op(
+Plot.plot(
     {
         "height": 600,
         "grid": True,
@@ -85,7 +85,7 @@ Some marks allow for nice representation of complex data. The following plot, ta
 ```{python}
 metros = pl.read_csv("data/metros.csv")
 
-op(
+Plot.plot(
     {
         "height": 600,
         "grid": True,
@@ -138,7 +138,7 @@ vapor = (
     .melt(variable_name="column", value_name="values")
 )
 
-op(
+Plot.plot(
     {
         "projection": "equal-earth",
         "color": {

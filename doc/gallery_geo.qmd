@@ -2,19 +2,16 @@
 title: "Mapping and spatial data"
 ---
 
+{{< include _setup.qmd >}}
 
-```{python}
-import polars as pl
-from pyobsplot import Obsplot, Plot, js
 
-op = Obsplot(renderer="jsdom")
-```
 
 The [Geo mark](https://observablehq.com/@observablehq/plot-geo?collection=@observablehq/plot) allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.
 
 This allows to create choropleth maps such as the following:
 
 ```{python}
+from pyobsplot import Obsplot, Plot
 import geopandas as gpd
 import pandas as pd
 
@@ -29,7 +26,7 @@ counties = pd.merge(counties, unemployment.loc[:, ("id", "rate")], on="id", how=
 counties = counties.to_json()
 
 # Map
-op(
+Plot.plot(
     {
         "marks": [Plot.geo(counties, {"fill": js("(d) => d.properties.rate")})],
         "projection": "albers-usa",
@@ -55,7 +52,7 @@ nation = gpd.read_file("data/us-counties-10m.json", layer="nation").to_json()
 
 walmarts = pd.read_csv("data/walmarts.tsv", sep="\t")
 
-op(
+Plot.plot(
     {
         "marks": [
             Plot.density(
@@ -80,11 +77,13 @@ The [Raster mark](https://observablehq.com/@observablehq/plot-raster?collection=
 Plot allows to do different type of spatial interpolations, such as *nearest*, which draws voronoi cells around values:
 
 ```{python}
+import polars as pl
+
 ca55 = pl.read_csv("data/ca55-south.csv")
 
 
 def flare_map(interpolation):
-    return op(
+    return Plot.plot(
         {
             "x": {"axis": None},
             "y": {"axis": None},
