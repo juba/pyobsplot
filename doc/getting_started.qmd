@@ -89,6 +89,7 @@ Plot.plot(
 )
 ```
 
+## Plot generator object
 
 Calling `Plot.plot()` is the fastest way to generate a plot with the default settings, but for further customization you can import the `Obsplot` class and create a *plot generator object*:
 
@@ -116,6 +117,8 @@ For the simplest cases, you can also create your plot directly by passing a `Plo
 ```{python}
 op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
 ```
+
+## jsdom renderer
 
 By default, plots will be created as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/). This allows for [(very basic) interactivity](usage.qmd#interactivity), but also generates bigger files. An alternative is to use the [`jsdom` renderer](usage.qmd#renderers), which generates SVG or HTML outputs.
 
