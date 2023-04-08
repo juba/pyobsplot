@@ -3,7 +3,7 @@
 
 ## pyobsplot 0.3.1
 
-- It is now possible to use `Plot.plot()` directly when creating a plot with default settings.
+- It is now possible to use `Plot.plot()` directly when creating a plot with default settings.Thanks to [@fil](https://github.com/fil) for the idea.
 - GeoJson data passed as `string` instead of `dict` is serialized correctly.
 - Add debug mode to output.
  
