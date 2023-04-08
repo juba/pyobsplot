@@ -26,6 +26,12 @@ div.sourceCode {
     }
 }
 
+pre {
+    code {
+        overflow: auto;
+    }
+}
+
 code {
     color: #787109;
 }
