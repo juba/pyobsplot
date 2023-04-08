@@ -130,7 +130,7 @@ opj = Obsplot(renderer="jsdom")
 ```
 
 
-# Learn more
+## Learn more
 
 To go further, see the [usage](usage.qmd) page.
 
