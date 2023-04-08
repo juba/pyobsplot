@@ -98,10 +98,10 @@ The following table lists the differences between the two renderers.
     width: 100%;
     text-align: center;
     vertical-align: middle;
+    margin-bottom: 3em;
 }
 .renderers-table td,
 .renderers-table th {
-    width: 19em;
     padding: .5em 2em !important;
 }
 .renderers-table tbody tr {
@@ -111,7 +111,7 @@ The following table lists the differences between the two renderers.
 
 <table class="table table-striped renderers-table">
 <thead>
-<tr><th></th><th>widget</th><th>jsdom</th></tr>
+<tr><th style="width: 25%;"></th><th style="width: 37%;">widget</th><th style="width: 37%;">jsdom</th></tr>
 </thead>
 <tbody>
 <tr>
@@ -127,7 +127,7 @@ The following table lists the differences between the two renderers.
 <tr>
 <td>**Quarto**</td>
 <td>Supported only in HTML format</td>
-<td>Supported in HTML format, SVG output supported in other formats as well</td>
+<td>Supported in HTML format, SVG output supported in other formats</td>
 </tr>
 <tr>
 <td>**Output size**</td>
@@ -342,9 +342,7 @@ display(w)
 display(plot)
 ```
 
-You can see a live version of this example in the following Colab notebook:
-
-[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
+You can see a live version of this example in the following Colab notebook: [![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
 
 ## Quarto
 
