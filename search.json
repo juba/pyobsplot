@@ -165,7 +165,7 @@
     "href": "getting_started.html#jsdom-renderer",
     "title": "Getting started",
     "section": "jsdom renderer",
-    "text": "jsdom renderer\nBy default, plots will be created as Jupyter widgets. This allows for (very basic) interactivity, but also generates bigger files. An alternative is to use the jsdom renderer, which generates SVG or HTML outputs.\nThe renderer is determined by passing a renderer argument to Obsplot() when creating a generator object:\n\n# Switch to widget renderer (default one)\nopw = Obsplot(renderer=\"widget\")\n# Switch to jsdom renderer\nopj = Obsplot(renderer=\"jsdom\")"
+    "text": "jsdom renderer\nBy default, plots will be created as Jupyter widgets. This allows for (very basic) interactivity, but also generates bigger files. An alternative is to use the jsdom renderer, which generates SVG or HTML outputs.\nThe renderer is configured by passing a renderer argument to Obsplot() when creating a generator object:\n\n# Switch to widget renderer (default one)\nopw = Obsplot(renderer=\"widget\")\n# Switch to jsdom renderer\nopj = Obsplot(renderer=\"jsdom\")"
   },
   {
     "objectID": "getting_started.html#learn-more",
