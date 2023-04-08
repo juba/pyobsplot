@@ -33,11 +33,13 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: 
+      - cosmo
+      - custom.scss
     mainfont: "'Source Sans 3', 'Source Sans Pro', 'Segoe UI', 'Roboto', 'Helvetica', sans-serif"
     monofont: "Fira Mono"
+    linkcolor: "#FF4222"
     toc: true
-    css: styles.css
     highlight-style: gruvbox
     grid: 
       body-width: 900px

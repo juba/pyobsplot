@@ -1,10 +1,16 @@
-/* css styles */
+/*-- scss:defaults --*/
+
+$toc-color: #FF4222;
+$toc-active-border: #FF4222;
+
+/*-- scss:rules --*/
 
 #TOC {
     margin-top: 2em;
 }
 
 a:hover {
+    color: #FF4222;
     text-decoration: none;
 }
 
@@ -14,6 +20,28 @@ div.sourceCode {
 
 .quarto-title {
     margin: 1.5em 0 1em 0;
+
+    h1 {
+        font-size: 2.5rem;
+    }
+}
+
+code {
+    color: #787109;
+}
+
+.cell-output {
+
+    &>p>img,
+    &>p>svg,
+    .figure {
+        display: block;
+        margin: 0 auto 3em auto;
+    }
+
+    .figure {
+        width: fit-content
+    }
 }
 
 /* fira-mono-regular - latin */
