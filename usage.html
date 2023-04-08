@@ -95,7 +95,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -281,10 +280,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     width: 100%;
     text-align: center;
     vertical-align: middle;
+    margin-bottom: 3em;
 }
 .renderers-table td,
 .renderers-table th {
-    width: 19em;
     padding: .5em 2em !important;
 }
 .renderers-table tbody tr {
@@ -294,12 +293,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table class="table table-striped renderers-table">
 <thead>
 <tr>
-<th>
+<th style="width: 25%;">
 </th>
-<th>
+<th style="width: 37%;">
 widget
 </th>
-<th>
+<th style="width: 37%;">
 jsdom
 </th>
 </tr>
@@ -335,7 +334,7 @@ Needs a working node.js installation and an additional <code>npm</code> package
 Supported only in HTML format
 </td>
 <td>
-Supported in HTML format, SVG output supported in other formats as well
+Supported in HTML format, SVG output supported in other formats
 </td>
 </tr>
 <tr>
@@ -561,12 +560,7 @@ Output is saved between sessions
 <span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>display(w)</span>
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>display(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>You can see a live version of this example in the following Colab notebook:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
-</figure>
-</div>
+<p>You can see a live version of this example in the following Colab notebook: <a href="https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb"><img src="img/colab-badge.svg" class="img-fluid"></a></p>
 </section>
 <section id="quarto" class="level2">
 <h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
