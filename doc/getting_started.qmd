@@ -99,6 +99,12 @@ from pyobsplot import Obsplot, Plot
 op = Obsplot()
 ```
 
+```{python}
+# | include: false
+
+op = Obsplot(renderer="jsdom")
+```
+
 You can then create plots by calling this generator object with your plot specification:
 
 ```{python}
