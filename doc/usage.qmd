@@ -57,7 +57,7 @@ op({
         "axis": None
     },
     "marks": [
-        Plot.ruleY([0], {"stroke": "royalblue"}),
+        Plot.ruleY([0], {"stroke": "steelblue"}),
         Plot.lineY(d3.cumsum({ "length": 100 }, d3.randomNormal()))
     ]
 })
@@ -80,7 +80,7 @@ op({
     "marks": [
         Plot.dot(data, {
             "x": "x", "y": "y", "r": 5,
-            "stroke": "black", "fill": "royalblue",
+            "stroke": "black", "fill": "steelblue",
             "fillOpacity": js("d => d.type == 'T1' ? 0.7 : 0.1")
         })
     ]
@@ -202,7 +202,7 @@ import random
 op(
     Plot.tickX(
         [random.gauss(0,1) for i in range(1000)], 
-        {"stroke": "royalblue", "opacity": 0.2}
+        {"stroke": "steelblue", "opacity": 0.2}
     )
 )
 ```
@@ -224,7 +224,7 @@ df = pl.DataFrame({
 op({
     "x": {"grid": True},
     "y": {"domain": [0, 5]},
-    "marks": [Plot.lineY(df, {"x": "Date", "y": "Value", "stroke": "royalblue"})]
+    "marks": [Plot.lineY(df, {"x": "Date", "y": "Value", "stroke": "steelblue"})]
 })
 ```
 
@@ -323,7 +323,7 @@ def generate_plot_spec(opacity):
     return {
       "grid": True,
       "marks": [
-            Plot.rectY(penguins, Plot.binX({"y": "count"}, {"x": "body_mass_g", "fill": "royalblue", "fillOpacity": opacity})),
+            Plot.rectY(penguins, Plot.binX({"y": "count"}, {"x": "body_mass_g", "fill": "steelblue", "fillOpacity": opacity})),
             Plot.ruleY([0])
         ]
     }
