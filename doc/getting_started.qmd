@@ -128,7 +128,7 @@ op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
 
 By default, plots will be created as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/). This allows for [(very basic) interactivity](usage.qmd#interactivity), but also generates bigger files. An alternative is to use the [`jsdom` renderer](usage.qmd#renderers), which generates SVG or HTML outputs.
 
-The renderer is determined by passing a `renderer` argument to `Obsplot()` when creating a generator object:
+The renderer is configured by passing a `renderer` argument to `Obsplot()` when creating a generator object:
 
 ```{python}
 # | eval: false
