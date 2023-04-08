@@ -7,7 +7,7 @@ title: "pyobsplot"
 
 ## Overview
 
-`pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are produced from Python code with a syntax as close as possible to the JavaScript one.
+`pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in [Jupyter](https://jupyter.org) notebooks, [VSCode](https://code.visualstudio.com) notebooks, [Google Colab](https://colab.research.google.com) and [Quarto](https://quarto.org) documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.
 
 
 ```{python}
