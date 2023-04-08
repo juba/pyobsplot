@@ -10,17 +10,18 @@ website:
   favicon: favicon.png
   repo-url: https://github.com/juba/pyobsplot/
   repo-subdir: "doc"
-  repo-actions: [edit, issue]
-  sidebar:
-    search: true
-    style: "docked"
-    contents:
-      - href: index.qmd
-        text: Introduction
+  repo-actions: [issue]
+  search:
+    location: navbar
+    type: overlay
+  navbar:
+    background: "#e15759"
+    pinned: false
+    left:
       - getting_started.qmd
       - usage.qmd
-      - section: "Gallery"
-        contents:
+      - text: "Gallery"
+        menu:
           - gallery_marks.qmd
           - gallery_transforms.qmd
           - gallery_geo.qmd
@@ -30,15 +31,17 @@ website:
       - icon: github
         href: https://github.com/juba/pyobsplot/
 
-
-
-
 format:
-  bookup-html:
-    embed-fonts: true
+  html:
+    theme: cosmo
+    mainfont: "'Source Sans 3', 'Source Sans Pro', 'Segoe UI', 'Roboto', 'Helvetica', sans-serif"
+    monofont: "Fira Mono"
     toc: true
     css: styles.css
     highlight-style: gruvbox
+    grid: 
+      body-width: 900px
+      gutter-width: 3rem
 
 
 
