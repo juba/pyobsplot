@@ -119,6 +119,9 @@ class SpecParser:
                 return {"pyobsplot-type": "GeoJson-ref", "value": (len(self.data) - 1)}
             else:
                 return {"pyobsplot-type": "GeoJson-ref", "value": index}
+        # If range, convert  to list
+        if isinstance(spec, range):
+            return self.parse(list(spec))
         # If dict, parse recursively
         if isinstance(spec, dict):
             return {k: self.parse(v) for k, v in spec.items()}

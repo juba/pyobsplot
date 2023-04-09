@@ -1,6 +1,7 @@
 ## pyobsplot (development version)
 
 - Add ability to specify some default spec values to plot generator objects.
+- range objects are correctly serialized as lists for `jsdom` renderer.
 
 
 ## pyobsplot 0.3.1

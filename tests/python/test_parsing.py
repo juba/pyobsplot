@@ -18,19 +18,19 @@ class TestSpecParser:
         parser = SpecParser()
         assert parser.renderer == "widget"
         assert parser._spec == {}
-        assert parser._defaults == {}
-        parser = SpecParser(renderer="widget", defaults={"foo": "bar"})
+        assert parser._default == {}
+        parser = SpecParser(renderer="widget", default={"foo": "bar"})
         assert parser.renderer == "widget"
         assert parser._spec == {}
-        assert parser._defaults == {"foo": "bar"}
+        assert parser._default == {"foo": "bar"}
         parser = SpecParser(renderer="jsdom")
         assert parser.renderer == "jsdom"
         assert parser._spec == {}
-        assert parser._defaults == {}
-        parser = SpecParser(renderer="jsdom", defaults={"foo": "bar"})
+        assert parser._default == {}
+        parser = SpecParser(renderer="jsdom", default={"foo": "bar"})
         assert parser.renderer == "jsdom"
         assert parser._spec == {}
-        assert parser._defaults == {"foo": "bar"}
+        assert parser._default == {"foo": "bar"}
 
     def test_parse_plot_mark(self):
         parser = SpecParser()
@@ -47,8 +47,8 @@ class TestSpecParser:
         }
 
 
-class TestMergeDefaults:
-    def test_merge_without_defaults(self):
+class TestMergedefault:
+    def test_merge_without_default(self):
         spec = {"width": 100, "color": {"legend": True}}
         parser = SpecParser(renderer="widget")
         parser.spec = spec
@@ -59,15 +59,15 @@ class TestMergeDefaults:
         parsed = parser.parse_spec()
         assert parsed == spec
 
-    def test_merge_with_defaults(self):
+    def test_merge_with_default(self):
         spec = {"width": 100, "color": {"legend": True}}
-        defaults = {"width": 200, "style": {"color": "red"}}
+        default = {"width": 200, "style": {"color": "red"}}
         merged = {"width": 100, "color": {"legend": True}, "style": {"color": "red"}}
-        parser = SpecParser(renderer="widget", defaults=defaults)
+        parser = SpecParser(renderer="widget", default=default)
         parser.spec = spec
         parsed = parser.parse_spec()
         assert parsed == merged
-        parser = SpecParser(renderer="jsdom", defaults=defaults)
+        parser = SpecParser(renderer="jsdom", default=default)
         parser.spec = spec
         parsed = parser.parse_spec()
         assert parsed == merged
@@ -85,6 +85,11 @@ class TestParse:
             "y": "foo",
             "z": None,
         }
+
+    def test_parse_range(self):
+        parser = SpecParser()
+        parsed = parser.parse(range(3))
+        assert parsed == [0, 1, 2]
 
     def test_parse_geojson(self):
         df = pd.DataFrame({"x": [1, 2], "y": [1, 3]})
