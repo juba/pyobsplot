@@ -2,7 +2,7 @@
 
 - Add ability to specify some default spec values to plot generator objects.
 - `range` objects are correctly serialized as lists for `jsdom` renderer.
-- Fix: don't add styles to svg or html output if styles are already present.
+- Fix: don't add styles to svg or html output if these styles are already present.
 
 
 ## pyobsplot 0.3.1
