@@ -1,5 +1,7 @@
 ## pyobsplot (development version)
 
+- Add ability to specify some default spec values to plot generator objects.
+
 
 ## pyobsplot 0.3.1
 

@@ -26,16 +26,18 @@ class ObsplotWidget(anywidget.AnyWidget):
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
 
-    def __init__(self, spec, debug: bool = False):
+    def __init__(self, spec, defaults: dict = {}, debug: bool = False):
         """Obsplot widget constructor."""
         self._debug = debug
+        self._defaults = defaults
         # Init widget
         super().__init__(spec=spec)
 
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
         spec = proposal["value"]
-        parser = SpecParser("widget")
-        code = parser.parse(spec)
+        parser = SpecParser(renderer="widget", defaults=self._defaults)
+        parser.spec = spec
+        code = parser.parse_spec()
         spec = {"data": parser.serialize_data(), "code": code, "debug": self._debug}
         return spec

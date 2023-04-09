@@ -18,15 +18,32 @@ class SpecParser:
     Class implementing plot specification parsing.
     """
 
-    def __init__(self, renderer: str = "widget") -> None:
+    def __init__(self, renderer: str = "widget", defaults: dict = {}) -> None:
         """
         SpecParser constructor.
 
         Args:
             renderer(str): type of renderer ("widget" or "jsdom").
+            defaults(dict): dict of default spec values.
         """
         self.renderer = renderer
         self.data = []
+        self._spec = dict()
+        self._defaults = defaults
+
+    @property
+    def spec(self):
+        return self._spec
+
+    @spec.setter
+    def spec(self, value):
+        if (
+            "pyobsplot-type" in value
+            and value["pyobsplot-type"] == "function"
+            and value["module"] == "Plot"
+        ):
+            value = {"marks": [value]}
+        self._spec = value
 
     def cache_index(self, data: Any) -> Optional[int]:
         """Returns the index of a data object in the data cache.
@@ -42,14 +59,45 @@ class SpecParser:
             return index[0]
         return None
 
-    def parse(self, spec: Any) -> Any:
-        """Recursively parse a Plot specification to check and convert its elements.
+    def merge_defaults(self, spec: dict) -> dict:
+        """Merge SpecParser default spec values with an actual spec.
 
         Args:
-            spec (Any): a complete specification or part of a specification.
+            spec (dict): spec to update with default values.
 
         Returns:
-            Any: parsed specification or part of a specification.
+            dict: merged spec.
+        """
+        defaults = self._defaults
+        for k in defaults:
+            if k not in spec:
+                spec[k] = defaults[k]
+        return spec
+
+    def parse_spec(self) -> dict:
+        """Start spec parsing from _spec attribute.
+
+        Args:
+            defaults (dict): default spec values defined during Creator creation.
+
+        Returns:
+            dict: parsed specification.
+        """
+        # Deep copy should not be needed and copy should be sufficient as
+        # merge_defaults only affects top-level elements.
+        spec = self.spec.copy()
+        spec = self.merge_defaults(spec)
+        return self.parse(spec)
+
+    def parse(self, spec: Any) -> Any:
+        """Recursively parse part of a Plot specification to check and convert
+        its elements.
+
+        Args:
+            spec (Any): part of a specification.
+
+        Returns:
+            Any: parsed part of a specification.
         """
         if spec is None:
             return None

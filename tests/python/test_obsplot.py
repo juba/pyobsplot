@@ -58,8 +58,23 @@ class TestInit:
         oj = Obsplot(renderer="jsdom")
         plot = Plot.plot(spec)
         assert isinstance(plot, pyobsplot.obsplot.ObsplotWidget)
-        ow_plot = ow(plot)
-        assert isinstance(ow_plot, pyobsplot.obsplot.ObsplotWidget)
-        assert ow_plot.spec == plot.spec
+        with pytest.raises(ValueError):
+            ow(plot)
         with pytest.raises(ValueError):
             oj(plot)
+
+    def test_defaults(self):
+        ow = Obsplot(renderer="widget")
+        assert ow._defaults == {}
+        oj = Obsplot(renderer="jsdom")
+        assert oj._defaults == {}
+        defaults = {"width": 100, "style": {"color": "red"}}
+        ow = Obsplot(renderer="widget", defaults=defaults)
+        assert ow._defaults == defaults
+        oj = Obsplot(renderer="jsdom", defaults=defaults)
+        assert oj._defaults == defaults
+        wrong_defaults = {"x": 100}
+        with pytest.raises(ValueError):
+            ow = Obsplot(renderer="widget", defaults=wrong_defaults)
+        with pytest.raises(ValueError):
+            oj = Obsplot(renderer="jsdom", defaults=wrong_defaults)
