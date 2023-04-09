@@ -12,12 +12,9 @@ export function generate_plot(spec, renderer) {
         spec["data"] = unserialize_data(spec["data"], renderer)
         out = parse_spec(spec["code"], spec["data"]);
         if (spec["code"]["pyobsplot-type"] == "function") {
-            if (!(out instanceof Node)) {
-                // If spec root is a JS function and the result is not
-                // an Element, call plot() on it.
-                // This is to handle the specifications with mark function call.
-                out = out.plot()
-            }
+            // If spec root is a JS function, call plot() on it.
+            // This is to handle the specifications with mark function call.
+            out = out.plot()
         } else {
             if (spec["debug"]) {
                 console.log("--- start pyobsplot debugging output ---")
