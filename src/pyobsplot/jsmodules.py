@@ -44,7 +44,7 @@ class Plot(metaclass=JSModule):
     def plot(*args, **kwargs) -> ObsplotWidget:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
-        with args and kwargs.
+        or an ObpsplotJsdom with args and kwargs.
         """
         if _plot_renderer == "widget":
             op = ObsplotWidgetCreator()
