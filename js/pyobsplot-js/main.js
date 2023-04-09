@@ -28,11 +28,17 @@ function jsdom_plot(spec) {
     for (const svg of el.tagName.toLowerCase() === "svg" ? [el] : el.querySelectorAll("svg")) {
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        svg.style.color = "black"
+        if (svg.style.color == "") {
+            svg.style.color = "black"
+        }
     }
     for (const figure of el.tagName.toLowerCase() === "figure" ? [el] : el.querySelectorAll("figure")) {
-        figure.style.color = "black"
-        figure.style.backgroundColor = "white"
+        if (figure.style.color == "") {
+            figure.style.color = "black"
+        }
+        if (figure.style.backgroundColor == "") {
+            figure.style.backgroundColor = "white"
+        }
     }
 
     return el.outerHTML
