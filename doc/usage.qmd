@@ -6,7 +6,9 @@ title: "Usage"
 
 For a quick usage introduction, see [getting started](getting_started.qmd).
 
-We start by importing the needed classes and create a plot generator object:
+To create a plot we can either use `Plot.plot()` to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.
+
+So we start by importing the needed classes and create a plot generator object:
 
 ```{python}
 #| eval: false
@@ -204,6 +206,43 @@ op(
         [random.gauss(0,1) for i in range(1000)], 
         {"stroke": "steelblue", "opacity": 0.2}
     )
+)
+```
+
+
+## Default specification values
+
+When creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.
+
+Only the top-level layout options can be specified as defaults. This can be useful to specify a default `width`, colors, margins or even `style`.
+
+The complete list of available default attributes is :
+
+```{python}
+#| echo: false
+from pyobsplot.utils import allowed_defaults
+print(allowed_defaults)
+```
+
+So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :
+
+```{python}
+#| echo: false
+op_colors = Obsplot(renderer="jsdom", default={"width": 400, "margin": 50, "style": {"color": "white", "background-color": "#004"}})
+```
+
+```{python}
+#| eval: false
+op_colors = Obsplot(default={
+    "width": 400, 
+    "margin": 50,
+    "style": {"color": "white", "background-color": "#004"}
+})
+```
+
+```{python}
+op_colors(
+    Plot.dot(data, {"x": "x", "y": "y"})
 )
 ```
 
