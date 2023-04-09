@@ -18,18 +18,18 @@ class SpecParser:
     Class implementing plot specification parsing.
     """
 
-    def __init__(self, renderer: str = "widget", defaults: dict = {}) -> None:
+    def __init__(self, renderer: str = "widget", default: dict = {}) -> None:
         """
         SpecParser constructor.
 
         Args:
             renderer(str): type of renderer ("widget" or "jsdom").
-            defaults(dict): dict of default spec values.
+            default(dict): dict of default spec values.
         """
         self.renderer = renderer
         self.data = []
         self._spec = dict()
-        self._defaults = defaults
+        self._default = default
 
     @property
     def spec(self):
@@ -59,7 +59,7 @@ class SpecParser:
             return index[0]
         return None
 
-    def merge_defaults(self, spec: dict) -> dict:
+    def merge_default(self, spec: dict) -> dict:
         """Merge SpecParser default spec values with an actual spec.
 
         Args:
@@ -68,25 +68,25 @@ class SpecParser:
         Returns:
             dict: merged spec.
         """
-        defaults = self._defaults
-        for k in defaults:
+        default = self._default
+        for k in default:
             if k not in spec:
-                spec[k] = defaults[k]
+                spec[k] = default[k]
         return spec
 
     def parse_spec(self) -> dict:
         """Start spec parsing from _spec attribute.
 
         Args:
-            defaults (dict): default spec values defined during Creator creation.
+            default (dict): default spec values defined during Creator creation.
 
         Returns:
             dict: parsed specification.
         """
         # Deep copy should not be needed and copy should be sufficient as
-        # merge_defaults only affects top-level elements.
+        # merge_default only affects top-level elements.
         spec = self.spec.copy()
-        spec = self.merge_defaults(spec)
+        spec = self.merge_default(spec)
         return self.parse(spec)
 
     def parse(self, spec: Any) -> Any:

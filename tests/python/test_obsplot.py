@@ -63,18 +63,18 @@ class TestInit:
         with pytest.raises(ValueError):
             oj(plot)
 
-    def test_defaults(self):
+    def test_default(self):
         ow = Obsplot(renderer="widget")
-        assert ow._defaults == {}
+        assert ow._default == {}
         oj = Obsplot(renderer="jsdom")
-        assert oj._defaults == {}
-        defaults = {"width": 100, "style": {"color": "red"}}
-        ow = Obsplot(renderer="widget", defaults=defaults)
-        assert ow._defaults == defaults
-        oj = Obsplot(renderer="jsdom", defaults=defaults)
-        assert oj._defaults == defaults
-        wrong_defaults = {"x": 100}
+        assert oj._default == {}
+        default = {"width": 100, "style": {"color": "red"}}
+        ow = Obsplot(renderer="widget", default=default)
+        assert ow._default == default
+        oj = Obsplot(renderer="jsdom", default=default)
+        assert oj._default == default
+        wrong_default = {"x": 100}
         with pytest.raises(ValueError):
-            ow = Obsplot(renderer="widget", defaults=wrong_defaults)
+            ow = Obsplot(renderer="widget", default=wrong_default)
         with pytest.raises(ValueError):
-            oj = Obsplot(renderer="jsdom", defaults=wrong_defaults)
+            oj = Obsplot(renderer="jsdom", default=wrong_default)

@@ -22,12 +22,12 @@ class ObsplotJsdom:
     Python kwargs.
     """
 
-    def __init__(self, spec: Any, defaults: dict = {}, debug: bool = False) -> None:
+    def __init__(self, spec: Any, default: dict = {}, debug: bool = False) -> None:
         """
         Constructor. Parse the spec given as argument.
         """
         # Create parser
-        parser = SpecParser(renderer="jsdom", defaults=defaults)
+        parser = SpecParser(renderer="jsdom", default=default)
         # Parse spec code
         parser.spec = spec
         code = parser.parse_spec()
