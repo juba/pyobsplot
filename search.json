@@ -179,14 +179,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Add ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if styles are already present."
+    "text": "Add ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if these styles are already present."
   },
   {
     "objectID": "changelog.html#pyobsplot-development-version",
     "href": "changelog.html#pyobsplot-development-version",
     "title": "Changelog",
     "section": "",
-    "text": "Add ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if styles are already present."
+    "text": "Add ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if these styles are already present."
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.1",
