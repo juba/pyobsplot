@@ -30,6 +30,6 @@ function _onValueChanged(view, el) {
     plot.replaceChildren()
     // Regenerate it
     let spec = () => view.model.get("spec");
-    plot.appendChild(generate_plot(spec()));
+    plot.appendChild(generate_plot(spec(), "widget"));
 }
 
