@@ -171,8 +171,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#alternative-syntaxes" id="toc-alternative-syntaxes" class="nav-link" data-scroll-target="#alternative-syntaxes">Alternative syntaxes</a></li>
   <li><a href="#dataframes-and-series" id="toc-dataframes-and-series" class="nav-link" data-scroll-target="#dataframes-and-series">DataFrames and Series</a></li>
   <li><a href="#datetime-objects" id="toc-datetime-objects" class="nav-link" data-scroll-target="#datetime-objects">datetime objects</a></li>
-  <li><a href="#interactivity" id="toc-interactivity" class="nav-link" data-scroll-target="#interactivity">Interactivity</a></li>
   <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
+  <li><a href="#interactivity" id="toc-interactivity" class="nav-link" data-scroll-target="#interactivity">Interactivity</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -533,40 +533,40 @@ Output is saved between sessions
 </div>
 </div>
 </section>
+<section id="quarto" class="level2">
+<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
+<p><code>pyobsplot</code> plots are compatible with <a href="https://quarto.org">quarto</a> HTML formats. If you use the <a href="#renderers">jsdom renderer</a>, plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.</p>
+<p>If your source document is a jupyter notebook (and not a <code>.qmd</code> file), then you have to use the <code>--execute</code> argument to force plot computation and to make them visible in the output:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render test.ipynb <span class="at">--execute</span> <span class="at">--to</span> html</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <section id="interactivity" class="level2">
 <h2 class="anchored" data-anchor-id="interactivity">Interactivity</h2>
 <p>When using the <code>widget</code> renderer, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the <code>spec</code> attribute of an existing <code>Obsplot</code> to another plot specification and it will update it.</p>
 <p>This allows to do things like the following, where a plot is updated depending on the value of a Jupyter <code>IntSlider</code> widget:</p>
 <div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_plot_spec(opacity):</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">"grid"</span>: <span class="va">True</span>,</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"marks"</span>: [</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            Plot.rectY(penguins, Plot.binX({<span class="st">"y"</span>: <span class="st">"count"</span>}, {<span class="st">"x"</span>: <span class="st">"body_mass_g"</span>, <span class="st">"fill"</span>: <span class="st">"steelblue"</span>, <span class="st">"fillOpacity"</span>: opacity})),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY([<span class="dv">0</span>])</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> op(generate_plot_spec(<span class="dv">1</span>))</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_plot(change):</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    new <span class="op">=</span> change[<span class="st">'new'</span>]</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    plot.spec <span class="op">=</span> generate_plot_spec(new <span class="op">/</span> <span class="dv">100</span>)</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> IntSlider(value <span class="op">=</span> <span class="dv">100</span>, <span class="bu">min</span> <span class="op">=</span> <span class="dv">0</span>, <span class="bu">max</span> <span class="op">=</span> <span class="dv">100</span>)</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>w.observe(update_plot, names<span class="op">=</span><span class="st">'value'</span>)</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>display(w)</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>display(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_plot_spec(opacity):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">"grid"</span>: <span class="va">True</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"marks"</span>: [</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>            Plot.rectY(penguins, Plot.binX({<span class="st">"y"</span>: <span class="st">"count"</span>}, {<span class="st">"x"</span>: <span class="st">"body_mass_g"</span>, <span class="st">"fill"</span>: <span class="st">"steelblue"</span>, <span class="st">"fillOpacity"</span>: opacity})),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY([<span class="dv">0</span>])</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> op(generate_plot_spec(<span class="dv">1</span>))</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_plot(change):</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    new <span class="op">=</span> change[<span class="st">'new'</span>]</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    plot.spec <span class="op">=</span> generate_plot_spec(new <span class="op">/</span> <span class="dv">100</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> IntSlider(value <span class="op">=</span> <span class="dv">100</span>, <span class="bu">min</span> <span class="op">=</span> <span class="dv">0</span>, <span class="bu">max</span> <span class="op">=</span> <span class="dv">100</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>w.observe(update_plot, names<span class="op">=</span><span class="st">'value'</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>display(w)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>display(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can see a live version of this example in the following Colab notebook: <a href="https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb"><img src="img/colab-badge.svg" class="img-fluid"></a></p>
-</section>
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p><code>Obsplot</code> plots are compatible with <a href="https://quarto.org">quarto</a> HTML formats. If you use the <a href="#renderers">jsdom renderer</a>, plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.</p>
-<p>If your source document is a jupyter notebook (and not a <code>.qmd</code> file), then you have to use the <code>--execute</code> argument to force plot computation and to make them visible in the output:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render test.ipynb <span class="at">--execute</span> <span class="at">--to</span> html</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>

@@ -294,17 +294,17 @@
     "text": "datetime objects\ndatetime.date and datetime.datetime Python objects are automatically serialized and converted to JavaScript Date objects.\nThat makes the following two specifications equivalent:\n\nop({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01')\"), js(\"new Date('2022-01-01')\")]}, \n    \"grid\": True\n})\n\n\n\n\n\nfrom datetime import date\nop({\n    \"x\": {\"domain\": [date(2021,1,1), date(2022,1,1)]}, \n    \"grid\": True\n})\n\n\n\n\nAs well as the two following ones, using datetime:\n\nop({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01T07:00:00')\"), js(\"new Date('2021-01-01T08:00:00')\")]}, \n    \"grid\": True\n})\n\n\n\n\n\nfrom datetime import datetime\nop({\n    \"x\": {\"domain\": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, \n    \"grid\": True\n})"
   },
   {
+    "objectID": "usage.html#quarto",
+    "href": "usage.html#quarto",
+    "title": "Usage",
+    "section": "Quarto",
+    "text": "Quarto\npyobsplot plots are compatible with quarto HTML formats. If you use the jsdom renderer, plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.\nIf your source document is a jupyter notebook (and not a .qmd file), then you have to use the --execute argument to force plot computation and to make them visible in the output:\nquarto render test.ipynb --execute --to html"
+  },
+  {
     "objectID": "usage.html#interactivity",
     "href": "usage.html#interactivity",
     "title": "Usage",
     "section": "Interactivity",
     "text": "Interactivity\nWhen using the widget renderer, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the spec attribute of an existing Obsplot to another plot specification and it will update it.\nThis allows to do things like the following, where a plot is updated depending on the value of a Jupyter IntSlider widget:\n\ndef generate_plot_spec(opacity):\n    return {\n      \"grid\": True,\n      \"marks\": [\n            Plot.rectY(penguins, Plot.binX({\"y\": \"count\"}, {\"x\": \"body_mass_g\", \"fill\": \"steelblue\", \"fillOpacity\": opacity})),\n            Plot.ruleY([0])\n        ]\n    }\n\nplot = op(generate_plot_spec(1))\n\ndef update_plot(change):\n    new = change['new']\n    plot.spec = generate_plot_spec(new / 100)\n\n\nw = IntSlider(value = 100, min = 0, max = 100)\nw.observe(update_plot, names='value')\n\ndisplay(w)\ndisplay(plot)\n\nYou can see a live version of this example in the following Colab notebook:"
-  },
-  {
-    "objectID": "usage.html#quarto",
-    "href": "usage.html#quarto",
-    "title": "Usage",
-    "section": "Quarto",
-    "text": "Quarto\nObsplot plots are compatible with quarto HTML formats. If you use the jsdom renderer, plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.\nIf your source document is a jupyter notebook (and not a .qmd file), then you have to use the --execute argument to force plot computation and to make them visible in the output:\nquarto render test.ipynb --execute --to html"
   }
 ]
