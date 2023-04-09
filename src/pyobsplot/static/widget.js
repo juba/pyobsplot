@@ -68335,9 +68335,7 @@ function generate_plot(spec, renderer) {
     spec["data"] = unserialize_data(spec["data"], renderer);
     out = parse_spec(spec["code"], spec["data"]);
     if (spec["code"]["pyobsplot-type"] == "function") {
-      if (!(out instanceof Node)) {
-        out = out.plot();
-      }
+      out = out.plot();
     } else {
       if (spec["debug"]) {
         console.log("--- start pyobsplot debugging output ---");
@@ -68371,7 +68369,7 @@ function _onValueChanged(view, el) {
   let plot3 = el.querySelector(".pyobsplot-plot");
   plot3.replaceChildren();
   let spec = () => view.model.get("spec");
-  plot3.appendChild(generate_plot(spec()));
+  plot3.appendChild(generate_plot(spec(), "widget"));
 }
 export {
   render
