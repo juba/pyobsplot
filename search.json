@@ -175,6 +175,20 @@
     "text": "Learn more\nTo go further, see the usage page."
   },
   {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "Add ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if styles are already present."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-development-version",
+    "href": "changelog.html#pyobsplot-development-version",
+    "title": "Changelog",
+    "section": "",
+    "text": "Add ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if styles are already present."
+  },
+  {
     "objectID": "changelog.html#pyobsplot-0.3.1",
     "href": "changelog.html#pyobsplot-0.3.1",
     "title": "Changelog",
@@ -256,7 +270,7 @@
     "href": "usage.html",
     "title": "Usage",
     "section": "",
-    "text": "For a quick usage introduction, see getting started.\nWe start by importing the needed classes and create a plot generator object:\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()"
+    "text": "For a quick usage introduction, see getting started.\nTo create a plot we can either use Plot.plot() to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.\nSo we start by importing the needed classes and create a plot generator object:\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()"
   },
   {
     "objectID": "usage.html#from-javascript-to-python",
@@ -278,6 +292,13 @@
     "title": "Usage",
     "section": "Alternative syntaxes",
     "text": "Alternative syntaxes\nAs we’ve already seen, the most common syntax for a plot specification is to pass it as a dictionary :\n\nop({\n    \"grid\": True,\n    \"color\": {\"legend\": True}\n    \"marks\": [\n        Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\"})\n    ],\n})\n\nBut it is also possible to pass top level arguments as kwargs to the generator object, which would give the following:\n\nop(\n    grid = True,\n    color = {\"legend\": True},\n    marks = [\n        Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\"})\n    ],\n)\n\nFinally, for the simplest cases, you can also pass a mark method directly. The JavaScript plot() method will be called automatically to display the plot:\n\nimport random\nop(\n    Plot.tickX(\n        [random.gauss(0,1) for i in range(1000)], \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    )\n)"
+  },
+  {
+    "objectID": "usage.html#default-specification-values",
+    "href": "usage.html#default-specification-values",
+    "title": "Usage",
+    "section": "Default specification values",
+    "text": "Default specification values\nWhen creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.\nOnly the top-level layout options can be specified as defaults. This can be useful to specify a default width, colors, margins or even style.\nThe complete list of available default attributes is :\n\n\n['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'margin', 'width', 'height', 'aspectRatio', 'style']\n\n\nSo to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :\n\nop_colors = Obsplot(default={\n    \"width\": 400, \n    \"margin\": 50,\n    \"style\": {\"color\": \"white\", \"background-color\": \"#004\"}\n})\n\n\nop_colors(\n    Plot.dot(data, {\"x\": \"x\", \"y\": \"y\"})\n)"
   },
   {
     "objectID": "usage.html#dataframes-and-series",

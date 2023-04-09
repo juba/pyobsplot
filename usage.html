@@ -169,6 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#from-javascript-to-python" id="toc-from-javascript-to-python" class="nav-link active" data-scroll-target="#from-javascript-to-python">From JavaScript to Python</a></li>
   <li><a href="#renderers" id="toc-renderers" class="nav-link" data-scroll-target="#renderers">Renderers</a></li>
   <li><a href="#alternative-syntaxes" id="toc-alternative-syntaxes" class="nav-link" data-scroll-target="#alternative-syntaxes">Alternative syntaxes</a></li>
+  <li><a href="#default-specification-values" id="toc-default-specification-values" class="nav-link" data-scroll-target="#default-specification-values">Default specification values</a></li>
   <li><a href="#dataframes-and-series" id="toc-dataframes-and-series" class="nav-link" data-scroll-target="#dataframes-and-series">DataFrames and Series</a></li>
   <li><a href="#datetime-objects" id="toc-datetime-objects" class="nav-link" data-scroll-target="#datetime-objects">datetime objects</a></li>
   <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
@@ -197,7 +198,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <p>For a quick usage introduction, see <a href="./getting_started.html">getting started</a>.</p>
-<p>We start by importing the needed classes and create a plot generator object:</p>
+<p>To create a plot we can either use <code>Plot.plot()</code> to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.</p>
+<p>So we start by importing the needed classes and create a plot generator object:</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -422,69 +424,96 @@ Output is saved between sessions
 </div>
 </div>
 </section>
+<section id="default-specification-values" class="level2">
+<h2 class="anchored" data-anchor-id="default-specification-values">Default specification values</h2>
+<p>When creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.</p>
+<p>Only the top-level layout options can be specified as defaults. This can be useful to specify a default <code>width</code>, colors, margins or even <code>style</code>.</p>
+<p>The complete list of available default attributes is :</p>
+<div class="cell" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'margin', 'width', 'height', 'aspectRatio', 'style']</code></pre>
+</div>
+</div>
+<p>So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>op_colors <span class="op">=</span> Obsplot(default<span class="op">=</span>{</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"width"</span>: <span class="dv">400</span>, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"margin"</span>: <span class="dv">50</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"style"</span>: {<span class="st">"color"</span>: <span class="st">"white"</span>, <span class="st">"background-color"</span>: <span class="st">"#004"</span>}</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>op_colors(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    Plot.dot(data, {<span class="st">"x"</span>: <span class="st">"x"</span>, <span class="st">"y"</span>: <span class="st">"y"</span>})</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="usage_files/figure-html/cell-14-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+</section>
 <section id="dataframes-and-series" class="level2">
 <h2 class="anchored" data-anchor-id="dataframes-and-series">DataFrames and Series</h2>
 <p>Pandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.</p>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.DataFrame({</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Date"</span>: [date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">1</span>), date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">2</span>), date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">3</span>), date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">4</span>)],</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Value"</span>: [<span class="fl">4.2</span>, <span class="fl">3.8</span>, <span class="fl">4.5</span>, <span class="fl">4.7</span>]</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>op({</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"grid"</span>: <span class="va">True</span>},</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: {<span class="st">"domain"</span>: [<span class="dv">0</span>, <span class="dv">5</span>]},</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"marks"</span>: [Plot.lineY(df, {<span class="st">"x"</span>: <span class="st">"Date"</span>, <span class="st">"y"</span>: <span class="st">"Value"</span>, <span class="st">"stroke"</span>: <span class="st">"steelblue"</span>})]</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Date"</span>: [date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">1</span>), date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">2</span>), date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">3</span>), date(<span class="dv">2023</span>, <span class="dv">1</span>, <span class="dv">4</span>)],</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Value"</span>: [<span class="fl">4.2</span>, <span class="fl">3.8</span>, <span class="fl">4.5</span>, <span class="fl">4.7</span>]</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"grid"</span>: <span class="va">True</span>},</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: {<span class="st">"domain"</span>: [<span class="dv">0</span>, <span class="dv">5</span>]},</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"marks"</span>: [Plot.lineY(df, {<span class="st">"x"</span>: <span class="st">"Date"</span>, <span class="st">"y"</span>: <span class="st">"Value"</span>, <span class="st">"stroke"</span>: <span class="st">"steelblue"</span>})]</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-11-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-15-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 <p>If you pass a pandas or polars Series object, it will be automatically converted to a DataFrame with one column:</p>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> df.get_column(<span class="st">"Value"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>op(</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    Plot.tickX(value, {<span class="st">"x"</span>: <span class="st">"Value"</span>, <span class="st">"stroke"</span>: <span class="st">"darkviolet"</span>})</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> df.get_column(<span class="st">"Value"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>op(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    Plot.tickX(value, {<span class="st">"x"</span>: <span class="st">"Value"</span>, <span class="st">"stroke"</span>: <span class="st">"darkviolet"</span>})</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-12-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-16-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 <p><code>pyobsplot</code> implements a simple caching mechanism for some data objects (it currently works for DataFrames and for GeoJson data). Sometimes the same data object is used several times in a plot specification:</p>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>op({</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"height"</span>: <span class="dv">600</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"grid"</span>: <span class="va">True</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"facet"</span>: {</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"marginRight"</span>: <span class="dv">80</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  },</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"marks"</span>: [</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    Plot.frame({<span class="st">"facet"</span>: <span class="va">False</span>}),</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    Plot.dot(penguins, {</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"x"</span>: <span class="st">"culmen_depth_mm"</span>,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"y"</span>: <span class="st">"culmen_length_mm"</span>,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"r"</span>: <span class="fl">1.5</span>,</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fill"</span>: <span class="st">"#ccc"</span>,</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"facet"</span>: <span class="st">"exclude"</span>,</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fx"</span>: <span class="st">"sex"</span>,</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fy"</span>: <span class="st">"species"</span>,</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    }),</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    Plot.dot(penguins, {</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>       <span class="st">"x"</span>: <span class="st">"culmen_depth_mm"</span>,</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>       <span class="st">"y"</span>: <span class="st">"culmen_length_mm"</span>,</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>       <span class="st">"fx"</span>: <span class="st">"sex"</span>,</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>       <span class="st">"fy"</span>: <span class="st">"species"</span>,</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"height"</span>: <span class="dv">600</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"grid"</span>: <span class="va">True</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"facet"</span>: {</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"marginRight"</span>: <span class="dv">80</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"marks"</span>: [</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    Plot.frame({<span class="st">"facet"</span>: <span class="va">False</span>}),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    Plot.dot(penguins, {</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"x"</span>: <span class="st">"culmen_depth_mm"</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">"y"</span>: <span class="st">"culmen_length_mm"</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"r"</span>: <span class="fl">1.5</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fill"</span>: <span class="st">"#ccc"</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"facet"</span>: <span class="st">"exclude"</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fx"</span>: <span class="st">"sex"</span>,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"fy"</span>: <span class="st">"species"</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    }),</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    Plot.dot(penguins, {</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>       <span class="st">"x"</span>: <span class="st">"culmen_depth_mm"</span>,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>       <span class="st">"y"</span>: <span class="st">"culmen_length_mm"</span>,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>       <span class="st">"fx"</span>: <span class="st">"sex"</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>       <span class="st">"fy"</span>: <span class="st">"species"</span>,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-13-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-17-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 <p>In this case, caching ensures that the <code>penguins</code> DataFrame is only serialized and transmitted once instead of twice.</p>
@@ -493,43 +522,43 @@ Output is saved between sessions
 <h2 class="anchored" data-anchor-id="datetime-objects">datetime objects</h2>
 <p><code>datetime.date</code> and <code>datetime.datetime</code> Python objects are automatically serialized and converted to JavaScript <code>Date</code> objects.</p>
 <p>That makes the following two specifications equivalent:</p>
-<div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>op({</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01')"</span>), js(<span class="st">"new Date('2022-01-01')"</span>)]}, </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01')"</span>), js(<span class="st">"new Date('2022-01-01')"</span>)]}, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-14-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-18-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>op({</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [date(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>), date(<span class="dv">2022</span>,<span class="dv">1</span>,<span class="dv">1</span>)]}, </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [date(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>), date(<span class="dv">2022</span>,<span class="dv">1</span>,<span class="dv">1</span>)]}, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-15-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-19-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 <p>As well as the two following ones, using <code>datetime</code>:</p>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>op({</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01T07:00:00')"</span>), js(<span class="st">"new Date('2021-01-01T08:00:00')"</span>)]}, </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01T07:00:00')"</span>), js(<span class="st">"new Date('2021-01-01T08:00:00')"</span>)]}, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-16-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-20-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>op({</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>), datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">0</span>,<span class="dv">0</span>)]}, </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>), datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">0</span>,<span class="dv">0</span>)]}, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-17-output-1.svg" class="img-fluid"></p>
+<p><img src="usage_files/figure-html/cell-21-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -537,34 +566,34 @@ Output is saved between sessions
 <h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
 <p><code>pyobsplot</code> plots are compatible with <a href="https://quarto.org">quarto</a> HTML formats. If you use the <a href="#renderers">jsdom renderer</a>, plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.</p>
 <p>If your source document is a jupyter notebook (and not a <code>.qmd</code> file), then you have to use the <code>--execute</code> argument to force plot computation and to make them visible in the output:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render test.ipynb <span class="at">--execute</span> <span class="at">--to</span> html</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render test.ipynb <span class="at">--execute</span> <span class="at">--to</span> html</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="interactivity" class="level2">
 <h2 class="anchored" data-anchor-id="interactivity">Interactivity</h2>
 <p>When using the <code>widget</code> renderer, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the <code>spec</code> attribute of an existing <code>Obsplot</code> to another plot specification and it will update it.</p>
 <p>This allows to do things like the following, where a plot is updated depending on the value of a Jupyter <code>IntSlider</code> widget:</p>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_plot_spec(opacity):</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">"grid"</span>: <span class="va">True</span>,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"marks"</span>: [</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>            Plot.rectY(penguins, Plot.binX({<span class="st">"y"</span>: <span class="st">"count"</span>}, {<span class="st">"x"</span>: <span class="st">"body_mass_g"</span>, <span class="st">"fill"</span>: <span class="st">"steelblue"</span>, <span class="st">"fillOpacity"</span>: opacity})),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY([<span class="dv">0</span>])</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> op(generate_plot_spec(<span class="dv">1</span>))</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_plot(change):</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    new <span class="op">=</span> change[<span class="st">'new'</span>]</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    plot.spec <span class="op">=</span> generate_plot_spec(new <span class="op">/</span> <span class="dv">100</span>)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> IntSlider(value <span class="op">=</span> <span class="dv">100</span>, <span class="bu">min</span> <span class="op">=</span> <span class="dv">0</span>, <span class="bu">max</span> <span class="op">=</span> <span class="dv">100</span>)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>w.observe(update_plot, names<span class="op">=</span><span class="st">'value'</span>)</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>display(w)</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>display(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_plot_spec(opacity):</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">"grid"</span>: <span class="va">True</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"marks"</span>: [</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            Plot.rectY(penguins, Plot.binX({<span class="st">"y"</span>: <span class="st">"count"</span>}, {<span class="st">"x"</span>: <span class="st">"body_mass_g"</span>, <span class="st">"fill"</span>: <span class="st">"steelblue"</span>, <span class="st">"fillOpacity"</span>: opacity})),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY([<span class="dv">0</span>])</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> op(generate_plot_spec(<span class="dv">1</span>))</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_plot(change):</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    new <span class="op">=</span> change[<span class="st">'new'</span>]</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    plot.spec <span class="op">=</span> generate_plot_spec(new <span class="op">/</span> <span class="dv">100</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> IntSlider(value <span class="op">=</span> <span class="dv">100</span>, <span class="bu">min</span> <span class="op">=</span> <span class="dv">0</span>, <span class="bu">max</span> <span class="op">=</span> <span class="dv">100</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>w.observe(update_plot, names<span class="op">=</span><span class="st">'value'</span>)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>display(w)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>display(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can see a live version of this example in the following Colab notebook: <a href="https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb"><img src="img/colab-badge.svg" class="img-fluid"></a></p>
 
