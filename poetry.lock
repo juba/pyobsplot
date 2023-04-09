@@ -1810,18 +1810,18 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "polars"
-version = "0.16.18"
+version = "0.17.0"
 description = "Blazingly fast DataFrame library"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "polars-0.16.18-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:ee471d3f79daf93e7b0a5412a25473fdc27b59caa05d3baeb786e2022f0e16b0"},
-    {file = "polars-0.16.18-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:bee894337be02706056e17248a361d8b2aeb59971ddc04d0a2be2df568977846"},
-    {file = "polars-0.16.18-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:674645118122c0ddd93668735d736a080290f5d2de1ea9a751f3639a331a4784"},
-    {file = "polars-0.16.18-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ed6d2b07a43baf1563a68beb88b9a561f41967815fd57c9682aaac4502ee4499"},
-    {file = "polars-0.16.18-cp37-abi3-win_amd64.whl", hash = "sha256:eaeba3902d6a412eb2986c2477387cc400f1502abd22cf79b2cc32b435d8abe4"},
-    {file = "polars-0.16.18.tar.gz", hash = "sha256:221125b1e1d043d13d889c336ba1f592ed8f150ec06124067e72e40600b3c96a"},
+    {file = "polars-0.17.0-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:173fb5e1f1752de7b3cd2dbfdcd504272521131b91d3a86fdfce0079e3ba6267"},
+    {file = "polars-0.17.0-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:a62f0e6b39099f71980e42998826e1f9f2501e6287683dbde82dfaee5dbcaf0c"},
+    {file = "polars-0.17.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c6beeabf731bb18ca9d0fcda2c5c3654fa22ddb110bcba4f01e521d726fcf6d1"},
+    {file = "polars-0.17.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3e5dc4f9617e21b1f4515ce8233ad9d1ffd11e113b801e8df175e8799a3cd3ff"},
+    {file = "polars-0.17.0-cp37-abi3-win_amd64.whl", hash = "sha256:f1ef9dd06d19fd68fd81105fd2e2ec844b9a576325c4c7ca96205482d73e1faf"},
+    {file = "polars-0.17.0.tar.gz", hash = "sha256:6b4ea5c1700258583eda4946b406e43db424618f94d03e791065263ac759d38d"},
 ]
 
 [package.dependencies]
@@ -1834,8 +1834,8 @@ deltalake = ["deltalake (>=0.8.0)"]
 fsspec = ["fsspec"]
 matplotlib = ["matplotlib"]
 numpy = ["numpy (>=1.16.0)"]
-pandas = ["pandas", "pyarrow (>=4.0.0)"]
-pyarrow = ["pyarrow (>=4.0.0)"]
+pandas = ["pandas", "pyarrow (>=7.0.0)"]
+pyarrow = ["pyarrow (>=7.0.0)"]
 sqlalchemy = ["pandas", "sqlalchemy"]
 timezone = ["backports.zoneinfo", "tzdata"]
 xlsx2csv = ["xlsx2csv (>=0.8.0)"]
