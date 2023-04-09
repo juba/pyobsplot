@@ -7,6 +7,7 @@ from typing import Any
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
+from .utils import allowed_defaults
 
 
 class Obsplot:
@@ -57,21 +58,15 @@ class ObsplotCreator:
     """
 
     def __init__(self, default: dict = {}) -> None:
-        allowed_default = [
-            "marginTop",
-            "marginRight",
-            "marginBottom",
-            "marginLeft",
-            "margin",
-            "width",
-            "height",
-            "aspectRatio",
-            "style",
-        ]
+        """Generic Creator constructor
+
+        Args:
+            default (dict, optional): dict of default spec values. Defaults to {}.
+        """
         for k in default:
-            if k not in allowed_default:
+            if k not in allowed_defaults:
                 raise ValueError(
-                    f"{k} is not allowed in default.\nAllowed values: {allowed_default}."  # noqa: E501
+                    f"{k} is not allowed in default.\nAllowed values: {allowed_defaults}."  # noqa: E501
                 )
         self._default = default
 
