@@ -61,5 +61,13 @@ test.describe('Visual Regression', () => {
         });
     }
 
+    // default notebook
+    let default_notebooks = ["default_values"]
+    for (let notebook of default_notebooks) {
+        test(`Default / ${notebook}.ipynb`, async ({ page }) => {
+            await test_notebook(page, notebook, null);
+        });
+    }
+
 });
 
