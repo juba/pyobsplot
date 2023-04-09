@@ -311,6 +311,18 @@ op({
 ```
 
 
+## Quarto
+
+`pyobsplot` plots are compatible with [quarto](https://quarto.org) HTML formats. If you use the [jsdom renderer](#renderers), plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.
+
+If your source document is a jupyter notebook (and not a `.qmd` file), then you have to use the `--execute` argument to force plot computation and to make them visible in the output:
+
+```sh
+quarto render test.ipynb --execute --to html
+```
+
+
+
 ## Interactivity
 
 When using the `widget` renderer, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the `spec` attribute of an existing `Obsplot` to another plot specification and it will update it.
@@ -343,14 +355,4 @@ display(plot)
 ```
 
 You can see a live version of this example in the following Colab notebook: [![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
-
-## Quarto
-
-`Obsplot` plots are compatible with [quarto](https://quarto.org) HTML formats. If you use the [jsdom renderer](#renderers), plots without legends are generated as SVG files and are also compatible with other formats such as PDF or docx.
-
-If your source document is a jupyter notebook (and not a `.qmd` file), then you have to use the `--execute` argument to force plot computation and to make them visible in the output:
-
-```sh
-quarto render test.ipynb --execute --to html
-```
 
