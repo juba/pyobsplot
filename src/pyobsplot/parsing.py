@@ -4,13 +4,12 @@ Plot specification parsing.
 
 import datetime
 import json
-import base64
 import pandas as pd
 import polars as pl
 
 from typing import Any, Optional
 
-from .data import pd_to_arrow, pl_to_arrow
+from .data import serialize
 
 
 class SpecParser:
@@ -174,24 +173,7 @@ class SpecParser:
         Returns:
             list: list of serialized data objects.
         """
-        result = []
-        for d in self.data:
-            # If polars DataFrame, serialize to Arrow IPC
-            if isinstance(d, pl.DataFrame):
-                value = pl_to_arrow(d)
-                if self.renderer == "jsdom":
-                    value = base64.standard_b64encode(value).decode("ascii")
-                result.append({"pyobsplot-type": "DataFrame", "value": value})
-            # If pandas DataFrame, serialize to Arrow IPC
-            elif isinstance(d, pd.DataFrame):
-                value = pd_to_arrow(d)
-                if self.renderer == "jsdom":
-                    value = base64.standard_b64encode(value).decode("ascii")
-                result.append({"pyobsplot-type": "DataFrame", "value": value})
-            # Else, keep as is
-            else:
-                result.append(d)
-        return result
+        return [serialize(d, renderer=self.renderer) for d in self.data]
 
 
 def js(txt: str) -> dict:

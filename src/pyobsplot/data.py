@@ -8,8 +8,36 @@ import pandas as pd
 import polars as pl
 import pyarrow as pa
 import pyarrow.feather as pf
+import base64
 
 from typing import Any
+
+
+def serialize(data: Any, renderer: str) -> Any:
+    """Serialize a data object.
+
+    Args:
+        data (Any): data object to serialize.
+        renderer (str): renderer.
+
+    Returns:
+        Any: serialized data object.
+    """
+    # If polars DataFrame, serialize to Arrow IPC
+    if isinstance(data, pl.DataFrame):
+        value = pl_to_arrow(data)
+        if renderer == "jsdom":
+            value = base64.standard_b64encode(value).decode("ascii")
+        return {"pyobsplot-type": "DataFrame", "value": value}
+    # If pandas DataFrame, serialize to Arrow IPC
+    elif isinstance(data, pd.DataFrame):
+        value = pd_to_arrow(data)
+        if renderer == "jsdom":
+            value = base64.standard_b64encode(value).decode("ascii")
+        return {"pyobsplot-type": "DataFrame", "value": value}
+    # Else, keep as is
+    else:
+        return data
 
 
 def pd_to_arrow(df: pd.DataFrame) -> bytes:
