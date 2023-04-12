@@ -74,7 +74,7 @@ This project is at an early stage. There will be bugs, and the API may change in
 
 If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:
 
-[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
+[![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
 ## Features and limitations
 
