@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/pyobsplot?color=green)](https://www.npmjs.com/package/pyobsplot)
 [![Tests](https://github.com/juba/pyobsplot/actions/workflows/tests.yml/badge.svg)](https://github.com/juba/pyobsplot/actions/workflows/tests.yml)
 [![Documentation](https://github.com/juba/pyobsplot/actions/workflows/publish.yml/badge.svg)](https://github.com/juba/pyobsplot/actions/workflows/publish.yml)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
+[![Open In Colab](https://github.com/juba/pyobsplot/raw/main/doc/img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
 
 `pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in [Jupyter](https://jupyter.org) notebooks, [VSCode](https://code.visualstudio.com) notebooks, [Google Colab](https://colab.research.google.com) and [Quarto](https://quarto.org) documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.
@@ -50,6 +50,8 @@ For usage instructions, see the [documentation website](https://juba.github.io/p
 
 - See [getting started](https://juba.github.io/pyobsplot/getting_started.html) for a quick usage overview.
 - See [usage](https://juba.github.io/pyobsplot/usage.html) for more detailed usage instructions.
+
+If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab: [![](https://github.com/juba/pyobsplot/raw/main/doc/img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
 
 ## Features and limitations
