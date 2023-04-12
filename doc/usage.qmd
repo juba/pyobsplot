@@ -31,7 +31,7 @@ So the following JavaScript code:
 ```javascript
 Plot.plot(
     {
-        color: {legend: true}
+        color: {legend: true},
         grid: false,
         marks: [Plot.dot(data, {x: "x", y: "y", fill: "type", r: 5})]
     }
@@ -43,7 +43,7 @@ Becomes:
 ```{python}
 #| eval: false
 op({
-    "color": {"legend": True}
+    "color": {"legend": True},
     "grid": False,
     "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
 })
