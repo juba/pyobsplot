@@ -3,6 +3,7 @@ Obsplot jsdom handling.
 """
 
 import subprocess
+import os
 import json
 import shutil
 from IPython.display import HTML, SVG
@@ -52,6 +53,9 @@ class ObsplotJsdom:
             input=json.dumps(self.spec),
             capture_output=True,
             encoding="Utf8",
+            # Use shell=True if we are on Windows. Otherwise PATH
+            # is not parsed and npx is not found.
+            shell=os.name == "nt",
         )
         if p.returncode != 0:
             raise RuntimeError(
