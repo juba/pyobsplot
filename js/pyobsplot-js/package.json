@@ -27,5 +27,11 @@
   "bin": {
     "pyobsplot": "main.js"
   },
-  "type": "module"
+  "type": "module",
+  "keywords": [
+    "Observable Plot",
+    "Python",
+    "visualization",
+    "jsdom"
+  ]
 }
