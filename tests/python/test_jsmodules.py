@@ -10,10 +10,10 @@ from pyobsplot.parsing import js
 
 class TestJsModules:
     def test_js_modules(self):
-        assert jsmodules.Plot.foo() == {
+        assert jsmodules.Plot.dot() == {
             "pyobsplot-type": "function",
             "module": "Plot",
-            "method": "foo",
+            "method": "dot",
             "args": (),
         }
         assert jsmodules.d3.bar() == {
@@ -34,18 +34,20 @@ class TestJsModules:
             "method": "baz",
             "args": (),
         }
+        with pytest.raises(AttributeError):
+            jsmodules.Plot.foo()
 
     def test_js_modules_args(self):
-        assert jsmodules.Plot.foo(1, "bar") == {
+        assert jsmodules.Plot.dot(1, "bar") == {
             "pyobsplot-type": "function",
             "module": "Plot",
-            "method": "foo",
+            "method": "dot",
             "args": (1, "bar"),
         }
-        assert jsmodules.Plot.foo([1, 2], {"x": "foo"}) == {
+        assert jsmodules.Plot.line([1, 2], {"x": "foo"}) == {
             "pyobsplot-type": "function",
             "module": "Plot",
-            "method": "foo",
+            "method": "line",
             "args": ([1, 2], {"x": "foo"}),
         }
 

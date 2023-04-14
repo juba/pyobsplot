@@ -176,10 +176,10 @@ class TestParse:
         }
 
     def test_parse_js(self):
-        assert SpecParser().parse(jsmodules.Plot.foo()) == {
+        assert SpecParser().parse(jsmodules.Plot.dot()) == {
             "pyobsplot-type": "function",
             "module": "Plot",
-            "method": "foo",
+            "method": "dot",
             "args": [],
         }
         assert SpecParser().parse(jsmodules.d3.bar(1, "baz")) == {

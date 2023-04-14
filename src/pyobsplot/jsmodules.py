@@ -1,9 +1,53 @@
+from functools import partial
+
 from .obsplot import ObsplotWidgetCreator, ObsplotJsdomCreator
 from .widget import ObsplotWidget
+from .utils import plot_methods
 
 # Default renderer for Plot.plot() calls.
 # Not documented, only internal use for documentation generation
 _plot_renderer = "widget"
+
+
+class Plot:
+    """Plot methods class."""
+
+    @staticmethod
+    def plot(*args, **kwargs) -> ObsplotWidget:
+        """
+        Plot.plot static method. If called directly, create an ObsplotWidget
+        or an ObpsplotJsdom with args and kwargs.
+        """
+        if _plot_renderer == "widget":
+            op = ObsplotWidgetCreator()
+        if _plot_renderer == "jsdom":
+            op = ObsplotJsdomCreator()
+        return op(*args, **kwargs)
+
+
+def method_to_spec(*args, **kwargs) -> dict:
+    """Function used for creating Plot.xyz static methods.
+    Generates a dict of specification with method name and args.
+
+    Returns:
+        dict: Plot function specification.
+    """
+    name = kwargs["name"]
+    if len(kwargs) > 1:
+        raise ValueError(f"kwargs must not be passed to Plot.{name} : {kwargs}")
+    return {
+        "pyobsplot-type": "function",
+        "module": "Plot",
+        "method": name,
+        "args": args,
+    }
+
+
+# For each exitsting JS Plot method, create a static Python Plot method with the
+# same name which calls method_to_spec()
+for method in plot_methods:
+    if method != "plot":
+        setattr(Plot, method, staticmethod(partial(method_to_spec, name=method)))
 
 
 class JSModule(type):
@@ -11,16 +55,6 @@ class JSModule(type):
 
     def __getattr__(cls: type, name: str) -> callable:
         """Intercept methods calling and returns a parsed and typed dict object."""
-
-        # If "Plot.plot" is called, returns it as is.
-        # This is to allow users to use `Plot.plot` directly to generate charts
-        # without having to call Plot.plot = Obsplot() first.
-        if ("pyobsplot.parsing", "Plot", "plot") == (
-            cls.__module__,
-            cls.__name__,
-            name,
-        ):
-            return Plot.plot
 
         def wrapper(*args, **kwargs) -> dict:
             if kwargs:
@@ -35,22 +69,6 @@ class JSModule(type):
             }
 
         return wrapper
-
-
-class Plot(metaclass=JSModule):
-    """JSModule class to allow Plot objects in specification."""
-
-    @staticmethod
-    def plot(*args, **kwargs) -> ObsplotWidget:
-        """
-        Plot.plot static method. If called directly, create an ObsplotWidget
-        or an ObpsplotJsdom with args and kwargs.
-        """
-        if _plot_renderer == "widget":
-            op = ObsplotWidgetCreator()
-        if _plot_renderer == "jsdom":
-            op = ObsplotJsdomCreator()
-        return op(*args, **kwargs)
 
 
 class d3(metaclass=JSModule):
