@@ -2,9 +2,9 @@
 title: "Development"
 ---
 
-## debug mode
+## Debug mode
 
-"debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`) in the browser console. It is only available with the "widget" renderer.
+"Debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`) in the browser console. It is only available with the "widget" renderer.
 
 To activate it, add `debug=True` when creating your plot generator object:
 
