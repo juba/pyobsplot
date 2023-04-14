@@ -2,6 +2,17 @@
 title: "Development"
 ---
 
+## debug mode
+
+"debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`) in the browser console. It is only available with the "widget" renderer.
+
+To activate it, add `debug=True` when creating your plot generator object:
+
+```{python}
+# | eval: false
+op = Obsplot(render="widget", debug=True)
+```
+
 ## Install fom source
 
 If you want to build `pyobsplot` from source, you'll have to follow these steps:
@@ -69,13 +80,16 @@ After that, you can test that currently generated images are the same as the ref
 npm run uitest
 ```
 
-## debug mode
+## Maintenance notes
 
-"debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`) in the browser console. It is only available with the "widget" renderer.
+### Releases
 
-To activate it, add `debug=True` when creating your plot generator object:
+- Release the Python package with `poetry build` and `poetry publish`
+- If necessary release the npm package with `npm publish` in its directory
 
-```{python}
-# | eval: false
-op = Obsplot(render="widget", debug=True)
-```
+### New Plot versions
+
+When a new Plot version is released:
+
+- update with `npm install @observablehq/plot` and `npm install d3`
+- run `tools/get_plot_methods.js` and update `utils.py`
