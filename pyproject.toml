@@ -28,6 +28,7 @@ pandas = ">=1.2.0"
 polars = ">=0.16.0"
 pyarrow = "^11.0.0"
 ipywidgets = ">=8.0.0"
+jupyterlab_widgets = ">=3.0.0"
 jupyterlab = ">=3.6.0"
 
 [tool.poetry.group.dev.dependencies]
