@@ -81,8 +81,8 @@ If you just want to try this package without installing it on your computer, you
 **Features:**
 
 - Syntax as close as possible to the JavaScript one
-- Two renderers available: `widget`, which generates plots as Jupyter widgets, and `jsdom`, which generate SVG or HTML outputs
-- [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and data type conversions
+- Two renderers available: `widget`, which generates plots as Jupyter widgets, and `jsdom`, which generates SVG or HTML outputs
+- [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and better data type conversions
 - Works offline, no iframe or dependency to Observable runtime
 - Caching mechanism of data objects if they are used several times in the same plot
 - Custom JavaScript code can be passed as strings with the `js` method
