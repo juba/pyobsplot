@@ -69,6 +69,13 @@ class ObsplotCreator:
         self._default = default
         self._debug = debug
 
+    def __repr__(self):
+        return (
+            f"<{type(self).__name__}>\n"
+            f"debug: {self._debug!r}\n"
+            f"default: {self._default!r}\n"
+        )
+
     def get_spec(self, *args, **kwargs):
         """
         Extract plot specification from args and kwargs, taking into account

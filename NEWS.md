@@ -2,6 +2,7 @@
 
 - Autocompletion of Plot methods should now be working in IDEs.
 - debug mode also works with `jsdom` renderer.
+- plot generator objects now have correct `__repr__` methods.
 
 ## pyobsplot 0.3.2
 
