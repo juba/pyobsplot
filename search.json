@@ -102,14 +102,14 @@
     "href": "development.html",
     "title": "Development",
     "section": "",
-    "text": "“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot) in the browser console. It is only available with the “widget” renderer.\nTo activate it, add debug=True when creating your plot generator object:\n\nop = Obsplot(render=\"widget\", debug=True)"
+    "text": "“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot).\nTo activate it, add debug=True when creating your plot generator object:\n\nop = Obsplot(render=\"widget\", debug=True)\n\nIf using the widget renderer, debug output will be displayed in JavaScript console. With the jsdom renderer, it will be displayed directly in the notebook."
   },
   {
     "objectID": "development.html#debug-mode",
     "href": "development.html#debug-mode",
     "title": "Development",
     "section": "",
-    "text": "“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot) in the browser console. It is only available with the “widget” renderer.\nTo activate it, add debug=True when creating your plot generator object:\n\nop = Obsplot(render=\"widget\", debug=True)"
+    "text": "“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot).\nTo activate it, add debug=True when creating your plot generator object:\n\nop = Obsplot(render=\"widget\", debug=True)\n\nIf using the widget renderer, debug output will be displayed in JavaScript console. With the jsdom renderer, it will be displayed directly in the notebook."
   },
   {
     "objectID": "development.html#install-fom-source",
@@ -186,14 +186,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Autocompletion of Plot methods should now be working in IDEs."
+    "text": "Autocompletion of Plot methods should now be working in IDEs.\ndebug mode also works with jsdom renderer.\nplot generator objects now have correct __repr__ methods."
   },
   {
     "objectID": "changelog.html#pyobsplot-development-version",
     "href": "changelog.html#pyobsplot-development-version",
     "title": "Changelog",
     "section": "",
-    "text": "Autocompletion of Plot methods should now be working in IDEs."
+    "text": "Autocompletion of Plot methods should now be working in IDEs.\ndebug mode also works with jsdom renderer.\nplot generator objects now have correct __repr__ methods."
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.2",
