@@ -29,9 +29,9 @@ class TestInit:
         op = Obsplot(renderer="widget", debug=True)
         assert op._debug
         op = Obsplot(renderer="jsdom")
-        assert "_debug" not in op.__dict__
-        with pytest.raises(ValueError):
-            op = Obsplot(renderer="jsdom", debug=True)
+        assert op._debug is False
+        op = Obsplot(renderer="jsdom", debug=True)
+        assert op._debug
 
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     def test_init(self):

@@ -17,9 +17,7 @@ export function generate_plot(spec, renderer) {
             out = out.plot()
         } else {
             if (spec["debug"]) {
-                console.log("--- start pyobsplot debugging output ---")
-                console.log(out)
-                console.log("--- end pyobsplot debugging output ---")
+                debug_output(out, renderer)
             }
             out = Plot.plot(out)
         }
@@ -31,6 +29,21 @@ export function generate_plot(spec, renderer) {
         out.textContent = "⚠ " + error
     }
     return out
+}
+
+
+// Output plot specification if debug is true
+function debug_output(out, renderer) {
+    if (renderer == "widget") {
+        console.log("--- start pyobsplot debugging output ---")
+        console.log(out)
+        console.log("--- end pyobsplot debugging output ---")
+    }
+    if (renderer == "jsdom") {
+        console.log("<br>--- start pyobsplot debugging output ---<br>")
+        console.log(out)
+        console.log("<br>--- end pyobsplot debugging output ---</br>")
+    }
 }
 
 export { parse_spec, get_fun } from "./parsing.js"

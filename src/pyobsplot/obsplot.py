@@ -40,9 +40,7 @@ class Obsplot:
         if renderer == "widget":
             return ObsplotWidgetCreator(default=default, debug=debug)
         elif renderer == "jsdom":
-            if debug:
-                raise ValueError("debug mode is not available with jsdom renderer")
-            return ObsplotJsdomCreator(default=default)
+            return ObsplotJsdomCreator(default=default, debug=debug)
         else:
             raise ValueError(
                 f"""
@@ -57,7 +55,7 @@ class ObsplotCreator:
     Creator class.
     """
 
-    def __init__(self, default: dict = {}) -> None:
+    def __init__(self, default: dict = {}, debug: bool = False) -> None:
         """Generic Creator constructor
 
         Args:
@@ -69,6 +67,7 @@ class ObsplotCreator:
                     f"{k} is not allowed in default.\nAllowed values: {allowed_defaults}."  # noqa: E501
                 )
         self._default = default
+        self._debug = debug
 
     def get_spec(self, *args, **kwargs):
         """
@@ -99,8 +98,7 @@ class ObsplotWidgetCreator(ObsplotCreator):
     """
 
     def __init__(self, default: dict = {}, debug: bool = False) -> None:
-        super().__init__(default)
-        self._debug = debug
+        super().__init__(default, debug)
 
     def __call__(self, *args, **kwargs) -> ObsplotWidget:
         """
@@ -115,12 +113,12 @@ class ObsplotJsdomCreator(ObsplotCreator):
     Jsdom renderer Creator class.
     """
 
-    def __init__(self, default: dict = {}) -> None:
-        super().__init__(default)
+    def __init__(self, default: dict = {}, debug: bool = False) -> None:
+        super().__init__(default, debug)
 
     def __call__(self, *args, **kwargs) -> None:
         """
         Method called whent an instance is called.
         """
         spec = self.get_spec(*args, **kwargs)
-        display(ObsplotJsdom(spec, default=self._default).plot())
+        display(ObsplotJsdom(spec, default=self._default, debug=self._debug).plot())

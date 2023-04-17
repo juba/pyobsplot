@@ -4,7 +4,7 @@ title: "Development"
 
 ## Debug mode
 
-"Debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`) in the browser console. It is only available with the "widget" renderer.
+"Debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`).
 
 To activate it, add `debug=True` when creating your plot generator object:
 
@@ -12,6 +12,8 @@ To activate it, add `debug=True` when creating your plot generator object:
 # | eval: false
 op = Obsplot(render="widget", debug=True)
 ```
+
+If using the `widget` renderer, debug output will be displayed in JavaScript console. With the `jsdom` renderer, it will be displayed directly in the notebook.
 
 ## Install fom source
 
