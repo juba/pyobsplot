@@ -112,6 +112,13 @@
     "text": "“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot).\nTo activate it, add debug=True when creating your plot generator object:\n\nop = Obsplot(render=\"widget\", debug=True)\n\nIf using the widget renderer, debug output will be displayed in JavaScript console. With the jsdom renderer, it will be displayed directly in the notebook."
   },
   {
+    "objectID": "development.html#install-from-git",
+    "href": "development.html#install-from-git",
+    "title": "Development",
+    "section": "Install from git",
+    "text": "Install from git\nTo install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install 'https://gitpkg.now.sh/juba/pyobsplot/js/pyobsplot-js?main'"
+  },
+  {
     "objectID": "development.html#install-fom-source",
     "href": "development.html#install-fom-source",
     "title": "Development",
