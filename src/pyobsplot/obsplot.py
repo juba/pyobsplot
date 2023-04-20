@@ -113,7 +113,7 @@ class ObsplotWidgetCreator(ObsplotCreator):
 
     def __call__(self, *args, **kwargs) -> ObsplotWidget:
         """
-        Method called whent an instance is called.
+        Method called when an instance is called.
         """
         spec = self.get_spec(*args, **kwargs)
         return ObsplotWidget(spec, default=self._default, debug=self._debug)
@@ -131,7 +131,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
 
     def __call__(self, *args, **kwargs) -> None:
         """
-        Method called whent an instance is called.
+        Method called when an instance is called.
         """
         if self._proc.poll() is not None:
             raise RuntimeError(
