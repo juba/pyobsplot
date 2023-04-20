@@ -2,6 +2,10 @@
 Obsplot main class.
 """
 
+import shutil
+import os
+import signal
+from subprocess import Popen, PIPE, SubprocessError
 from IPython.display import display
 from typing import Any
 
@@ -122,10 +126,63 @@ class ObsplotJsdomCreator(ObsplotCreator):
 
     def __init__(self, default: dict = {}, debug: bool = False) -> None:
         super().__init__(default, debug)
+        self._proc = None
+        self.start_server()
 
     def __call__(self, *args, **kwargs) -> None:
         """
         Method called whent an instance is called.
         """
+        if self._proc.poll() is not None:
+            raise RuntimeError(
+                "Server has ended, please recreate your plot generator object."
+            )
         spec = self.get_spec(*args, **kwargs)
-        display(ObsplotJsdom(spec, default=self._default, debug=self._debug).plot())
+        display(
+            ObsplotJsdom(
+                spec,
+                port=self._port,
+                default=self._default,
+                debug=self._debug,
+            ).plot()
+        )
+
+    def start_server(self):
+        """
+        Start http node plot generator server.
+        """
+        if self._proc is not None:
+            if self._proc.poll() is None:
+                # If proc already running, do nothing
+                return
+        # Check for node executable
+        npx = shutil.which("npx")
+        if not npx:
+            raise RuntimeError("npx executable has not been found.")
+        # Run node script with JSON spec as input
+        try:
+            p = Popen(
+                ["npx", "pyobsplot"],
+                stdin=None,
+                stdout=PIPE,
+                stderr=PIPE,
+                encoding="Utf8",
+                # Use shell=True if we are on Windows. Otherwise PATH
+                # is not parsed and npx is not found.
+                shell=os.name == "nt",
+                start_new_session=True,
+            )
+        except SubprocessError:
+            err = p.stderr.read()
+            raise RuntimeError(f"Can't start server: {err}")
+        # read back OS selected port from stdout
+        port = p.stdout.readline()
+        self._port = port.strip()
+        # store Popen process
+        self._proc = p
+
+    def close(self):
+        """
+        Stop http node plot generator server.
+        """
+        os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)

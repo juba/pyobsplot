@@ -2,10 +2,8 @@
 Obsplot jsdom handling.
 """
 
-import subprocess
-import os
 import json
-import shutil
+import requests
 from IPython.display import HTML, SVG
 
 from typing import Any
@@ -23,7 +21,13 @@ class ObsplotJsdom:
     Python kwargs.
     """
 
-    def __init__(self, spec: Any, default: dict = {}, debug: bool = False) -> None:
+    def __init__(
+        self,
+        spec: Any,
+        port: int,
+        default: dict = {},
+        debug: bool = False,
+    ) -> None:
         """
         Constructor. Parse the spec given as argument.
         """
@@ -35,34 +39,28 @@ class ObsplotJsdom:
         # Create spec object
         spec = {"data": parser.serialize_data(), "code": code, "debug": debug}
         self.spec = spec
+        self.port = port
 
     def plot(self):
-        """Generates the plot by calling node script.
+        """Generates the plot by sending request to http node server.
 
         Returns:
             Either an HTML or SVG IPython.display object.
         """
 
-        # Check for node executable
-        npx = shutil.which("npx")
-        if not npx:
-            raise RuntimeError("npx executable has not been found.")
-        # Run node script with JSON spec as input
-        p = subprocess.run(
-            ["npx", "pyobsplot"],
-            input=json.dumps(self.spec),
-            capture_output=True,
-            encoding="Utf8",
-            # Use shell=True if we are on Windows. Otherwise PATH
-            # is not parsed and npx is not found.
-            shell=os.name == "nt",
-        )
-        if p.returncode != 0:
-            raise RuntimeError(
-                f"jsdom script error (${p.returncode}): ${p.stderr} - ${p.stdout}"
+        # Make POST request with plot spec
+        url = f"http://localhost:{self.port}/plot"
+        try:
+            r = requests.post(url, data=json.dumps(self.spec))
+        except ConnectionRefusedError:
+            print(
+                f"Error: can't connect to generator server on port {self.port}. Please recreate your generator object."  # noqa: E501
             )
-        # Get script output
-        out = p.stdout
+        # Read back result
+        if r.status_code == 500:
+            raise RuntimeError(r.content.decode())
+        out = r.content.decode()
+
         # If output is svg, returns IPython.display.SVG
         if out[0:4] == "<svg":
             return SVG(out)

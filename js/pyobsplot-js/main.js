@@ -4,6 +4,7 @@
 
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
+import * as http from "node:http"
 import { JSDOM } from "jsdom"
 import { generate_plot } from "./plot.js"
 
@@ -20,6 +21,7 @@ global.HTMLCollection = jsdom.window.HTMLCollection
 global.d3 = d3
 global.Plot = Plot
 
+// jsdom plot generator
 function jsdom_plot(spec) {
 
     spec = JSON.parse(spec)
@@ -45,15 +47,51 @@ function jsdom_plot(spec) {
 }
 
 
-process.stdin.setEncoding('utf8');
-let data = ''
-process.stdin.on('data', function (chunk) {
-    data += chunk;
-});
-process.stdin.on('end', function () {
-    let output = jsdom_plot(data)
-    process.stdout.write(output)
-});
+// Request listener for http server
+const requestListener = function (req, res) {
+    // Send back plain text
+    res.setHeader("Content-Type", "text/plain");
+    switch (req.url) {
+        // plot entry point
+        case "/plot":
+            let body = '';
+            req.on('data', (chunk) => {
+                body += chunk.toString();
+            });
+            req.on('end', () => {
+                let output
+                try {
+                    output = jsdom_plot(body)
+                } catch (error) {
+                    res.writeHead(500);
+                    res.end(`Server error: ${error.message}.`);
+                    return
+                }
+                res.writeHead(200);
+                res.end(output);
+            })
+            break
+        // status entry point
+        case "/status":
+            res.writeHead(200);
+            res.end("pyobsplot");
+            break
+        // else
+        default:
+            res.writeHead(404);
+            res.end("Resource not found");
+    }
+}
 
 
+// let OS find a free port
+const port = 0
+const host = "localhost"
+// Launch server
+const server = http.createServer(requestListener);
+server.listen(port, host, () => {
+    // send selected port to stdout
+    const port = server.address().port;
+    process.stdout.write(port + "\n");
+});
 
