@@ -186,14 +186,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Autocompletion of Plot methods should now be working in IDEs.\nDebug mode also works with jsdom renderer.\nPlot generator objects now have correct __repr__ methods.\nUpdate anywidget to 0.2.2"
+    "text": "jsdom renderer now uses a local http server instead of calling a script at each invocation, greatly improving rendering speed.\nAutocompletion of Plot methods should now be working in IDEs.\nDebug mode also works with jsdom renderer.\nPlot generator objects now have correct __repr__ methods.\nUpdate anywidget to 0.2.3"
   },
   {
     "objectID": "changelog.html#pyobsplot-development-version",
     "href": "changelog.html#pyobsplot-development-version",
     "title": "Changelog",
     "section": "",
-    "text": "Autocompletion of Plot methods should now be working in IDEs.\nDebug mode also works with jsdom renderer.\nPlot generator objects now have correct __repr__ methods.\nUpdate anywidget to 0.2.2"
+    "text": "jsdom renderer now uses a local http server instead of calling a script at each invocation, greatly improving rendering speed.\nAutocompletion of Plot methods should now be working in IDEs.\nDebug mode also works with jsdom renderer.\nPlot generator objects now have correct __repr__ methods.\nUpdate anywidget to 0.2.3"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.2",
