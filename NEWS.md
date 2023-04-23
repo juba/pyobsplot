@@ -4,7 +4,8 @@
 - Autocompletion of Plot methods should now be working in IDEs.
 - Debug mode also works with `jsdom` renderer.
 - Plot generator objects now have correct `__repr__` methods.
-- Update anywidget to 0.2.3
+- Update anywidget to 0.2.3.
+- Fix: "Exception not rethrown" errors in pytest.
 
 ## pyobsplot 0.3.2
 
