@@ -1,5 +1,8 @@
 ## pyobsplot (development version)
 
+
+## pyobsplot 0.3.3
+
 - `jsdom` renderer now uses a local http server instead of calling a script at each invocation, greatly improving rendering speed.
 - Autocompletion of Plot methods should now be working in IDEs.
 - Ensure that the needed version of the npm package is run if jsdom renderer is used.
