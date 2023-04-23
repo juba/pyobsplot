@@ -176,8 +176,12 @@ class ObsplotJsdomCreator(ObsplotCreator):
             err = p.stderr.read()
             raise RuntimeError(f"Can't start server: {err}")
         # read back OS selected port from stdout
-        port = p.stdout.readline()
-        self._port = int(port.strip())
+        try:
+            port = p.stdout.readline()
+            self._port = int(port.strip())
+        except ValueError:
+            err = p.stderr.read()
+            raise ValueError(f"invalid port value {port.strip()}. stderr is '{err}'.")
         # store Popen process
         self._proc = p
 
