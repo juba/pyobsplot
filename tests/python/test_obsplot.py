@@ -112,6 +112,8 @@ class TestInit:
 
     def test_jsdom_server(self, oj):
         port = oj._port
+        assert port > 1024 and port <= 65535
+
         url = f"http://localhost:{port}"
 
         # /status request
