@@ -11,7 +11,7 @@ from typing import Any
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
-from .utils import allowed_defaults
+from .utils import allowed_defaults, min_npm_version
 
 
 class Obsplot:
@@ -162,7 +162,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
         # Run node script with JSON spec as input
         try:
             p = Popen(
-                ["npx", "pyobsplot"],
+                ["npx", f"pyobsplot@{min_npm_version}"],
                 stdin=None,
                 stdout=PIPE,
                 stderr=PIPE,
@@ -181,7 +181,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
             self._port = int(port.strip())
         except ValueError:
             err = p.stderr.read()
-            raise ValueError(f"invalid port value {port.strip()}. stderr is '{err}'.")
+            raise ValueError(f"Server not started: {err}")
         # store Popen process
         self._proc = p
 
