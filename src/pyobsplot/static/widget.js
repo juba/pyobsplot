@@ -68344,8 +68344,8 @@ function generate_plot(spec, renderer) {
     }
   } catch (error) {
     out = document.createElement("pre");
-    out.style.color = "#CC0000";
-    out.style.padding = "1em 1.5em";
+    out.style.color = "#DD3333";
+    out.style.padding = ".5em 1em";
     out.textContent = "\u26A0 " + error;
   }
   return out;
