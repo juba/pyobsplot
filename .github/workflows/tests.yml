@@ -8,6 +8,7 @@ name: Tests
 jobs:
   run-pytest:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
@@ -16,16 +17,24 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: "npm"
+
+      - name: Install node dependencies
+        run: npm install --production=false
+
       - name: Install poetry
         run: pipx install poetry
 
-      - name: Install Python and Dependencies
+      - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           cache: "poetry"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: poetry install
 
       - name: Run pytest
@@ -33,14 +42,18 @@ jobs:
 
   run-jstest:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           cache: "npm"
-      - name: Install dependencies
+
+      - name: Install node dependencies
         run: npm install --production=false
+
       - name: Run tests
         run: npm run jstest
