@@ -21,8 +21,14 @@ class ObsplotWidget(anywidget.AnyWidget):
     Python kwargs.
     """
 
-    _esm = bundler_output_dir / "widget.js"
-    _css = bundler_output_dir / "styles.css"
+    # Disable _esm and _css watching and live reload to avoid "exception not rethrown"
+    # error with pytest.
+    _esm = anywidget._file_contents.FileContents(
+        bundler_output_dir / "widget.js", start_thread=False
+    )
+    _css = anywidget._file_contents.FileContents(
+        bundler_output_dir / "styles.css", start_thread=False
+    )
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
 
