@@ -6,7 +6,7 @@ on:
 name: Tests
 
 jobs:
-  run-pytest:
+  Python-tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -40,7 +40,7 @@ jobs:
       - name: Run pytest
         run: poetry run pytest
 
-  run-jstest:
+  JS-tests:
     runs-on: ubuntu-latest
 
     steps:
