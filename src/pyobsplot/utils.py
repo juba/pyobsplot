@@ -104,6 +104,7 @@ plot_methods = (
     "hull",
     "identity",
     "image",
+    "indexOf",
     "initializer",
     "interpolateNearest",
     "interpolateNone",

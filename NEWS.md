@@ -1,5 +1,7 @@
 ## pyobsplot 0.3.4dev
 
+- Update Observable Plot to 0.6.6.
+
 
 ## pyobsplot 0.3.3
 
@@ -10,6 +12,7 @@
 - Plot generator objects now have correct `__repr__` methods.
 - Update anywidget to 0.2.3.
 - Fix: "Exception not rethrown" errors in pytest.
+
 
 ## pyobsplot 0.3.2
 
