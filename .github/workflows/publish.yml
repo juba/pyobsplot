@@ -16,8 +16,6 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          version: pre-release
 
       - name: Setup node
         uses: actions/setup-node@v3
