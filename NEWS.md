@@ -1,4 +1,4 @@
-## pyobsplot (development version)
+## pyobsplot 0.3.4dev
 
 
 ## pyobsplot 0.3.3
