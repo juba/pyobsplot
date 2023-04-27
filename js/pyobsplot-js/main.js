@@ -30,17 +30,12 @@ function jsdom_plot(spec) {
     for (const svg of el.tagName.toLowerCase() === "svg" ? [el] : el.querySelectorAll("svg")) {
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        if (svg.style.color == "") {
-            svg.style.color = "black"
-        }
+        svg.style.color ||= "black";
     }
     for (const figure of el.tagName.toLowerCase() === "figure" ? [el] : el.querySelectorAll("figure")) {
-        if (figure.style.color == "") {
-            figure.style.color = "black"
-        }
-        if (figure.style.backgroundColor == "") {
-            figure.style.backgroundColor = "white"
-        }
+        figure.style.color ||= "black"
+        figure.style.backgroundColor ||= "white"
+        figure.style.padding ||= "0px 5px 5px 5px"
     }
 
     return el.outerHTML
