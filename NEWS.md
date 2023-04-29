@@ -1,4 +1,4 @@
-## pyobsplot 0.3.4dev
+## pyobsplot 0.3.4
 
 - Add small padding around figure outputs for jsdom renderer to improve presentation over non-white backgrounds.
 - Update Observable Plot to 0.6.6.
