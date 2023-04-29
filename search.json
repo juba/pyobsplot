@@ -196,8 +196,8 @@
     "text": "Add small padding around figure outputs for jsdom renderer to improve presentation over non-white backgrounds.\nUpdate Observable Plot to 0.6.6."
   },
   {
-    "objectID": "changelog.html#pyobsplot-0.3.4dev",
-    "href": "changelog.html#pyobsplot-0.3.4dev",
+    "objectID": "changelog.html#pyobsplot-0.3.4",
+    "href": "changelog.html#pyobsplot-0.3.4",
     "title": "Changelog",
     "section": "",
     "text": "Add small padding around figure outputs for jsdom renderer to improve presentation over non-white backgrounds.\nUpdate Observable Plot to 0.6.6."
