@@ -6,4 +6,5 @@ module.exports = {
     outputDir: 'test-results',
     timeout: 2400000,
     retries: 0,
+    fullyParallel: true,
 };
