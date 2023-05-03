@@ -189,6 +189,20 @@
     "text": "Learn more\nTo go further, see the usage page."
   },
   {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "Update apache-arrow to 12.0.0"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.5-dev",
+    "href": "changelog.html#pyobsplot-0.3.5-dev",
+    "title": "Changelog",
+    "section": "",
+    "text": "Update apache-arrow to 12.0.0"
+  },
+  {
     "objectID": "changelog.html#pyobsplot-0.3.4",
     "href": "changelog.html#pyobsplot-0.3.4",
     "title": "Changelog",
