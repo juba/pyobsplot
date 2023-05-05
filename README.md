@@ -38,7 +38,7 @@ Plot.plot({
 
 ## Installation and usage
 
-> **Warning**: this project is at an early stage. There will be bugs, and the API may change.
+> **Warning**: this project is at an early stage.
 
 `pyobsplot` can be installed with `pip`:
 
@@ -71,9 +71,7 @@ If you just want to try this package without installing it on your computer, you
 
 **Limitations:**
 
-- Plots with legends don't work in Quarto in formats other than HTML. (#9)
-- Some faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn't happen when using mark-level faceting (with the `fx` and `fy` channels). (#3)
-
+- Plots with legends don't work in Quarto in formats other than HTML. (<https://github.com/juba/pyobsplot/issues/9>)
 
 
 ## Credits
