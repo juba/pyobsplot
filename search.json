@@ -81,14 +81,14 @@
     "href": "index.html#installation-and-usage",
     "title": "pyobsplot",
     "section": "Installation and usage",
-    "text": "Installation and usage\n\n\n\n\n\n\nWarning\n\n\n\nThis project is at an early stage. There will be bugs, and the API may change in future releases.\n\n\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
+    "text": "Installation and usage\n\n\n\n\n\n\nWarning\n\n\n\nThis project is at an early stage.\n\n\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
   },
   {
     "objectID": "index.html#features-and-limitations",
     "href": "index.html#features-and-limitations",
     "title": "pyobsplot",
     "section": "Features and limitations",
-    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nTwo renderers available: widget, which generates plots as Jupyter widgets, and jsdom, which generates SVG or HTML outputs\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and better data type conversions\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\nPlots can be defined with a dictionary, a call to a Plot mark function, or with kwargs. See alternative syntaxes.\nWorks with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the jsdom renderer.\n\nLimitations:\n\nPlots with legends don’t work in Quarto in formats other than HTML.\nSome faceting operations produce warnings when used as top-level faceting (but the plots should be fine). This doesn’t happen when using mark-level faceting (with the fx and fy channels)."
+    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nTwo renderers available: widget, which generates plots as Jupyter widgets, and jsdom, which generates SVG or HTML outputs\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and better data type conversions\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\nPlots can be defined with a dictionary, a call to a Plot mark function, or with kwargs. See alternative syntaxes.\nWorks with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the jsdom renderer.\n\nLimitations:\n\nPlots with legends don’t work in Quarto in formats other than HTML."
   },
   {
     "objectID": "index.html#credits",
