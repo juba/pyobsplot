@@ -1,6 +1,7 @@
 ## pyobsplot 0.3.5-dev
 
 - Update apache-arrow to 12.0.0
+- Update anywidget to 0.3.0
 
 
 ## pyobsplot 0.3.4

@@ -57033,21 +57033,6 @@ var encoder = new TextEncoder();
 var encodeUtf8 = (value) => encoder.encode(value);
 
 // js/pyobsplot-js/node_modules/apache-arrow/util/compat.mjs
-var [BigIntCtor, BigIntAvailable] = (() => {
-  const BigIntUnavailableError = () => {
-    throw new Error("BigInt is not available in this environment");
-  };
-  function BigIntUnavailable() {
-    throw BigIntUnavailableError();
-  }
-  BigIntUnavailable.asIntN = () => {
-    throw BigIntUnavailableError();
-  };
-  BigIntUnavailable.asUintN = () => {
-    throw BigIntUnavailableError();
-  };
-  return typeof BigInt !== "undefined" ? [BigInt, true] : [BigIntUnavailable, false];
-})();
 var [BigInt64ArrayCtor, BigInt64ArrayAvailable] = (() => {
   const BigInt64ArrayUnavailableError = () => {
     throw new Error("BigInt64Array is not available in this environment");
@@ -57765,15 +57750,8 @@ function bignumToNumber(bn) {
   }
   return number14;
 }
-var bignumToString;
-var bignumToBigInt;
-if (!BigIntAvailable) {
-  bignumToString = decimalToString;
-  bignumToBigInt = bignumToString;
-} else {
-  bignumToBigInt = (a7) => a7.byteLength === 8 ? new a7["BigIntArray"](a7.buffer, a7.byteOffset, 1)[0] : decimalToString(a7);
-  bignumToString = (a7) => a7.byteLength === 8 ? `${new a7["BigIntArray"](a7.buffer, a7.byteOffset, 1)[0]}` : decimalToString(a7);
-}
+var bignumToString = (a7) => a7.byteLength === 8 ? `${new a7["BigIntArray"](a7.buffer, a7.byteOffset, 1)[0]}` : decimalToString(a7);
+var bignumToBigInt = (a7) => a7.byteLength === 8 ? new a7["BigIntArray"](a7.buffer, a7.byteOffset, 1)[0] : decimalToString(a7);
 function decimalToString(a7) {
   let digits = "";
   const base64 = new Uint32Array(2);
@@ -57829,6 +57807,14 @@ var BN = class {
     return BN.new(num, isSigned);
   }
 };
+
+// js/pyobsplot-js/node_modules/apache-arrow/util/bigint.mjs
+function bigIntToNumber(number14) {
+  if (typeof number14 === "bigint" && (number14 < Number.MIN_SAFE_INTEGER || number14 > Number.MAX_SAFE_INTEGER)) {
+    throw new TypeError(`${number14} is not safe to convert to a number.`);
+  }
+  return Number(number14);
+}
 
 // js/pyobsplot-js/node_modules/apache-arrow/type.mjs
 var _a;
@@ -58402,7 +58388,7 @@ var Dictionary = class extends DataType {
     this.indices = indices;
     this.dictionary = dictionary;
     this.isOrdered = isOrdered3 || false;
-    this.id = id3 == null ? getId() : typeof id3 === "number" ? id3 : id3.low;
+    this.id = id3 == null ? getId() : bigIntToNumber(id3);
   }
   get typeId() {
     return Type.Dictionary;
@@ -59725,31 +59711,6 @@ function popcnt_uint32(uint32) {
 // js/pyobsplot-js/node_modules/apache-arrow/data.mjs
 var kUnknownNullCount = -1;
 var Data = class {
-  constructor(type3, offset3, length7, nullCount, buffers, children3 = [], dictionary) {
-    this.type = type3;
-    this.children = children3;
-    this.dictionary = dictionary;
-    this.offset = Math.floor(Math.max(offset3 || 0, 0));
-    this.length = Math.floor(Math.max(length7 || 0, 0));
-    this._nullCount = Math.floor(Math.max(nullCount || 0, -1));
-    let buffer;
-    if (buffers instanceof Data) {
-      this.stride = buffers.stride;
-      this.values = buffers.values;
-      this.typeIds = buffers.typeIds;
-      this.nullBitmap = buffers.nullBitmap;
-      this.valueOffsets = buffers.valueOffsets;
-    } else {
-      this.stride = strideForType(type3);
-      if (buffers) {
-        (buffer = buffers[0]) && (this.valueOffsets = buffer);
-        (buffer = buffers[1]) && (this.values = buffer);
-        (buffer = buffers[2]) && (this.nullBitmap = buffer);
-        (buffer = buffers[3]) && (this.typeIds = buffer);
-      }
-    }
-    this.nullable = this._nullCount !== 0 && this.nullBitmap && this.nullBitmap.byteLength > 0;
-  }
   get typeId() {
     return this.type.typeId;
   }
@@ -59775,6 +59736,31 @@ var Data = class {
       this._nullCount = nullCount = this.length - popcnt_bit_range(nullBitmap, this.offset, this.offset + this.length);
     }
     return nullCount;
+  }
+  constructor(type3, offset3, length7, nullCount, buffers, children3 = [], dictionary) {
+    this.type = type3;
+    this.children = children3;
+    this.dictionary = dictionary;
+    this.offset = Math.floor(Math.max(offset3 || 0, 0));
+    this.length = Math.floor(Math.max(length7 || 0, 0));
+    this._nullCount = Math.floor(Math.max(nullCount || 0, -1));
+    let buffer;
+    if (buffers instanceof Data) {
+      this.stride = buffers.stride;
+      this.values = buffers.values;
+      this.typeIds = buffers.typeIds;
+      this.nullBitmap = buffers.nullBitmap;
+      this.valueOffsets = buffers.valueOffsets;
+    } else {
+      this.stride = strideForType(type3);
+      if (buffers) {
+        (buffer = buffers[0]) && (this.valueOffsets = buffer);
+        (buffer = buffers[1]) && (this.values = buffer);
+        (buffer = buffers[2]) && (this.nullBitmap = buffer);
+        (buffer = buffers[3]) && (this.typeIds = buffer);
+      }
+    }
+    this.nullable = this._nullCount !== 0 && this.nullBitmap && this.nullBitmap.byteLength > 0;
   }
   getValid(index5) {
     if (this.nullable && this.nullCount > 0) {
@@ -60704,10 +60690,8 @@ return true;`);
 function valueToCase(x7) {
   if (typeof x7 !== "bigint") {
     return valueToString(x7);
-  } else if (BigIntAvailable) {
-    return `${valueToString(x7)}n`;
   }
-  return `"${valueToString(x7)}"`;
+  return `${valueToString(x7)}n`;
 }
 
 // js/pyobsplot-js/node_modules/apache-arrow/builder/buffer.mjs
@@ -60826,6 +60810,16 @@ var OffsetsBufferBuilder = class extends DataBufferBuilder {
 
 // js/pyobsplot-js/node_modules/apache-arrow/builder.mjs
 var Builder = class {
+  /** @nocollapse */
+  // @ts-ignore
+  static throughNode(options) {
+    throw new Error(`"throughNode" not available in this environment`);
+  }
+  /** @nocollapse */
+  // @ts-ignore
+  static throughDOM(options) {
+    throw new Error(`"throughDOM" not available in this environment`);
+  }
   /**
    * Construct a builder with the given Arrow DataType with optional null values,
    * which will be interpreted as "null" when set or appended to the `Builder`.
@@ -60842,16 +60836,6 @@ var Builder = class {
     if (nulls && nulls.length > 0) {
       this._isValid = createIsValidFunction(nulls);
     }
-  }
-  /** @nocollapse */
-  // @ts-ignore
-  static throughNode(options) {
-    throw new Error(`"throughNode" not available in this environment`);
-  }
-  /** @nocollapse */
-  // @ts-ignore
-  static throughDOM(options) {
-    throw new Error(`"throughDOM" not available in this environment`);
   }
   /**
    * Flush the `Builder` and return a `Vector<T>`.
@@ -61126,10 +61110,10 @@ var Block = class {
   }
   static createBlock(builder, offset3, metaDataLength, bodyLength) {
     builder.prep(8, 24);
-    builder.writeInt64(bodyLength);
+    builder.writeInt64(BigInt(bodyLength !== null && bodyLength !== void 0 ? bodyLength : 0));
     builder.pad(4);
     builder.writeInt32(metaDataLength);
-    builder.writeInt64(offset3);
+    builder.writeInt64(BigInt(offset3 !== null && offset3 !== void 0 ? offset3 : 0));
     return builder.offset();
   }
 };
@@ -61146,24 +61130,6 @@ var float32 = new Float32Array(int32.buffer);
 var float64 = new Float64Array(int32.buffer);
 var isLittleEndian = new Uint16Array(new Uint8Array([1, 0]).buffer)[0] === 1;
 
-// js/pyobsplot-js/node_modules/flatbuffers/mjs/long.js
-var Long = class {
-  constructor(low, high) {
-    this.low = low | 0;
-    this.high = high | 0;
-  }
-  static create(low, high) {
-    return low == 0 && high == 0 ? Long.ZERO : new Long(low, high);
-  }
-  toFloat64() {
-    return (this.low >>> 0) + this.high * 4294967296;
-  }
-  equals(other) {
-    return this.low == other.low && this.high == other.high;
-  }
-};
-Long.ZERO = new Long(0, 0);
-
 // js/pyobsplot-js/node_modules/flatbuffers/mjs/encoding.js
 var Encoding;
 (function(Encoding2) {
@@ -61179,6 +61145,7 @@ var ByteBuffer = class {
   constructor(bytes_) {
     this.bytes_ = bytes_;
     this.position_ = 0;
+    this.text_decoder_ = new TextDecoder();
   }
   /**
    * Create and allocate a new ByteBuffer with a given size.
@@ -61232,10 +61199,10 @@ var ByteBuffer = class {
     return this.readInt32(offset3) >>> 0;
   }
   readInt64(offset3) {
-    return new Long(this.readInt32(offset3), this.readInt32(offset3 + 4));
+    return BigInt.asIntN(64, BigInt(this.readUint32(offset3)) + (BigInt(this.readUint32(offset3 + 4)) << BigInt(32)));
   }
   readUint64(offset3) {
-    return new Long(this.readUint32(offset3), this.readUint32(offset3 + 4));
+    return BigInt.asUintN(64, BigInt(this.readUint32(offset3)) + (BigInt(this.readUint32(offset3 + 4)) << BigInt(32)));
   }
   readFloat32(offset3) {
     int32[0] = this.readInt32(offset3);
@@ -61273,12 +61240,12 @@ var ByteBuffer = class {
     this.bytes_[offset3 + 3] = value >> 24;
   }
   writeInt64(offset3, value) {
-    this.writeInt32(offset3, value.low);
-    this.writeInt32(offset3 + 4, value.high);
+    this.writeInt32(offset3, Number(BigInt.asIntN(32, value)));
+    this.writeInt32(offset3 + 4, Number(BigInt.asIntN(32, value >> BigInt(32))));
   }
   writeUint64(offset3, value) {
-    this.writeUint32(offset3, value.low);
-    this.writeUint32(offset3 + 4, value.high);
+    this.writeUint32(offset3, Number(BigInt.asUintN(32, value)));
+    this.writeUint32(offset3 + 4, Number(BigInt.asUintN(32, value >> BigInt(32))));
   }
   writeFloat32(offset3, value) {
     float32[0] = value;
@@ -61324,10 +61291,9 @@ var ByteBuffer = class {
    * Create a JavaScript string from UTF-8 data stored inside the FlatBuffer.
    * This allocates a new string and converts to wide chars upon each access.
    *
-   * To avoid the conversion to UTF-16, pass Encoding.UTF8_BYTES as
-   * the "optionalEncoding" argument. This is useful for avoiding conversion to
-   * and from UTF-16 when the data will just be packaged back up in another
-   * FlatBuffer later on.
+   * To avoid the conversion to string, pass Encoding.UTF8_BYTES as the
+   * "optionalEncoding" argument. This is useful for avoiding conversion when
+   * the data will just be packaged back up in another FlatBuffer later on.
    *
    * @param offset
    * @param opt_encoding Defaults to UTF16_STRING
@@ -61335,39 +61301,12 @@ var ByteBuffer = class {
   __string(offset3, opt_encoding) {
     offset3 += this.readInt32(offset3);
     const length7 = this.readInt32(offset3);
-    let result = "";
-    let i = 0;
     offset3 += SIZEOF_INT;
-    if (opt_encoding === Encoding.UTF8_BYTES) {
-      return this.bytes_.subarray(offset3, offset3 + length7);
-    }
-    while (i < length7) {
-      let codePoint;
-      const a7 = this.readUint8(offset3 + i++);
-      if (a7 < 192) {
-        codePoint = a7;
-      } else {
-        const b = this.readUint8(offset3 + i++);
-        if (a7 < 224) {
-          codePoint = (a7 & 31) << 6 | b & 63;
-        } else {
-          const c11 = this.readUint8(offset3 + i++);
-          if (a7 < 240) {
-            codePoint = (a7 & 15) << 12 | (b & 63) << 6 | c11 & 63;
-          } else {
-            const d = this.readUint8(offset3 + i++);
-            codePoint = (a7 & 7) << 18 | (b & 63) << 12 | (c11 & 63) << 6 | d & 63;
-          }
-        }
-      }
-      if (codePoint < 65536) {
-        result += String.fromCharCode(codePoint);
-      } else {
-        codePoint -= 65536;
-        result += String.fromCharCode((codePoint >> 10) + 55296, (codePoint & (1 << 10) - 1) + 56320);
-      }
-    }
-    return result;
+    const utf8bytes = this.bytes_.subarray(offset3, offset3 + length7);
+    if (opt_encoding === Encoding.UTF8_BYTES)
+      return utf8bytes;
+    else
+      return this.text_decoder_.decode(utf8bytes);
   }
   /**
    * Handle unions that can contain string as its member, if a Table-derived type then initialize it,
@@ -61412,19 +61351,14 @@ var ByteBuffer = class {
     return true;
   }
   /**
-   * A helper function to avoid generated code depending on this file directly.
-   */
-  createLong(low, high) {
-    return Long.create(low, high);
-  }
-  /**
    * A helper function for generating list for obj api
    */
   createScalarList(listAccessor, listLength) {
     const ret = [];
     for (let i = 0; i < listLength; ++i) {
-      if (listAccessor(i) !== null) {
-        ret.push(listAccessor(i));
+      const val = listAccessor(i);
+      if (val !== null) {
+        ret.push(val);
       }
     }
     return ret;
@@ -61462,6 +61396,7 @@ var Builder2 = class {
     this.vector_num_elems = 0;
     this.force_defaults = false;
     this.string_maps = null;
+    this.text_encoder = new TextEncoder();
     let initial_size;
     if (!opt_initial_size) {
       initial_size = 1024;
@@ -61555,7 +61490,7 @@ var Builder2 = class {
   }
   /**
    * Add an `int8` to the buffer, properly aligned, and grows the buffer (if necessary).
-   * @param value The `int8` to add the the buffer.
+   * @param value The `int8` to add the buffer.
    */
   addInt8(value) {
     this.prep(1, 0);
@@ -61563,7 +61498,7 @@ var Builder2 = class {
   }
   /**
    * Add an `int16` to the buffer, properly aligned, and grows the buffer (if necessary).
-   * @param value The `int16` to add the the buffer.
+   * @param value The `int16` to add the buffer.
    */
   addInt16(value) {
     this.prep(2, 0);
@@ -61571,7 +61506,7 @@ var Builder2 = class {
   }
   /**
    * Add an `int32` to the buffer, properly aligned, and grows the buffer (if necessary).
-   * @param value The `int32` to add the the buffer.
+   * @param value The `int32` to add the buffer.
    */
   addInt32(value) {
     this.prep(4, 0);
@@ -61579,7 +61514,7 @@ var Builder2 = class {
   }
   /**
    * Add an `int64` to the buffer, properly aligned, and grows the buffer (if necessary).
-   * @param value The `int64` to add the the buffer.
+   * @param value The `int64` to add the buffer.
    */
   addInt64(value) {
     this.prep(8, 0);
@@ -61587,7 +61522,7 @@ var Builder2 = class {
   }
   /**
    * Add a `float32` to the buffer, properly aligned, and grows the buffer (if necessary).
-   * @param value The `float32` to add the the buffer.
+   * @param value The `float32` to add the buffer.
    */
   addFloat32(value) {
     this.prep(4, 0);
@@ -61595,7 +61530,7 @@ var Builder2 = class {
   }
   /**
    * Add a `float64` to the buffer, properly aligned, and grows the buffer (if necessary).
-   * @param value The `float64` to add the the buffer.
+   * @param value The `float64` to add the buffer.
    */
   addFloat64(value) {
     this.prep(8, 0);
@@ -61620,7 +61555,7 @@ var Builder2 = class {
     }
   }
   addFieldInt64(voffset, value, defaultValue) {
-    if (this.force_defaults || !value.equals(defaultValue)) {
+    if (this.force_defaults || value !== defaultValue) {
       this.addInt64(value);
       this.slot(voffset);
     }
@@ -61815,7 +61750,7 @@ var Builder2 = class {
   requiredField(table, field3) {
     const table_start = this.bb.capacity() - table;
     const vtable_start = table_start - this.bb.readInt32(table_start);
-    const ok = this.bb.readInt16(vtable_start + field3) != 0;
+    const ok = field3 < this.bb.readInt16(vtable_start) && this.bb.readInt16(vtable_start + field3) != 0;
     if (!ok) {
       throw new Error("FlatBuffers: field " + field3 + " must be set");
     }
@@ -61875,40 +61810,14 @@ var Builder2 = class {
    * @return The offset in the buffer where the encoded string starts
    */
   createString(s3) {
-    if (!s3) {
+    if (s3 === null || s3 === void 0) {
       return 0;
     }
     let utf8;
     if (s3 instanceof Uint8Array) {
       utf8 = s3;
     } else {
-      utf8 = [];
-      let i = 0;
-      while (i < s3.length) {
-        let codePoint;
-        const a7 = s3.charCodeAt(i++);
-        if (a7 < 55296 || a7 >= 56320) {
-          codePoint = a7;
-        } else {
-          const b = s3.charCodeAt(i++);
-          codePoint = (a7 << 10) + b + (65536 - (55296 << 10) - 56320);
-        }
-        if (codePoint < 128) {
-          utf8.push(codePoint);
-        } else {
-          if (codePoint < 2048) {
-            utf8.push(codePoint >> 6 & 31 | 192);
-          } else {
-            if (codePoint < 65536) {
-              utf8.push(codePoint >> 12 & 15 | 224);
-            } else {
-              utf8.push(codePoint >> 18 & 7 | 240, codePoint >> 12 & 63 | 128);
-            }
-            utf8.push(codePoint >> 6 & 63 | 128);
-          }
-          utf8.push(codePoint & 63 | 128);
-        }
-      }
+      utf8 = this.text_encoder.encode(s3);
     }
     this.addInt8(0);
     this.startVector(1, utf8.length, 1);
@@ -61917,12 +61826,6 @@ var Builder2 = class {
       bytes[offset3++] = utf8[i];
     }
     return this.endVector();
-  }
-  /**
-   * A helper function to avoid generated code depending on this file directly.
-   */
-  createLong(low, high) {
-    return Long.create(low, high);
   }
   /**
    * A helper function to pack an object
@@ -61958,7 +61861,7 @@ var Builder2 = class {
   }
   createStructOffsetList(list, startFunc) {
     startFunc(this, list.length);
-    this.createObjectOffsetList(list);
+    this.createObjectOffsetList(list.slice().reverse());
     return this.endVector();
   }
 };
@@ -62105,7 +62008,7 @@ var DictionaryEncoding = class {
    */
   id() {
     const offset3 = this.bb.__offset(this.bb_pos, 4);
-    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : this.bb.createLong(0, 0);
+    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : BigInt("0");
   }
   /**
    * The dictionary indices are constrained to be non-negative integers. If
@@ -62136,7 +62039,7 @@ var DictionaryEncoding = class {
     builder.startObject(4);
   }
   static addId(builder, id3) {
-    builder.addFieldInt64(0, id3, builder.createLong(0, 0));
+    builder.addFieldInt64(0, id3, BigInt("0"));
   }
   static addIndexType(builder, indexTypeOffset) {
     builder.addFieldOffset(1, indexTypeOffset, 0);
@@ -62617,7 +62520,7 @@ var Null2 = class {
   }
 };
 
-// js/pyobsplot-js/node_modules/apache-arrow/fb/struct_.mjs
+// js/pyobsplot-js/node_modules/apache-arrow/fb/struct-.mjs
 var Struct_ = class {
   constructor() {
     this.bb = null;
@@ -62870,6 +62773,7 @@ var Type2;
   Type3[Type3["LargeBinary"] = 19] = "LargeBinary";
   Type3[Type3["LargeUtf8"] = 20] = "LargeUtf8";
   Type3[Type3["LargeList"] = 21] = "LargeList";
+  Type3[Type3["RunEndEncoded"] = 22] = "RunEndEncoded";
 })(Type2 || (Type2 = {}));
 
 // js/pyobsplot-js/node_modules/apache-arrow/fb/field.mjs
@@ -62908,7 +62812,6 @@ var Field = class {
   /**
    * This is the type of the decoded value if the field is dictionary encoded.
    */
-  // @ts-ignore
   type(obj) {
     const offset3 = this.bb.__offset(this.bb_pos, 10);
     return offset3 ? this.bb.__union(obj, this.bb_pos + offset3) : null;
@@ -63041,7 +62944,7 @@ var Schema = class {
    */
   features(index5) {
     const offset3 = this.bb.__offset(this.bb_pos, 10);
-    return offset3 ? this.bb.readInt64(this.bb.__vector(this.bb_pos + offset3) + index5 * 8) : this.bb.createLong(0, 0);
+    return offset3 ? this.bb.readInt64(this.bb.__vector(this.bb_pos + offset3) + index5 * 8) : BigInt(0);
   }
   featuresLength() {
     const offset3 = this.bb.__offset(this.bb_pos, 10);
@@ -63269,12 +63172,6 @@ Schema2.prototype.fields = null;
 Schema2.prototype.metadata = null;
 Schema2.prototype.dictionaries = null;
 var Field2 = class {
-  constructor(name, type3, nullable = false, metadata) {
-    this.name = name;
-    this.type = type3;
-    this.nullable = nullable;
-    this.metadata = metadata || /* @__PURE__ */ new Map();
-  }
   /** @nocollapse */
   static new(...args) {
     let [name, type3, nullable, metadata] = args;
@@ -63285,6 +63182,12 @@ var Field2 = class {
       metadata === void 0 && (metadata = args[0].metadata);
     }
     return new Field2(`${name}`, type3, nullable, metadata);
+  }
+  constructor(name, type3, nullable = false, metadata) {
+    this.name = name;
+    this.type = type3;
+    this.nullable = nullable;
+    this.metadata = metadata || /* @__PURE__ */ new Map();
   }
   get typeId() {
     return this.type.typeId;
@@ -63327,16 +63230,9 @@ function generateDictionaryMap(fields, dictionaries = /* @__PURE__ */ new Map())
 }
 
 // js/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/file.mjs
-var Long2 = Long;
 var Builder3 = Builder2;
 var ByteBuffer2 = ByteBuffer;
 var Footer_ = class {
-  constructor(schema, version = MetadataVersion.V4, recordBatches, dictionaryBatches) {
-    this.schema = schema;
-    this.version = version;
-    recordBatches && (this._recordBatches = recordBatches);
-    dictionaryBatches && (this._dictionaryBatches = dictionaryBatches);
-  }
   /** @nocollapse */
   static decode(buf) {
     buf = new ByteBuffer2(toUint8Array(buf));
@@ -63372,6 +63268,12 @@ var Footer_ = class {
   get numDictionaries() {
     return this._dictionaryBatches.length;
   }
+  constructor(schema, version = MetadataVersion.V4, recordBatches, dictionaryBatches) {
+    this.schema = schema;
+    this.version = version;
+    recordBatches && (this._recordBatches = recordBatches);
+    dictionaryBatches && (this._dictionaryBatches = dictionaryBatches);
+  }
   *recordBatches() {
     for (let block, i = -1, n = this.numRecordBatches; ++i < n; ) {
       if (block = this.getRecordBatch(i)) {
@@ -63394,15 +63296,15 @@ var Footer_ = class {
   }
 };
 var OffHeapFooter = class extends Footer_ {
-  constructor(schema, _footer) {
-    super(schema, _footer.version());
-    this._footer = _footer;
-  }
   get numRecordBatches() {
     return this._footer.recordBatchesLength();
   }
   get numDictionaries() {
     return this._footer.dictionariesLength();
+  }
+  constructor(schema, _footer) {
+    super(schema, _footer.version());
+    this._footer = _footer;
   }
   getRecordBatch(index5) {
     if (index5 >= 0 && index5 < this.numRecordBatches) {
@@ -63424,11 +63326,6 @@ var OffHeapFooter = class extends Footer_ {
   }
 };
 var FileBlock = class {
-  constructor(metaDataLength, bodyLength, offset3) {
-    this.metaDataLength = metaDataLength;
-    this.offset = typeof offset3 === "number" ? offset3 : offset3.low;
-    this.bodyLength = typeof bodyLength === "number" ? bodyLength : bodyLength.low;
-  }
   /** @nocollapse */
   static decode(block) {
     return new FileBlock(block.metaDataLength(), block.bodyLength(), block.offset());
@@ -63436,9 +63333,14 @@ var FileBlock = class {
   /** @nocollapse */
   static encode(b, fileBlock) {
     const { metaDataLength } = fileBlock;
-    const offset3 = new Long2(fileBlock.offset, 0);
-    const bodyLength = new Long2(fileBlock.bodyLength, 0);
+    const offset3 = BigInt(fileBlock.offset);
+    const bodyLength = BigInt(fileBlock.bodyLength);
     return Block.createBlock(b, offset3, metaDataLength, bodyLength);
+  }
+  constructor(metaDataLength, bodyLength, offset3) {
+    this.metaDataLength = metaDataLength;
+    this.offset = bigIntToNumber(offset3);
+    this.bodyLength = bigIntToNumber(bodyLength);
   }
 };
 
@@ -63577,21 +63479,27 @@ var AsyncByteQueue = class extends AsyncQueue {
   }
   toUint8Array(sync = false) {
     return sync ? joinUint8Arrays(this._values)[0] : (() => __awaiter(this, void 0, void 0, function* () {
-      var e_1, _a5;
+      var _a5, e_1, _b2, _c2;
       const buffers = [];
       let byteLength = 0;
       try {
-        for (var _b2 = __asyncValues(this), _c2; _c2 = yield _b2.next(), !_c2.done; ) {
-          const chunk = _c2.value;
-          buffers.push(chunk);
-          byteLength += chunk.byteLength;
+        for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; ) {
+          _c2 = _f2.value;
+          _d2 = false;
+          try {
+            const chunk = _c2;
+            buffers.push(chunk);
+            byteLength += chunk.byteLength;
+          } finally {
+            _d2 = true;
+          }
         }
       } catch (e_1_1) {
         e_1 = { error: e_1_1 };
       } finally {
         try {
-          if (_c2 && !_c2.done && (_a5 = _b2.return))
-            yield _a5.call(_b2);
+          if (!_d2 && !_a5 && (_b2 = _e2.return))
+            yield _b2.call(_e2);
         } finally {
           if (e_1)
             throw e_1.error;
@@ -63746,7 +63654,7 @@ var RandomAccessFile = class extends ByteStream {
     super();
     this.position = 0;
     this.buffer = toUint8Array(buffer);
-    this.size = typeof byteLength === "undefined" ? this.buffer.byteLength : byteLength;
+    this.size = byteLength === void 0 ? this.buffer.byteLength : byteLength;
   }
   readInt32(position5) {
     const { buffer, byteOffset } = this.readAt(position5, 4);
@@ -65721,8 +65629,8 @@ var Buffer2 = class {
   }
   static createBuffer(builder, offset3, length7) {
     builder.prep(8, 16);
-    builder.writeInt64(length7);
-    builder.writeInt64(offset3);
+    builder.writeInt64(BigInt(length7 !== null && length7 !== void 0 ? length7 : 0));
+    builder.writeInt64(BigInt(offset3 !== null && offset3 !== void 0 ? offset3 : 0));
     return builder.offset();
   }
 };
@@ -65758,8 +65666,8 @@ var FieldNode = class {
   }
   static createFieldNode(builder, length7, null_count) {
     builder.prep(8, 16);
-    builder.writeInt64(null_count);
-    builder.writeInt64(length7);
+    builder.writeInt64(BigInt(null_count !== null && null_count !== void 0 ? null_count : 0));
+    builder.writeInt64(BigInt(length7 !== null && length7 !== void 0 ? length7 : 0));
     return builder.offset();
   }
 };
@@ -65788,7 +65696,7 @@ var RecordBatch2 = class {
    */
   length() {
     const offset3 = this.bb.__offset(this.bb_pos, 4);
-    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : this.bb.createLong(0, 0);
+    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : BigInt("0");
   }
   /**
    * Nodes correspond to the pre-ordered flattened logical schema
@@ -65828,7 +65736,7 @@ var RecordBatch2 = class {
     builder.startObject(4);
   }
   static addLength(builder, length7) {
-    builder.addFieldInt64(0, length7, builder.createLong(0, 0));
+    builder.addFieldInt64(0, length7, BigInt("0"));
   }
   static addNodes(builder, nodesOffset) {
     builder.addFieldOffset(1, nodesOffset, 0);
@@ -65871,7 +65779,7 @@ var DictionaryBatch = class {
   }
   id() {
     const offset3 = this.bb.__offset(this.bb_pos, 4);
-    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : this.bb.createLong(0, 0);
+    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : BigInt("0");
   }
   data(obj) {
     const offset3 = this.bb.__offset(this.bb_pos, 6);
@@ -65890,7 +65798,7 @@ var DictionaryBatch = class {
     builder.startObject(3);
   }
   static addId(builder, id3) {
-    builder.addFieldInt64(0, id3, builder.createLong(0, 0));
+    builder.addFieldInt64(0, id3, BigInt("0"));
   }
   static addData(builder, dataOffset) {
     builder.addFieldOffset(1, dataOffset, 0);
@@ -65941,14 +65849,13 @@ var Message = class {
     const offset3 = this.bb.__offset(this.bb_pos, 6);
     return offset3 ? this.bb.readUint8(this.bb_pos + offset3) : MessageHeader2.NONE;
   }
-  // @ts-ignore
   header(obj) {
     const offset3 = this.bb.__offset(this.bb_pos, 8);
     return offset3 ? this.bb.__union(obj, this.bb_pos + offset3) : null;
   }
   bodyLength() {
     const offset3 = this.bb.__offset(this.bb_pos, 10);
-    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : this.bb.createLong(0, 0);
+    return offset3 ? this.bb.readInt64(this.bb_pos + offset3) : BigInt("0");
   }
   customMetadata(index5, obj) {
     const offset3 = this.bb.__offset(this.bb_pos, 12);
@@ -65971,7 +65878,7 @@ var Message = class {
     builder.addFieldOffset(2, headerOffset, 0);
   }
   static addBodyLength(builder, bodyLength) {
-    builder.addFieldInt64(3, bodyLength, builder.createLong(0, 0));
+    builder.addFieldInt64(3, bodyLength, BigInt("0"));
   }
   static addCustomMetadata(builder, customMetadataOffset) {
     builder.addFieldOffset(4, customMetadataOffset, 0);
@@ -66008,7 +65915,6 @@ var Message = class {
 };
 
 // js/pyobsplot-js/node_modules/apache-arrow/visitor/typeassembler.mjs
-var Long3 = Long;
 var TypeAssembler = class extends Visitor {
   visit(node, builder) {
     return node == null || builder == null ? void 0 : super.visit(node, builder);
@@ -66091,7 +65997,7 @@ var TypeAssembler = class extends Visitor {
   visitDictionary(node, b) {
     const indexType = this.visit(node.indices, b);
     DictionaryEncoding.startDictionaryEncoding(b);
-    DictionaryEncoding.addId(b, new Long3(node.id, 0));
+    DictionaryEncoding.addId(b, BigInt(node.id));
     DictionaryEncoding.addIsOrdered(b, node.isOrdered);
     if (indexType !== void 0) {
       DictionaryEncoding.addIndexType(b, indexType);
@@ -66251,17 +66157,9 @@ function typeFromJSON(f, children3) {
 }
 
 // js/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/message.mjs
-var Long4 = Long;
 var Builder4 = Builder2;
 var ByteBuffer3 = ByteBuffer;
 var Message2 = class {
-  constructor(bodyLength, version, headerType, header) {
-    this._version = version;
-    this._headerType = headerType;
-    this.body = new Uint8Array(0);
-    header && (this._createHeader = () => header);
-    this._bodyLength = typeof bodyLength === "number" ? bodyLength : bodyLength.low;
-  }
   /** @nocollapse */
   static fromJSON(msg, headerType) {
     const message = new Message2(0, MetadataVersion.V4, headerType);
@@ -66294,7 +66192,7 @@ var Message2 = class {
     Message.addVersion(b, MetadataVersion.V4);
     Message.addHeader(b, headerOffset);
     Message.addHeaderType(b, message.headerType);
-    Message.addBodyLength(b, new Long4(message.bodyLength, 0));
+    Message.addBodyLength(b, BigInt(message.bodyLength));
     Message.finishMessageBuffer(b, Message.endMessage(b));
     return b.asUint8Array();
   }
@@ -66335,13 +66233,15 @@ var Message2 = class {
   isDictionaryBatch() {
     return this.headerType === MessageHeader.DictionaryBatch;
   }
+  constructor(bodyLength, version, headerType, header) {
+    this._version = version;
+    this._headerType = headerType;
+    this.body = new Uint8Array(0);
+    header && (this._createHeader = () => header);
+    this._bodyLength = bigIntToNumber(bodyLength);
+  }
 };
 var RecordBatch3 = class {
-  constructor(length7, nodes, buffers) {
-    this._nodes = nodes;
-    this._buffers = buffers;
-    this._length = typeof length7 === "number" ? length7 : length7.low;
-  }
   get nodes() {
     return this._nodes;
   }
@@ -66351,13 +66251,13 @@ var RecordBatch3 = class {
   get buffers() {
     return this._buffers;
   }
+  constructor(length7, nodes, buffers) {
+    this._nodes = nodes;
+    this._buffers = buffers;
+    this._length = bigIntToNumber(length7);
+  }
 };
 var DictionaryBatch2 = class {
-  constructor(data, id3, isDelta = false) {
-    this._data = data;
-    this._isDelta = isDelta;
-    this._id = typeof id3 === "number" ? id3 : id3.low;
-  }
   get id() {
     return this._id;
   }
@@ -66376,17 +66276,22 @@ var DictionaryBatch2 = class {
   get buffers() {
     return this.data.buffers;
   }
+  constructor(data, id3, isDelta = false) {
+    this._data = data;
+    this._isDelta = isDelta;
+    this._id = bigIntToNumber(id3);
+  }
 };
 var BufferRegion = class {
   constructor(offset3, length7) {
-    this.offset = typeof offset3 === "number" ? offset3 : offset3.low;
-    this.length = typeof length7 === "number" ? length7 : length7.low;
+    this.offset = bigIntToNumber(offset3);
+    this.length = bigIntToNumber(length7);
   }
 };
 var FieldNode2 = class {
   constructor(length7, nullCount) {
-    this.length = typeof length7 === "number" ? length7 : length7.low;
-    this.nullCount = typeof nullCount === "number" ? nullCount : nullCount.low;
+    this.length = bigIntToNumber(length7);
+    this.nullCount = bigIntToNumber(nullCount);
   }
 };
 function messageHeaderFromJSON(message, type3) {
@@ -66499,7 +66404,7 @@ function decodeField(f, dictionaries) {
   if (!dictionaries || !(dictMeta = f.dictionary())) {
     type3 = decodeFieldType(f, decodeFieldChildren(f, dictionaries));
     field3 = new Field2(f.name(), type3, f.nullable(), decodeCustomMetadata(f));
-  } else if (!dictionaries.has(id3 = dictMeta.id().low)) {
+  } else if (!dictionaries.has(id3 = bigIntToNumber(dictMeta.id()))) {
     keys = (keys = dictMeta.indexType()) ? decodeIndexType(keys) : new Int32();
     dictionaries.set(id3, type3 = decodeFieldType(f, decodeFieldChildren(f, dictionaries)));
     dictType = new Dictionary(type3, keys, id3, dictMeta.isOrdered());
@@ -66665,7 +66570,7 @@ function encodeRecordBatch(b, recordBatch) {
     BufferRegion.encode(b, b_);
   const buffersVectorOffset = b.endVector();
   RecordBatch2.startRecordBatch(b);
-  RecordBatch2.addLength(b, new Long4(recordBatch.length, 0));
+  RecordBatch2.addLength(b, BigInt(recordBatch.length));
   RecordBatch2.addNodes(b, nodesVectorOffset);
   RecordBatch2.addBuffers(b, buffersVectorOffset);
   return RecordBatch2.endRecordBatch(b);
@@ -66673,16 +66578,16 @@ function encodeRecordBatch(b, recordBatch) {
 function encodeDictionaryBatch(b, dictionaryBatch) {
   const dataOffset = RecordBatch3.encode(b, dictionaryBatch.data);
   DictionaryBatch.startDictionaryBatch(b);
-  DictionaryBatch.addId(b, new Long4(dictionaryBatch.id, 0));
+  DictionaryBatch.addId(b, BigInt(dictionaryBatch.id));
   DictionaryBatch.addIsDelta(b, dictionaryBatch.isDelta);
   DictionaryBatch.addData(b, dataOffset);
   return DictionaryBatch.endDictionaryBatch(b);
 }
 function encodeFieldNode(b, node) {
-  return FieldNode.createFieldNode(b, new Long4(node.length, 0), new Long4(node.nullCount, 0));
+  return FieldNode.createFieldNode(b, BigInt(node.length), BigInt(node.nullCount));
 }
 function encodeBufferRegion(b, node) {
-  return Buffer2.createBuffer(b, new Long4(node.offset, 0), new Long4(node.length, 0));
+  return Buffer2.createBuffer(b, BigInt(node.offset), BigInt(node.length));
 }
 var platformIsLittleEndian = (() => {
   const buffer = new ArrayBuffer(2);
@@ -67085,20 +66990,26 @@ var AsyncRecordBatchStreamReader = class extends RecordBatchReader {
     this._impl = _impl;
   }
   readAll() {
-    var e_1, _a5;
+    var _a5, e_1, _b2, _c2;
     return __awaiter(this, void 0, void 0, function* () {
       const batches = new Array();
       try {
-        for (var _b2 = __asyncValues(this), _c2; _c2 = yield _b2.next(), !_c2.done; ) {
-          const batch = _c2.value;
-          batches.push(batch);
+        for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; ) {
+          _c2 = _f2.value;
+          _d2 = false;
+          try {
+            const batch = _c2;
+            batches.push(batch);
+          } finally {
+            _d2 = true;
+          }
         }
       } catch (e_1_1) {
         e_1 = { error: e_1_1 };
       } finally {
         try {
-          if (_c2 && !_c2.done && (_a5 = _b2.return))
-            yield _a5.call(_b2);
+          if (!_d2 && !_a5 && (_b2 = _e2.return))
+            yield _b2.call(_e2);
         } finally {
           if (e_1)
             throw e_1.error;
@@ -67127,18 +67038,18 @@ var AsyncRecordBatchFileReader = class extends AsyncRecordBatchStreamReader {
   }
 };
 var RecordBatchReaderImpl = class {
+  get numDictionaries() {
+    return this._dictionaryIndex;
+  }
+  get numRecordBatches() {
+    return this._recordBatchIndex;
+  }
   constructor(dictionaries = /* @__PURE__ */ new Map()) {
     this.closed = false;
     this.autoDestroy = true;
     this._dictionaryIndex = 0;
     this._recordBatchIndex = 0;
     this.dictionaries = dictionaries;
-  }
-  get numDictionaries() {
-    return this._dictionaryIndex;
-  }
-  get numRecordBatches() {
-    return this._recordBatchIndex;
   }
   isSync() {
     return false;
@@ -67342,9 +67253,6 @@ var AsyncRecordBatchStreamReaderImpl = class extends RecordBatchReaderImpl {
   }
 };
 var RecordBatchFileReaderImpl = class extends RecordBatchStreamReaderImpl {
-  constructor(source, dictionaries) {
-    super(source instanceof RandomAccessFile ? source : new RandomAccessFile(source), dictionaries);
-  }
   get footer() {
     return this._footer;
   }
@@ -67353,6 +67261,9 @@ var RecordBatchFileReaderImpl = class extends RecordBatchStreamReaderImpl {
   }
   get numRecordBatches() {
     return this._footer ? this._footer.numRecordBatches : 0;
+  }
+  constructor(source, dictionaries) {
+    super(source instanceof RandomAccessFile ? source : new RandomAccessFile(source), dictionaries);
   }
   isSync() {
     return true;
@@ -67424,11 +67335,6 @@ var RecordBatchFileReaderImpl = class extends RecordBatchStreamReaderImpl {
   }
 };
 var AsyncRecordBatchFileReaderImpl = class extends AsyncRecordBatchStreamReaderImpl {
-  constructor(source, ...rest) {
-    const byteLength = typeof rest[0] !== "number" ? rest.shift() : void 0;
-    const dictionaries = rest[0] instanceof Map ? rest.shift() : void 0;
-    super(source instanceof AsyncRandomAccessFile ? source : new AsyncRandomAccessFile(source, byteLength), dictionaries);
-  }
   get footer() {
     return this._footer;
   }
@@ -67437,6 +67343,11 @@ var AsyncRecordBatchFileReaderImpl = class extends AsyncRecordBatchStreamReaderI
   }
   get numRecordBatches() {
     return this._footer ? this._footer.numRecordBatches : 0;
+  }
+  constructor(source, ...rest) {
+    const byteLength = typeof rest[0] !== "number" ? rest.shift() : void 0;
+    const dictionaries = rest[0] instanceof Map ? rest.shift() : void 0;
+    super(source instanceof AsyncRandomAccessFile ? source : new AsyncRandomAccessFile(source, byteLength), dictionaries);
   }
   isFile() {
     return true;
@@ -67587,19 +67498,19 @@ function fromFileHandle(source) {
 
 // js/pyobsplot-js/node_modules/apache-arrow/visitor/vectorassembler.mjs
 var VectorAssembler = class extends Visitor {
-  constructor() {
-    super();
-    this._byteLength = 0;
-    this._nodes = [];
-    this._buffers = [];
-    this._bufferRegions = [];
-  }
   /** @nocollapse */
   static assemble(...args) {
     const unwrap = (nodes) => nodes.flatMap((node) => Array.isArray(node) ? unwrap(node) : node instanceof RecordBatch ? node.data.children : node.data);
     const assembler = new VectorAssembler();
     assembler.visitMany(unwrap(args));
     return assembler;
+  }
+  constructor() {
+    super();
+    this._byteLength = 0;
+    this._nodes = [];
+    this._buffers = [];
+    this._bufferRegions = [];
   }
   visit(data) {
     if (data instanceof Vector3) {
@@ -67729,6 +67640,15 @@ VectorAssembler.prototype.visitMap = assembleListVector;
 
 // js/pyobsplot-js/node_modules/apache-arrow/ipc/writer.mjs
 var RecordBatchWriter = class extends ReadableInterop {
+  /** @nocollapse */
+  // @ts-ignore
+  static throughNode(options) {
+    throw new Error(`"throughNode" not available in this environment`);
+  }
+  /** @nocollapse */
+  static throughDOM(writableStrategy, readableStrategy) {
+    throw new Error(`"throughDOM" not available in this environment`);
+  }
   constructor(options) {
     super();
     this._position = 0;
@@ -67741,15 +67661,6 @@ var RecordBatchWriter = class extends ReadableInterop {
     isObject3(options) || (options = { autoDestroy: true, writeLegacyIpcFormat: false });
     this._autoDestroy = typeof options.autoDestroy === "boolean" ? options.autoDestroy : true;
     this._writeLegacyIpcFormat = typeof options.writeLegacyIpcFormat === "boolean" ? options.writeLegacyIpcFormat : false;
-  }
-  /** @nocollapse */
-  // @ts-ignore
-  static throughNode(options) {
-    throw new Error(`"throughNode" not available in this environment`);
-  }
-  /** @nocollapse */
-  static throughDOM(writableStrategy, readableStrategy) {
-    throw new Error(`"throughDOM" not available in this environment`);
   }
   toString(sync = false) {
     return this._sink.toString(sync);
@@ -67976,20 +67887,26 @@ function writeAll(writer, input) {
   return writer.finish();
 }
 function writeAllAsync(writer, batches) {
-  var batches_1, batches_1_1;
-  var e_1, _a5;
+  var _a5, batches_1, batches_1_1;
+  var _b2, e_1, _c2, _d2;
   return __awaiter(this, void 0, void 0, function* () {
     try {
-      for (batches_1 = __asyncValues(batches); batches_1_1 = yield batches_1.next(), !batches_1_1.done; ) {
-        const batch = batches_1_1.value;
-        writer.write(batch);
+      for (_a5 = true, batches_1 = __asyncValues(batches); batches_1_1 = yield batches_1.next(), _b2 = batches_1_1.done, !_b2; ) {
+        _d2 = batches_1_1.value;
+        _a5 = false;
+        try {
+          const batch = _d2;
+          writer.write(batch);
+        } finally {
+          _a5 = true;
+        }
       }
     } catch (e_1_1) {
       e_1 = { error: e_1_1 };
     } finally {
       try {
-        if (batches_1_1 && !batches_1_1.done && (_a5 = batches_1.return))
-          yield _a5.call(batches_1);
+        if (!_a5 && !_b2 && (_c2 = batches_1.return))
+          yield _c2.call(batches_1);
       } finally {
         if (e_1)
           throw e_1.error;

@@ -51,25 +51,25 @@ trio = ["trio (>=0.16,<0.22)"]
 
 [[package]]
 name = "anywidget"
-version = "0.2.3"
+version = "0.3.0"
 description = "custom jupyter widgets made easy"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "anywidget-0.2.3-py3-none-any.whl", hash = "sha256:8d2d03c72adcda4048de331955d02cb21ca3fb016e788d8e67c228dadaddadf8"},
-    {file = "anywidget-0.2.3.tar.gz", hash = "sha256:7e0e2cdbc8b1e9cbe651bea1e7b9fa4be4c4bc0d3c95a9f82ba8df9eac27a426"},
+    {file = "anywidget-0.3.0-py3-none-any.whl", hash = "sha256:9d7a587e73bd77f881cb49d419cdc414a734562af6b192e0b5dc35b19c7a64e7"},
+    {file = "anywidget-0.3.0.tar.gz", hash = "sha256:52214c4296bfde3f9ba1a144c5b7ed2b123211cb2493f06426dda5428df43bc8"},
 ]
 
 [package.dependencies]
-ipykernel = {version = "*", optional = true, markers = "extra == \"dev\""}
+comm = {version = ">=0.1.0", optional = true, markers = "extra == \"dev\""}
 ipywidgets = ">=7.6.0"
 psygnal = ">=0.8.1"
 typing-extensions = ">=4.2.0"
-watchfiles = {version = "*", optional = true, markers = "extra == \"dev\""}
+watchfiles = {version = ">=0.18.0", optional = true, markers = "extra == \"dev\""}
 
 [package.extras]
-dev = ["ipykernel", "watchfiles"]
+dev = ["comm (>=0.1.0)", "watchfiles (>=0.18.0)"]
 test = ["black[jupyter]", "pydantic", "pytest", "pytest-cov", "ruff"]
 
 [[package]]
@@ -2933,4 +2933,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "8d31349dc418bf46b918d85a4d1d64cf73d3f6808748b92d4f049458d826da50"
+content-hash = "afe1bfcc4fd733bcf6368241eea9429910eb1ae375f0fb505b2747a561ee7a83"
