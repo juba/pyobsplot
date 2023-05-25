@@ -109,4 +109,4 @@ npm run uitest
 When a new Plot version is released:
 
 - update with `npm install @observablehq/plot` and `npm install d3` for both `pyobsplot` and `pyobsplot-js`
-- run `tools/get_plot_methods.js` and update `utils.py`
+- run `utils/get_plot_methods.js` and update `utils.py`
