@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@observablehq/plot": "^0.6.6",
+    "@observablehq/plot": "^0.6.7",
     "anywidget": "^0.2.3",
     "d3": "^7.8.4",
     "pyobsplot": "file:js/pyobsplot-js"
@@ -12,11 +12,11 @@
     "pytest": "poetry run pytest",
     "jstest": "cd js/pyobsplot-js && npm run test",
     "uistart": "poetry run jupyter lab --config tests/ui/jupyter_server_config.py",
-    "uitest": "playwright test --workers=4 --config tests/ui/playwright.config.cjs",
+    "uitest": "playwright test --workers=1 --config tests/ui/playwright.config.cjs",
     "uitest:debug": "PWDEBUG=1 playwright test --config tests/ui/playwright.config.cjs",
     "uitest:report": "http-server ./tests/ui/playwright-report -a localhost -o",
-    "uitest:update": "playwright test --workers=4 --config tests/ui/playwright.config.cjs --update-snapshots",
-    "uitest:ui": "playwright test --workers=4 --config tests/ui/playwright.config.cjs --ui"
+    "uitest:update": "playwright test --workers=1 --config tests/ui/playwright.config.cjs --update-snapshots",
+    "uitest:ui": "playwright test --workers=1 --config tests/ui/playwright.config.cjs --ui"
   },
   "devDependencies": {
     "@jupyterlab/galata": "^4.5.3",

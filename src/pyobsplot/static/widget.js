@@ -965,6 +965,7 @@ __export(src_exports2, {
   Text: () => Text,
   TickX: () => TickX,
   TickY: () => TickY,
+  Tip: () => Tip,
   Vector: () => Vector,
   area: () => area,
   areaX: () => areaX,
@@ -991,6 +992,9 @@ __export(src_exports2, {
   cluster: () => cluster,
   column: () => column,
   contour: () => contour,
+  crosshair: () => crosshair,
+  crosshairX: () => crosshairX,
+  crosshairY: () => crosshairY,
   delaunayLink: () => delaunayLink,
   delaunayMesh: () => delaunayMesh,
   density: () => density,
@@ -1042,6 +1046,9 @@ __export(src_exports2, {
   normalizeX: () => normalizeX,
   normalizeY: () => normalizeY,
   plot: () => plot,
+  pointer: () => pointer,
+  pointerX: () => pointerX,
+  pointerY: () => pointerY,
   raster: () => raster,
   rect: () => rect,
   rectX: () => rectX,
@@ -1072,6 +1079,7 @@ __export(src_exports2, {
   textY: () => textY,
   tickX: () => tickX,
   tickY: () => tickY,
+  tip: () => tip,
   transform: () => basic,
   tree: () => tree,
   treeLink: () => treeLink,
@@ -19208,10 +19216,9 @@ var timeIntervals = /* @__PURE__ */ new Map([
   ["minute", timeMinute],
   ["hour", timeHour],
   ["day", timeDay],
+  // TODO local time equivalent of unixDay?
   ["week", timeSunday],
   ["month", timeMonth],
-  ["quarter", timeMonth.every(3)],
-  ["half", timeMonth.every(6)],
   ["year", timeYear],
   ["monday", timeMonday],
   ["tuesday", timeTuesday],
@@ -19225,11 +19232,9 @@ var utcIntervals = /* @__PURE__ */ new Map([
   ["second", second],
   ["minute", utcMinute],
   ["hour", utcHour],
-  ["day", utcDay],
+  ["day", unixDay],
   ["week", utcSunday],
   ["month", utcMonth],
-  ["quarter", utcMonth.every(3)],
-  ["half", utcMonth.every(6)],
   ["year", utcYear],
   ["monday", utcMonday],
   ["tuesday", utcTuesday],
@@ -19239,17 +19244,52 @@ var utcIntervals = /* @__PURE__ */ new Map([
   ["saturday", utcSaturday],
   ["sunday", utcSunday]
 ]);
+function parseInterval(input, intervals) {
+  let name = `${input}`.toLowerCase();
+  if (name.endsWith("s"))
+    name = name.slice(0, -1);
+  let period3 = 1;
+  const match = /^(?:(\d+)\s+)/.exec(name);
+  if (match) {
+    name = name.slice(match[0].length);
+    period3 = +match[1];
+  }
+  switch (name) {
+    case "quarter":
+      name = "month";
+      period3 *= 3;
+      break;
+    case "half":
+      name = "month";
+      period3 *= 6;
+      break;
+  }
+  let interval3 = intervals.get(name);
+  if (!interval3)
+    throw new Error(`unknown interval: ${input}`);
+  if (!(period3 > 1))
+    return interval3;
+  if (!interval3.every)
+    throw new Error(`non-periodic interval: ${name}`);
+  return interval3.every(period3);
+}
 function maybeTimeInterval(interval3) {
-  const i = timeIntervals.get(`${interval3}`.toLowerCase());
-  if (!i)
-    throw new Error(`unknown interval: ${interval3}`);
-  return i;
+  return parseInterval(interval3, timeIntervals);
 }
 function maybeUtcInterval(interval3) {
-  const i = utcIntervals.get(`${interval3}`.toLowerCase());
+  return parseInterval(interval3, utcIntervals);
+}
+function isUtcYear(i) {
   if (!i)
-    throw new Error(`unknown interval: ${interval3}`);
-  return i;
+    return false;
+  const date3 = i.floor(new Date(Date.UTC(2e3, 11, 31)));
+  return utcYear(date3) >= date3;
+}
+function isTimeYear(i) {
+  if (!i)
+    return false;
+  const date3 = i.floor(new Date(2e3, 11, 31));
+  return timeYear(date3) >= date3;
 }
 
 // node_modules/@observablehq/plot/src/options.js
@@ -19268,6 +19308,7 @@ function maybeTypedArrayify(data, type3) {
 function floater(f) {
   return (d, i) => coerceNumber(f(d, i));
 }
+var singleton = [null];
 var field = (name) => (d) => d[name];
 var indexOf = { transform: range4 };
 var identity6 = { transform: (d) => d };
@@ -19324,6 +19365,15 @@ function map4(values3, f, type3 = Array) {
 function slice5(values3, type3 = Array) {
   return values3 instanceof type3 ? values3.slice() : type3.from(values3);
 }
+function hasX({ x: x7, x1: x13, x2: x22 }) {
+  return x7 !== void 0 || x13 !== void 0 || x22 !== void 0;
+}
+function hasY({ y: y7, y1: y13, y2: y22 }) {
+  return y7 !== void 0 || y13 !== void 0 || y22 !== void 0;
+}
+function hasXY(options) {
+  return hasX(options) || hasY(options) || options.interval !== void 0;
+}
 function isObject(option) {
   return option?.toString === objectToString;
 }
@@ -19365,6 +19415,9 @@ function range4(data) {
 }
 function take(values3, index5) {
   return map4(index5, (i) => values3[i]);
+}
+function taker(f) {
+  return f.length === 1 ? (index5, values3) => f(take(values3, index5)) : f;
 }
 function keyof2(value) {
   return value !== null && typeof value === "object" ? value.valueOf() : value;
@@ -19409,6 +19462,14 @@ function mid(x13, x22) {
     },
     label: x13.label
   };
+}
+function maybeApplyInterval(V, scale5) {
+  const t = maybeIntervalTransform(scale5?.interval, scale5?.type);
+  return t ? map4(V, t) : V;
+}
+function maybeIntervalTransform(interval3, type3) {
+  const i = maybeInterval(interval3, type3);
+  return i && ((v3) => defined(v3) ? i.floor(v3) : v3);
 }
 function maybeInterval(interval3, type3) {
   if (interval3 == null)
@@ -19548,8 +19609,8 @@ function isNone(value) {
 function isRound(value) {
   return /^\s*round\s*$/i.test(value);
 }
-function maybeFrameAnchor(value = "middle") {
-  return keyword(value, "frameAnchor", [
+function maybeAnchor(value, name) {
+  return maybeKeyword(value, name, [
     "middle",
     "top-left",
     "top",
@@ -19561,6 +19622,9 @@ function maybeFrameAnchor(value = "middle") {
     "left"
   ]);
 }
+function maybeFrameAnchor(value = "middle") {
+  return maybeAnchor(value, "frameAnchor");
+}
 function orderof(values3) {
   if (values3 == null)
     return;
@@ -19570,10 +19634,10 @@ function orderof(values3) {
 }
 function inherit2(options = {}, ...rest) {
   let o = options;
-  for (const defaults41 of rest) {
-    for (const key in defaults41) {
+  for (const defaults43 of rest) {
+    for (const key in defaults43) {
       if (o[key] === void 0) {
-        const value = defaults41[key];
+        const value = defaults43[key];
         if (o === options)
           o = { ...o, [key]: value };
         else
@@ -19722,9 +19786,9 @@ function composeTransform(t15, t23) {
     return t23 === null ? void 0 : t23;
   if (t23 == null)
     return t15 === null ? void 0 : t15;
-  return function(data, facets) {
-    ({ data, facets } = t15.call(this, data, facets));
-    return t23.call(this, arrayify2(data), facets);
+  return function(data, facets, plotOptions) {
+    ({ data, facets } = t15.call(this, data, facets, plotOptions));
+    return t23.call(this, arrayify2(data), facets, plotOptions);
   };
 }
 function composeInitializer(i1, i2) {
@@ -19783,7 +19847,12 @@ function sortData(compare) {
 }
 function sortValue(value) {
   let channel, order;
-  ({ channel, value, order = ascendingDefined2 } = { ...maybeValue(value) });
+  ({ channel, value, order } = { ...maybeValue(value) });
+  const negate3 = channel?.startsWith("-");
+  if (negate3)
+    channel = channel.slice(1);
+  if (order === void 0)
+    order = negate3 ? descendingDefined : ascendingDefined2;
   if (typeof order !== "function") {
     switch (`${order}`.toLowerCase()) {
       case "ascending":
@@ -19873,9 +19942,9 @@ function groupn(x7, y7, {
     ..."z" in inputs && { z: GZ || z },
     ..."fill" in inputs && { fill: GF || fill },
     ..."stroke" in inputs && { stroke: GS || stroke },
-    ...basic(options, (data, facets) => {
-      const X4 = valueof(data, x7);
-      const Y4 = valueof(data, y7);
+    ...basic(options, (data, facets, plotOptions) => {
+      const X4 = maybeApplyInterval(valueof(data, x7), plotOptions?.x);
+      const Y4 = maybeApplyInterval(valueof(data, y7), plotOptions?.y);
       const Z = valueof(data, z);
       const F = valueof(data, vfill);
       const S = valueof(data, vstroke);
@@ -20160,6 +20229,8 @@ function reduceProportion(value, scope) {
 
 // node_modules/@observablehq/plot/src/channel.js
 function createChannel(data, { scale: scale5, type: type3, value, filter: filter7, hint }, name) {
+  if (hint === void 0 && typeof value?.transform === "function")
+    hint = value.hint;
   return inferChannelScale(name, {
     scale: scale5,
     type: type3,
@@ -20195,6 +20266,7 @@ function inferChannelScale(name, channel) {
         break;
       case "fillOpacity":
       case "strokeOpacity":
+      case "opacity":
         channel.scale = scale5 !== true && isEvery(value, isOpacity) ? null : "opacity";
         break;
       case "symbol":
@@ -20217,13 +20289,15 @@ function inferChannelScale(name, channel) {
   return channel;
 }
 function channelDomain(data, facets, channels, facetChannels, options) {
-  const { reverse: defaultReverse, reduce: defaultReduce = true, limit: defaultLimit } = options;
+  const { order: defaultOrder, reverse: defaultReverse, reduce: defaultReduce = true, limit: defaultLimit } = options;
   for (const x7 in options) {
     if (!registry.has(x7))
       continue;
-    let { value: y7, reverse: reverse5 = defaultReverse, reduce: reduce3 = defaultReduce, limit = defaultLimit } = maybeValue(options[x7]);
-    if (reverse5 === void 0)
-      reverse5 = y7 === "width" || y7 === "height";
+    let { value: y7, order = defaultOrder, reverse: reverse5 = defaultReverse, reduce: reduce3 = defaultReduce, limit = defaultLimit } = maybeValue(options[x7]);
+    const negate3 = y7?.startsWith("-");
+    if (negate3)
+      y7 = y7.slice(1);
+    order = order === void 0 ? negate3 !== (y7 === "width" || y7 === "height") ? descendingGroup : ascendingGroup : maybeOrder(order);
     if (reduce3 == null || reduce3 === false)
       continue;
     const X4 = x7 === "fx" || x7 === "fy" ? reindexFacetChannel(facets, facetChannels[x7]) : findScaleChannel(channels, x7);
@@ -20244,12 +20318,15 @@ function channelDomain(data, facets, channels, facetChannels, options) {
       const YV = y7 === "data" ? data : y7 === "height" ? difference2(channels, "y1", "y2") : y7 === "width" ? difference2(channels, "x1", "x2") : values(channels, y7, y7 === "y" ? "y2" : y7 === "x" ? "x2" : void 0);
       const reducer3 = maybeReduce(reduce3 === true ? "max" : reduce3, YV);
       X4.domain = () => {
-        let domain = rollup(
+        let domain = rollups(
           range4(XV),
           (I) => reducer3.reduceIndex(I, YV),
           (i) => XV[i]
         );
-        domain = sort(domain, reverse5 ? descendingGroup : ascendingGroup);
+        if (order)
+          domain.sort(order);
+        if (reverse5)
+          domain.reverse();
         if (lo !== 0 || hi !== Infinity)
           domain = domain.slice(lo, hi);
         return domain.map(first);
@@ -20290,11 +20367,39 @@ function values(channels, name, alias) {
     return channel.value;
   throw new Error(`missing channel: ${name}`);
 }
+function maybeOrder(order) {
+  if (order == null || typeof order === "function")
+    return order;
+  switch (`${order}`.toLowerCase()) {
+    case "ascending":
+      return ascendingGroup;
+    case "descending":
+      return descendingGroup;
+  }
+  throw new Error(`invalid order: ${order}`);
+}
 function ascendingGroup([ak, av], [bk, bv]) {
   return ascendingDefined2(av, bv) || ascendingDefined2(ak, bk);
 }
 function descendingGroup([ak, av], [bk, bv]) {
   return descendingDefined(av, bv) || ascendingDefined2(ak, bk);
+}
+function getSource(channels, key) {
+  let channel = channels[key];
+  if (!channel)
+    return;
+  while (channel.source)
+    channel = channel.source;
+  return channel.source === null ? null : channel;
+}
+
+// node_modules/@observablehq/plot/src/context.js
+function createContext(options = {}) {
+  const { document: document2 = typeof window !== "undefined" ? window.document : void 0 } = options;
+  return { document: document2 };
+}
+function create2(name, { document: document2 }) {
+  return select_default2(creator_default(name).call(document2.documentElement));
 }
 
 // node_modules/@observablehq/plot/src/warnings.js
@@ -20470,17 +20575,6 @@ var reflectY = constant2(
     }
   })
 );
-function maybeProject(cx, cy, channels, values3, context) {
-  const x7 = channels[cx] && channels[cx].scale === "x";
-  const y7 = channels[cy] && channels[cy].scale === "y";
-  if (x7 && y7) {
-    project(cx, cy, values3, context.projection);
-  } else if (x7) {
-    throw new Error(`projection requires paired x and y channels; ${cx} is missing ${cy}`);
-  } else if (y7) {
-    throw new Error(`projection requires paired x and y channels; ${cy} is missing ${cx}`);
-  }
-}
 function project(cx, cy, values3, projection3) {
   const x7 = values3[cx];
   const y7 = values3[cy];
@@ -20512,7 +20606,7 @@ function projectionAspectRatio(projection3, marks3) {
   }
   return defaultAspectRatio;
 }
-function applyPosition(channels, scales, context) {
+function applyPosition(channels, scales, { projection: projection3 }) {
   const { x: x7, y: y7 } = channels;
   let position5 = {};
   if (x7)
@@ -20520,8 +20614,8 @@ function applyPosition(channels, scales, context) {
   if (y7)
     position5.y = y7;
   position5 = valueObject(position5, scales);
-  if (context.projection)
-    maybeProject("x", "y", channels, position5, context);
+  if (projection3 && x7?.scale === "x" && y7?.scale === "y")
+    project("x", "y", position5, projection3);
   if (x7)
     position5.x = coerceNumbers(position5.x);
   if (y7)
@@ -20535,18 +20629,8 @@ function hasGeometry(marks3) {
   return false;
 }
 
-// node_modules/@observablehq/plot/src/context.js
-function createContext(options = {}, dimensions, className) {
-  const { document: document2 = typeof window !== "undefined" ? window.document : void 0 } = options;
-  return { document: document2, className, projection: createProjection(options, dimensions) };
-}
-function create2(name, { document: document2 }) {
-  return select_default2(creator_default(name).call(document2.documentElement));
-}
-
 // node_modules/@observablehq/plot/src/scales/schemes.js
-var ordinalSchemes = /* @__PURE__ */ new Map([
-  // categorical
+var categoricalSchemes = /* @__PURE__ */ new Map([
   ["accent", Accent_default],
   ["category10", category10_default],
   ["dark2", Dark2_default],
@@ -20556,7 +20640,13 @@ var ordinalSchemes = /* @__PURE__ */ new Map([
   ["set1", Set1_default],
   ["set2", Set2_default],
   ["set3", Set3_default],
-  ["tableau10", Tableau10_default],
+  ["tableau10", Tableau10_default]
+]);
+function isCategoricalScheme(scheme55) {
+  return scheme55 != null && categoricalSchemes.has(`${scheme55}`.toLowerCase());
+}
+var ordinalSchemes = new Map([
+  ...categoricalSchemes,
   // diverging
   ["brbg", scheme112(scheme, BrBG_default)],
   ["prgn", scheme112(scheme2, PRGn_default)],
@@ -21302,8 +21392,6 @@ function inferScaleLabel(channels = [], scale5) {
   }
   if (label === void 0)
     return;
-  if (isTemporalScale(scale5) && /^(date|time|year)$/i.test(label))
-    return;
   if (!isOrdinalScale(scale5) && scale5.percent)
     label = `${label} (%)`;
   return { inferred: true, toString: () => label };
@@ -21340,7 +21428,8 @@ function innerDimensions({ fx, fy }, dimensions) {
     marginBottom,
     marginLeft,
     width: fx ? fx.scale.bandwidth() + marginLeft + marginRight : width,
-    height: fy ? fy.scale.bandwidth() + marginTop + marginBottom : height
+    height: fy ? fy.scale.bandwidth() + marginTop + marginBottom : height,
+    facet: { width, height }
   };
 }
 function autoScaleRangeX(scale5, dimensions) {
@@ -21543,17 +21632,19 @@ function inferScaleType(key, channels, { type: type3, domain, range: range9, sch
       return asOrdinalType(kind);
     if (isTemporal(domain))
       return "utc";
-    if (kind === color2 && (pivot != null || isDivergingScheme(scheme55)))
-      return "diverging";
-    return "linear";
+  } else {
+    const values3 = channels.map(({ value }) => value).filter((value) => value !== void 0);
+    if (values3.some(isOrdinal))
+      return asOrdinalType(kind);
+    if (values3.some(isTemporal))
+      return "utc";
   }
-  const values3 = channels.map(({ value }) => value).filter((value) => value !== void 0);
-  if (values3.some(isOrdinal))
-    return asOrdinalType(kind);
-  if (values3.some(isTemporal))
-    return "utc";
-  if (kind === color2 && (pivot != null || isDivergingScheme(scheme55)))
-    return "diverging";
+  if (kind === color2) {
+    if (pivot != null || isDivergingScheme(scheme55))
+      return "diverging";
+    if (isCategoricalScheme(scheme55))
+      return "categorical";
+  }
   return "linear";
 }
 function asOrdinalType(kind) {
@@ -21730,6 +21821,7 @@ function styles(mark, {
   strokeDashoffset,
   opacity: opacity3,
   mixBlendMode,
+  imageFilter,
   paintOrder,
   pointerEvents,
   shapeRendering
@@ -21798,6 +21890,7 @@ function styles(mark, {
   mark.ariaHidden = string(ariaHidden);
   mark.opacity = impliedNumber(copacity, 1);
   mark.mixBlendMode = impliedString(mixBlendMode, "normal");
+  mark.imageFilter = impliedString(imageFilter, "none");
   mark.paintOrder = impliedString(paintOrder, "normal");
   mark.pointerEvents = impliedString(pointerEvents, "auto");
   mark.shapeRendering = impliedString(shapeRendering, "auto");
@@ -21829,7 +21922,7 @@ function applyTextGroup(selection3, T) {
   if (T)
     selection3.text(([i]) => formatDefault(T[i]));
 }
-function applyChannelStyles(selection3, { target }, {
+function applyChannelStyles(selection3, { target, tip: tip3 }, {
   ariaLabel: AL,
   title: T,
   fill: F,
@@ -21856,9 +21949,10 @@ function applyChannelStyles(selection3, { target }, {
     applyAttr(selection3, "opacity", (i) => O[i]);
   if (H)
     applyHref(selection3, (i) => H[i], target);
-  applyTitle(selection3, T);
+  if (!tip3)
+    applyTitle(selection3, T);
 }
-function applyGroupedChannelStyles(selection3, { target }, {
+function applyGroupedChannelStyles(selection3, { target, tip: tip3 }, {
   ariaLabel: AL,
   title: T,
   fill: F,
@@ -21885,7 +21979,8 @@ function applyGroupedChannelStyles(selection3, { target }, {
     applyAttr(selection3, "opacity", ([i]) => O[i]);
   if (H)
     applyHref(selection3, ([i]) => H[i], target);
-  applyTitleGroup(selection3, T);
+  if (!tip3)
+    applyTitleGroup(selection3, T);
 }
 function groupAesthetics({
   ariaLabel: AL,
@@ -21897,8 +21992,8 @@ function groupAesthetics({
   strokeWidth: SW,
   opacity: O,
   href: H
-}) {
-  return [AL, T, F, FO, S, SO, SW, O, H].filter((c11) => c11 !== void 0);
+}, { tip: tip3 }) {
+  return [AL, tip3 ? void 0 : T, F, FO, S, SO, SW, O, H].filter((c11) => c11 !== void 0);
 }
 function groupZ2(I, Z, z) {
   const G = group(I, (i) => Z[i]);
@@ -21909,9 +22004,10 @@ function groupZ2(I, Z, z) {
   }
   return G.values();
 }
-function* groupIndex(I, position5, { z }, channels) {
+function* groupIndex(I, position5, mark, channels) {
+  const { z } = mark;
   const { z: Z } = channels;
-  const A6 = groupAesthetics(channels);
+  const A6 = groupAesthetics(channels, mark);
   const C4 = [...position5, ...A6];
   for (const G of Z ? groupZ2(I, Z, z) : [I]) {
     let Ag;
@@ -21995,6 +22091,7 @@ function applyIndirectStyles(selection3, mark, dimensions, context) {
   applyAttr(selection3, "stroke-dasharray", mark.strokeDasharray);
   applyAttr(selection3, "stroke-dashoffset", mark.strokeDashoffset);
   applyAttr(selection3, "shape-rendering", mark.shapeRendering);
+  applyAttr(selection3, "filter", mark.imageFilter);
   applyAttr(selection3, "paint-order", mark.paintOrder);
   applyAttr(selection3, "pointer-events", mark.pointerEvents);
 }
@@ -22190,8 +22287,8 @@ function createFacets(channelsByScale, options) {
   return fxDomain && fyDomain ? cross(fxDomain, fyDomain).map(([x7, y7], i) => ({ x: x7, y: y7, i })) : fxDomain ? fxDomain.map((x7, i) => ({ x: x7, i })) : fyDomain ? fyDomain.map((y7, i) => ({ y: y7, i })) : void 0;
 }
 function recreateFacets(facets, { x: X4, y: Y4 }) {
-  X4 &&= new InternMap(X4.map((x7, i) => [x7, i]));
-  Y4 &&= new InternMap(Y4.map((y7, i) => [y7, i]));
+  X4 &&= facetIndex(X4);
+  Y4 &&= facetIndex(Y4);
   return facets.filter(
     X4 && Y4 ? (f) => X4.has(f.x) && Y4.has(f.y) : X4 ? (f) => X4.has(f.x) : (f) => Y4.has(f.y)
   ).sort(
@@ -22217,7 +22314,7 @@ function facetGroups(data, { fx, fy }) {
     (i) => FY[i]
   );
 }
-function facetTranslate(fx, fy, { marginTop, marginLeft }) {
+function facetTranslator(fx, fy, { marginTop, marginLeft }) {
   return fx && fy ? ({ x: x7, y: y7 }) => `translate(${fx(x7) - marginLeft},${fy(y7) - marginTop})` : fx ? ({ x: x7 }) => `translate(${fx(x7) - marginLeft},0)` : ({ y: y7 }) => `translate(0,${fy(y7) - marginTop})`;
 }
 function facetExclude(index5) {
@@ -22258,53 +22355,71 @@ function maybeFacetAnchor(facetAnchor) {
     return anchor;
   throw new Error(`invalid facet anchor: ${facetAnchor}`);
 }
+var indexCache = /* @__PURE__ */ new WeakMap();
+function facetIndex(V) {
+  let I = indexCache.get(V);
+  if (!I)
+    indexCache.set(V, I = new InternMap(map4(V, (v3, i) => [v3, i])));
+  return I;
+}
+function facetIndexOf(V, v3) {
+  return facetIndex(V).get(v3);
+}
+function facetFind(facets, x7, y7) {
+  x7 = keyof2(x7);
+  y7 = keyof2(y7);
+  return facets.find((f) => Object.is(keyof2(f.x), x7) && Object.is(keyof2(f.y), y7));
+}
+function facetEmpty(facets, x7, y7) {
+  return facetFind(facets, x7, y7)?.empty;
+}
 function facetAnchorTop(facets, { y: Y4 }, { y: y7 }) {
-  return Y4 ? Y4.indexOf(y7) === 0 : true;
+  return Y4 ? facetIndexOf(Y4, y7) === 0 : true;
 }
 function facetAnchorBottom(facets, { y: Y4 }, { y: y7 }) {
-  return Y4 ? Y4.indexOf(y7) === Y4.length - 1 : true;
+  return Y4 ? facetIndexOf(Y4, y7) === Y4.length - 1 : true;
 }
 function facetAnchorLeft(facets, { x: X4 }, { x: x7 }) {
-  return X4 ? X4.indexOf(x7) === 0 : true;
+  return X4 ? facetIndexOf(X4, x7) === 0 : true;
 }
 function facetAnchorRight(facets, { x: X4 }, { x: x7 }) {
-  return X4 ? X4.indexOf(x7) === X4.length - 1 : true;
+  return X4 ? facetIndexOf(X4, x7) === X4.length - 1 : true;
 }
 function facetAnchorTopEmpty(facets, { y: Y4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = Y4?.indexOf(y7);
-  if (i > 0) {
-    const y8 = Y4[i - 1];
-    return facets.find((f) => f.x === x7 && f.y === y8)?.empty;
-  }
+  if (!Y4)
+    return;
+  const i = facetIndexOf(Y4, y7);
+  if (i > 0)
+    return facetEmpty(facets, x7, Y4[i - 1]);
 }
 function facetAnchorBottomEmpty(facets, { y: Y4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = Y4?.indexOf(y7);
-  if (i < Y4?.length - 1) {
-    const y8 = Y4[i + 1];
-    return facets.find((f) => f.x === x7 && f.y === y8)?.empty;
-  }
+  if (!Y4)
+    return;
+  const i = facetIndexOf(Y4, y7);
+  if (i < Y4.length - 1)
+    return facetEmpty(facets, x7, Y4[i + 1]);
 }
 function facetAnchorLeftEmpty(facets, { x: X4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = X4?.indexOf(x7);
-  if (i > 0) {
-    const x8 = X4[i - 1];
-    return facets.find((f) => f.x === x8 && f.y === y7)?.empty;
-  }
+  if (!X4)
+    return;
+  const i = facetIndexOf(X4, x7);
+  if (i > 0)
+    return facetEmpty(facets, X4[i - 1], y7);
 }
 function facetAnchorRightEmpty(facets, { x: X4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = X4?.indexOf(x7);
-  if (i < X4?.length - 1) {
-    const x8 = X4[i + 1];
-    return facets.find((f) => f.x === x8 && f.y === y7)?.empty;
-  }
+  if (!X4)
+    return;
+  const i = facetIndexOf(X4, x7);
+  if (i < X4.length - 1)
+    return facetEmpty(facets, X4[i + 1], y7);
 }
 function facetAnchorEmpty(facets, channels, { empty: empty7 }) {
   return empty7;
@@ -22316,6 +22431,323 @@ function and(a7, b) {
 }
 function facetFilter(facets, { channels: { fx, fy }, groups: groups3 }) {
   return fx && fy ? facets.map(({ x: x7, y: y7 }) => groups3.get(x7)?.get(y7) ?? []) : fx ? facets.map(({ x: x7 }) => groups3.get(x7) ?? []) : facets.map(({ y: y7 }) => groups3.get(y7) ?? []);
+}
+
+// node_modules/@observablehq/plot/src/mark.js
+var Mark = class {
+  constructor(data, channels = {}, options = {}, defaults43) {
+    const {
+      facet = "auto",
+      facetAnchor,
+      fx,
+      fy,
+      sort: sort5,
+      dx = 0,
+      dy = 0,
+      margin = 0,
+      marginTop = margin,
+      marginRight = margin,
+      marginBottom = margin,
+      marginLeft = margin,
+      clip,
+      channels: extraChannels,
+      tip: tip3,
+      render: render2
+    } = options;
+    this.data = data;
+    this.sort = isDomainSort(sort5) ? sort5 : null;
+    this.initializer = initializer(options).initializer;
+    this.transform = this.initializer ? options.transform : basic(options).transform;
+    if (facet === null || facet === false) {
+      this.facet = null;
+    } else {
+      this.facet = keyword(facet === true ? "include" : facet, "facet", ["auto", "include", "exclude", "super"]);
+      this.fx = data === singleton && typeof fx === "string" ? [fx] : fx;
+      this.fy = data === singleton && typeof fy === "string" ? [fy] : fy;
+    }
+    this.facetAnchor = maybeFacetAnchor(facetAnchor);
+    channels = maybeNamed(channels);
+    if (extraChannels !== void 0)
+      channels = { ...maybeChannels(extraChannels), ...channels };
+    if (defaults43 !== void 0)
+      channels = { ...styles(this, options, defaults43), ...channels };
+    this.channels = Object.fromEntries(
+      Object.entries(channels).map(([name, channel]) => {
+        if (isOptions(channel.value)) {
+          const { value, scale: scale5 = channel.scale } = channel.value;
+          channel = { ...channel, scale: scale5, value };
+        }
+        if (data === singleton && typeof channel.value === "string") {
+          const { value } = channel;
+          channel = { ...channel, value: [value] };
+        }
+        return [name, channel];
+      }).filter(([name, { value, optional: optional3 }]) => {
+        if (value != null)
+          return true;
+        if (optional3)
+          return false;
+        throw new Error(`missing channel value: ${name}`);
+      })
+    );
+    this.dx = +dx;
+    this.dy = +dy;
+    this.marginTop = +marginTop;
+    this.marginRight = +marginRight;
+    this.marginBottom = +marginBottom;
+    this.marginLeft = +marginLeft;
+    this.clip = maybeClip(clip);
+    this.tip = maybeTip(tip3);
+    if (this.facet === "super") {
+      if (fx || fy)
+        throw new Error(`super-faceting cannot use fx or fy`);
+      for (const name in this.channels) {
+        const { scale: scale5 } = channels[name];
+        if (scale5 !== "x" && scale5 !== "y")
+          continue;
+        throw new Error(`super-faceting cannot use x or y`);
+      }
+    }
+    if (render2 != null) {
+      this.render = composeRender(render2, this.render);
+    }
+  }
+  initialize(facets, facetChannels, plotOptions) {
+    let data = arrayify2(this.data);
+    if (facets === void 0 && data != null)
+      facets = [range4(data)];
+    const originalFacets = facets;
+    if (this.transform != null)
+      ({ facets, data } = this.transform(data, facets, plotOptions)), data = arrayify2(data);
+    if (facets !== void 0)
+      facets.original = originalFacets;
+    const channels = createChannels(this.channels, data);
+    if (this.sort != null)
+      channelDomain(data, facets, channels, facetChannels, this.sort);
+    return { data, facets, channels };
+  }
+  filter(index5, channels, values3) {
+    for (const name in channels) {
+      const { filter: filter7 = defined } = channels[name];
+      if (filter7 !== null) {
+        const value = values3[name];
+        index5 = index5.filter((i) => filter7(value[i]));
+      }
+    }
+    return index5;
+  }
+  // If there is a projection, and there are paired x and y channels associated
+  // with the x and y scale respectively (and not already in screen coordinates
+  // as with an initializer), then apply the projection, replacing the x and y
+  // values. Note that the x and y scales themselves don’t exist if there is a
+  // projection, but whether the channels are associated with scales still
+  // determines whether the projection should apply; think of the projection as
+  // a combination xy-scale.
+  project(channels, values3, context) {
+    for (const cx in channels) {
+      if (channels[cx].scale === "x" && /^x|x$/.test(cx)) {
+        const cy = cx.replace(/^x|x$/, "y");
+        if (cy in channels && channels[cy].scale === "y") {
+          project(cx, cy, values3, context.projection);
+        }
+      }
+    }
+  }
+  scale(channels, scales, context) {
+    const values3 = valueObject(channels, scales);
+    if (context.projection)
+      this.project(channels, values3, context);
+    return values3;
+  }
+};
+function marks(...marks3) {
+  marks3.plot = Mark.prototype.plot;
+  return marks3;
+}
+function composeRender(r1, r2) {
+  if (r1 == null)
+    return r2 === null ? void 0 : r2;
+  if (r2 == null)
+    return r1 === null ? void 0 : r1;
+  if (typeof r1 !== "function")
+    throw new TypeError(`invalid render transform: ${r1}`);
+  if (typeof r2 !== "function")
+    throw new TypeError(`invalid render transform: ${r2}`);
+  return function(i, s3, v3, d, c11, next) {
+    return r1.call(this, i, s3, v3, d, c11, (i2, s4, v4, d2, c12) => {
+      return r2.call(this, i2, s4, v4, d2, c12, next);
+    });
+  };
+}
+function maybeChannels(channels) {
+  return Object.fromEntries(
+    Object.entries(maybeNamed(channels)).map(([name, channel]) => {
+      channel = maybeValue(channel);
+      if (channel.filter === void 0 && channel.scale == null)
+        channel = { ...channel, filter: null };
+      return [name, channel];
+    })
+  );
+}
+function maybeTip(tip3) {
+  return tip3 === true ? "xy" : tip3 === false ? null : maybeKeyword(tip3, "tip", ["x", "y", "xy"]);
+}
+function withTip(options, tip3) {
+  return options?.tip === true ? { ...options, tip: tip3 } : options;
+}
+
+// node_modules/@observablehq/plot/src/interactions/pointer.js
+var states = /* @__PURE__ */ new WeakMap();
+function pointerK(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, render: render2, ...options } = {}) {
+  maxRadius = +maxRadius;
+  if (px != null)
+    x7 ??= null, channels = { ...channels, px: { value: px, scale: "x" } };
+  if (py != null)
+    y7 ??= null, channels = { ...channels, py: { value: py, scale: "y" } };
+  return {
+    x: x7,
+    y: y7,
+    channels,
+    ...options,
+    // Unlike other composed transforms, the render transform must be the
+    // outermost render function because it will re-render dynamically in
+    // response to pointer events.
+    render: composeRender(function(index5, scales, values3, dimensions, context, next) {
+      const svg3 = context.ownerSVGElement;
+      const { data } = context.getMarkState(this);
+      let state = states.get(svg3);
+      if (!state)
+        states.set(svg3, state = { sticky: false, roots: [], renders: [] });
+      let renderIndex = state.renders.push(render3) - 1;
+      const { x: x8, y: y8, fx, fy } = scales;
+      let tx = fx ? fx(index5.fx) - dimensions.marginLeft : 0;
+      let ty = fy ? fy(index5.fy) - dimensions.marginTop : 0;
+      if (x8?.bandwidth)
+        tx += x8.bandwidth() / 2;
+      if (y8?.bandwidth)
+        ty += y8.bandwidth() / 2;
+      const faceted = index5.fi != null;
+      let facetState;
+      if (faceted) {
+        let facetStates = state.facetStates;
+        if (!facetStates)
+          state.facetStates = facetStates = /* @__PURE__ */ new Map();
+        facetState = facetStates.get(this);
+        if (!facetState)
+          facetStates.set(this, facetState = /* @__PURE__ */ new Map());
+      }
+      const [cx, cy] = applyFrameAnchor(this, dimensions);
+      const { px: PX, py: PY } = values3;
+      const px2 = PX ? (i2) => PX[i2] : anchorX(values3, cx);
+      const py2 = PY ? (i2) => PY[i2] : anchorY(values3, cy);
+      let i;
+      let g;
+      let f;
+      function update(ii, ri) {
+        if (faceted) {
+          if (f)
+            f = cancelAnimationFrame(f);
+          if (ii == null)
+            facetState.delete(index5.fi);
+          else {
+            facetState.set(index5.fi, ri);
+            f = requestAnimationFrame(() => {
+              f = null;
+              for (const r of facetState.values()) {
+                if (r < ri) {
+                  ii = null;
+                  break;
+                }
+              }
+              render3(ii);
+            });
+            return;
+          }
+        }
+        render3(ii);
+      }
+      function render3(ii) {
+        if (i === ii)
+          return;
+        i = ii;
+        const I = i == null ? [] : [i];
+        if (faceted)
+          I.fx = index5.fx, I.fy = index5.fy, I.fi = index5.fi;
+        const r = next(I, scales, values3, dimensions, context);
+        if (g) {
+          if (faceted) {
+            const p = g.parentNode;
+            const ft = g.getAttribute("transform");
+            const mt = r.getAttribute("transform");
+            ft ? r.setAttribute("transform", ft) : r.removeAttribute("transform");
+            mt ? p.setAttribute("transform", mt) : p.removeAttribute("transform");
+            r.removeAttribute("aria-label");
+            r.removeAttribute("aria-description");
+            r.removeAttribute("aria-hidden");
+          }
+          g.replaceWith(r);
+        }
+        state.roots[renderIndex] = g = r;
+        context.dispatchValue(i == null ? null : data[i]);
+        return r;
+      }
+      function pointermove(event) {
+        if (state.sticky || event.pointerType === "mouse" && event.buttons === 1)
+          return;
+        let [xp, yp] = pointer_default(event);
+        xp -= tx, yp -= ty;
+        let ii = null;
+        let ri = maxRadius * maxRadius;
+        for (const j of index5) {
+          const dx = kx3 * (px2(j) - xp);
+          const dy = ky3 * (py2(j) - yp);
+          const rj = dx * dx + dy * dy;
+          if (rj <= ri)
+            ii = j, ri = rj;
+        }
+        update(ii, ri);
+      }
+      function pointerdown(event) {
+        if (event.pointerType !== "mouse")
+          return;
+        if (i == null)
+          return;
+        if (state.sticky && state.roots.some((r) => r?.contains(event.target)))
+          return;
+        if (state.sticky)
+          state.sticky = false, state.renders.forEach((r) => r(null));
+        else
+          state.sticky = true;
+        event.stopImmediatePropagation();
+      }
+      function pointerleave(event) {
+        if (event.pointerType !== "mouse")
+          return;
+        if (!state.sticky)
+          update(null);
+      }
+      svg3.addEventListener("pointerenter", pointermove);
+      svg3.addEventListener("pointermove", pointermove);
+      svg3.addEventListener("pointerdown", pointerdown);
+      svg3.addEventListener("pointerleave", pointerleave);
+      return render3(null);
+    }, render2)
+  };
+}
+function pointer(options) {
+  return pointerK(1, 1, options);
+}
+function pointerX(options) {
+  return pointerK(1, 0.01, options);
+}
+function pointerY(options) {
+  return pointerK(0.01, 1, options);
+}
+function anchorX({ x1: X15, x2: X25, x: X4 = X15 }, cx) {
+  return X15 && X25 ? (i) => (X15[i] + X25[i]) / 2 : X4 ? (i) => X4[i] : () => cx;
+}
+function anchorY({ y1: Y15, y2: Y25, y: Y4 = Y15 }, cy) {
+  return Y15 && Y25 ? (i) => (Y15[i] + Y25[i]) / 2 : Y4 ? (i) => Y4[i] : () => cy;
 }
 
 // node_modules/@observablehq/plot/src/axes.js
@@ -22555,13 +22987,13 @@ function legend(options = {}) {
   }
   throw new Error("unknown legend type; no scale found");
 }
-function exposeLegends(scales, context, defaults41 = {}) {
+function exposeLegends(scales, context, defaults43 = {}) {
   return (key, options) => {
     if (!legendRegistry.has(key))
       throw new Error(`unknown legend type: ${key}`);
     if (!(key in scales))
       return;
-    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults41[key], options), (key2) => scales[key2]);
+    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults43[key], options), (key2) => scales[key2]);
   };
 }
 function legendOptions({ className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 } = {}, options) {
@@ -22607,128 +23039,83 @@ function createLegends(scales, context, options) {
   return legends;
 }
 
-// node_modules/@observablehq/plot/src/mark.js
-var Mark = class {
-  constructor(data, channels = {}, options = {}, defaults41) {
-    const {
-      facet = "auto",
-      facetAnchor,
-      fx,
-      fy,
-      sort: sort5,
-      dx = 0,
-      dy = 0,
-      margin = 0,
-      marginTop = margin,
-      marginRight = margin,
-      marginBottom = margin,
-      marginLeft = margin,
-      clip,
-      channels: extraChannels
-    } = options;
-    this.data = data;
-    this.sort = isDomainSort(sort5) ? sort5 : null;
-    this.initializer = initializer(options).initializer;
-    this.transform = this.initializer ? options.transform : basic(options).transform;
-    if (facet === null || facet === false) {
-      this.facet = null;
-    } else {
-      this.facet = keyword(facet === true ? "include" : facet, "facet", ["auto", "include", "exclude", "super"]);
-      this.fx = fx;
-      this.fy = fy;
-    }
-    this.facetAnchor = maybeFacetAnchor(facetAnchor);
-    channels = maybeNamed(channels);
-    if (extraChannels !== void 0)
-      channels = { ...maybeNamed(extraChannels), ...channels };
-    if (defaults41 !== void 0)
-      channels = { ...styles(this, options, defaults41), ...channels };
-    this.channels = Object.fromEntries(
-      Object.entries(channels).map(([name, channel]) => {
-        const { value } = channel;
-        if (isOptions(value)) {
-          channel = { ...channel, value: value.value };
-          if (value.scale !== void 0)
-            channel.scale = value.scale;
-        }
-        return [name, channel];
-      }).filter(([name, { value, optional: optional3 }]) => {
-        if (value != null)
-          return true;
-        if (optional3)
-          return false;
-        throw new Error(`missing channel value: ${name}`);
-      })
-    );
-    this.dx = +dx;
-    this.dy = +dy;
-    this.marginTop = +marginTop;
-    this.marginRight = +marginRight;
-    this.marginBottom = +marginBottom;
-    this.marginLeft = +marginLeft;
-    this.clip = maybeClip(clip);
-    if (this.facet === "super") {
-      if (fx || fy)
-        throw new Error(`super-faceting cannot use fx or fy`);
-      for (const name in this.channels) {
-        const { scale: scale5 } = channels[name];
-        if (scale5 !== "x" && scale5 !== "y")
-          continue;
-        throw new Error(`super-faceting cannot use x or y`);
-      }
-    }
-  }
-  initialize(facets, facetChannels) {
-    let data = arrayify2(this.data);
-    if (facets === void 0 && data != null)
-      facets = [range4(data)];
-    const originalFacets = facets;
-    if (this.transform != null)
-      ({ facets, data } = this.transform(data, facets)), data = arrayify2(data);
-    if (facets !== void 0)
-      facets.original = originalFacets;
-    const channels = createChannels(this.channels, data);
-    if (this.sort != null)
-      channelDomain(data, facets, channels, facetChannels, this.sort);
-    return { data, facets, channels };
-  }
-  filter(index5, channels, values3) {
-    for (const name in channels) {
-      const { filter: filter7 = defined } = channels[name];
-      if (filter7 !== null) {
-        const value = values3[name];
-        index5 = index5.filter((i) => filter7(value[i]));
-      }
-    }
-    return index5;
-  }
-  // If there is a projection, and there are both x and y channels (or x1 and
-  // y1, or x2 and y2 channels), and those channels are associated with the x
-  // and y scale respectively (and not already in screen coordinates as with an
-  // initializer), then apply the projection, replacing the x and y values. Note
-  // that the x and y scales themselves don’t exist if there is a projection,
-  // but whether the channels are associated with scales still determines
-  // whether the projection should apply; think of the projection as a
-  // combination xy-scale.
-  project(channels, values3, context) {
-    maybeProject("x", "y", channels, values3, context);
-    maybeProject("x1", "y1", channels, values3, context);
-    maybeProject("x2", "y2", channels, values3, context);
-  }
-  scale(channels, scales, context) {
-    const values3 = valueObject(channels, scales);
-    if (context.projection)
-      this.project(channels, values3, context);
-    return values3;
-  }
-};
-function marks(...marks3) {
-  marks3.plot = Mark.prototype.plot;
-  return marks3;
-}
-
 // node_modules/@observablehq/plot/src/math.js
 var radians3 = Math.PI / 180;
+
+// node_modules/@observablehq/plot/src/marker.js
+function markers(mark, { marker, markerStart = marker, markerMid = marker, markerEnd = marker } = {}) {
+  mark.markerStart = maybeMarker(markerStart);
+  mark.markerMid = maybeMarker(markerMid);
+  mark.markerEnd = maybeMarker(markerEnd);
+}
+function maybeMarker(marker) {
+  if (marker == null || marker === false)
+    return null;
+  if (marker === true)
+    return markerCircleFill;
+  if (typeof marker === "function")
+    return marker;
+  switch (`${marker}`.toLowerCase()) {
+    case "none":
+      return null;
+    case "arrow":
+      return markerArrow("auto");
+    case "arrow-reverse":
+      return markerArrow("auto-start-reverse");
+    case "dot":
+      return markerDot;
+    case "circle":
+    case "circle-fill":
+      return markerCircleFill;
+    case "circle-stroke":
+      return markerCircleStroke;
+  }
+  throw new Error(`invalid marker: ${marker}`);
+}
+function markerArrow(orient) {
+  return (color5, context) => create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("orient", orient).attr("fill", "none").attr("stroke", color5).attr("stroke-width", 1.5).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").call((marker) => marker.append("path").attr("d", "M-1.5,-3l3,3l-3,3")).node();
+}
+function markerDot(color5, context) {
+  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "none").call((marker) => marker.append("circle").attr("r", 2.5)).node();
+}
+function markerCircleFill(color5, context) {
+  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "white").attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
+}
+function markerCircleStroke(color5, context) {
+  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", "white").attr("stroke", color5).attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
+}
+var nextMarkerId = 0;
+function applyMarkers(path3, mark, { stroke: S }, context) {
+  return applyMarkersColor(path3, mark, S && ((i) => S[i]), context);
+}
+function applyGroupedMarkers(path3, mark, { stroke: S }, context) {
+  return applyMarkersColor(path3, mark, S && (([i]) => S[i]), context);
+}
+function applyMarkersColor(path3, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, context) {
+  const iriByMarkerColor = /* @__PURE__ */ new Map();
+  function applyMarker(marker) {
+    return function(i) {
+      const color5 = strokeof(i);
+      let iriByColor = iriByMarkerColor.get(marker);
+      if (!iriByColor)
+        iriByMarkerColor.set(marker, iriByColor = /* @__PURE__ */ new Map());
+      let iri = iriByColor.get(color5);
+      if (!iri) {
+        const node = this.parentNode.insertBefore(marker(color5, context), this);
+        const id3 = `plot-marker-${++nextMarkerId}`;
+        node.setAttribute("id", id3);
+        iriByColor.set(color5, iri = `url(#${id3})`);
+      }
+      return iri;
+    };
+  }
+  if (markerStart)
+    path3.attr("marker-start", applyMarker(markerStart));
+  if (markerMid)
+    path3.attr("marker-mid", applyMarker(markerMid));
+  if (markerEnd)
+    path3.attr("marker-end", applyMarker(markerEnd));
+}
 
 // node_modules/@observablehq/plot/src/transforms/inset.js
 function maybeInsetX({ inset, insetLeft, insetRight, ...options } = {}) {
@@ -22832,11 +23219,12 @@ var RuleX = class extends Mark {
         y1: { value: y13, scale: "y", optional: true },
         y2: { value: y22, scale: "y", optional: true }
       },
-      options,
+      withTip(options, "x"),
       defaults
     );
     this.insetTop = number5(insetTop);
     this.insetBottom = number5(insetBottom);
+    markers(this, options);
   }
   render(index5, scales, channels, dimensions, context) {
     const { x: x7, y: y7 } = scales;
@@ -22847,7 +23235,7 @@ var RuleX = class extends Mark {
       (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles, this).attr("x1", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("x2", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("y1", Y15 && !isCollapsed(y7) ? (i) => Y15[i] + insetTop : marginTop + insetTop).attr(
         "y2",
         Y25 && !isCollapsed(y7) ? y7.bandwidth ? (i) => Y25[i] + y7.bandwidth() - insetBottom : (i) => Y25[i] - insetBottom : height - marginBottom - insetBottom
-      ).call(applyChannelStyles, this, channels)
+      ).call(applyChannelStyles, this, channels).call(applyMarkers, this, channels, context)
     ).node();
   }
 };
@@ -22861,11 +23249,12 @@ var RuleY = class extends Mark {
         x1: { value: x13, scale: "x", optional: true },
         x2: { value: x22, scale: "x", optional: true }
       },
-      options,
+      withTip(options, "y"),
       defaults
     );
     this.insetRight = number5(insetRight);
     this.insetLeft = number5(insetLeft);
+    markers(this, options);
   }
   render(index5, scales, channels, dimensions, context) {
     const { x: x7, y: y7 } = scales;
@@ -22876,7 +23265,7 @@ var RuleY = class extends Mark {
       (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles, this).attr("x1", X15 && !isCollapsed(x7) ? (i) => X15[i] + insetLeft : marginLeft + insetLeft).attr(
         "x2",
         X25 && !isCollapsed(x7) ? x7.bandwidth ? (i) => X25[i] + x7.bandwidth() - insetRight : (i) => X25[i] - insetRight : width - marginRight - insetRight
-      ).attr("y1", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).attr("y2", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).call(applyChannelStyles, this, channels)
+      ).attr("y1", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).attr("y2", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).call(applyChannelStyles, this, channels).call(applyMarkers, this, channels, context)
     ).node();
   }
 };
@@ -22891,7 +23280,7 @@ function ruleY(data, options) {
   return new RuleY(data, { ...rest, y: y7, x1: x13, x2: x22 });
 }
 function maybeOptionalZero(x7, x13, x22) {
-  if (x7 === void 0) {
+  if (x7 == null) {
     if (x13 === void 0) {
       if (x22 !== void 0)
         return [0, x22];
@@ -23025,14 +23414,20 @@ function applyMultilineText(selection3, mark, T, TL) {
     const n = lines.length;
     const y7 = lineAnchor === "top" ? 0.71 : lineAnchor === "bottom" ? 1 - n : (164 - n * 100) / 200;
     if (n > 1) {
+      let m5 = 0;
       for (let i2 = 0; i2 < n; ++i2) {
+        ++m5;
         if (!lines[i2])
           continue;
         const tspan = this.ownerDocument.createElementNS(namespaces_default.svg, "tspan");
         tspan.setAttribute("x", 0);
-        tspan.setAttribute("y", `${(y7 + i2) * lineHeight}em`);
+        if (i2 === m5 - 1)
+          tspan.setAttribute("y", `${(y7 + i2) * lineHeight}em`);
+        else
+          tspan.setAttribute("dy", `${m5 * lineHeight}em`);
         tspan.textContent = lines[i2];
         this.appendChild(tspan);
+        m5 = 0;
       }
     } else {
       if (y7)
@@ -23046,19 +23441,16 @@ function applyMultilineText(selection3, mark, T, TL) {
     }
   });
 }
-function text(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function text(data, { x: x7, y: y7, ...options } = {}) {
   if (options.frameAnchor === void 0)
     [x7, y7] = maybeTuple(x7, y7);
-  return new Text(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Text(data, { ...options, x: x7, y: y7 });
 }
-function textX(data, options = {}) {
-  const { x: x7 = identity6, ...remainingOptions } = options;
-  return new Text(data, maybeIntervalMidY({ ...remainingOptions, x: x7 }));
+function textX(data, { x: x7 = identity6, ...options } = {}) {
+  return new Text(data, maybeIntervalMidY({ ...options, x: x7 }));
 }
-function textY(data, options = {}) {
-  const { y: y7 = identity6, ...remainingOptions } = options;
-  return new Text(data, maybeIntervalMidX({ ...remainingOptions, y: y7 }));
+function textY(data, { y: y7 = identity6, ...options } = {}) {
+  return new Text(data, maybeIntervalMidX({ ...options, y: y7 }));
 }
 function applyIndirectTextStyles(selection3, mark, T) {
   applyAttr(selection3, "text-anchor", mark.textAnchor);
@@ -23069,7 +23461,7 @@ function applyIndirectTextStyles(selection3, mark, T) {
   applyAttr(selection3, "font-weight", mark.fontWeight);
 }
 function inferFontVariant2(T) {
-  return isNumeric(T) || isTemporal(T) ? "tabular-nums" : void 0;
+  return T && (isNumeric(T) || isTemporal(T)) ? "tabular-nums" : void 0;
 }
 var fontSizes = /* @__PURE__ */ new Set([
   // global keywords
@@ -23264,13 +23656,14 @@ function clipper({ monospace, lineWidth, textOverflow }) {
     case "clip-end":
       return (text3) => clipEnd(text3, maxWidth, widthof, "");
     case "ellipsis-start":
-      return (text3) => clipStart(text3, maxWidth, widthof, "\u2026");
+      return (text3) => clipStart(text3, maxWidth, widthof, ellipsis);
     case "ellipsis-middle":
-      return (text3) => clipMiddle(text3, maxWidth, widthof, "\u2026");
+      return (text3) => clipMiddle(text3, maxWidth, widthof, ellipsis);
     case "ellipsis-end":
-      return (text3) => clipEnd(text3, maxWidth, widthof, "\u2026");
+      return (text3) => clipEnd(text3, maxWidth, widthof, ellipsis);
   }
 }
+var ellipsis = "\u2026";
 function cut(text3, width, widthof, inset) {
   const I = [];
   let w = 0;
@@ -23288,30 +23681,30 @@ function cut(text3, width, widthof, inset) {
   }
   return [-1, 0];
 }
-function clipEnd(text3, width, widthof, ellipsis) {
+function clipEnd(text3, width, widthof, ellipsis3) {
   text3 = text3.trim();
-  const e = widthof(ellipsis);
+  const e = widthof(ellipsis3);
   const [i] = cut(text3, width, widthof, e);
-  return i < 0 ? text3 : text3.slice(0, i).trimEnd() + ellipsis;
+  return i < 0 ? text3 : text3.slice(0, i).trimEnd() + ellipsis3;
 }
-function clipMiddle(text3, width, widthof, ellipsis) {
+function clipMiddle(text3, width, widthof, ellipsis3) {
   text3 = text3.trim();
   const w = widthof(text3);
   if (w <= width)
     return text3;
-  const e = widthof(ellipsis) / 2;
+  const e = widthof(ellipsis3) / 2;
   const [i, ei] = cut(text3, width / 2, widthof, e);
   const [j] = cut(text3, w - width / 2 - ei + e, widthof, -e);
-  return j < 0 ? ellipsis : text3.slice(0, i).trimEnd() + ellipsis + text3.slice(readCharacter(text3, j)).trimStart();
+  return j < 0 ? ellipsis3 : text3.slice(0, i).trimEnd() + ellipsis3 + text3.slice(readCharacter(text3, j)).trimStart();
 }
-function clipStart(text3, width, widthof, ellipsis) {
+function clipStart(text3, width, widthof, ellipsis3) {
   text3 = text3.trim();
   const w = widthof(text3);
   if (w <= width)
     return text3;
-  const e = widthof(ellipsis);
+  const e = widthof(ellipsis3);
   const [j] = cut(text3, w - width + e, widthof, -e);
-  return j < 0 ? ellipsis : ellipsis + text3.slice(readCharacter(text3, j)).trimStart();
+  return j < 0 ? ellipsis3 : ellipsis3 + text3.slice(readCharacter(text3, j)).trimStart();
 }
 var reCombiner = /[\p{Combining_Mark}\p{Emoji_Modifier}]+/uy;
 var rePictographic = /\p{Extended_Pictographic}/uy;
@@ -23469,24 +23862,24 @@ function maybeData(data, options) {
     options = {};
   return [data, options];
 }
-function maybeAnchor({ anchor } = {}, anchors) {
+function maybeAnchor2({ anchor } = {}, anchors) {
   return anchor === void 0 ? anchors[0] : keyword(anchor, "anchor", anchors);
 }
-function anchorY(options) {
-  return maybeAnchor(options, ["left", "right"]);
+function anchorY2(options) {
+  return maybeAnchor2(options, ["left", "right"]);
 }
 function anchorFy(options) {
-  return maybeAnchor(options, ["right", "left"]);
+  return maybeAnchor2(options, ["right", "left"]);
 }
-function anchorX(options) {
-  return maybeAnchor(options, ["bottom", "top"]);
+function anchorX2(options) {
+  return maybeAnchor2(options, ["bottom", "top"]);
 }
 function anchorFx(options) {
-  return maybeAnchor(options, ["top", "bottom"]);
+  return maybeAnchor2(options, ["top", "bottom"]);
 }
 function axisY() {
   const [data, options] = maybeData(...arguments);
-  return axisKy("y", anchorY(options), data, options);
+  return axisKy("y", anchorY2(options), data, options);
 }
 function axisFy() {
   const [data, options] = maybeData(...arguments);
@@ -23494,7 +23887,7 @@ function axisFy() {
 }
 function axisX() {
   const [data, options] = maybeData(...arguments);
-  return axisKx("x", anchorX(options), data, options);
+  return axisKx("x", anchorX2(options), data, options);
 }
 function axisFx() {
   const [data, options] = maybeData(...arguments);
@@ -23522,8 +23915,9 @@ function axisKy(k3, anchor, data, {
   marginBottom = margin === void 0 ? 20 : margin,
   marginLeft = margin === void 0 ? anchor === "left" ? 40 : 0 : margin,
   label,
-  labelOffset,
   labelAnchor,
+  labelArrow,
+  labelOffset,
   ...options
 }) {
   tickSize = number5(tickSize);
@@ -23531,6 +23925,7 @@ function axisKy(k3, anchor, data, {
   tickRotate = number5(tickRotate);
   if (labelAnchor !== void 0)
     labelAnchor = keyword(labelAnchor, "labelAnchor", ["center", "top", "bottom"]);
+  labelArrow = maybeLabelArrow(labelArrow);
   return marks(
     tickSize && !isNoneish(stroke) ? axisTickKy(k3, anchor, data, {
       stroke,
@@ -23582,11 +23977,7 @@ function axisKy(k3, anchor, data, {
         this.ariaLabel = `${k3}-axis label`;
         return {
           facets: [[0]],
-          channels: {
-            text: {
-              value: [label === void 0 ? inferAxisLabel(k3, scale5, cla) : label]
-            }
-          }
+          channels: { text: { value: [formatAxisLabel(k3, scale5, { anchor, label, labelAnchor: cla, labelArrow })] } }
         };
       })
     ) : null
@@ -23615,6 +24006,7 @@ function axisKx(k3, anchor, data, {
   marginLeft = margin === void 0 ? 20 : margin,
   label,
   labelAnchor,
+  labelArrow,
   labelOffset,
   ...options
 }) {
@@ -23623,6 +24015,7 @@ function axisKx(k3, anchor, data, {
   tickRotate = number5(tickRotate);
   if (labelAnchor !== void 0)
     labelAnchor = keyword(labelAnchor, "labelAnchor", ["center", "left", "right"]);
+  labelArrow = maybeLabelArrow(labelArrow);
   return marks(
     tickSize && !isNoneish(stroke) ? axisTickKx(k3, anchor, data, {
       stroke,
@@ -23671,11 +24064,7 @@ function axisKx(k3, anchor, data, {
         this.ariaLabel = `${k3}-axis label`;
         return {
           facets: [[0]],
-          channels: {
-            text: {
-              value: [label === void 0 ? inferAxisLabel(k3, scale5, cla) : label]
-            }
-          }
+          channels: { text: { value: [formatAxisLabel(k3, scale5, { anchor, label, labelAnchor: cla, labelArrow })] } }
         };
       })
     ) : null
@@ -23825,7 +24214,7 @@ function axisTextKx(k3, anchor, data, {
 }
 function gridY() {
   const [data, options] = maybeData(...arguments);
-  return gridKy("y", anchorY(options), data, options);
+  return gridKy("y", anchorY2(options), data, options);
 }
 function gridFy() {
   const [data, options] = maybeData(...arguments);
@@ -23833,7 +24222,7 @@ function gridFy() {
 }
 function gridX() {
   const [data, options] = maybeData(...arguments);
-  return gridKx("x", anchorX(options), data, options);
+  return gridKx("x", anchorX2(options), data, options);
 }
 function gridFx() {
   const [data, options] = maybeData(...arguments);
@@ -23890,7 +24279,8 @@ function axisMark(mark, k3, ariaLabel, data, options, initialize) {
   let channels;
   const m5 = mark(
     data,
-    initializer(options, function(data2, facets, _channels, scales) {
+    initializer(options, function(data2, facets, _channels, scales, dimensions, context) {
+      const initializeFacets = data2 == null && (k3 === "fx" || k3 === "fy");
       const { [k3]: scale5 } = scales;
       if (!scale5)
         throw new Error(`missing scale: ${k3}`);
@@ -23921,17 +24311,17 @@ function axisMark(mark, k3, ariaLabel, data, options, initialize) {
           facets = [range4(data2)];
         } else {
           channels[k3] = { scale: k3, value: identity6 };
-          facets = void 0;
         }
       }
       initialize?.call(this, scale5, ticks3, channels);
-      return {
-        data: data2,
-        facets,
-        channels: Object.fromEntries(
-          Object.entries(channels).map(([name, channel]) => [name, { ...channel, value: valueof(data2, channel.value) }])
-        )
-      };
+      const initializedChannels = Object.fromEntries(
+        Object.entries(channels).map(([name, channel]) => {
+          return [name, { ...channel, value: valueof(data2, channel.value) }];
+        })
+      );
+      if (initializeFacets)
+        facets = context.filterFacets(data2, initializedChannels);
+      return { data: data2, facets, channels: initializedChannels };
     })
   );
   if (data == null) {
@@ -23947,7 +24337,7 @@ function inferTextChannel(scale5, ticks3, tickFormat3) {
   return { value: inferTickFormat(scale5, ticks3, tickFormat3) };
 }
 function inferTickFormat(scale5, ticks3, tickFormat3) {
-  return scale5.tickFormat ? scale5.tickFormat(isIterable(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? formatDefault : typeof tickFormat3 === "string" ? (isTemporal(scale5.domain()) ? utcFormat : format)(tickFormat3) : constant2(tickFormat3);
+  return scale5.tickFormat ? scale5.tickFormat(isIterable(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? isUtcYear(scale5.interval) ? utcFormat("%Y") : isTimeYear(scale5.interval) ? timeFormat("%Y") : formatDefault : typeof tickFormat3 === "string" ? (isTemporal(scale5.domain()) ? utcFormat : format)(tickFormat3) : constant2(tickFormat3);
 }
 var shapeTickBottom = {
   draw(context, l) {
@@ -23974,17 +24364,41 @@ var shapeTickRight = {
   }
 };
 function inferFontVariant3(scale5) {
-  return scale5.bandwidth && scale5.interval === void 0 ? void 0 : "tabular-nums";
+  return scale5.bandwidth && !scale5.interval ? void 0 : "tabular-nums";
 }
 function inferScaleOrder(scale5) {
   return Math.sign(orderof(scale5.domain())) * Math.sign(orderof(scale5.range()));
 }
-function inferAxisLabel(key, scale5, labelAnchor) {
-  const label = scale5.label;
-  if (scale5.bandwidth || !label?.inferred)
+function formatAxisLabel(k3, scale5, { anchor, label = scale5.label, labelAnchor, labelArrow } = {}) {
+  if (label == null || label.inferred && isTemporalish(scale5) && /^(date|time|year)$/i.test(label))
+    return;
+  label = String(label);
+  if (labelArrow === "auto")
+    labelArrow = (!scale5.bandwidth || scale5.interval) && !/[↑↓→←]/.test(label);
+  if (!labelArrow)
     return label;
-  const order = inferScaleOrder(scale5);
-  return order ? key === "x" || labelAnchor === "center" ? key === "x" === order < 0 ? `\u2190 ${label}` : `${label} \u2192` : `${order < 0 ? "\u2191 " : "\u2193 "}${label}` : label;
+  if (labelArrow === true) {
+    const order = inferScaleOrder(scale5);
+    if (order)
+      labelArrow = /x$/.test(k3) || labelAnchor === "center" ? /x$/.test(k3) === order < 0 ? "left" : "right" : order < 0 ? "up" : "down";
+  }
+  switch (labelArrow) {
+    case "left":
+      return `\u2190 ${label}`;
+    case "right":
+      return `${label} \u2192`;
+    case "up":
+      return anchor === "right" ? `${label} \u2191` : `\u2191 ${label}`;
+    case "down":
+      return anchor === "right" ? `${label} \u2193` : `\u2193 ${label}`;
+  }
+  return label;
+}
+function maybeLabelArrow(labelArrow = "auto") {
+  return isNoneish(labelArrow) ? false : typeof labelArrow === "boolean" ? labelArrow : keyword(labelArrow, "labelArrow", ["auto", "up", "right", "down", "left"]);
+}
+function isTemporalish(scale5) {
+  return isTemporalScale(scale5) || scale5.interval != null;
 }
 
 // node_modules/@observablehq/plot/src/marks/frame.js
@@ -24011,7 +24425,7 @@ var Frame = class extends Mark {
       rx,
       ry
     } = options;
-    super(void 0, void 0, options, anchor == null ? defaults4 : lineDefaults);
+    super(singleton, void 0, options, anchor == null ? defaults4 : lineDefaults);
     this.anchor = maybeKeyword(anchor, "anchor", ["top", "right", "bottom", "left"]);
     this.insetTop = number5(insetTop);
     this.insetRight = number5(insetRight);
@@ -24027,7 +24441,7 @@ var Frame = class extends Mark {
     const x22 = width - marginRight - insetRight;
     const y13 = marginTop + insetTop;
     const y22 = height - marginBottom - insetBottom;
-    return create2(anchor ? "svg:line" : "svg:rect", context).call(applyIndirectStyles, this, dimensions, context).call(applyDirectStyles, this).call(applyTransform, this, {}).call(
+    return create2(anchor ? "svg:line" : "svg:rect", context).datum(0).call(applyIndirectStyles, this, dimensions, context).call(applyDirectStyles, this).call(applyChannelStyles, this, channels).call(applyTransform, this, {}).call(
       anchor === "left" ? (line3) => line3.attr("x1", x13).attr("x2", x13).attr("y1", y13).attr("y2", y22) : anchor === "right" ? (line3) => line3.attr("x1", x22).attr("x2", x22).attr("y1", y13).attr("y2", y22) : anchor === "top" ? (line3) => line3.attr("x1", x13).attr("x2", x22).attr("y1", y13).attr("y2", y13) : anchor === "bottom" ? (line3) => line3.attr("x1", x13).attr("x2", x22).attr("y1", y22).attr("y2", y22) : (rect3) => rect3.attr("x", x13).attr("y", y13).attr("width", x22 - x13).attr("height", y22 - y13).attr("rx", rx).attr("ry", ry)
     ).node();
   }
@@ -24036,11 +24450,291 @@ function frame2(options) {
   return new Frame(options);
 }
 
+// node_modules/@observablehq/plot/src/marks/tip.js
+var defaults5 = {
+  ariaLabel: "tip",
+  fill: "white",
+  stroke: "currentColor"
+};
+var ignoreChannels = /* @__PURE__ */ new Set(["geometry", "href", "src", "ariaLabel"]);
+var Tip = class extends Mark {
+  constructor(data, options = {}) {
+    if (options.tip)
+      options = { ...options, tip: false };
+    if (options.title === void 0 && isIterable(data) && isTextual(data))
+      options = { ...options, title: identity6 };
+    const {
+      x: x7,
+      y: y7,
+      x1: x13,
+      x2: x22,
+      y1: y13,
+      y2: y22,
+      anchor,
+      monospace,
+      fontFamily = monospace ? "ui-monospace, monospace" : void 0,
+      fontSize,
+      fontStyle,
+      fontVariant,
+      fontWeight,
+      lineHeight = 1,
+      lineWidth = 20,
+      frameAnchor,
+      textAnchor = "start",
+      textOverflow,
+      textPadding = 8,
+      pointerSize = 12,
+      pathFilter = "drop-shadow(0 3px 4px rgba(0,0,0,0.2))"
+    } = options;
+    super(
+      data,
+      {
+        x: { value: x13 != null && x22 != null ? null : x7, scale: "x", optional: true },
+        // ignore midpoint
+        y: { value: y13 != null && y22 != null ? null : y7, scale: "y", optional: true },
+        // ignore midpoint
+        x1: { value: x13, scale: "x", optional: x22 == null },
+        y1: { value: y13, scale: "y", optional: y22 == null },
+        x2: { value: x22, scale: "x", optional: x13 == null },
+        y2: { value: y22, scale: "y", optional: y13 == null }
+      },
+      options,
+      defaults5
+    );
+    this.anchor = maybeAnchor(anchor, "anchor");
+    this.previousAnchor = this.anchor ?? "top-left";
+    this.frameAnchor = maybeFrameAnchor(frameAnchor);
+    this.textAnchor = impliedString(textAnchor, "middle");
+    this.textPadding = +textPadding;
+    this.pointerSize = +pointerSize;
+    this.pathFilter = string(pathFilter);
+    this.lineHeight = +lineHeight;
+    this.lineWidth = +lineWidth;
+    this.textOverflow = maybeTextOverflow(textOverflow);
+    this.monospace = !!monospace;
+    this.fontFamily = string(fontFamily);
+    this.fontSize = number5(fontSize);
+    this.fontStyle = string(fontStyle);
+    this.fontVariant = string(fontVariant);
+    this.fontWeight = string(fontWeight);
+    for (const key in defaults5)
+      if (key in this.channels)
+        this[key] = defaults5[key];
+    this.splitLines = splitter2(this);
+    this.clipLine = clipper(this);
+  }
+  render(index5, scales, values3, dimensions, context) {
+    const mark = this;
+    const { x: x7, y: y7, fx, fy } = scales;
+    const { ownerSVGElement: svg3, document: document2 } = context;
+    const { anchor, monospace, lineHeight, lineWidth } = this;
+    const { textPadding: r, pointerSize: m5, pathFilter } = this;
+    const { marginTop, marginLeft } = dimensions;
+    const sources = getSources(values3);
+    const { x1: X15, y1: Y15, x2: X25, y2: Y25, x: X4 = X15 ?? X25, y: Y4 = Y15 ?? Y25 } = values3;
+    const ox3 = fx ? fx(index5.fx) - marginLeft : 0;
+    const oy3 = fy ? fy(index5.fy) - marginTop : 0;
+    const [cx, cy] = applyFrameAnchor(this, dimensions);
+    const px = anchorX(values3, cx);
+    const py = anchorY(values3, cy);
+    const widthof = monospace ? monospaceWidth : defaultWidth;
+    const ee = widthof(ellipsis);
+    const formatFx = fx && inferTickFormat(fx);
+    const formatFy = fy && inferTickFormat(fy);
+    function* format5(sources2, i) {
+      if ("title" in sources2) {
+        const text3 = sources2.title.value[i];
+        for (const line3 of mark.splitLines(formatDefault(text3))) {
+          yield { name: "", value: mark.clipLine(line3) };
+        }
+        return;
+      }
+      for (const key in sources2) {
+        if (key === "x1" && "x2" in sources2)
+          continue;
+        if (key === "y1" && "y2" in sources2)
+          continue;
+        const channel = sources2[key];
+        const value = channel.value[i];
+        if (!defined(value) && channel.scale == null)
+          continue;
+        if (key === "x2" && "x1" in sources2) {
+          yield { name: formatLabel(scales, channel, "x"), value: formatPair(sources2.x1, channel, i) };
+        } else if (key === "y2" && "y1" in sources2) {
+          yield { name: formatLabel(scales, channel, "y"), value: formatPair(sources2.y1, channel, i) };
+        } else {
+          const scale5 = channel.scale;
+          const line3 = { name: formatLabel(scales, channel, key), value: formatDefault(value) };
+          if (scale5 === "color" || scale5 === "opacity")
+            line3[scale5] = values3[key][i];
+          yield line3;
+        }
+      }
+      if (index5.fi != null && fx)
+        yield { name: String(fx.label ?? "fx"), value: formatFx(index5.fx) };
+      if (index5.fi != null && fy)
+        yield { name: String(fy.label ?? "fy"), value: formatFy(index5.fy) };
+    }
+    const g = create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyIndirectTextStyles, this).call(applyTransform, this, { x: X4 && x7, y: Y4 && y7 }).call(
+      (g2) => g2.selectAll().data(index5).enter().append("g").attr("transform", (i) => `translate(${Math.round(px(i))},${Math.round(py(i))})`).call(applyDirectStyles, this).call((g3) => g3.append("path").attr("filter", pathFilter)).call(
+        (g3) => g3.append("text").each(function(i) {
+          const that = select_default2(this);
+          this.setAttribute("fill", "currentColor");
+          this.setAttribute("fill-opacity", 1);
+          this.setAttribute("stroke", "none");
+          const names = /* @__PURE__ */ new Set();
+          for (const line3 of format5(sources, i)) {
+            const name = line3.name;
+            if (name && names.has(name))
+              continue;
+            else
+              names.add(name);
+            renderLine(that, line3);
+          }
+        })
+      )
+    );
+    function renderLine(selection3, { name, value, color: color5, opacity: opacity3 }) {
+      const swatch = color5 != null || opacity3 != null;
+      let title;
+      let w = lineWidth * 100;
+      const [j] = cut(name, w, widthof, ee);
+      if (j >= 0) {
+        name = name.slice(0, j).trimEnd() + ellipsis;
+        title = value.trim();
+        value = "";
+      } else {
+        if (name || !value && !swatch)
+          value = " " + value;
+        const [k3] = cut(value, w - widthof(name), widthof, ee);
+        if (k3 >= 0) {
+          value = value.slice(0, k3).trimEnd() + ellipsis;
+          title = value.trim();
+        }
+      }
+      const line3 = selection3.append("tspan").attr("x", 0).attr("dy", `${lineHeight}em`).text("\u200B");
+      if (name)
+        line3.append("tspan").attr("font-weight", "bold").text(name);
+      if (value)
+        line3.append(() => document2.createTextNode(value));
+      if (swatch)
+        line3.append("tspan").text(" \u25A0").attr("fill", color5).attr("fill-opacity", opacity3).style("user-select", "none");
+      if (title)
+        line3.append("title").text(title);
+    }
+    function postrender() {
+      const { width, height } = dimensions.facet ?? dimensions;
+      g.selectChildren().each(function(i) {
+        let { x: tx, width: w, height: h } = this.getBBox();
+        w = Math.round(w), h = Math.round(h);
+        let a7 = anchor;
+        if (a7 === void 0) {
+          a7 = mark.previousAnchor;
+          const x8 = px(i) + ox3;
+          const y8 = py(i) + oy3;
+          const fitLeft = x8 + w + r * 2 < width;
+          const fitRight = x8 - w - r * 2 > 0;
+          const fitTop = y8 + h + m5 + r * 2 + 7 < height;
+          const fitBottom = y8 - h - m5 - r * 2 > 0;
+          const ax = (/-left$/.test(a7) ? fitLeft || !fitRight : fitLeft && !fitRight) ? "left" : "right";
+          const ay = (/^top-/.test(a7) ? fitTop || !fitBottom : fitTop && !fitBottom) ? "top" : "bottom";
+          a7 = mark.previousAnchor = `${ay}-${ax}`;
+        }
+        const path3 = this.firstChild;
+        const text3 = this.lastChild;
+        path3.setAttribute("d", getPath(a7, m5, r, w, h));
+        if (tx)
+          for (const t of text3.childNodes)
+            t.setAttribute("x", -tx);
+        text3.setAttribute("y", `${+getLineOffset(a7, text3.childNodes.length, lineHeight).toFixed(6)}em`);
+        text3.setAttribute("transform", `translate(${getTextTranslate(a7, m5, r, w, h)})`);
+      });
+    }
+    if (svg3.isConnected)
+      Promise.resolve().then(postrender);
+    else if (typeof requestAnimationFrame !== "undefined")
+      requestAnimationFrame(postrender);
+    return g.node();
+  }
+};
+function tip(data, { x: x7, y: y7, ...options } = {}) {
+  if (options.frameAnchor === void 0)
+    [x7, y7] = maybeTuple(x7, y7);
+  return new Tip(data, { ...options, x: x7, y: y7 });
+}
+function getLineOffset(anchor, length7, lineHeight) {
+  return /^top(?:-|$)/.test(anchor) ? 0.94 - lineHeight : /^bottom(?:-|$)/ ? -0.29 - length7 * lineHeight : length7 / 2 * lineHeight;
+}
+function getTextTranslate(anchor, m5, r, width, height) {
+  switch (anchor) {
+    case "middle":
+      return [-width / 2, height / 2];
+    case "top-left":
+      return [r, m5 + r];
+    case "top":
+      return [-width / 2, m5 / 2 + r];
+    case "top-right":
+      return [-width - r, m5 + r];
+    case "right":
+      return [-m5 / 2 - width - r, height / 2];
+    case "bottom-left":
+      return [r, -m5 - r];
+    case "bottom":
+      return [-width / 2, -m5 / 2 - r];
+    case "bottom-right":
+      return [-width - r, -m5 - r];
+    case "left":
+      return [r + m5 / 2, height / 2];
+  }
+}
+function getPath(anchor, m5, r, width, height) {
+  const w = width + r * 2;
+  const h = height + r * 2;
+  switch (anchor) {
+    case "middle":
+      return `M${-w / 2},${-h / 2}h${w}v${h}h${-w}z`;
+    case "top-left":
+      return `M0,0l${m5},${m5}h${w - m5}v${h}h${-w}z`;
+    case "top":
+      return `M0,0l${m5 / 2},${m5 / 2}h${(w - m5) / 2}v${h}h${-w}v${-h}h${(w - m5) / 2}z`;
+    case "top-right":
+      return `M0,0l${-m5},${m5}h${m5 - w}v${h}h${w}z`;
+    case "right":
+      return `M0,0l${-m5 / 2},${-m5 / 2}v${m5 / 2 - h / 2}h${-w}v${h}h${w}v${m5 / 2 - h / 2}z`;
+    case "bottom-left":
+      return `M0,0l${m5},${-m5}h${w - m5}v${-h}h${-w}z`;
+    case "bottom":
+      return `M0,0l${m5 / 2},${-m5 / 2}h${(w - m5) / 2}v${-h}h${-w}v${h}h${(w - m5) / 2}z`;
+    case "bottom-right":
+      return `M0,0l${-m5},${-m5}h${m5 - w}v${-h}h${w}z`;
+    case "left":
+      return `M0,0l${m5 / 2},${-m5 / 2}v${m5 / 2 - h / 2}h${w}v${h}h${-w}v${m5 / 2 - h / 2}z`;
+  }
+}
+function getSources({ channels }) {
+  const sources = {};
+  for (const key in channels) {
+    if (ignoreChannels.has(key))
+      continue;
+    const source = getSource(channels, key);
+    if (source)
+      sources[key] = source;
+  }
+  return sources;
+}
+function formatPair(c1, c22, i) {
+  return c22.hint?.length ? `${formatDefault(c22.value[i] - c1.value[i])}` : `${formatDefault(c1.value[i])}\u2013${formatDefault(c22.value[i])}`;
+}
+function formatLabel(scales, c11, defaultLabel) {
+  return String(scales[c11.scale]?.label ?? c11?.label ?? defaultLabel);
+}
+
 // node_modules/@observablehq/plot/src/plot.js
 function plot(options = {}) {
   const { facet, style, caption, ariaLabel, ariaDescription } = options;
   const className = maybeClassName(options.className);
   const marks3 = options.marks === void 0 ? [] : flatMarks(options.marks);
+  marks3.push(...inferTips(marks3));
   const topFacetState = maybeTopFacet(facet, options);
   const facetStateByMark = /* @__PURE__ */ new Map();
   for (const mark of marks3) {
@@ -24099,7 +24793,7 @@ function plot(options = {}) {
     if (stateByMark.has(mark))
       throw new Error("duplicate mark; each mark must be unique");
     const { facetsIndex, channels: facetChannels } = facetStateByMark.get(mark) ?? {};
-    const { data, facets: facets2, channels } = mark.initialize(facetsIndex, facetChannels);
+    const { data, facets: facets2, channels } = mark.initialize(facetsIndex, facetChannels, options);
     applyScaleTransforms(channels, options);
     stateByMark.set(mark, { data, facets: facets2, channels });
   }
@@ -24110,7 +24804,27 @@ function plot(options = {}) {
   const { fx, fy } = scales;
   const subdimensions = fx || fy ? innerDimensions(scaleDescriptors, dimensions) : dimensions;
   const superdimensions = fx || fy ? actualDimensions(scales, dimensions) : dimensions;
-  const context = createContext(options, subdimensions, className);
+  const context = createContext(options);
+  const document2 = context.document;
+  const svg3 = creator_default("svg").call(document2.documentElement);
+  let figure = svg3;
+  context.ownerSVGElement = svg3;
+  context.className = className;
+  context.projection = createProjection(options, subdimensions);
+  context.filterFacets = (data, channels) => {
+    return facetFilter(facets, { channels, groups: facetGroups(data, channels) });
+  };
+  context.getMarkState = (mark) => {
+    const state = stateByMark.get(mark);
+    const facetState = facetStateByMark.get(mark);
+    return { ...state, channels: { ...state.channels, ...facetState?.channels } };
+  };
+  context.dispatchValue = (value) => {
+    if (figure.value === value)
+      return;
+    figure.value = value;
+    figure.dispatchEvent(new Event("input", { bubbles: true }));
+  };
   const newByScale = /* @__PURE__ */ new Set();
   for (const [mark, state] of stateByMark) {
     if (mark.initializer != null) {
@@ -24123,26 +24837,18 @@ function plot(options = {}) {
         state.facets = update.facets;
       }
       if (update.channels !== void 0) {
-        inferChannelScales(update.channels);
-        Object.assign(state.channels, update.channels);
-        for (const channel of Object.values(update.channels)) {
+        const { fx: fx2, fy: fy2, ...channels } = update.channels;
+        inferChannelScales(channels);
+        Object.assign(state.channels, channels);
+        for (const channel of Object.values(channels)) {
           const { scale: scale5 } = channel;
           if (scale5 != null && registry.get(scale5) !== position) {
             applyScaleTransform(channel, options);
             newByScale.add(scale5);
           }
         }
-        const { fx: fx2, fy: fy2 } = update.channels;
-        if (fx2 != null || fy2 != null) {
-          const facetState = facetStateByMark.get(mark) ?? { channels: {} };
-          if (fx2 != null)
-            facetState.channels.fx = fx2;
-          if (fy2 != null)
-            facetState.channels.fy = fy2;
-          facetState.groups = facetGroups(state.data, facetState.channels);
-          facetState.facetsIndex = state.facets = facetFilter(facets, facetState);
-          facetStateByMark.set(mark, facetState);
-        }
+        if (fx2 != null || fy2 != null)
+          facetStateByMark.set(mark, true);
       }
     }
   }
@@ -24155,11 +24861,17 @@ function plot(options = {}) {
     Object.assign(scaleDescriptors, newScaleDescriptors);
     Object.assign(scales, newScales);
   }
+  let facetDomains, facetTranslate;
+  if (facets !== void 0) {
+    facetDomains = { x: fx?.domain(), y: fy?.domain() };
+    facets = recreateFacets(facets, facetDomains);
+    facetTranslate = facetTranslator(fx, fy, dimensions);
+  }
   for (const [mark, state] of stateByMark) {
     state.values = mark.scale(state.channels, scales, context);
   }
   const { width, height } = dimensions;
-  const svg3 = create2("svg", context).attr("class", className).attr("fill", "currentColor").attr("font-family", "system-ui, sans-serif").attr("font-size", 10).attr("text-anchor", "middle").attr("width", width).attr("height", height).attr("viewBox", `0 0 ${width} ${height}`).attr("aria-label", ariaLabel).attr("aria-description", ariaDescription).call(
+  select_default2(svg3).attr("class", className).attr("fill", "currentColor").attr("font-family", "system-ui, sans-serif").attr("font-size", 10).attr("text-anchor", "middle").attr("width", width).attr("height", height).attr("viewBox", `0 0 ${width} ${height}`).attr("aria-label", ariaLabel).attr("aria-description", ariaDescription).call(
     (svg4) => (
       // Warning: if you edit this, change defaultClassName.
       svg4.append("style").text(
@@ -24176,55 +24888,52 @@ function plot(options = {}) {
 }`
       )
     )
-  ).call(applyInlineStyles, style).node();
-  if (facets !== void 0) {
-    const facetDomains = { x: fx?.domain(), y: fy?.domain() };
-    facets = recreateFacets(facets, facetDomains);
-    select_default2(svg3).selectAll().data(facets).enter().append("g").attr("aria-label", "facet").attr("transform", facetTranslate(fx, fy, dimensions)).each(function(f) {
-      let empty7 = true;
-      for (const mark of marks3) {
-        if (mark.facet === "super")
+  ).call(applyInlineStyles, style);
+  for (const mark of marks3) {
+    const { channels, values: values3, facets: indexes3 } = stateByMark.get(mark);
+    if (facets === void 0 || mark.facet === "super") {
+      let index5 = null;
+      if (indexes3) {
+        index5 = indexes3[0];
+        index5 = mark.filter(index5, channels, values3);
+        if (index5.length === 0)
           continue;
-        const { channels, values: values3, facets: indexes3 } = stateByMark.get(mark);
+      }
+      const node = mark.render(index5, scales, values3, superdimensions, context);
+      if (node == null)
+        continue;
+      svg3.appendChild(node);
+    } else {
+      let g;
+      for (const f of facets) {
         if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty))
           continue;
         let index5 = null;
         if (indexes3) {
-          index5 = indexes3[facetStateByMark.has(mark) ? f.i : 0];
+          const faceted = facetStateByMark.has(mark);
+          index5 = indexes3[faceted ? f.i : 0];
           index5 = mark.filter(index5, channels, values3);
           if (index5.length === 0)
             continue;
-          index5.fi = f.i;
+          if (faceted)
+            index5.fx = f.x, index5.fy = f.y, index5.fi = f.i;
         }
         const node = mark.render(index5, scales, values3, subdimensions, context);
         if (node == null)
           continue;
-        empty7 = false;
-        this.appendChild(node);
+        (g ??= select_default2(svg3).append("g")).append(() => node).datum(f);
+        for (const name of ["aria-label", "aria-description", "aria-hidden", "transform"]) {
+          if (node.hasAttribute(name)) {
+            g.attr(name, node.getAttribute(name));
+            node.removeAttribute(name);
+          }
+        }
       }
-      if (empty7)
-        this.remove();
-    });
-  }
-  for (const mark of marks3) {
-    if (facets !== void 0 && mark.facet !== "super")
-      continue;
-    const { channels, values: values3, facets: indexes3 } = stateByMark.get(mark);
-    let index5 = null;
-    if (indexes3) {
-      index5 = indexes3[0];
-      index5 = mark.filter(index5, channels, values3);
-      if (index5.length === 0)
-        continue;
+      g?.selectChildren().attr("transform", facetTranslate);
     }
-    const node = mark.render(index5, scales, values3, superdimensions, context);
-    if (node != null)
-      svg3.appendChild(node);
   }
-  let figure = svg3;
   const legends = createLegends(scaleDescriptors, context, options);
   if (caption != null || legends.length > 0) {
-    const { document: document2 } = context;
     figure = document2.createElement("figure");
     figure.style.maxWidth = "initial";
     for (const legend3 of legends)
@@ -24277,7 +24986,7 @@ function applyScaleTransform(channel, options) {
     type: type3,
     percent,
     interval: interval3,
-    transform: transform3 = percent ? (x7) => x7 * 100 : maybeInterval(interval3, type3)?.floor
+    transform: transform3 = percent ? (x7) => x7 * 100 : maybeIntervalTransform(interval3, type3)
   } = options[scale5] ?? {};
   if (transform3 != null)
     channel.value = map4(channel.value, transform3);
@@ -24309,9 +25018,9 @@ function maybeTopFacet(facet, options) {
   const { x: x7, y: y7 } = facet;
   if (x7 == null && y7 == null)
     return;
-  const data = arrayify2(facet.data ?? x7 ?? y7);
-  if (data === void 0)
-    throw new Error(`missing facet data`);
+  const data = arrayify2(facet.data);
+  if (data == null)
+    throw new Error("missing facet data");
   const channels = {};
   if (x7 != null)
     channels.fx = createChannel(data, { value: x7, scale: "fx" });
@@ -24349,6 +25058,22 @@ function maybeMarkFacet(mark, topFacetState, options) {
       `Warning: the ${mark.ariaLabel} mark appears to use faceted data, but isn\u2019t faceted. The mark data has the same length as the facet data and the mark facet option is "auto", but the mark data and facet data are distinct. If this mark should be faceted, set the mark facet option to true; otherwise, suppress this warning by setting the mark facet option to false.`
     );
   }
+}
+function derive(mark, options = {}) {
+  return initializer({ ...options, x: null, y: null }, (data, facets, channels, scales, dimensions, context) => {
+    return context.getMarkState(mark);
+  });
+}
+function inferTips(marks3) {
+  const tips = [];
+  for (const mark of marks3) {
+    const t = mark.tip;
+    if (t) {
+      const p = t === "x" ? pointerX : t === "y" ? pointerY : pointer;
+      tips.push(tip(mark.data, p(derive(mark))));
+    }
+  }
+  return tips;
 }
 function inferAxes(marks3, channelsByScale, options) {
   let {
@@ -24401,11 +25126,11 @@ function inferAxes(marks3, channelsByScale, options) {
   maybeAxis(axes, xAxis, axisX, "bottom", "top", options, x7);
   return axes;
 }
-function maybeAxis(axes, axis3, axisType, primary, secondary, defaults41, options) {
+function maybeAxis(axes, axis3, axisType, primary, secondary, defaults43, options) {
   if (!axis3)
     return;
   const both = isBoth(axis3);
-  options = axisOptions(both ? primary : axis3, defaults41, options);
+  options = axisOptions(both ? primary : axis3, defaults43, options);
   const { line: line3 } = options;
   if ((axisType === axisY || axisType === axisX) && line3 && !isNone(line3))
     axes.push(frame2(lineOptions(options)));
@@ -24421,8 +25146,8 @@ function maybeGrid(axes, grid, gridType, options) {
 function isBoth(value) {
   return /^\s*both\s*$/i.test(value);
 }
-function axisOptions(anchor, defaults41, {
-  line: line3 = defaults41.line,
+function axisOptions(anchor, defaults43, {
+  line: line3 = defaults43.line,
   ticks: ticks3,
   tickSize,
   tickSpacing,
@@ -24432,8 +25157,9 @@ function axisOptions(anchor, defaults41, {
   fontVariant,
   ariaLabel,
   ariaDescription,
-  label = defaults41.label,
+  label = defaults43.label,
   labelAnchor,
+  labelArrow = defaults43.labelArrow,
   labelOffset
 }) {
   return {
@@ -24450,6 +25176,7 @@ function axisOptions(anchor, defaults41, {
     ariaDescription,
     label,
     labelAnchor,
+    labelArrow,
     labelOffset
   };
 }
@@ -24601,11 +25328,11 @@ function bin2(outputs = { fill: "count" }, options = {}) {
 function maybeDenseInterval(bin5, k3, options = {}) {
   return options?.interval == null ? options : bin5({ [k3]: options?.reduce === void 0 ? reduceFirst : options.reduce, filter: null }, options);
 }
-function maybeDenseIntervalX(options) {
-  return maybeDenseInterval(binX, "y", options);
+function maybeDenseIntervalX(options = {}) {
+  return maybeDenseInterval(binX, "y", withTip(options, "x"));
 }
-function maybeDenseIntervalY(options) {
-  return maybeDenseInterval(binY, "x", options);
+function maybeDenseIntervalY(options = {}) {
+  return maybeDenseInterval(binY, "x", withTip(options, "y"));
 }
 function binn(bx, by, gx, gy, {
   data: reduceData = reduceIdentity,
@@ -24660,8 +25387,8 @@ function binn(bx, by, gx, gy, {
     ..."z" in inputs && { z: GZ || z },
     ..."fill" in inputs && { fill: GF || fill },
     ..."stroke" in inputs && { stroke: GS || stroke },
-    ...basic(options, (data, facets) => {
-      const K3 = valueof(data, k3);
+    ...basic(options, (data, facets, plotOptions) => {
+      const K3 = maybeApplyInterval(valueof(data, k3), plotOptions?.[gk]);
       const Z = valueof(data, z);
       const F = valueof(data, vfill);
       const S = valueof(data, vstroke);
@@ -24989,64 +25716,64 @@ var reduceY2 = {
 
 // node_modules/@observablehq/plot/src/transforms/identity.js
 function maybeIdentityX(options = {}) {
-  const { x: x7, x1: x13, x2: x22 } = options;
-  return x13 === void 0 && x22 === void 0 && x7 === void 0 ? { ...options, x: identity6 } : options;
+  return hasX(options) ? options : { ...options, x: identity6 };
 }
 function maybeIdentityY(options = {}) {
-  const { y: y7, y1: y13, y2: y22 } = options;
-  return y13 === void 0 && y22 === void 0 && y7 === void 0 ? { ...options, y: identity6 } : options;
+  return hasY(options) ? options : { ...options, y: identity6 };
 }
 
 // node_modules/@observablehq/plot/src/transforms/stack.js
-function stackX(stack3 = {}, options = {}) {
+function stackX(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions2(stack3);
+    [stackOptions, options] = mergeOptions2(stackOptions);
   const { y1: y13, y: y7 = y13, x: x7, ...rest } = options;
-  const [transform3, Y4, x13, x22] = stackAlias(y7, x7, "x", stack3, rest);
+  const [transform3, Y4, x13, x22] = stack(y7, x7, "y", "x", stackOptions, rest);
   return { ...transform3, y1: y13, y: Y4, x1: x13, x2: x22, x: mid(x13, x22) };
 }
-function stackX1(stack3 = {}, options = {}) {
+function stackX1(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions2(stack3);
+    [stackOptions, options] = mergeOptions2(stackOptions);
   const { y1: y13, y: y7 = y13, x: x7 } = options;
-  const [transform3, Y4, X4] = stackAlias(y7, x7, "x", stack3, options);
+  const [transform3, Y4, X4] = stack(y7, x7, "y", "x", stackOptions, options);
   return { ...transform3, y1: y13, y: Y4, x: X4 };
 }
-function stackX2(stack3 = {}, options = {}) {
+function stackX2(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions2(stack3);
+    [stackOptions, options] = mergeOptions2(stackOptions);
   const { y1: y13, y: y7 = y13, x: x7 } = options;
-  const [transform3, Y4, , X4] = stackAlias(y7, x7, "x", stack3, options);
+  const [transform3, Y4, , X4] = stack(y7, x7, "y", "x", stackOptions, options);
   return { ...transform3, y1: y13, y: Y4, x: X4 };
 }
-function stackY(stack3 = {}, options = {}) {
+function stackY(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions2(stack3);
+    [stackOptions, options] = mergeOptions2(stackOptions);
   const { x1: x13, x: x7 = x13, y: y7, ...rest } = options;
-  const [transform3, X4, y13, y22] = stackAlias(x7, y7, "y", stack3, rest);
+  const [transform3, X4, y13, y22] = stack(x7, y7, "x", "y", stackOptions, rest);
   return { ...transform3, x1: x13, x: X4, y1: y13, y2: y22, y: mid(y13, y22) };
 }
-function stackY1(stack3 = {}, options = {}) {
+function stackY1(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions2(stack3);
+    [stackOptions, options] = mergeOptions2(stackOptions);
   const { x1: x13, x: x7 = x13, y: y7 } = options;
-  const [transform3, X4, Y4] = stackAlias(x7, y7, "y", stack3, options);
+  const [transform3, X4, Y4] = stack(x7, y7, "x", "y", stackOptions, options);
   return { ...transform3, x1: x13, x: X4, y: Y4 };
 }
-function stackY2(stack3 = {}, options = {}) {
+function stackY2(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions2(stack3);
+    [stackOptions, options] = mergeOptions2(stackOptions);
   const { x1: x13, x: x7 = x13, y: y7 } = options;
-  const [transform3, X4, , Y4] = stackAlias(x7, y7, "y", stack3, options);
+  const [transform3, X4, , Y4] = stack(x7, y7, "x", "y", stackOptions, options);
   return { ...transform3, x1: x13, x: X4, y: Y4 };
 }
 function maybeStackX({ x: x7, x1: x13, x2: x22, ...options } = {}) {
+  options = withTip(options, "y");
   if (x13 === void 0 && x22 === void 0)
     return stackX({ x: x7, ...options });
   [x13, x22] = maybeZero(x7, x13, x22);
   return { ...options, x1: x13, x2: x22 };
 }
 function maybeStackY({ y: y7, y1: y13, y2: y22, ...options } = {}) {
+  options = withTip(options, "x");
   if (y13 === void 0 && y22 === void 0)
     return stackY({ y: y7, ...options });
   [y13, y22] = maybeZero(y7, y13, y22);
@@ -25056,16 +25783,18 @@ function mergeOptions2(options) {
   const { offset: offset3, order, reverse: reverse5, ...rest } = options;
   return [{ offset: offset3, order, reverse: reverse5 }, rest];
 }
-function stack(x7, y7 = one2, ky3, { offset: offset3, order, reverse: reverse5 }, options) {
+var lengthy = { length: true };
+function stack(x7, y7 = one2, kx3, ky3, { offset: offset3, order, reverse: reverse5 }, options) {
   const z = maybeZ(options);
   const [X4, setX] = maybeColumn(x7);
   const [Y15, setY1] = column(y7);
   const [Y25, setY2] = column(y7);
+  Y15.hint = Y25.hint = lengthy;
   offset3 = maybeOffset(offset3);
-  order = maybeOrder(order, offset3, ky3);
+  order = maybeOrder2(order, offset3, ky3);
   return [
-    basic(options, (data, facets) => {
-      const X5 = x7 == null ? void 0 : setX(valueof(data, x7));
+    basic(options, (data, facets, plotOptions) => {
+      const X5 = x7 == null ? void 0 : setX(maybeApplyInterval(valueof(data, x7), plotOptions?.[kx3]));
       const Y4 = valueof(data, y7, Float64Array);
       const Z = valueof(data, z);
       const O = order && order(data, X5, Y4, Z);
@@ -25078,7 +25807,8 @@ function stack(x7, y7 = one2, ky3, { offset: offset3, order, reverse: reverse5 }
         if (O)
           applyOrder(stacks, O);
         for (const stack3 of stacks) {
-          let yn = 0, yp = 0;
+          let yn = 0;
+          let yp = 0;
           if (reverse5)
             stack3.reverse();
           for (const i of stack3) {
@@ -25102,7 +25832,6 @@ function stack(x7, y7 = one2, ky3, { offset: offset3, order, reverse: reverse5 }
     Y25
   ];
 }
-var stackAlias = stack;
 function maybeOffset(offset3) {
   if (offset3 == null)
     return;
@@ -25208,7 +25937,7 @@ function offsetCenterFacets(facetstacks, Y15, Y25) {
     }
   }
 }
-function maybeOrder(order, offset3, ky3) {
+function maybeOrder2(order, offset3, ky3) {
   if (order === void 0 && offset3 === offsetWiggle)
     return orderInsideOut;
   if (order == null)
@@ -25305,7 +26034,7 @@ function applyOrder(stacks, O) {
 }
 
 // node_modules/@observablehq/plot/src/marks/area.js
-var defaults5 = {
+var defaults6 = {
   ariaLabel: "area",
   strokeWidth: 1,
   strokeLinecap: "round",
@@ -25325,7 +26054,7 @@ var Area = class extends Mark {
         z: { value: maybeZ(options), optional: true }
       },
       options,
-      defaults5
+      defaults6
     );
     this.z = z;
     this.curve = maybeCurve(curve, tension);
@@ -25357,81 +26086,8 @@ function areaY(data, options) {
   return new Area(data, maybeStackY(maybeIdentityY({ ...rest, x1: x7, x2: void 0 })));
 }
 
-// node_modules/@observablehq/plot/src/marker.js
-function markers(mark, { marker, markerStart = marker, markerMid = marker, markerEnd = marker } = {}) {
-  mark.markerStart = maybeMarker(markerStart);
-  mark.markerMid = maybeMarker(markerMid);
-  mark.markerEnd = maybeMarker(markerEnd);
-}
-function maybeMarker(marker) {
-  if (marker == null || marker === false)
-    return null;
-  if (marker === true)
-    return markerCircleFill;
-  if (typeof marker === "function")
-    return marker;
-  switch (`${marker}`.toLowerCase()) {
-    case "none":
-      return null;
-    case "arrow":
-      return markerArrow;
-    case "dot":
-      return markerDot;
-    case "circle":
-    case "circle-fill":
-      return markerCircleFill;
-    case "circle-stroke":
-      return markerCircleStroke;
-  }
-  throw new Error(`invalid marker: ${marker}`);
-}
-function markerArrow(color5, context) {
-  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("orient", "auto").attr("fill", "none").attr("stroke", color5).attr("stroke-width", 1.5).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").call((marker) => marker.append("path").attr("d", "M-1.5,-3l3,3l-3,3")).node();
-}
-function markerDot(color5, context) {
-  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "none").call((marker) => marker.append("circle").attr("r", 2.5)).node();
-}
-function markerCircleFill(color5, context) {
-  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "white").attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
-}
-function markerCircleStroke(color5, context) {
-  return create2("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", "white").attr("stroke", color5).attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
-}
-var nextMarkerId = 0;
-function applyMarkers(path3, mark, { stroke: S }, context) {
-  return applyMarkersColor(path3, mark, S && ((i) => S[i]), context);
-}
-function applyGroupedMarkers(path3, mark, { stroke: S }, context) {
-  return applyMarkersColor(path3, mark, S && (([i]) => S[i]), context);
-}
-function applyMarkersColor(path3, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, context) {
-  const iriByMarkerColor = /* @__PURE__ */ new Map();
-  function applyMarker(marker) {
-    return function(i) {
-      const color5 = strokeof(i);
-      let iriByColor = iriByMarkerColor.get(marker);
-      if (!iriByColor)
-        iriByMarkerColor.set(marker, iriByColor = /* @__PURE__ */ new Map());
-      let iri = iriByColor.get(color5);
-      if (!iri) {
-        const node = this.parentNode.insertBefore(marker(color5, context), this);
-        const id3 = `plot-marker-${++nextMarkerId}`;
-        node.setAttribute("id", id3);
-        iriByColor.set(color5, iri = `url(#${id3})`);
-      }
-      return iri;
-    };
-  }
-  if (markerStart)
-    path3.attr("marker-start", applyMarker(markerStart));
-  if (markerMid)
-    path3.attr("marker-mid", applyMarker(markerMid));
-  if (markerEnd)
-    path3.attr("marker-end", applyMarker(markerEnd));
-}
-
 // node_modules/@observablehq/plot/src/marks/link.js
-var defaults6 = {
+var defaults7 = {
   ariaLabel: "link",
   fill: "none",
   stroke: "currentColor",
@@ -25449,7 +26105,7 @@ var Link = class extends Mark {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults6
+      defaults7
     );
     this.curve = maybeCurveAuto(curve, tension);
     markers(this, options);
@@ -25492,11 +26148,10 @@ function sphereLink(projection3, X15, Y15, X25, Y25) {
     ]
   });
 }
-function link3(data, options = {}) {
-  let { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...remainingOptions } = options;
+function link3(data, { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...options } = {}) {
   [x13, x22] = maybeSameValue(x7, x13, x22);
   [y13, y22] = maybeSameValue(y7, y13, y22);
-  return new Link(data, { ...remainingOptions, x1: x13, x2: x22, y1: y13, y2: y22 });
+  return new Link(data, { ...options, x1: x13, x2: x22, y1: y13, y2: y22 });
 }
 function maybeSameValue(x7, x13, x22) {
   if (x7 === void 0) {
@@ -25516,7 +26171,7 @@ function maybeSameValue(x7, x13, x22) {
 }
 
 // node_modules/@observablehq/plot/src/marks/arrow.js
-var defaults7 = {
+var defaults8 = {
   ariaLabel: "arrow",
   fill: "none",
   stroke: "currentColor",
@@ -25548,7 +26203,7 @@ var Arrow = class extends Mark {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults7
+      defaults8
     );
     this.bend = bend === true ? 22.5 : Math.max(-90, Math.min(90, bend));
     this.headAngle = +headAngle;
@@ -25615,17 +26270,16 @@ function circleCircleIntersect([ax, ay, ar], [bx, by, br], sign5) {
   const y7 = sign5 * Math.sqrt(ar * ar - x7 * x7);
   return [ax + (dx * x7 + dy * y7) / d, ay + (dy * x7 - dx * y7) / d];
 }
-function arrow(data, options = {}) {
-  let { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...remainingOptions } = options;
+function arrow(data, { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...options } = {}) {
   [x13, x22] = maybeSameValue(x7, x13, x22);
   [y13, y22] = maybeSameValue(y7, y13, y22);
-  return new Arrow(data, { ...remainingOptions, x1: x13, x2: x22, y1: y13, y2: y22 });
+  return new Arrow(data, { ...options, x1: x13, x2: x22, y1: y13, y2: y22 });
 }
 
 // node_modules/@observablehq/plot/src/marks/bar.js
 var AbstractBar = class extends Mark {
-  constructor(data, channels, options = {}, defaults41) {
-    super(data, channels, options, defaults41);
+  constructor(data, channels, options = {}, defaults43) {
+    super(data, channels, options, defaults43);
     const { inset = 0, insetTop = inset, insetRight = inset, insetBottom = inset, insetLeft = inset, rx, ry } = options;
     this.insetTop = number5(insetTop);
     this.insetRight = number5(insetRight);
@@ -25659,7 +26313,7 @@ var AbstractBar = class extends Mark {
     return Math.max(0, bandwidth - insetTop - insetBottom);
   }
 };
-var defaults8 = {
+var defaults9 = {
   ariaLabel: "bar"
 };
 var BarX = class extends AbstractBar {
@@ -25673,7 +26327,7 @@ var BarX = class extends AbstractBar {
         y: { value: y7, scale: "y", type: "band", optional: true }
       },
       options,
-      defaults8
+      defaults9
     );
   }
   _transform(selection3, mark, { x: x7 }) {
@@ -25699,7 +26353,7 @@ var BarY = class extends AbstractBar {
         x: { value: x7, scale: "x", type: "band", optional: true }
       },
       options,
-      defaults8
+      defaults9
     );
   }
   _transform(selection3, mark, { y: y7 }) {
@@ -25714,15 +26368,19 @@ var BarY = class extends AbstractBar {
     return isCollapsed(y7) ? height - marginTop - marginBottom - insetTop - insetBottom : (i) => Math.max(0, Math.abs(Y25[i] - Y15[i]) - insetTop - insetBottom);
   }
 };
-function barX(data, options = { y: indexOf, x2: identity6 }) {
+function barX(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, y: indexOf, x2: identity6 };
   return new BarX(data, maybeStackX(maybeIntervalX(maybeIdentityX(options))));
 }
-function barY(data, options = { x: indexOf, y2: identity6 }) {
+function barY(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, x: indexOf, y2: identity6 };
   return new BarY(data, maybeStackY(maybeIntervalY(maybeIdentityY(options))));
 }
 
 // node_modules/@observablehq/plot/src/marks/cell.js
-var defaults9 = {
+var defaults10 = {
   ariaLabel: "cell"
 };
 var Cell = class extends AbstractBar {
@@ -25734,40 +26392,37 @@ var Cell = class extends AbstractBar {
         y: { value: y7, scale: "y", type: "band", optional: true }
       },
       options,
-      defaults9
+      defaults10
     );
   }
   _transform(selection3, mark) {
     selection3.call(applyTransform, mark, {}, 0, 0);
   }
 };
-function cell(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function cell(data, { x: x7, y: y7, ...options } = {}) {
   [x7, y7] = maybeTuple(x7, y7);
-  return new Cell(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Cell(data, { ...options, x: x7, y: y7 });
 }
-function cellX(data, options = {}) {
-  let { x: x7 = indexOf, fill, stroke, ...remainingOptions } = options;
+function cellX(data, { x: x7 = indexOf, fill, stroke, ...options } = {}) {
   if (fill === void 0 && maybeColorChannel(stroke)[0] === void 0)
     fill = identity6;
-  return new Cell(data, { ...remainingOptions, x: x7, fill, stroke });
+  return new Cell(data, { ...options, x: x7, fill, stroke });
 }
-function cellY(data, options = {}) {
-  let { y: y7 = indexOf, fill, stroke, ...remainingOptions } = options;
+function cellY(data, { y: y7 = indexOf, fill, stroke, ...options } = {}) {
   if (fill === void 0 && maybeColorChannel(stroke)[0] === void 0)
     fill = identity6;
-  return new Cell(data, { ...remainingOptions, y: y7, fill, stroke });
+  return new Cell(data, { ...options, y: y7, fill, stroke });
 }
 
 // node_modules/@observablehq/plot/src/marks/dot.js
-var defaults10 = {
+var defaults11 = {
   ariaLabel: "dot",
   fill: "none",
   stroke: "currentColor",
   strokeWidth: 1.5
 };
 function withDefaultSort(options) {
-  return options.sort === void 0 && options.reverse === void 0 ? sort2({ channel: "r", order: "descending" }, options) : options;
+  return options.sort === void 0 && options.reverse === void 0 ? sort2({ channel: "-r" }, options) : options;
 }
 var Dot = class extends Mark {
   constructor(data, options = {}) {
@@ -25785,7 +26440,7 @@ var Dot = class extends Mark {
         symbol: { value: vsymbol, scale: "auto", optional: true }
       },
       withDefaultSort(options),
-      defaults10
+      defaults11
     );
     this.r = cr;
     this.rotate = crotate;
@@ -25806,7 +26461,7 @@ var Dot = class extends Mark {
     const { x: X4, y: Y4, r: R, rotate: A6, symbol: S } = channels;
     const { r, rotate, symbol: symbol3 } = this;
     const [cx, cy] = applyFrameAnchor(this, dimensions);
-    const circle3 = this.symbol === circle_default3;
+    const circle3 = symbol3 === circle_default3;
     const size = R ? void 0 : r * r * Math.PI;
     if (negative(r))
       index5 = [];
@@ -25843,19 +26498,16 @@ var Dot = class extends Mark {
     ).node();
   }
 };
-function dot(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function dot(data, { x: x7, y: y7, ...options } = {}) {
   if (options.frameAnchor === void 0)
     [x7, y7] = maybeTuple(x7, y7);
-  return new Dot(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Dot(data, { ...options, x: x7, y: y7 });
 }
-function dotX(data, options = {}) {
-  const { x: x7 = identity6, ...remainingOptions } = options;
-  return new Dot(data, maybeIntervalMidY({ ...remainingOptions, x: x7 }));
+function dotX(data, { x: x7 = identity6, ...options } = {}) {
+  return new Dot(data, maybeIntervalMidY({ ...options, x: x7 }));
 }
-function dotY(data, options = {}) {
-  const { y: y7 = identity6, ...remainingOptions } = options;
-  return new Dot(data, maybeIntervalMidX({ ...remainingOptions, y: y7 }));
+function dotY(data, { y: y7 = identity6, ...options } = {}) {
+  return new Dot(data, maybeIntervalMidX({ ...options, y: y7 }));
 }
 function circle(data, options) {
   return dot(data, { ...options, symbol: "circle" });
@@ -25865,7 +26517,7 @@ function hexagon(data, options) {
 }
 
 // node_modules/@observablehq/plot/src/marks/line.js
-var defaults11 = {
+var defaults12 = {
   ariaLabel: "line",
   fill: "none",
   stroke: "currentColor",
@@ -25885,7 +26537,7 @@ var Line = class extends Mark {
         z: { value: maybeZ(options), optional: true }
       },
       options,
-      defaults11
+      defaults12
     );
     this.z = z;
     this.curve = maybeCurveAuto(curve, tension);
@@ -25928,22 +26580,19 @@ function sphereLine(projection3, X4, Y4) {
     return path3({ type: "MultiLineString", coordinates: lines });
   };
 }
-function line(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function line(data, { x: x7, y: y7, ...options } = {}) {
   [x7, y7] = maybeTuple(x7, y7);
-  return new Line(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Line(data, { ...options, x: x7, y: y7 });
 }
-function lineX(data, options = {}) {
-  const { x: x7 = identity6, y: y7 = indexOf, ...remainingOptions } = options;
-  return new Line(data, maybeDenseIntervalY({ ...remainingOptions, x: x7, y: y7 }));
+function lineX(data, { x: x7 = identity6, y: y7 = indexOf, ...options } = {}) {
+  return new Line(data, maybeDenseIntervalY({ ...options, x: x7, y: y7 }));
 }
-function lineY(data, options = {}) {
-  const { x: x7 = indexOf, y: y7 = identity6, ...remainingOptions } = options;
-  return new Line(data, maybeDenseIntervalX({ ...remainingOptions, x: x7, y: y7 }));
+function lineY(data, { x: x7 = indexOf, y: y7 = identity6, ...options } = {}) {
+  return new Line(data, maybeDenseIntervalX({ ...options, x: x7, y: y7 }));
 }
 
 // node_modules/@observablehq/plot/src/marks/rect.js
-var defaults12 = {
+var defaults13 = {
   ariaLabel: "rect"
 };
 var Rect = class extends Mark {
@@ -25970,7 +26619,7 @@ var Rect = class extends Mark {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults12
+      defaults13
     );
     this.insetTop = number5(insetTop);
     this.insetRight = number5(insetRight);
@@ -26005,19 +26654,19 @@ var Rect = class extends Mark {
 function rect(data, options) {
   return new Rect(data, maybeTrivialIntervalX(maybeTrivialIntervalY(options)));
 }
-function rectX(data, options = { y: indexOf, interval: 1, x2: identity6 }) {
+function rectX(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, y: indexOf, x2: identity6, interval: 1 };
   return new Rect(data, maybeStackX(maybeTrivialIntervalY(maybeIdentityX(options))));
 }
-function rectY(data, options = { x: indexOf, interval: 1, y2: identity6 }) {
+function rectY(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, x: indexOf, y2: identity6, interval: 1 };
   return new Rect(data, maybeStackY(maybeTrivialIntervalX(maybeIdentityY(options))));
 }
 
 // node_modules/@observablehq/plot/src/marks/auto.js
 function autoSpec(data, options) {
-  const { x: x7, y: y7, fx, fy, color: color5, size, mark } = autoImpl(data, options);
-  return { x: x7, y: y7, fx, fy, color: color5, size, mark };
-}
-function autoImpl(data, options) {
   options = normalizeOptions(options);
   const { x: x7, y: y7, color: color5, size } = options;
   const X4 = materializeValue(data, x7);
@@ -26063,13 +26712,13 @@ function autoImpl(data, options) {
       colorMode = "stroke";
       break;
     case "line":
-      markImpl = X4 && Y4 ? line : X4 ? lineX : lineY;
+      markImpl = X4 && Y4 || xReduce != null || yReduce != null ? yZero || yReduce != null || X4 && isMonotonic(X4) ? lineY : xZero || xReduce != null || Y4 && isMonotonic(Y4) ? lineX : line : X4 ? lineX : lineY;
       colorMode = "stroke";
       if (isHighCardinality(C4))
         Z = null;
       break;
     case "area":
-      markImpl = yZero ? areaY : xZero || Y4 && isMonotonic(Y4) ? areaX : areaY;
+      markImpl = !(yZero || yReduce != null) && (xZero || xReduce != null || Y4 && isMonotonic(Y4)) ? areaX : areaY;
       colorMode = "fill";
       if (isHighCardinality(C4))
         Z = null;
@@ -26079,13 +26728,13 @@ function autoImpl(data, options) {
       colorMode = "stroke";
       break;
     case "bar":
-      markImpl = yZero ? isOrdinalReduced(xReduce, X4) ? barY : rectY : xZero ? isOrdinalReduced(yReduce, Y4) ? barX : rectX : isOrdinalReduced(xReduce, X4) && isOrdinalReduced(yReduce, Y4) ? cell : isOrdinalReduced(xReduce, X4) ? barY : isOrdinalReduced(yReduce, Y4) ? barX : rectY;
+      markImpl = yZero ? isOrdinalReduced(xReduce, X4) ? barY : rectY : xZero ? isOrdinalReduced(yReduce, Y4) ? barX : rectX : isOrdinalReduced(xReduce, X4) && isOrdinalReduced(yReduce, Y4) ? cell : isOrdinalReduced(xReduce, X4) ? barY : isOrdinalReduced(yReduce, Y4) ? barX : xReduce != null ? rectX : yReduce != null ? rectY : rect;
       colorMode = "fill";
       break;
     default:
       throw new Error(`invalid mark: ${mark}`);
   }
-  let markOptions = {
+  let markOptions3 = {
     fx,
     fy,
     x: X4 ?? void 0,
@@ -26094,8 +26743,9 @@ function autoImpl(data, options) {
     // treat null y as undefined for implicit stack
     [colorMode]: C4 ?? colorColor,
     z: Z,
-    r: S ?? void 0
+    r: S ?? void 0,
     // treat null size as undefined for default constant radius
+    tip: true
   };
   let transformImpl;
   let transformOptions = { [colorMode]: colorReduce ?? void 0, r: sizeReduce ?? void 0 };
@@ -26117,9 +26767,9 @@ function autoImpl(data, options) {
     }
   }
   if (transformImpl === bin2 || transformImpl === binX)
-    markOptions.x = { value: X4, ...xOptions };
+    markOptions3.x = { value: X4, ...xOptions };
   if (transformImpl === bin2 || transformImpl === binY)
-    markOptions.y = { value: Y4, ...yOptions };
+    markOptions3.y = { value: Y4, ...yOptions };
   if (xZero === void 0)
     xZero = X4 && !(transformImpl === bin2 || transformImpl === binX) && (markImpl === barX || markImpl === areaX || markImpl === rectX || markImpl === ruleY);
   if (yZero === void 0)
@@ -26149,28 +26799,29 @@ function autoImpl(data, options) {
       reduce: sizeReduce ?? null
     },
     mark,
-    markImpl,
-    markOptions,
-    transformImpl,
+    markImpl: implNames[markImpl],
+    markOptions: markOptions3,
+    transformImpl: implNames[transformImpl],
     transformOptions,
     colorMode
   };
 }
 function auto(data, options) {
+  const spec = autoSpec(data, options);
   const {
     fx,
     fy,
     x: { zero: xZero },
     y: { zero: yZero },
-    markImpl,
-    markOptions,
-    transformImpl,
+    markOptions: markOptions3,
     transformOptions,
     colorMode
-  } = autoImpl(data, options);
+  } = spec;
+  const markImpl = impls[spec.markImpl];
+  const transformImpl = impls[spec.transformImpl];
   const frames = fx != null || fy != null ? frame2({ strokeOpacity: 0.1 }) : null;
   const rules = [xZero ? ruleX([0]) : null, yZero ? ruleY([0]) : null];
-  const mark = markImpl(data, transformImpl ? transformImpl(transformOptions, markOptions) : markOptions);
+  const mark = markImpl(data, transformImpl ? transformImpl(transformOptions, markOptions3) : markOptions3);
   return colorMode === "stroke" ? marks(frames, rules, mark) : marks(frames, mark, rules);
 }
 function isMonotonic(values3) {
@@ -26261,19 +26912,56 @@ function isReducer(reduce3) {
 function isHighCardinality(value) {
   return value ? new InternSet(value).size > value.length >> 1 : false;
 }
+var impls = {
+  dot,
+  line,
+  lineX,
+  lineY,
+  areaX,
+  areaY,
+  ruleX,
+  ruleY,
+  barX,
+  barY,
+  rect,
+  rectX,
+  rectY,
+  cell,
+  bin: bin2,
+  binX,
+  binY,
+  group: group2,
+  groupX,
+  groupY
+};
+var implNames = Object.fromEntries(Object.entries(impls).map(([name, impl]) => [impl, name]));
 
 // node_modules/@observablehq/plot/src/transforms/map.js
-function mapX(map11, options = {}) {
-  return mapAlias(
-    Object.fromEntries(["x", "x1", "x2"].filter((key) => options[key] != null).map((key) => [key, map11])),
-    options
-  );
+function mapX(mapper, options = {}) {
+  let { x: x7, x1: x13, x2: x22 } = options;
+  if (x7 === void 0 && x13 === void 0 && x22 === void 0)
+    options = { ...options, x: x7 = identity6 };
+  const outputs = {};
+  if (x7 != null)
+    outputs.x = mapper;
+  if (x13 != null)
+    outputs.x1 = mapper;
+  if (x22 != null)
+    outputs.x2 = mapper;
+  return map5(outputs, options);
 }
-function mapY(map11, options = {}) {
-  return mapAlias(
-    Object.fromEntries(["y", "y1", "y2"].filter((key) => options[key] != null).map((key) => [key, map11])),
-    options
-  );
+function mapY(mapper, options = {}) {
+  let { y: y7, y1: y13, y2: y22 } = options;
+  if (y7 === void 0 && y13 === void 0 && y22 === void 0)
+    options = { ...options, y: y7 = identity6 };
+  const outputs = {};
+  if (y7 != null)
+    outputs.y = mapper;
+  if (y13 != null)
+    outputs.y1 = mapper;
+  if (y22 != null)
+    outputs.y2 = mapper;
+  return map5(outputs, options);
 }
 function map5(outputs = {}, options = {}) {
   const z = maybeZ(options);
@@ -26299,7 +26987,6 @@ function map5(outputs = {}, options = {}) {
     ...Object.fromEntries(channels.map(({ key, output }) => [key, output]))
   };
 }
-var mapAlias = map5;
 function maybeMap(map11) {
   if (map11 == null)
     throw new Error("missing map");
@@ -26308,14 +26995,14 @@ function maybeMap(map11) {
   if (typeof map11.map === "function" && isObject(map11))
     return mapMap(map11);
   if (typeof map11 === "function")
-    return mapFunction(map11);
+    return mapFunction(taker(map11));
   switch (`${map11}`.toLowerCase()) {
     case "cumsum":
       return mapCumsum;
     case "rank":
-      return mapFunction(rank);
+      return mapFunction((I, V) => rank(I, (i) => V[i]));
     case "quantile":
-      return mapFunction(rankQuantile);
+      return mapFunction((I, V) => rankQuantile(I, (i) => V[i]));
   }
   throw new Error(`invalid map: ${map11}`);
 }
@@ -26323,14 +27010,14 @@ function mapMap(map11) {
   console.warn("deprecated map interface; implement mapIndex instead.");
   return { mapIndex: map11.map.bind(map11) };
 }
-function rankQuantile(V) {
-  const n = count(V) - 1;
-  return rank(V).map((r) => r / n);
+function rankQuantile(I, f) {
+  const n = count(I, f) - 1;
+  return rank(I, f).map((r) => r / n);
 }
 function mapFunction(f) {
   return {
     mapIndex(I, S, T) {
-      const M3 = f(take(S, I));
+      const M3 = f(I, S);
       if (M3.length !== I.length)
         throw new Error("map function returned a mismatched length");
       for (let i = 0, n = I.length; i < n; ++i)
@@ -26347,18 +27034,19 @@ var mapCumsum = {
 };
 
 // node_modules/@observablehq/plot/src/marks/tick.js
-var defaults13 = {
+var defaults14 = {
   ariaLabel: "tick",
   fill: null,
   stroke: "currentColor"
 };
 var AbstractTick = class extends Mark {
   constructor(data, channels, options) {
-    super(data, channels, options, defaults13);
+    super(data, channels, options, defaults14);
+    markers(this, options);
   }
   render(index5, scales, channels, dimensions, context) {
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(this._transform, this, scales).call(
-      (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles, this).attr("x1", this._x1(scales, channels, dimensions)).attr("x2", this._x2(scales, channels, dimensions)).attr("y1", this._y1(scales, channels, dimensions)).attr("y2", this._y2(scales, channels, dimensions)).call(applyChannelStyles, this, channels)
+      (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles, this).attr("x1", this._x1(scales, channels, dimensions)).attr("x2", this._x2(scales, channels, dimensions)).attr("y1", this._y1(scales, channels, dimensions)).attr("y2", this._y2(scales, channels, dimensions)).call(applyChannelStyles, this, channels).call(applyMarkers, this, channels, context)
     ).node();
   }
 };
@@ -26426,54 +27114,50 @@ var TickY = class extends AbstractTick {
     return (i) => Y4[i];
   }
 };
-function tickX(data, options = {}) {
-  const { x: x7 = identity6, ...remainingOptions } = options;
-  return new TickX(data, { ...remainingOptions, x: x7 });
+function tickX(data, { x: x7 = identity6, ...options } = {}) {
+  return new TickX(data, { ...options, x: x7 });
 }
-function tickY(data, options = {}) {
-  const { y: y7 = identity6, ...remainingOptions } = options;
-  return new TickY(data, { ...remainingOptions, y: y7 });
+function tickY(data, { y: y7 = identity6, ...options } = {}) {
+  return new TickY(data, { ...options, y: y7 });
 }
 
 // node_modules/@observablehq/plot/src/marks/box.js
-function boxX(data, options = {}) {
-  const {
-    x: x7 = identity6,
-    y: y7 = null,
-    fill = "#ccc",
-    fillOpacity,
-    stroke = "currentColor",
-    strokeOpacity,
-    strokeWidth = 2,
-    sort: sort5,
-    ...remainingOptions
-  } = options;
+function boxX(data, {
+  x: x7 = identity6,
+  y: y7 = null,
+  fill = "#ccc",
+  fillOpacity,
+  stroke = "currentColor",
+  strokeOpacity,
+  strokeWidth = 2,
+  sort: sort5,
+  ...options
+} = {}) {
   const group5 = y7 != null ? groupY : groupZ;
   return marks(
-    ruleY(data, group5({ x1: loqr1, x2: hiqr2 }, { x: x7, y: y7, stroke, strokeOpacity, ...remainingOptions })),
-    barX(data, group5({ x1: "p25", x2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...remainingOptions })),
-    tickX(data, group5({ x: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...remainingOptions })),
-    dot(data, map5({ x: oqr }, { x: x7, y: y7, z: y7, stroke, strokeOpacity, ...remainingOptions }))
+    ruleY(data, group5({ x1: loqr1, x2: hiqr2 }, { x: x7, y: y7, stroke, strokeOpacity, ...options })),
+    barX(data, group5({ x1: "p25", x2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...options })),
+    tickX(data, group5({ x: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...options })),
+    dot(data, map5({ x: oqr }, { x: x7, y: y7, z: y7, stroke, strokeOpacity, ...options }))
   );
 }
-function boxY(data, options = {}) {
-  const {
-    y: y7 = identity6,
-    x: x7 = null,
-    fill = "#ccc",
-    fillOpacity,
-    stroke = "currentColor",
-    strokeOpacity,
-    strokeWidth = 2,
-    sort: sort5,
-    ...remainingOptions
-  } = options;
+function boxY(data, {
+  y: y7 = identity6,
+  x: x7 = null,
+  fill = "#ccc",
+  fillOpacity,
+  stroke = "currentColor",
+  strokeOpacity,
+  strokeWidth = 2,
+  sort: sort5,
+  ...options
+} = {}) {
   const group5 = x7 != null ? groupX : groupZ;
   return marks(
-    ruleX(data, group5({ y1: loqr1, y2: hiqr2 }, { x: x7, y: y7, stroke, strokeOpacity, ...remainingOptions })),
-    barY(data, group5({ y1: "p25", y2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...remainingOptions })),
-    tickY(data, group5({ y: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...remainingOptions })),
-    dot(data, map5({ y: oqr }, { x: x7, y: y7, z: x7, stroke, strokeOpacity, ...remainingOptions }))
+    ruleX(data, group5({ y1: loqr1, y2: hiqr2 }, { x: x7, y: y7, stroke, strokeOpacity, ...options })),
+    barY(data, group5({ y1: "p25", y2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...options })),
+    tickY(data, group5({ y: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...options })),
+    dot(data, map5({ y: oqr }, { x: x7, y: y7, z: x7, stroke, strokeOpacity, ...options }))
   );
 }
 function oqr(values3) {
@@ -26497,7 +27181,7 @@ function quartile3(values3) {
 }
 
 // node_modules/@observablehq/plot/src/marks/raster.js
-var defaults14 = {
+var defaults15 = {
   ariaLabel: "raster",
   stroke: null,
   pixelSize: 1
@@ -26515,7 +27199,7 @@ function integer(input, name) {
   return x7;
 }
 var AbstractRaster = class extends Mark {
-  constructor(data, channels, options = {}, defaults41) {
+  constructor(data, channels, options = {}, defaults43) {
     let {
       width,
       height,
@@ -26525,7 +27209,7 @@ var AbstractRaster = class extends Mark {
       y1: y13 = y7 == null ? 0 : void 0,
       x2: x22 = x7 == null ? width : void 0,
       y2: y22 = y7 == null ? height : void 0,
-      pixelSize = defaults41.pixelSize,
+      pixelSize = defaults43.pixelSize,
       blur: blur4 = 0,
       interpolate
     } = options;
@@ -26563,7 +27247,7 @@ var AbstractRaster = class extends Mark {
         ...channels
       },
       options,
-      defaults41
+      defaults43
     );
     this.width = width;
     this.height = height;
@@ -26582,7 +27266,7 @@ var Raster = class extends AbstractRaster {
       if (maybeColorChannel(fill)[0] !== void 0)
         options = sampler("fill", options);
     }
-    super(data, void 0, options, defaults14);
+    super(data, void 0, options, defaults15);
     this.imageRendering = impliedString(imageRendering, "auto");
   }
   // Ignore the color scale, so the fill channel is returned unscaled.
@@ -26893,7 +27577,7 @@ function denseY(y13, y22, width, height) {
 }
 
 // node_modules/@observablehq/plot/src/marks/contour.js
-var defaults15 = {
+var defaults16 = {
   ariaLabel: "contour",
   fill: "none",
   stroke: "currentColor",
@@ -26902,7 +27586,7 @@ var defaults15 = {
 };
 var Contour = class extends AbstractRaster {
   constructor(data, { smooth = true, value, ...options } = {}) {
-    const channels = styles({}, options, defaults15);
+    const channels = styles({}, options, defaults16);
     if (value === void 0) {
       for (const key in channels) {
         if (channels[key].value != null) {
@@ -26933,7 +27617,7 @@ var Contour = class extends AbstractRaster {
       if (interpolate === void 0)
         options.interpolate = "nearest";
     }
-    super(data, { value: { value, optional: true } }, contourGeometry(options), defaults15);
+    super(data, { value: { value, optional: true } }, contourGeometry(options), defaults16);
     const contourChannels = { geometry: { value: identity6 } };
     for (const key in this.channels) {
       const channel = this.channels[key];
@@ -27039,6 +27723,99 @@ function finite3(x7) {
   return isFinite(x7) ? x7 : NaN;
 }
 
+// node_modules/@observablehq/plot/src/marks/crosshair.js
+function crosshair(data, options) {
+  return crosshairK(pointer, data, options);
+}
+function crosshairX(data, options = {}) {
+  return crosshairK(pointerX, data, options);
+}
+function crosshairY(data, options = {}) {
+  return crosshairK(pointerY, data, options);
+}
+function crosshairK(pointer3, data, options = {}) {
+  const { x: x7, y: y7, maxRadius } = options;
+  const p = pointer3({ px: x7, py: y7, maxRadius });
+  const M3 = [];
+  if (x7 != null)
+    M3.push(ruleX(data, ruleOptions("x", { ...p, inset: -6 }, options)));
+  if (y7 != null)
+    M3.push(ruleY(data, ruleOptions("y", { ...p, inset: -6 }, options)));
+  if (x7 != null)
+    M3.push(text(data, textOptions("x", { ...p, dy: 9, frameAnchor: "bottom", lineAnchor: "top" }, options)));
+  if (y7 != null)
+    M3.push(text(data, textOptions("y", { ...p, dx: -9, frameAnchor: "left", textAnchor: "end" }, options)));
+  for (const m5 of M3)
+    m5.ariaLabel = `crosshair ${m5.ariaLabel}`;
+  return marks(...M3);
+}
+function markOptions(k3, { channels: pointerChannels, ...pointerOptions }, { facet, facetAnchor, fx, fy, [k3]: p, channels, transform: transform3, initializer: initializer3 }) {
+  return {
+    ...pointerOptions,
+    facet,
+    facetAnchor,
+    fx,
+    fy,
+    [k3]: p,
+    channels: { ...pointerChannels, ...channels },
+    transform: transform3,
+    initializer: pxpy(k3, initializer3)
+  };
+}
+function pxpy(k3, i) {
+  if (i == null)
+    return i;
+  return function(data, facets, { x: x13, y: y13, px, py, ...c1 }, ...args) {
+    const { channels: { x: x7, y: y7, ...c11 } = {}, ...rest } = i.call(this, data, facets, { ...c1, x: px, y: py }, ...args);
+    return {
+      channels: {
+        ...c11,
+        ...x7 && { px: x7, ...k3 === "x" && { x: x7 } },
+        ...y7 && { py: y7, ...k3 === "y" && { y: y7 } }
+      },
+      ...rest
+    };
+  };
+}
+function ruleOptions(k3, pointerOptions, options) {
+  const {
+    color: color5 = "currentColor",
+    opacity: opacity3 = 0.2,
+    ruleStroke: stroke = color5,
+    ruleStrokeOpacity: strokeOpacity = opacity3,
+    ruleStrokeWidth: strokeWidth
+  } = options;
+  return {
+    ...markOptions(k3, pointerOptions, options),
+    stroke,
+    strokeOpacity,
+    strokeWidth
+  };
+}
+function textOptions(k3, pointerOptions, options) {
+  const {
+    color: color5 = "currentColor",
+    textFill: fill = color5,
+    textFillOpacity: fillOpacity,
+    textStroke: stroke = "white",
+    textStrokeOpacity: strokeOpacity,
+    textStrokeWidth: strokeWidth = 5
+  } = options;
+  return {
+    ...markOptions(k3, pointerOptions, textChannel(k3, options)),
+    fill,
+    fillOpacity,
+    stroke,
+    strokeOpacity,
+    strokeWidth
+  };
+}
+function textChannel(source, options) {
+  return initializer(options, (data, facets, channels) => {
+    return { channels: { text: { value: getSource(channels, source)?.value } } };
+  });
+}
+
 // node_modules/@observablehq/plot/src/marks/delaunay.js
 var delaunayLinkDefaults = {
   ariaLabel: "delaunay link",
@@ -27141,7 +27918,7 @@ var DelaunayLink = class extends Mark {
   }
 };
 var AbstractDelaunayMark = class extends Mark {
-  constructor(data, options = {}, defaults41, zof = ({ z }) => z) {
+  constructor(data, options = {}, defaults43, zof = ({ z }) => z) {
     const { x: x7, y: y7 } = options;
     super(
       data,
@@ -27151,7 +27928,7 @@ var AbstractDelaunayMark = class extends Mark {
         z: { value: zof(options), optional: true }
       },
       options,
-      defaults41
+      defaults43
     );
   }
   render(index5, scales, channels, dimensions, context) {
@@ -27252,7 +28029,7 @@ function voronoiMesh(data, options) {
 }
 
 // node_modules/@observablehq/plot/src/marks/density.js
-var defaults16 = {
+var defaults17 = {
   ariaLabel: "density",
   fill: "none",
   stroke: "currentColor",
@@ -27271,7 +28048,7 @@ var Density = class extends Mark {
         weight: { value: weight, optional: true }
       },
       densityInitializer({ ...options, fill, stroke }, fillDensity, strokeDensity),
-      defaults16
+      defaults17
     );
     if (fillDensity)
       this.fill = void 0;
@@ -27290,10 +28067,9 @@ var Density = class extends Mark {
     ).node();
   }
 };
-function density(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function density(data, { x: x7, y: y7, ...options } = {}) {
   [x7, y7] = maybeTuple(x7, y7);
-  return new Density(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Density(data, { ...options, x: x7, y: y7 });
 }
 var dropChannels = /* @__PURE__ */ new Set(["x", "y", "z", "weight"]);
 function densityInitializer(options, fillDensity, strokeDensity) {
@@ -27375,7 +28151,7 @@ function isDensity(value) {
 }
 
 // node_modules/@observablehq/plot/src/marks/geo.js
-var defaults17 = {
+var defaults18 = {
   ariaLabel: "geo",
   fill: "none",
   stroke: "currentColor",
@@ -27394,7 +28170,7 @@ var Geo = class extends Mark {
         r: { value: vr, scale: "r", filter: positive, optional: true }
       },
       withDefaultSort(options),
-      defaults17
+      defaults18
     );
     this.r = cr;
   }
@@ -27508,9 +28284,11 @@ function hexbin(outputs = { fill: "count" }, { binWidth, ...options } = {}) {
       }
       binFacets.push(binFacet);
     }
+    const sx = channels.x.scale;
+    const sy = channels.y.scale;
     const binChannels = {
-      x: { value: BX },
-      y: { value: BY },
+      x: { value: BX, source: scales[sx] ? { value: map4(BX, scales[sx].invert), scale: sx } : null },
+      y: { value: BY, source: scales[sy] ? { value: map4(BY, scales[sy].invert), scale: sy } : null },
       ...Z && { z: { value: GZ } },
       ...F && { fill: { value: GF, scale: "auto" } },
       ...S && { stroke: { value: GS, scale: "auto" } },
@@ -27518,7 +28296,12 @@ function hexbin(outputs = { fill: "count" }, { binWidth, ...options } = {}) {
       ...Object.fromEntries(
         outputs.map(({ name, output }) => [
           name,
-          { scale: "auto", radius: name === "r" ? binWidth / 2 : void 0, value: output.transform() }
+          {
+            scale: "auto",
+            label: output.label,
+            radius: name === "r" ? binWidth / 2 : void 0,
+            value: output.transform()
+          }
         ])
       )
     };
@@ -27551,7 +28334,7 @@ function hbin(I, X4, Y4, dx) {
 }
 
 // node_modules/@observablehq/plot/src/marks/hexgrid.js
-var defaults18 = {
+var defaults19 = {
   ariaLabel: "hexgrid",
   fill: "none",
   stroke: "currentColor",
@@ -27562,7 +28345,7 @@ function hexgrid(options) {
 }
 var Hexgrid = class extends Mark {
   constructor({ binWidth = 20, clip = true, ...options } = {}) {
-    super(void 0, void 0, { clip, ...options }, defaults18);
+    super(singleton, void 0, { clip, ...options }, defaults19);
     this.binWidth = number5(binWidth);
   }
   render(index5, scales, channels, dimensions, context) {
@@ -27575,7 +28358,7 @@ var Hexgrid = class extends Mark {
         d += `M${round(i * wx + (j & 1) * rx)},${round(j * wy)}${path3}`;
       }
     }
-    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, {}, offset + ox, offset + oy).call((g) => g.append("path").call(applyDirectStyles, this).attr("d", d)).node();
+    return create2("svg:g", context).datum(0).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, {}, offset + ox, offset + oy).call((g) => g.append("path").call(applyDirectStyles, this).call(applyChannelStyles, this, channels).attr("d", d)).node();
   }
 };
 function round(x7) {
@@ -27583,7 +28366,7 @@ function round(x7) {
 }
 
 // node_modules/@observablehq/plot/src/marks/image.js
-var defaults19 = {
+var defaults20 = {
   ariaLabel: "image",
   fill: null,
   stroke: null
@@ -27625,7 +28408,7 @@ var Image2 = class extends Mark {
         src: { value: vs, optional: true }
       },
       withDefaultSort(options),
-      defaults19
+      defaults20
     );
     this.src = cs;
     this.width = cw;
@@ -27650,11 +28433,10 @@ var Image2 = class extends Mark {
 function position2(X4, W, R, x7, w, r) {
   return W && X4 ? (i) => X4[i] - W[i] / 2 : W ? (i) => x7 - W[i] / 2 : X4 && w !== void 0 ? (i) => X4[i] - w / 2 : w !== void 0 ? x7 - w / 2 : R && X4 ? (i) => X4[i] - R[i] : R ? (i) => x7 - R[i] : X4 ? (i) => X4[i] - r : x7 - r;
 }
-function image(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function image(data, { x: x7, y: y7, ...options } = {}) {
   if (options.frameAnchor === void 0)
     [x7, y7] = maybeTuple(x7, y7);
-  return new Image2(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Image2(data, { ...options, x: x7, y: y7 });
 }
 
 // node_modules/@observablehq/plot/src/stats.js
@@ -27778,7 +28560,7 @@ function qt(p, dof) {
 }
 
 // node_modules/@observablehq/plot/src/marks/linearRegression.js
-var defaults20 = {
+var defaults21 = {
   ariaLabel: "linear-regression",
   fill: "currentColor",
   fillOpacity: 0.1,
@@ -27799,7 +28581,7 @@ var LinearRegression = class extends Mark {
         z: { value: maybeZ(options), optional: true }
       },
       options,
-      defaults20
+      defaults21
     );
     this.z = z;
     this.ci = +ci;
@@ -27864,25 +28646,11 @@ var LinearRegressionY = class extends LinearRegression {
     return `M${x13},${f(x13)}L${x22},${f(x22)}`;
   }
 };
-function linearRegressionX(data, options = {}) {
-  const {
-    y: y7 = indexOf,
-    x: x7 = identity6,
-    stroke,
-    fill = isNoneish(stroke) ? "currentColor" : stroke,
-    ...remainingOptions
-  } = options;
-  return new LinearRegressionX(data, maybeDenseIntervalY({ ...remainingOptions, x: x7, y: y7, fill, stroke }));
+function linearRegressionX(data, { y: y7 = indexOf, x: x7 = identity6, stroke, fill = isNoneish(stroke) ? "currentColor" : stroke, ...options } = {}) {
+  return new LinearRegressionX(data, maybeDenseIntervalY({ ...options, x: x7, y: y7, fill, stroke }));
 }
-function linearRegressionY(data, options = {}) {
-  const {
-    x: x7 = indexOf,
-    y: y7 = identity6,
-    stroke,
-    fill = isNoneish(stroke) ? "currentColor" : stroke,
-    ...remainingOptions
-  } = options;
-  return new LinearRegressionY(data, maybeDenseIntervalX({ ...remainingOptions, x: x7, y: y7, fill, stroke }));
+function linearRegressionY(data, { x: x7 = indexOf, y: y7 = identity6, stroke, fill = isNoneish(stroke) ? "currentColor" : stroke, ...options } = {}) {
+  return new LinearRegressionY(data, maybeDenseIntervalX({ ...options, x: x7, y: y7, fill, stroke }));
 }
 function linearRegressionF(I, X4, Y4) {
   let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
@@ -27916,32 +28684,31 @@ function confidenceIntervalF(I, X4, Y4, p, f) {
 }
 
 // node_modules/@observablehq/plot/src/transforms/tree.js
-function treeNode(options = {}) {
-  let {
-    path: path3 = identity6,
-    // the delimited path
-    delimiter,
-    // how the path is separated
-    frameAnchor,
-    treeLayout = tree_default,
-    treeSort,
-    treeSeparation,
-    treeAnchor,
-    ...remainingOptions
-  } = options;
+function treeNode({
+  path: path3 = identity6,
+  // the delimited path
+  delimiter,
+  // how the path is separated
+  frameAnchor,
+  treeLayout = tree_default,
+  treeSort,
+  treeSeparation,
+  treeAnchor,
+  ...options
+} = {}) {
   treeAnchor = maybeTreeAnchor(treeAnchor);
   treeSort = maybeTreeSort(treeSort);
   if (frameAnchor === void 0)
     frameAnchor = treeAnchor.frameAnchor;
   const normalize7 = normalizer(delimiter);
-  const outputs = treeOutputs(remainingOptions, maybeNodeValue);
+  const outputs = treeOutputs(options, maybeNodeValue);
   const [X4, setX] = column();
   const [Y4, setY] = column();
   return {
     x: X4,
     y: Y4,
     frameAnchor,
-    ...basic(remainingOptions, (data, facets) => {
+    ...basic(options, (data, facets) => {
       const P = normalize7(valueof(data, path3));
       const X5 = setX([]);
       const Y5 = setY([]);
@@ -27976,27 +28743,26 @@ function treeNode(options = {}) {
     ...Object.fromEntries(outputs)
   };
 }
-function treeLink(options = {}) {
-  let {
-    path: path3 = identity6,
-    // the delimited path
-    delimiter,
-    // how the path is separated
-    curve = "bump-x",
-    stroke = "#555",
-    strokeWidth = 1.5,
-    strokeOpacity = 0.5,
-    treeLayout = tree_default,
-    treeSort,
-    treeSeparation,
-    treeAnchor,
-    ...remainingOptions
-  } = options;
+function treeLink({
+  path: path3 = identity6,
+  // the delimited path
+  delimiter,
+  // how the path is separated
+  curve = "bump-x",
+  stroke = "#555",
+  strokeWidth = 1.5,
+  strokeOpacity = 0.5,
+  treeLayout = tree_default,
+  treeSort,
+  treeSeparation,
+  treeAnchor,
+  ...options
+} = {}) {
   treeAnchor = maybeTreeAnchor(treeAnchor);
   treeSort = maybeTreeSort(treeSort);
-  remainingOptions = { curve, stroke, strokeWidth, strokeOpacity, ...remainingOptions };
+  options = { curve, stroke, strokeWidth, strokeOpacity, ...options };
   const normalize7 = normalizer(delimiter);
-  const outputs = treeOutputs(remainingOptions, maybeLinkValue);
+  const outputs = treeOutputs(options, maybeLinkValue);
   const [X15, setX1] = column();
   const [X25, setX2] = column();
   const [Y15, setY1] = column();
@@ -28006,7 +28772,7 @@ function treeLink(options = {}) {
     x2: X25,
     y1: Y15,
     y2: Y25,
-    ...basic(remainingOptions, (data, facets) => {
+    ...basic(options, (data, facets) => {
       const P = normalize7(valueof(data, path3));
       const X16 = setX1([]);
       const X26 = setX2([]);
@@ -28195,30 +28961,29 @@ function treeOutputs(options, maybeTreeValue) {
 }
 
 // node_modules/@observablehq/plot/src/marks/tree.js
-function tree(data, options = {}) {
-  let {
-    fill,
-    stroke,
-    strokeWidth,
-    strokeOpacity,
-    strokeLinejoin,
-    strokeLinecap,
-    strokeMiterlimit,
-    strokeDasharray,
-    strokeDashoffset,
-    marker,
-    markerStart = marker,
-    markerEnd = marker,
-    dot: dotDot = isNoneish(markerStart) && isNoneish(markerEnd),
-    text: textText = "node:name",
-    textStroke = "white",
-    title = "node:path",
-    dx,
-    dy,
-    ...remainingOptions
-  } = options;
+function tree(data, {
+  fill,
+  stroke,
+  strokeWidth,
+  strokeOpacity,
+  strokeLinejoin,
+  strokeLinecap,
+  strokeMiterlimit,
+  strokeDasharray,
+  strokeDashoffset,
+  marker,
+  markerStart = marker,
+  markerEnd = marker,
+  dot: dotDot = isNoneish(markerStart) && isNoneish(markerEnd),
+  text: textText = "node:name",
+  textStroke = "white",
+  title = "node:path",
+  dx,
+  dy,
+  ...options
+} = {}) {
   if (dx === void 0)
-    dx = maybeTreeAnchor(remainingOptions.treeAnchor).dx;
+    dx = maybeTreeAnchor(options.treeAnchor).dx;
   return marks(
     link3(
       data,
@@ -28233,10 +28998,10 @@ function tree(data, options = {}) {
         strokeMiterlimit,
         strokeDasharray,
         strokeDashoffset,
-        ...remainingOptions
+        ...options
       })
     ),
-    dotDot ? dot(data, treeNode({ fill: fill === void 0 ? "node:internal" : fill, title, ...remainingOptions })) : null,
+    dotDot ? dot(data, treeNode({ fill: fill === void 0 ? "node:internal" : fill, title, ...options })) : null,
     textText != null ? text(
       data,
       treeNode({
@@ -28246,7 +29011,7 @@ function tree(data, options = {}) {
         dx,
         dy,
         title,
-        ...remainingOptions
+        ...options
       })
     ) : null
   );
@@ -28265,7 +29030,7 @@ function centroid({ geometry = identity6, ...options } = {}) {
     const path3 = path_default(projection3);
     for (let i = 0; i < n; ++i)
       [X4[i], Y4[i]] = path3.centroid(G[i]);
-    return { data, facets, channels: { x: { value: X4 }, y: { value: Y4 } } };
+    return { data, facets, channels: { x: { value: X4, source: null }, y: { value: Y4, source: null } } };
   });
 }
 function geoCentroid({ geometry = identity6, ...options } = {}) {
@@ -28285,13 +29050,13 @@ var anchorXMiddle = ({ width, marginLeft, marginRight }) => [0, (marginLeft + wi
 var anchorYTop = ({ marginTop }) => [1, marginTop];
 var anchorYBottom = ({ height, marginBottom }) => [-1, height - marginBottom];
 var anchorYMiddle = ({ height, marginTop, marginBottom }) => [0, (marginTop + height - marginBottom) / 2];
-function maybeAnchor2(anchor) {
+function maybeAnchor3(anchor) {
   return typeof anchor === "string" ? { anchor } : anchor;
 }
 function dodgeX(dodgeOptions = {}, options = {}) {
   if (arguments.length === 1)
     [dodgeOptions, options] = mergeOptions3(dodgeOptions);
-  let { anchor = "left", padding = 1, r = options.r } = maybeAnchor2(dodgeOptions);
+  let { anchor = "left", padding = 1, r = options.r } = maybeAnchor3(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "left":
       anchor = anchorXLeft;
@@ -28310,7 +29075,7 @@ function dodgeX(dodgeOptions = {}, options = {}) {
 function dodgeY(dodgeOptions = {}, options = {}) {
   if (arguments.length === 1)
     [dodgeOptions, options] = mergeOptions3(dodgeOptions);
-  let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor2(dodgeOptions);
+  let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor3(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "top":
       anchor = anchorYTop;
@@ -28333,10 +29098,12 @@ function mergeOptions3(options) {
 }
 function dodge(y7, x7, anchor, padding, r, options) {
   if (r != null && typeof r !== "number") {
-    const { channels, sort: sort5, reverse: reverse5 } = options;
-    options = { ...options, channels: { r: { value: r, scale: "r" }, ...maybeNamed(channels) } };
+    let { channels, sort: sort5, reverse: reverse5 } = options;
+    channels = maybeNamed(channels);
+    if (channels?.r === void 0)
+      options = { ...options, channels: { ...channels, r: { value: r, scale: "r" } } };
     if (sort5 === void 0 && reverse5 === void 0)
-      options.sort = { channel: "r", order: "descending" };
+      options.sort = { channel: "-r" };
   }
   return initializer(options, function(data, facets, channels, scales, dimensions, context) {
     let { [x7]: X4, r: R } = channels;
@@ -28395,9 +29162,10 @@ function dodge(y7, x7, anchor, padding, r, options) {
       data,
       facets,
       channels: {
-        [x7]: { value: X4 },
-        [y7]: { value: Y4 },
-        ...R && { r: { value: R } }
+        [y7]: { value: Y4, source: null },
+        // don’t show in tooltip
+        [x7]: { value: X4, source: channels[x7] },
+        ...R && { r: { value: R, source: channels.r } }
       }
     };
   });
@@ -28424,7 +29192,7 @@ function normalize3(basis3) {
   if (basis3 === void 0)
     return normalizeFirst;
   if (typeof basis3 === "function")
-    return normalizeBasis((I, S) => basis3(take(S, I)));
+    return normalizeBasis(taker(basis3));
   if (/^p\d{2}$/i.test(basis3))
     return normalizeAccessor(percentile(basis3));
   switch (`${basis3}`.toLowerCase()) {
@@ -28521,9 +29289,9 @@ function window2(options = {}) {
   }
   if (!((k3 = Math.floor(k3)) > 0))
     throw new Error(`invalid k: ${k3}`);
-  return maybeReduce2(reduce3)(k3, maybeAnchor3(anchor, k3), strict);
+  return maybeReduce2(reduce3)(k3, maybeAnchor4(anchor, k3), strict);
 }
-function maybeAnchor3(anchor = "middle", k3) {
+function maybeAnchor4(anchor = "middle", k3) {
   switch (`${anchor}`.toLowerCase()) {
     case "middle":
       return k3 - 1 >> 1;
@@ -28548,24 +29316,24 @@ function maybeShift(shift) {
 function maybeReduce2(reduce3 = "mean") {
   if (typeof reduce3 === "string") {
     if (/^p\d{2}$/i.test(reduce3))
-      return reduceNumbers(percentile(reduce3));
+      return reduceAccessor2(percentile(reduce3));
     switch (reduce3.toLowerCase()) {
       case "deviation":
-        return reduceNumbers(deviation);
+        return reduceAccessor2(deviation);
       case "max":
-        return reduceArray(max);
+        return reduceArray((I, V) => max(I, (i) => V[i]));
       case "mean":
         return reduceMean;
       case "median":
-        return reduceNumbers(median);
+        return reduceAccessor2(median);
       case "min":
-        return reduceArray(min);
+        return reduceArray((I, V) => min(I, (i) => V[i]));
       case "mode":
-        return reduceArray(mode);
+        return reduceArray((I, V) => mode(I, (i) => V[i]));
       case "sum":
         return reduceSum2;
       case "variance":
-        return reduceNumbers(variance);
+        return reduceAccessor2(variance);
       case "difference":
         return reduceDifference;
       case "ratio":
@@ -28578,35 +29346,35 @@ function maybeReduce2(reduce3 = "mean") {
   }
   if (typeof reduce3 !== "function")
     throw new Error(`invalid reduce: ${reduce3}`);
-  return reduceArray(reduce3);
+  return reduceArray(taker(reduce3));
 }
 function slice6(I, i, j) {
   return I.subarray ? I.subarray(i, j) : I.slice(i, j);
 }
-function reduceNumbers(f) {
+function reduceAccessor2(f) {
   return (k3, s3, strict) => strict ? {
     mapIndex(I, S, T) {
-      const C4 = Float64Array.from(I, (i) => S[i] === null ? NaN : S[i]);
+      const s4 = (i) => S[i] == null ? NaN : +S[i];
       let nans = 0;
       for (let i = 0; i < k3 - 1; ++i)
-        if (isNaN(C4[i]))
+        if (isNaN(s4(i)))
           ++nans;
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
-        if (isNaN(C4[i + k3 - 1]))
+        if (isNaN(s4(i + k3 - 1)))
           ++nans;
-        T[I[i + s3]] = nans === 0 ? f(C4.subarray(i, i + k3)) : NaN;
-        if (isNaN(C4[i]))
+        T[I[i + s4]] = nans === 0 ? f(slice6(I, i, i + k3), s4) : NaN;
+        if (isNaN(s4(i)))
           --nans;
       }
     }
   } : {
     mapIndex(I, S, T) {
-      const C4 = Float64Array.from(I, (i) => S[i] === null ? NaN : S[i]);
-      for (let i = -s3; i < 0; ++i) {
-        T[I[i + s3]] = f(C4.subarray(0, i + k3));
+      const s4 = (i) => S[i] == null ? NaN : +S[i];
+      for (let i = -s4; i < 0; ++i) {
+        T[I[i + s4]] = f(slice6(I, 0, i + k3), s4);
       }
-      for (let i = 0, n = I.length - s3; i < n; ++i) {
-        T[I[i + s3]] = f(C4.subarray(i, i + k3));
+      for (let i = 0, n = I.length - s4; i < n; ++i) {
+        T[I[i + s4]] = f(slice6(I, i, i + k3), s4);
       }
     }
   };
@@ -28620,17 +29388,17 @@ function reduceArray(f) {
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
         count5 += defined(S[I[i + k3 - 1]]);
         if (count5 === k3)
-          T[I[i + s3]] = f(take(S, slice6(I, i, i + k3)));
+          T[I[i + s3]] = f(slice6(I, i, i + k3), S);
         count5 -= defined(S[I[i]]);
       }
     }
   } : {
     mapIndex(I, S, T) {
       for (let i = -s3; i < 0; ++i) {
-        T[I[i + s3]] = f(take(S, slice6(I, 0, i + k3)));
+        T[I[i + s3]] = f(slice6(I, 0, i + k3), S);
       }
       for (let i = 0, n = I.length - s3; i < n; ++i) {
-        T[I[i + s3]] = f(take(S, slice6(I, i, i + k3)));
+        T[I[i + s3]] = f(slice6(I, i, i + k3), S);
       }
     }
   };
@@ -28917,6 +29685,7 @@ __export(src_exports4, {
   Text: () => Text2,
   TickX: () => TickX2,
   TickY: () => TickY2,
+  Tip: () => Tip2,
   Vector: () => Vector2,
   area: () => area2,
   areaX: () => areaX2,
@@ -28943,6 +29712,9 @@ __export(src_exports4, {
   cluster: () => cluster2,
   column: () => column2,
   contour: () => contour2,
+  crosshair: () => crosshair2,
+  crosshairX: () => crosshairX2,
+  crosshairY: () => crosshairY2,
   delaunayLink: () => delaunayLink2,
   delaunayMesh: () => delaunayMesh2,
   density: () => density2,
@@ -28994,6 +29766,9 @@ __export(src_exports4, {
   normalizeX: () => normalizeX2,
   normalizeY: () => normalizeY2,
   plot: () => plot2,
+  pointer: () => pointer2,
+  pointerX: () => pointerX2,
+  pointerY: () => pointerY2,
   raster: () => raster2,
   rect: () => rect2,
   rectX: () => rectX2,
@@ -29024,6 +29799,7 @@ __export(src_exports4, {
   textY: () => textY2,
   tickX: () => tickX2,
   tickY: () => tickY2,
+  tip: () => tip2,
   transform: () => basic2,
   tree: () => tree2,
   treeLink: () => treeLink2,
@@ -47174,10 +47950,9 @@ var timeIntervals2 = /* @__PURE__ */ new Map([
   ["minute", timeMinute2],
   ["hour", timeHour2],
   ["day", timeDay2],
+  // TODO local time equivalent of unixDay?
   ["week", timeSunday2],
   ["month", timeMonth2],
-  ["quarter", timeMonth2.every(3)],
-  ["half", timeMonth2.every(6)],
   ["year", timeYear2],
   ["monday", timeMonday2],
   ["tuesday", timeTuesday2],
@@ -47191,11 +47966,9 @@ var utcIntervals2 = /* @__PURE__ */ new Map([
   ["second", second3],
   ["minute", utcMinute2],
   ["hour", utcHour2],
-  ["day", utcDay2],
+  ["day", unixDay2],
   ["week", utcSunday2],
   ["month", utcMonth2],
-  ["quarter", utcMonth2.every(3)],
-  ["half", utcMonth2.every(6)],
   ["year", utcYear2],
   ["monday", utcMonday2],
   ["tuesday", utcTuesday2],
@@ -47205,17 +47978,52 @@ var utcIntervals2 = /* @__PURE__ */ new Map([
   ["saturday", utcSaturday2],
   ["sunday", utcSunday2]
 ]);
+function parseInterval2(input, intervals) {
+  let name = `${input}`.toLowerCase();
+  if (name.endsWith("s"))
+    name = name.slice(0, -1);
+  let period3 = 1;
+  const match = /^(?:(\d+)\s+)/.exec(name);
+  if (match) {
+    name = name.slice(match[0].length);
+    period3 = +match[1];
+  }
+  switch (name) {
+    case "quarter":
+      name = "month";
+      period3 *= 3;
+      break;
+    case "half":
+      name = "month";
+      period3 *= 6;
+      break;
+  }
+  let interval3 = intervals.get(name);
+  if (!interval3)
+    throw new Error(`unknown interval: ${input}`);
+  if (!(period3 > 1))
+    return interval3;
+  if (!interval3.every)
+    throw new Error(`non-periodic interval: ${name}`);
+  return interval3.every(period3);
+}
 function maybeTimeInterval2(interval3) {
-  const i = timeIntervals2.get(`${interval3}`.toLowerCase());
-  if (!i)
-    throw new Error(`unknown interval: ${interval3}`);
-  return i;
+  return parseInterval2(interval3, timeIntervals2);
 }
 function maybeUtcInterval2(interval3) {
-  const i = utcIntervals2.get(`${interval3}`.toLowerCase());
+  return parseInterval2(interval3, utcIntervals2);
+}
+function isUtcYear2(i) {
   if (!i)
-    throw new Error(`unknown interval: ${interval3}`);
-  return i;
+    return false;
+  const date3 = i.floor(new Date(Date.UTC(2e3, 11, 31)));
+  return utcYear2(date3) >= date3;
+}
+function isTimeYear2(i) {
+  if (!i)
+    return false;
+  const date3 = i.floor(new Date(2e3, 11, 31));
+  return timeYear2(date3) >= date3;
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/options.js
@@ -47234,6 +48042,7 @@ function maybeTypedArrayify2(data, type3) {
 function floater2(f) {
   return (d, i) => coerceNumber2(f(d, i));
 }
+var singleton2 = [null];
 var field2 = (name) => (d) => d[name];
 var indexOf2 = { transform: range8 };
 var identity13 = { transform: (d) => d };
@@ -47290,6 +48099,15 @@ function map9(values3, f, type3 = Array) {
 function slice11(values3, type3 = Array) {
   return values3 instanceof type3 ? values3.slice() : type3.from(values3);
 }
+function hasX2({ x: x7, x1: x13, x2: x22 }) {
+  return x7 !== void 0 || x13 !== void 0 || x22 !== void 0;
+}
+function hasY2({ y: y7, y1: y13, y2: y22 }) {
+  return y7 !== void 0 || y13 !== void 0 || y22 !== void 0;
+}
+function hasXY2(options) {
+  return hasX2(options) || hasY2(options) || options.interval !== void 0;
+}
 function isObject2(option) {
   return option?.toString === objectToString2;
 }
@@ -47331,6 +48149,9 @@ function range8(data) {
 }
 function take2(values3, index5) {
   return map9(index5, (i) => values3[i]);
+}
+function taker2(f) {
+  return f.length === 1 ? (index5, values3) => f(take2(values3, index5)) : f;
 }
 function keyof4(value) {
   return value !== null && typeof value === "object" ? value.valueOf() : value;
@@ -47375,6 +48196,14 @@ function mid2(x13, x22) {
     },
     label: x13.label
   };
+}
+function maybeApplyInterval2(V, scale5) {
+  const t = maybeIntervalTransform2(scale5?.interval, scale5?.type);
+  return t ? map9(V, t) : V;
+}
+function maybeIntervalTransform2(interval3, type3) {
+  const i = maybeInterval2(interval3, type3);
+  return i && ((v3) => defined2(v3) ? i.floor(v3) : v3);
 }
 function maybeInterval2(interval3, type3) {
   if (interval3 == null)
@@ -47514,8 +48343,8 @@ function isNone2(value) {
 function isRound2(value) {
   return /^\s*round\s*$/i.test(value);
 }
-function maybeFrameAnchor2(value = "middle") {
-  return keyword2(value, "frameAnchor", [
+function maybeAnchor5(value, name) {
+  return maybeKeyword2(value, name, [
     "middle",
     "top-left",
     "top",
@@ -47527,6 +48356,9 @@ function maybeFrameAnchor2(value = "middle") {
     "left"
   ]);
 }
+function maybeFrameAnchor2(value = "middle") {
+  return maybeAnchor5(value, "frameAnchor");
+}
 function orderof2(values3) {
   if (values3 == null)
     return;
@@ -47536,10 +48368,10 @@ function orderof2(values3) {
 }
 function inherit4(options = {}, ...rest) {
   let o = options;
-  for (const defaults41 of rest) {
-    for (const key in defaults41) {
+  for (const defaults43 of rest) {
+    for (const key in defaults43) {
       if (o[key] === void 0) {
-        const value = defaults41[key];
+        const value = defaults43[key];
         if (o === options)
           o = { ...o, [key]: value };
         else
@@ -47688,9 +48520,9 @@ function composeTransform2(t15, t23) {
     return t23 === null ? void 0 : t23;
   if (t23 == null)
     return t15 === null ? void 0 : t15;
-  return function(data, facets) {
-    ({ data, facets } = t15.call(this, data, facets));
-    return t23.call(this, arrayify4(data), facets);
+  return function(data, facets, plotOptions) {
+    ({ data, facets } = t15.call(this, data, facets, plotOptions));
+    return t23.call(this, arrayify4(data), facets, plotOptions);
   };
 }
 function composeInitializer2(i1, i2) {
@@ -47749,7 +48581,12 @@ function sortData2(compare) {
 }
 function sortValue2(value) {
   let channel, order;
-  ({ channel, value, order = ascendingDefined4 } = { ...maybeValue2(value) });
+  ({ channel, value, order } = { ...maybeValue2(value) });
+  const negate3 = channel?.startsWith("-");
+  if (negate3)
+    channel = channel.slice(1);
+  if (order === void 0)
+    order = negate3 ? descendingDefined2 : ascendingDefined4;
   if (typeof order !== "function") {
     switch (`${order}`.toLowerCase()) {
       case "ascending":
@@ -47839,9 +48676,9 @@ function groupn2(x7, y7, {
     ..."z" in inputs && { z: GZ || z },
     ..."fill" in inputs && { fill: GF || fill },
     ..."stroke" in inputs && { stroke: GS || stroke },
-    ...basic2(options, (data, facets) => {
-      const X4 = valueof2(data, x7);
-      const Y4 = valueof2(data, y7);
+    ...basic2(options, (data, facets, plotOptions) => {
+      const X4 = maybeApplyInterval2(valueof2(data, x7), plotOptions?.x);
+      const Y4 = maybeApplyInterval2(valueof2(data, y7), plotOptions?.y);
       const Z = valueof2(data, z);
       const F = valueof2(data, vfill);
       const S = valueof2(data, vstroke);
@@ -47984,7 +48821,7 @@ function maybeReduce3(reduce3, value, fallback = invalidReduce2) {
   if (typeof reduce3 === "function")
     return reduceFunction2(reduce3);
   if (/^p\d{2}$/i.test(reduce3))
-    return reduceAccessor2(percentile2(reduce3));
+    return reduceAccessor3(percentile2(reduce3));
   switch (`${reduce3}`.toLowerCase()) {
     case "first":
       return reduceFirst3;
@@ -48003,23 +48840,23 @@ function maybeReduce3(reduce3, value, fallback = invalidReduce2) {
     case "proportion-facet":
       return reduceProportion2(value, "facet");
     case "deviation":
-      return reduceAccessor2(deviation2);
+      return reduceAccessor3(deviation2);
     case "min":
-      return reduceAccessor2(min4);
+      return reduceAccessor3(min4);
     case "min-index":
-      return reduceAccessor2(minIndex2);
+      return reduceAccessor3(minIndex2);
     case "max":
-      return reduceAccessor2(max5);
+      return reduceAccessor3(max5);
     case "max-index":
-      return reduceAccessor2(maxIndex2);
+      return reduceAccessor3(maxIndex2);
     case "mean":
       return reduceMaybeTemporalAccessor2(mean2);
     case "median":
       return reduceMaybeTemporalAccessor2(median2);
     case "variance":
-      return reduceAccessor2(variance2);
+      return reduceAccessor3(variance2);
     case "mode":
-      return reduceAccessor2(mode2);
+      return reduceAccessor3(mode2);
   }
   return fallback(reduce3);
 }
@@ -48055,7 +48892,7 @@ function reduceFunction2(f) {
     }
   };
 }
-function reduceAccessor2(f) {
+function reduceAccessor3(f) {
   return {
     reduceIndex(I, X4) {
       return f(I, (i) => X4[i]);
@@ -48119,13 +48956,15 @@ var reduceDistinct2 = {
     return s3.size;
   }
 };
-var reduceSum3 = reduceAccessor2(sum4);
+var reduceSum3 = reduceAccessor3(sum4);
 function reduceProportion2(value, scope) {
   return value == null ? { scope, label: "Frequency", reduceIndex: (I, V, basis3 = 1) => I.length / basis3 } : { scope, reduceIndex: (I, V, basis3 = 1) => sum4(I, (i) => V[i]) / basis3 };
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/channel.js
 function createChannel2(data, { scale: scale5, type: type3, value, filter: filter7, hint }, name) {
+  if (hint === void 0 && typeof value?.transform === "function")
+    hint = value.hint;
   return inferChannelScale2(name, {
     scale: scale5,
     type: type3,
@@ -48161,6 +49000,7 @@ function inferChannelScale2(name, channel) {
         break;
       case "fillOpacity":
       case "strokeOpacity":
+      case "opacity":
         channel.scale = scale5 !== true && isEvery2(value, isOpacity2) ? null : "opacity";
         break;
       case "symbol":
@@ -48183,13 +49023,15 @@ function inferChannelScale2(name, channel) {
   return channel;
 }
 function channelDomain2(data, facets, channels, facetChannels, options) {
-  const { reverse: defaultReverse, reduce: defaultReduce = true, limit: defaultLimit } = options;
+  const { order: defaultOrder, reverse: defaultReverse, reduce: defaultReduce = true, limit: defaultLimit } = options;
   for (const x7 in options) {
     if (!registry2.has(x7))
       continue;
-    let { value: y7, reverse: reverse5 = defaultReverse, reduce: reduce3 = defaultReduce, limit = defaultLimit } = maybeValue2(options[x7]);
-    if (reverse5 === void 0)
-      reverse5 = y7 === "width" || y7 === "height";
+    let { value: y7, order = defaultOrder, reverse: reverse5 = defaultReverse, reduce: reduce3 = defaultReduce, limit = defaultLimit } = maybeValue2(options[x7]);
+    const negate3 = y7?.startsWith("-");
+    if (negate3)
+      y7 = y7.slice(1);
+    order = order === void 0 ? negate3 !== (y7 === "width" || y7 === "height") ? descendingGroup2 : ascendingGroup2 : maybeOrder3(order);
     if (reduce3 == null || reduce3 === false)
       continue;
     const X4 = x7 === "fx" || x7 === "fy" ? reindexFacetChannel2(facets, facetChannels[x7]) : findScaleChannel2(channels, x7);
@@ -48210,12 +49052,15 @@ function channelDomain2(data, facets, channels, facetChannels, options) {
       const YV = y7 === "data" ? data : y7 === "height" ? difference4(channels, "y1", "y2") : y7 === "width" ? difference4(channels, "x1", "x2") : values2(channels, y7, y7 === "y" ? "y2" : y7 === "x" ? "x2" : void 0);
       const reducer3 = maybeReduce3(reduce3 === true ? "max" : reduce3, YV);
       X4.domain = () => {
-        let domain = rollup2(
+        let domain = rollups2(
           range8(XV),
           (I) => reducer3.reduceIndex(I, YV),
           (i) => XV[i]
         );
-        domain = sort3(domain, reverse5 ? descendingGroup2 : ascendingGroup2);
+        if (order)
+          domain.sort(order);
+        if (reverse5)
+          domain.reverse();
         if (lo !== 0 || hi !== Infinity)
           domain = domain.slice(lo, hi);
         return domain.map(first2);
@@ -48256,11 +49101,39 @@ function values2(channels, name, alias) {
     return channel.value;
   throw new Error(`missing channel: ${name}`);
 }
+function maybeOrder3(order) {
+  if (order == null || typeof order === "function")
+    return order;
+  switch (`${order}`.toLowerCase()) {
+    case "ascending":
+      return ascendingGroup2;
+    case "descending":
+      return descendingGroup2;
+  }
+  throw new Error(`invalid order: ${order}`);
+}
 function ascendingGroup2([ak, av], [bk, bv]) {
   return ascendingDefined4(av, bv) || ascendingDefined4(ak, bk);
 }
 function descendingGroup2([ak, av], [bk, bv]) {
   return descendingDefined2(av, bv) || ascendingDefined4(ak, bk);
+}
+function getSource2(channels, key) {
+  let channel = channels[key];
+  if (!channel)
+    return;
+  while (channel.source)
+    channel = channel.source;
+  return channel.source === null ? null : channel;
+}
+
+// js/pyobsplot-js/node_modules/@observablehq/plot/src/context.js
+function createContext2(options = {}) {
+  const { document: document2 = typeof window !== "undefined" ? window.document : void 0 } = options;
+  return { document: document2 };
+}
+function create4(name, { document: document2 }) {
+  return select_default5(creator_default2(name).call(document2.documentElement));
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/warnings.js
@@ -48436,17 +49309,6 @@ var reflectY2 = constant4(
     }
   })
 );
-function maybeProject2(cx, cy, channels, values3, context) {
-  const x7 = channels[cx] && channels[cx].scale === "x";
-  const y7 = channels[cy] && channels[cy].scale === "y";
-  if (x7 && y7) {
-    project2(cx, cy, values3, context.projection);
-  } else if (x7) {
-    throw new Error(`projection requires paired x and y channels; ${cx} is missing ${cy}`);
-  } else if (y7) {
-    throw new Error(`projection requires paired x and y channels; ${cy} is missing ${cx}`);
-  }
-}
 function project2(cx, cy, values3, projection3) {
   const x7 = values3[cx];
   const y7 = values3[cy];
@@ -48478,7 +49340,7 @@ function projectionAspectRatio2(projection3, marks3) {
   }
   return defaultAspectRatio2;
 }
-function applyPosition2(channels, scales, context) {
+function applyPosition2(channels, scales, { projection: projection3 }) {
   const { x: x7, y: y7 } = channels;
   let position5 = {};
   if (x7)
@@ -48486,8 +49348,8 @@ function applyPosition2(channels, scales, context) {
   if (y7)
     position5.y = y7;
   position5 = valueObject2(position5, scales);
-  if (context.projection)
-    maybeProject2("x", "y", channels, position5, context);
+  if (projection3 && x7?.scale === "x" && y7?.scale === "y")
+    project2("x", "y", position5, projection3);
   if (x7)
     position5.x = coerceNumbers2(position5.x);
   if (y7)
@@ -48501,18 +49363,8 @@ function hasGeometry2(marks3) {
   return false;
 }
 
-// js/pyobsplot-js/node_modules/@observablehq/plot/src/context.js
-function createContext2(options = {}, dimensions, className) {
-  const { document: document2 = typeof window !== "undefined" ? window.document : void 0 } = options;
-  return { document: document2, className, projection: createProjection2(options, dimensions) };
-}
-function create4(name, { document: document2 }) {
-  return select_default5(creator_default2(name).call(document2.documentElement));
-}
-
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/scales/schemes.js
-var ordinalSchemes2 = /* @__PURE__ */ new Map([
-  // categorical
+var categoricalSchemes2 = /* @__PURE__ */ new Map([
   ["accent", Accent_default2],
   ["category10", category10_default2],
   ["dark2", Dark2_default2],
@@ -48522,7 +49374,13 @@ var ordinalSchemes2 = /* @__PURE__ */ new Map([
   ["set1", Set1_default2],
   ["set2", Set2_default2],
   ["set3", Set3_default2],
-  ["tableau10", Tableau10_default2],
+  ["tableau10", Tableau10_default2]
+]);
+function isCategoricalScheme2(scheme55) {
+  return scheme55 != null && categoricalSchemes2.has(`${scheme55}`.toLowerCase());
+}
+var ordinalSchemes2 = new Map([
+  ...categoricalSchemes2,
   // diverging
   ["brbg", scheme113(scheme28, BrBG_default2)],
   ["prgn", scheme113(scheme29, PRGn_default2)],
@@ -49268,8 +50126,6 @@ function inferScaleLabel2(channels = [], scale5) {
   }
   if (label === void 0)
     return;
-  if (isTemporalScale2(scale5) && /^(date|time|year)$/i.test(label))
-    return;
   if (!isOrdinalScale2(scale5) && scale5.percent)
     label = `${label} (%)`;
   return { inferred: true, toString: () => label };
@@ -49306,7 +50162,8 @@ function innerDimensions2({ fx, fy }, dimensions) {
     marginBottom,
     marginLeft,
     width: fx ? fx.scale.bandwidth() + marginLeft + marginRight : width,
-    height: fy ? fy.scale.bandwidth() + marginTop + marginBottom : height
+    height: fy ? fy.scale.bandwidth() + marginTop + marginBottom : height,
+    facet: { width, height }
   };
 }
 function autoScaleRangeX2(scale5, dimensions) {
@@ -49509,17 +50366,19 @@ function inferScaleType2(key, channels, { type: type3, domain, range: range9, sc
       return asOrdinalType2(kind);
     if (isTemporal2(domain))
       return "utc";
-    if (kind === color4 && (pivot != null || isDivergingScheme2(scheme55)))
-      return "diverging";
-    return "linear";
+  } else {
+    const values3 = channels.map(({ value }) => value).filter((value) => value !== void 0);
+    if (values3.some(isOrdinal2))
+      return asOrdinalType2(kind);
+    if (values3.some(isTemporal2))
+      return "utc";
   }
-  const values3 = channels.map(({ value }) => value).filter((value) => value !== void 0);
-  if (values3.some(isOrdinal2))
-    return asOrdinalType2(kind);
-  if (values3.some(isTemporal2))
-    return "utc";
-  if (kind === color4 && (pivot != null || isDivergingScheme2(scheme55)))
-    return "diverging";
+  if (kind === color4) {
+    if (pivot != null || isDivergingScheme2(scheme55))
+      return "diverging";
+    if (isCategoricalScheme2(scheme55))
+      return "categorical";
+  }
   return "linear";
 }
 function asOrdinalType2(kind) {
@@ -49696,6 +50555,7 @@ function styles2(mark, {
   strokeDashoffset,
   opacity: opacity3,
   mixBlendMode,
+  imageFilter,
   paintOrder,
   pointerEvents,
   shapeRendering
@@ -49764,6 +50624,7 @@ function styles2(mark, {
   mark.ariaHidden = string2(ariaHidden);
   mark.opacity = impliedNumber2(copacity, 1);
   mark.mixBlendMode = impliedString2(mixBlendMode, "normal");
+  mark.imageFilter = impliedString2(imageFilter, "none");
   mark.paintOrder = impliedString2(paintOrder, "normal");
   mark.pointerEvents = impliedString2(pointerEvents, "auto");
   mark.shapeRendering = impliedString2(shapeRendering, "auto");
@@ -49795,7 +50656,7 @@ function applyTextGroup2(selection3, T) {
   if (T)
     selection3.text(([i]) => formatDefault2(T[i]));
 }
-function applyChannelStyles2(selection3, { target }, {
+function applyChannelStyles2(selection3, { target, tip: tip3 }, {
   ariaLabel: AL,
   title: T,
   fill: F,
@@ -49822,9 +50683,10 @@ function applyChannelStyles2(selection3, { target }, {
     applyAttr2(selection3, "opacity", (i) => O[i]);
   if (H)
     applyHref2(selection3, (i) => H[i], target);
-  applyTitle2(selection3, T);
+  if (!tip3)
+    applyTitle2(selection3, T);
 }
-function applyGroupedChannelStyles2(selection3, { target }, {
+function applyGroupedChannelStyles2(selection3, { target, tip: tip3 }, {
   ariaLabel: AL,
   title: T,
   fill: F,
@@ -49851,7 +50713,8 @@ function applyGroupedChannelStyles2(selection3, { target }, {
     applyAttr2(selection3, "opacity", ([i]) => O[i]);
   if (H)
     applyHref2(selection3, ([i]) => H[i], target);
-  applyTitleGroup2(selection3, T);
+  if (!tip3)
+    applyTitleGroup2(selection3, T);
 }
 function groupAesthetics2({
   ariaLabel: AL,
@@ -49863,8 +50726,8 @@ function groupAesthetics2({
   strokeWidth: SW,
   opacity: O,
   href: H
-}) {
-  return [AL, T, F, FO, S, SO, SW, O, H].filter((c11) => c11 !== void 0);
+}, { tip: tip3 }) {
+  return [AL, tip3 ? void 0 : T, F, FO, S, SO, SW, O, H].filter((c11) => c11 !== void 0);
 }
 function groupZ4(I, Z, z) {
   const G = group3(I, (i) => Z[i]);
@@ -49875,9 +50738,10 @@ function groupZ4(I, Z, z) {
   }
   return G.values();
 }
-function* groupIndex2(I, position5, { z }, channels) {
+function* groupIndex2(I, position5, mark, channels) {
+  const { z } = mark;
   const { z: Z } = channels;
-  const A6 = groupAesthetics2(channels);
+  const A6 = groupAesthetics2(channels, mark);
   const C4 = [...position5, ...A6];
   for (const G of Z ? groupZ4(I, Z, z) : [I]) {
     let Ag;
@@ -49961,6 +50825,7 @@ function applyIndirectStyles2(selection3, mark, dimensions, context) {
   applyAttr2(selection3, "stroke-dasharray", mark.strokeDasharray);
   applyAttr2(selection3, "stroke-dashoffset", mark.strokeDashoffset);
   applyAttr2(selection3, "shape-rendering", mark.shapeRendering);
+  applyAttr2(selection3, "filter", mark.imageFilter);
   applyAttr2(selection3, "paint-order", mark.paintOrder);
   applyAttr2(selection3, "pointer-events", mark.pointerEvents);
 }
@@ -50156,8 +51021,8 @@ function createFacets2(channelsByScale, options) {
   return fxDomain && fyDomain ? cross2(fxDomain, fyDomain).map(([x7, y7], i) => ({ x: x7, y: y7, i })) : fxDomain ? fxDomain.map((x7, i) => ({ x: x7, i })) : fyDomain ? fyDomain.map((y7, i) => ({ y: y7, i })) : void 0;
 }
 function recreateFacets2(facets, { x: X4, y: Y4 }) {
-  X4 &&= new InternMap2(X4.map((x7, i) => [x7, i]));
-  Y4 &&= new InternMap2(Y4.map((y7, i) => [y7, i]));
+  X4 &&= facetIndex2(X4);
+  Y4 &&= facetIndex2(Y4);
   return facets.filter(
     X4 && Y4 ? (f) => X4.has(f.x) && Y4.has(f.y) : X4 ? (f) => X4.has(f.x) : (f) => Y4.has(f.y)
   ).sort(
@@ -50183,7 +51048,7 @@ function facetGroups2(data, { fx, fy }) {
     (i) => FY[i]
   );
 }
-function facetTranslate2(fx, fy, { marginTop, marginLeft }) {
+function facetTranslator2(fx, fy, { marginTop, marginLeft }) {
   return fx && fy ? ({ x: x7, y: y7 }) => `translate(${fx(x7) - marginLeft},${fy(y7) - marginTop})` : fx ? ({ x: x7 }) => `translate(${fx(x7) - marginLeft},0)` : ({ y: y7 }) => `translate(0,${fy(y7) - marginTop})`;
 }
 function facetExclude2(index5) {
@@ -50224,53 +51089,71 @@ function maybeFacetAnchor2(facetAnchor) {
     return anchor;
   throw new Error(`invalid facet anchor: ${facetAnchor}`);
 }
+var indexCache2 = /* @__PURE__ */ new WeakMap();
+function facetIndex2(V) {
+  let I = indexCache2.get(V);
+  if (!I)
+    indexCache2.set(V, I = new InternMap2(map9(V, (v3, i) => [v3, i])));
+  return I;
+}
+function facetIndexOf2(V, v3) {
+  return facetIndex2(V).get(v3);
+}
+function facetFind2(facets, x7, y7) {
+  x7 = keyof4(x7);
+  y7 = keyof4(y7);
+  return facets.find((f) => Object.is(keyof4(f.x), x7) && Object.is(keyof4(f.y), y7));
+}
+function facetEmpty2(facets, x7, y7) {
+  return facetFind2(facets, x7, y7)?.empty;
+}
 function facetAnchorTop2(facets, { y: Y4 }, { y: y7 }) {
-  return Y4 ? Y4.indexOf(y7) === 0 : true;
+  return Y4 ? facetIndexOf2(Y4, y7) === 0 : true;
 }
 function facetAnchorBottom2(facets, { y: Y4 }, { y: y7 }) {
-  return Y4 ? Y4.indexOf(y7) === Y4.length - 1 : true;
+  return Y4 ? facetIndexOf2(Y4, y7) === Y4.length - 1 : true;
 }
 function facetAnchorLeft2(facets, { x: X4 }, { x: x7 }) {
-  return X4 ? X4.indexOf(x7) === 0 : true;
+  return X4 ? facetIndexOf2(X4, x7) === 0 : true;
 }
 function facetAnchorRight2(facets, { x: X4 }, { x: x7 }) {
-  return X4 ? X4.indexOf(x7) === X4.length - 1 : true;
+  return X4 ? facetIndexOf2(X4, x7) === X4.length - 1 : true;
 }
 function facetAnchorTopEmpty2(facets, { y: Y4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = Y4?.indexOf(y7);
-  if (i > 0) {
-    const y8 = Y4[i - 1];
-    return facets.find((f) => f.x === x7 && f.y === y8)?.empty;
-  }
+  if (!Y4)
+    return;
+  const i = facetIndexOf2(Y4, y7);
+  if (i > 0)
+    return facetEmpty2(facets, x7, Y4[i - 1]);
 }
 function facetAnchorBottomEmpty2(facets, { y: Y4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = Y4?.indexOf(y7);
-  if (i < Y4?.length - 1) {
-    const y8 = Y4[i + 1];
-    return facets.find((f) => f.x === x7 && f.y === y8)?.empty;
-  }
+  if (!Y4)
+    return;
+  const i = facetIndexOf2(Y4, y7);
+  if (i < Y4.length - 1)
+    return facetEmpty2(facets, x7, Y4[i + 1]);
 }
 function facetAnchorLeftEmpty2(facets, { x: X4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = X4?.indexOf(x7);
-  if (i > 0) {
-    const x8 = X4[i - 1];
-    return facets.find((f) => f.x === x8 && f.y === y7)?.empty;
-  }
+  if (!X4)
+    return;
+  const i = facetIndexOf2(X4, x7);
+  if (i > 0)
+    return facetEmpty2(facets, X4[i - 1], y7);
 }
 function facetAnchorRightEmpty2(facets, { x: X4 }, { x: x7, y: y7, empty: empty7 }) {
   if (empty7)
     return false;
-  const i = X4?.indexOf(x7);
-  if (i < X4?.length - 1) {
-    const x8 = X4[i + 1];
-    return facets.find((f) => f.x === x8 && f.y === y7)?.empty;
-  }
+  if (!X4)
+    return;
+  const i = facetIndexOf2(X4, x7);
+  if (i < X4.length - 1)
+    return facetEmpty2(facets, X4[i + 1], y7);
 }
 function facetAnchorEmpty2(facets, channels, { empty: empty7 }) {
   return empty7;
@@ -50282,6 +51165,323 @@ function and2(a7, b) {
 }
 function facetFilter2(facets, { channels: { fx, fy }, groups: groups3 }) {
   return fx && fy ? facets.map(({ x: x7, y: y7 }) => groups3.get(x7)?.get(y7) ?? []) : fx ? facets.map(({ x: x7 }) => groups3.get(x7) ?? []) : facets.map(({ y: y7 }) => groups3.get(y7) ?? []);
+}
+
+// js/pyobsplot-js/node_modules/@observablehq/plot/src/mark.js
+var Mark2 = class {
+  constructor(data, channels = {}, options = {}, defaults43) {
+    const {
+      facet = "auto",
+      facetAnchor,
+      fx,
+      fy,
+      sort: sort5,
+      dx = 0,
+      dy = 0,
+      margin = 0,
+      marginTop = margin,
+      marginRight = margin,
+      marginBottom = margin,
+      marginLeft = margin,
+      clip,
+      channels: extraChannels,
+      tip: tip3,
+      render: render2
+    } = options;
+    this.data = data;
+    this.sort = isDomainSort2(sort5) ? sort5 : null;
+    this.initializer = initializer2(options).initializer;
+    this.transform = this.initializer ? options.transform : basic2(options).transform;
+    if (facet === null || facet === false) {
+      this.facet = null;
+    } else {
+      this.facet = keyword2(facet === true ? "include" : facet, "facet", ["auto", "include", "exclude", "super"]);
+      this.fx = data === singleton2 && typeof fx === "string" ? [fx] : fx;
+      this.fy = data === singleton2 && typeof fy === "string" ? [fy] : fy;
+    }
+    this.facetAnchor = maybeFacetAnchor2(facetAnchor);
+    channels = maybeNamed2(channels);
+    if (extraChannels !== void 0)
+      channels = { ...maybeChannels2(extraChannels), ...channels };
+    if (defaults43 !== void 0)
+      channels = { ...styles2(this, options, defaults43), ...channels };
+    this.channels = Object.fromEntries(
+      Object.entries(channels).map(([name, channel]) => {
+        if (isOptions2(channel.value)) {
+          const { value, scale: scale5 = channel.scale } = channel.value;
+          channel = { ...channel, scale: scale5, value };
+        }
+        if (data === singleton2 && typeof channel.value === "string") {
+          const { value } = channel;
+          channel = { ...channel, value: [value] };
+        }
+        return [name, channel];
+      }).filter(([name, { value, optional: optional3 }]) => {
+        if (value != null)
+          return true;
+        if (optional3)
+          return false;
+        throw new Error(`missing channel value: ${name}`);
+      })
+    );
+    this.dx = +dx;
+    this.dy = +dy;
+    this.marginTop = +marginTop;
+    this.marginRight = +marginRight;
+    this.marginBottom = +marginBottom;
+    this.marginLeft = +marginLeft;
+    this.clip = maybeClip2(clip);
+    this.tip = maybeTip2(tip3);
+    if (this.facet === "super") {
+      if (fx || fy)
+        throw new Error(`super-faceting cannot use fx or fy`);
+      for (const name in this.channels) {
+        const { scale: scale5 } = channels[name];
+        if (scale5 !== "x" && scale5 !== "y")
+          continue;
+        throw new Error(`super-faceting cannot use x or y`);
+      }
+    }
+    if (render2 != null) {
+      this.render = composeRender2(render2, this.render);
+    }
+  }
+  initialize(facets, facetChannels, plotOptions) {
+    let data = arrayify4(this.data);
+    if (facets === void 0 && data != null)
+      facets = [range8(data)];
+    const originalFacets = facets;
+    if (this.transform != null)
+      ({ facets, data } = this.transform(data, facets, plotOptions)), data = arrayify4(data);
+    if (facets !== void 0)
+      facets.original = originalFacets;
+    const channels = createChannels2(this.channels, data);
+    if (this.sort != null)
+      channelDomain2(data, facets, channels, facetChannels, this.sort);
+    return { data, facets, channels };
+  }
+  filter(index5, channels, values3) {
+    for (const name in channels) {
+      const { filter: filter7 = defined2 } = channels[name];
+      if (filter7 !== null) {
+        const value = values3[name];
+        index5 = index5.filter((i) => filter7(value[i]));
+      }
+    }
+    return index5;
+  }
+  // If there is a projection, and there are paired x and y channels associated
+  // with the x and y scale respectively (and not already in screen coordinates
+  // as with an initializer), then apply the projection, replacing the x and y
+  // values. Note that the x and y scales themselves don’t exist if there is a
+  // projection, but whether the channels are associated with scales still
+  // determines whether the projection should apply; think of the projection as
+  // a combination xy-scale.
+  project(channels, values3, context) {
+    for (const cx in channels) {
+      if (channels[cx].scale === "x" && /^x|x$/.test(cx)) {
+        const cy = cx.replace(/^x|x$/, "y");
+        if (cy in channels && channels[cy].scale === "y") {
+          project2(cx, cy, values3, context.projection);
+        }
+      }
+    }
+  }
+  scale(channels, scales, context) {
+    const values3 = valueObject2(channels, scales);
+    if (context.projection)
+      this.project(channels, values3, context);
+    return values3;
+  }
+};
+function marks2(...marks3) {
+  marks3.plot = Mark2.prototype.plot;
+  return marks3;
+}
+function composeRender2(r1, r2) {
+  if (r1 == null)
+    return r2 === null ? void 0 : r2;
+  if (r2 == null)
+    return r1 === null ? void 0 : r1;
+  if (typeof r1 !== "function")
+    throw new TypeError(`invalid render transform: ${r1}`);
+  if (typeof r2 !== "function")
+    throw new TypeError(`invalid render transform: ${r2}`);
+  return function(i, s3, v3, d, c11, next) {
+    return r1.call(this, i, s3, v3, d, c11, (i2, s4, v4, d2, c12) => {
+      return r2.call(this, i2, s4, v4, d2, c12, next);
+    });
+  };
+}
+function maybeChannels2(channels) {
+  return Object.fromEntries(
+    Object.entries(maybeNamed2(channels)).map(([name, channel]) => {
+      channel = maybeValue2(channel);
+      if (channel.filter === void 0 && channel.scale == null)
+        channel = { ...channel, filter: null };
+      return [name, channel];
+    })
+  );
+}
+function maybeTip2(tip3) {
+  return tip3 === true ? "xy" : tip3 === false ? null : maybeKeyword2(tip3, "tip", ["x", "y", "xy"]);
+}
+function withTip2(options, tip3) {
+  return options?.tip === true ? { ...options, tip: tip3 } : options;
+}
+
+// js/pyobsplot-js/node_modules/@observablehq/plot/src/interactions/pointer.js
+var states2 = /* @__PURE__ */ new WeakMap();
+function pointerK2(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, render: render2, ...options } = {}) {
+  maxRadius = +maxRadius;
+  if (px != null)
+    x7 ??= null, channels = { ...channels, px: { value: px, scale: "x" } };
+  if (py != null)
+    y7 ??= null, channels = { ...channels, py: { value: py, scale: "y" } };
+  return {
+    x: x7,
+    y: y7,
+    channels,
+    ...options,
+    // Unlike other composed transforms, the render transform must be the
+    // outermost render function because it will re-render dynamically in
+    // response to pointer events.
+    render: composeRender2(function(index5, scales, values3, dimensions, context, next) {
+      const svg3 = context.ownerSVGElement;
+      const { data } = context.getMarkState(this);
+      let state = states2.get(svg3);
+      if (!state)
+        states2.set(svg3, state = { sticky: false, roots: [], renders: [] });
+      let renderIndex = state.renders.push(render3) - 1;
+      const { x: x8, y: y8, fx, fy } = scales;
+      let tx = fx ? fx(index5.fx) - dimensions.marginLeft : 0;
+      let ty = fy ? fy(index5.fy) - dimensions.marginTop : 0;
+      if (x8?.bandwidth)
+        tx += x8.bandwidth() / 2;
+      if (y8?.bandwidth)
+        ty += y8.bandwidth() / 2;
+      const faceted = index5.fi != null;
+      let facetState;
+      if (faceted) {
+        let facetStates = state.facetStates;
+        if (!facetStates)
+          state.facetStates = facetStates = /* @__PURE__ */ new Map();
+        facetState = facetStates.get(this);
+        if (!facetState)
+          facetStates.set(this, facetState = /* @__PURE__ */ new Map());
+      }
+      const [cx, cy] = applyFrameAnchor2(this, dimensions);
+      const { px: PX, py: PY } = values3;
+      const px2 = PX ? (i2) => PX[i2] : anchorX3(values3, cx);
+      const py2 = PY ? (i2) => PY[i2] : anchorY3(values3, cy);
+      let i;
+      let g;
+      let f;
+      function update(ii, ri) {
+        if (faceted) {
+          if (f)
+            f = cancelAnimationFrame(f);
+          if (ii == null)
+            facetState.delete(index5.fi);
+          else {
+            facetState.set(index5.fi, ri);
+            f = requestAnimationFrame(() => {
+              f = null;
+              for (const r of facetState.values()) {
+                if (r < ri) {
+                  ii = null;
+                  break;
+                }
+              }
+              render3(ii);
+            });
+            return;
+          }
+        }
+        render3(ii);
+      }
+      function render3(ii) {
+        if (i === ii)
+          return;
+        i = ii;
+        const I = i == null ? [] : [i];
+        if (faceted)
+          I.fx = index5.fx, I.fy = index5.fy, I.fi = index5.fi;
+        const r = next(I, scales, values3, dimensions, context);
+        if (g) {
+          if (faceted) {
+            const p = g.parentNode;
+            const ft = g.getAttribute("transform");
+            const mt = r.getAttribute("transform");
+            ft ? r.setAttribute("transform", ft) : r.removeAttribute("transform");
+            mt ? p.setAttribute("transform", mt) : p.removeAttribute("transform");
+            r.removeAttribute("aria-label");
+            r.removeAttribute("aria-description");
+            r.removeAttribute("aria-hidden");
+          }
+          g.replaceWith(r);
+        }
+        state.roots[renderIndex] = g = r;
+        context.dispatchValue(i == null ? null : data[i]);
+        return r;
+      }
+      function pointermove(event) {
+        if (state.sticky || event.pointerType === "mouse" && event.buttons === 1)
+          return;
+        let [xp, yp] = pointer_default2(event);
+        xp -= tx, yp -= ty;
+        let ii = null;
+        let ri = maxRadius * maxRadius;
+        for (const j of index5) {
+          const dx = kx3 * (px2(j) - xp);
+          const dy = ky3 * (py2(j) - yp);
+          const rj = dx * dx + dy * dy;
+          if (rj <= ri)
+            ii = j, ri = rj;
+        }
+        update(ii, ri);
+      }
+      function pointerdown(event) {
+        if (event.pointerType !== "mouse")
+          return;
+        if (i == null)
+          return;
+        if (state.sticky && state.roots.some((r) => r?.contains(event.target)))
+          return;
+        if (state.sticky)
+          state.sticky = false, state.renders.forEach((r) => r(null));
+        else
+          state.sticky = true;
+        event.stopImmediatePropagation();
+      }
+      function pointerleave(event) {
+        if (event.pointerType !== "mouse")
+          return;
+        if (!state.sticky)
+          update(null);
+      }
+      svg3.addEventListener("pointerenter", pointermove);
+      svg3.addEventListener("pointermove", pointermove);
+      svg3.addEventListener("pointerdown", pointerdown);
+      svg3.addEventListener("pointerleave", pointerleave);
+      return render3(null);
+    }, render2)
+  };
+}
+function pointer2(options) {
+  return pointerK2(1, 1, options);
+}
+function pointerX2(options) {
+  return pointerK2(1, 0.01, options);
+}
+function pointerY2(options) {
+  return pointerK2(0.01, 1, options);
+}
+function anchorX3({ x1: X15, x2: X25, x: X4 = X15 }, cx) {
+  return X15 && X25 ? (i) => (X15[i] + X25[i]) / 2 : X4 ? (i) => X4[i] : () => cx;
+}
+function anchorY3({ y1: Y15, y2: Y25, y: Y4 = Y15 }, cy) {
+  return Y15 && Y25 ? (i) => (Y15[i] + Y25[i]) / 2 : Y4 ? (i) => Y4[i] : () => cy;
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/axes.js
@@ -50521,13 +51721,13 @@ function legend2(options = {}) {
   }
   throw new Error("unknown legend type; no scale found");
 }
-function exposeLegends2(scales, context, defaults41 = {}) {
+function exposeLegends2(scales, context, defaults43 = {}) {
   return (key, options) => {
     if (!legendRegistry2.has(key))
       throw new Error(`unknown legend type: ${key}`);
     if (!(key in scales))
       return;
-    return legendRegistry2.get(key)(scales[key], legendOptions2(context, defaults41[key], options), (key2) => scales[key2]);
+    return legendRegistry2.get(key)(scales[key], legendOptions2(context, defaults43[key], options), (key2) => scales[key2]);
   };
 }
 function legendOptions2({ className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 } = {}, options) {
@@ -50573,128 +51773,83 @@ function createLegends2(scales, context, options) {
   return legends;
 }
 
-// js/pyobsplot-js/node_modules/@observablehq/plot/src/mark.js
-var Mark2 = class {
-  constructor(data, channels = {}, options = {}, defaults41) {
-    const {
-      facet = "auto",
-      facetAnchor,
-      fx,
-      fy,
-      sort: sort5,
-      dx = 0,
-      dy = 0,
-      margin = 0,
-      marginTop = margin,
-      marginRight = margin,
-      marginBottom = margin,
-      marginLeft = margin,
-      clip,
-      channels: extraChannels
-    } = options;
-    this.data = data;
-    this.sort = isDomainSort2(sort5) ? sort5 : null;
-    this.initializer = initializer2(options).initializer;
-    this.transform = this.initializer ? options.transform : basic2(options).transform;
-    if (facet === null || facet === false) {
-      this.facet = null;
-    } else {
-      this.facet = keyword2(facet === true ? "include" : facet, "facet", ["auto", "include", "exclude", "super"]);
-      this.fx = fx;
-      this.fy = fy;
-    }
-    this.facetAnchor = maybeFacetAnchor2(facetAnchor);
-    channels = maybeNamed2(channels);
-    if (extraChannels !== void 0)
-      channels = { ...maybeNamed2(extraChannels), ...channels };
-    if (defaults41 !== void 0)
-      channels = { ...styles2(this, options, defaults41), ...channels };
-    this.channels = Object.fromEntries(
-      Object.entries(channels).map(([name, channel]) => {
-        const { value } = channel;
-        if (isOptions2(value)) {
-          channel = { ...channel, value: value.value };
-          if (value.scale !== void 0)
-            channel.scale = value.scale;
-        }
-        return [name, channel];
-      }).filter(([name, { value, optional: optional3 }]) => {
-        if (value != null)
-          return true;
-        if (optional3)
-          return false;
-        throw new Error(`missing channel value: ${name}`);
-      })
-    );
-    this.dx = +dx;
-    this.dy = +dy;
-    this.marginTop = +marginTop;
-    this.marginRight = +marginRight;
-    this.marginBottom = +marginBottom;
-    this.marginLeft = +marginLeft;
-    this.clip = maybeClip2(clip);
-    if (this.facet === "super") {
-      if (fx || fy)
-        throw new Error(`super-faceting cannot use fx or fy`);
-      for (const name in this.channels) {
-        const { scale: scale5 } = channels[name];
-        if (scale5 !== "x" && scale5 !== "y")
-          continue;
-        throw new Error(`super-faceting cannot use x or y`);
-      }
-    }
-  }
-  initialize(facets, facetChannels) {
-    let data = arrayify4(this.data);
-    if (facets === void 0 && data != null)
-      facets = [range8(data)];
-    const originalFacets = facets;
-    if (this.transform != null)
-      ({ facets, data } = this.transform(data, facets)), data = arrayify4(data);
-    if (facets !== void 0)
-      facets.original = originalFacets;
-    const channels = createChannels2(this.channels, data);
-    if (this.sort != null)
-      channelDomain2(data, facets, channels, facetChannels, this.sort);
-    return { data, facets, channels };
-  }
-  filter(index5, channels, values3) {
-    for (const name in channels) {
-      const { filter: filter7 = defined2 } = channels[name];
-      if (filter7 !== null) {
-        const value = values3[name];
-        index5 = index5.filter((i) => filter7(value[i]));
-      }
-    }
-    return index5;
-  }
-  // If there is a projection, and there are both x and y channels (or x1 and
-  // y1, or x2 and y2 channels), and those channels are associated with the x
-  // and y scale respectively (and not already in screen coordinates as with an
-  // initializer), then apply the projection, replacing the x and y values. Note
-  // that the x and y scales themselves don’t exist if there is a projection,
-  // but whether the channels are associated with scales still determines
-  // whether the projection should apply; think of the projection as a
-  // combination xy-scale.
-  project(channels, values3, context) {
-    maybeProject2("x", "y", channels, values3, context);
-    maybeProject2("x1", "y1", channels, values3, context);
-    maybeProject2("x2", "y2", channels, values3, context);
-  }
-  scale(channels, scales, context) {
-    const values3 = valueObject2(channels, scales);
-    if (context.projection)
-      this.project(channels, values3, context);
-    return values3;
-  }
-};
-function marks2(...marks3) {
-  marks3.plot = Mark2.prototype.plot;
-  return marks3;
-}
-
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/math.js
 var radians6 = Math.PI / 180;
+
+// js/pyobsplot-js/node_modules/@observablehq/plot/src/marker.js
+function markers2(mark, { marker, markerStart = marker, markerMid = marker, markerEnd = marker } = {}) {
+  mark.markerStart = maybeMarker2(markerStart);
+  mark.markerMid = maybeMarker2(markerMid);
+  mark.markerEnd = maybeMarker2(markerEnd);
+}
+function maybeMarker2(marker) {
+  if (marker == null || marker === false)
+    return null;
+  if (marker === true)
+    return markerCircleFill2;
+  if (typeof marker === "function")
+    return marker;
+  switch (`${marker}`.toLowerCase()) {
+    case "none":
+      return null;
+    case "arrow":
+      return markerArrow2("auto");
+    case "arrow-reverse":
+      return markerArrow2("auto-start-reverse");
+    case "dot":
+      return markerDot2;
+    case "circle":
+    case "circle-fill":
+      return markerCircleFill2;
+    case "circle-stroke":
+      return markerCircleStroke2;
+  }
+  throw new Error(`invalid marker: ${marker}`);
+}
+function markerArrow2(orient) {
+  return (color5, context) => create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("orient", orient).attr("fill", "none").attr("stroke", color5).attr("stroke-width", 1.5).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").call((marker) => marker.append("path").attr("d", "M-1.5,-3l3,3l-3,3")).node();
+}
+function markerDot2(color5, context) {
+  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "none").call((marker) => marker.append("circle").attr("r", 2.5)).node();
+}
+function markerCircleFill2(color5, context) {
+  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "white").attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
+}
+function markerCircleStroke2(color5, context) {
+  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", "white").attr("stroke", color5).attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
+}
+var nextMarkerId2 = 0;
+function applyMarkers2(path3, mark, { stroke: S }, context) {
+  return applyMarkersColor2(path3, mark, S && ((i) => S[i]), context);
+}
+function applyGroupedMarkers2(path3, mark, { stroke: S }, context) {
+  return applyMarkersColor2(path3, mark, S && (([i]) => S[i]), context);
+}
+function applyMarkersColor2(path3, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, context) {
+  const iriByMarkerColor = /* @__PURE__ */ new Map();
+  function applyMarker(marker) {
+    return function(i) {
+      const color5 = strokeof(i);
+      let iriByColor = iriByMarkerColor.get(marker);
+      if (!iriByColor)
+        iriByMarkerColor.set(marker, iriByColor = /* @__PURE__ */ new Map());
+      let iri = iriByColor.get(color5);
+      if (!iri) {
+        const node = this.parentNode.insertBefore(marker(color5, context), this);
+        const id3 = `plot-marker-${++nextMarkerId2}`;
+        node.setAttribute("id", id3);
+        iriByColor.set(color5, iri = `url(#${id3})`);
+      }
+      return iri;
+    };
+  }
+  if (markerStart)
+    path3.attr("marker-start", applyMarker(markerStart));
+  if (markerMid)
+    path3.attr("marker-mid", applyMarker(markerMid));
+  if (markerEnd)
+    path3.attr("marker-end", applyMarker(markerEnd));
+}
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/transforms/inset.js
 function maybeInsetX2({ inset, insetLeft, insetRight, ...options } = {}) {
@@ -50783,7 +51938,7 @@ function maybeIntervalMidY2(options = {}) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/rule.js
-var defaults21 = {
+var defaults22 = {
   ariaLabel: "rule",
   fill: null,
   stroke: "currentColor"
@@ -50798,11 +51953,12 @@ var RuleX2 = class extends Mark2 {
         y1: { value: y13, scale: "y", optional: true },
         y2: { value: y22, scale: "y", optional: true }
       },
-      options,
-      defaults21
+      withTip2(options, "x"),
+      defaults22
     );
     this.insetTop = number11(insetTop);
     this.insetBottom = number11(insetBottom);
+    markers2(this, options);
   }
   render(index5, scales, channels, dimensions, context) {
     const { x: x7, y: y7 } = scales;
@@ -50813,7 +51969,7 @@ var RuleX2 = class extends Mark2 {
       (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles2, this).attr("x1", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("x2", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("y1", Y15 && !isCollapsed2(y7) ? (i) => Y15[i] + insetTop : marginTop + insetTop).attr(
         "y2",
         Y25 && !isCollapsed2(y7) ? y7.bandwidth ? (i) => Y25[i] + y7.bandwidth() - insetBottom : (i) => Y25[i] - insetBottom : height - marginBottom - insetBottom
-      ).call(applyChannelStyles2, this, channels)
+      ).call(applyChannelStyles2, this, channels).call(applyMarkers2, this, channels, context)
     ).node();
   }
 };
@@ -50827,11 +51983,12 @@ var RuleY2 = class extends Mark2 {
         x1: { value: x13, scale: "x", optional: true },
         x2: { value: x22, scale: "x", optional: true }
       },
-      options,
-      defaults21
+      withTip2(options, "y"),
+      defaults22
     );
     this.insetRight = number11(insetRight);
     this.insetLeft = number11(insetLeft);
+    markers2(this, options);
   }
   render(index5, scales, channels, dimensions, context) {
     const { x: x7, y: y7 } = scales;
@@ -50842,7 +51999,7 @@ var RuleY2 = class extends Mark2 {
       (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles2, this).attr("x1", X15 && !isCollapsed2(x7) ? (i) => X15[i] + insetLeft : marginLeft + insetLeft).attr(
         "x2",
         X25 && !isCollapsed2(x7) ? x7.bandwidth ? (i) => X25[i] + x7.bandwidth() - insetRight : (i) => X25[i] - insetRight : width - marginRight - insetRight
-      ).attr("y1", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).attr("y2", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).call(applyChannelStyles2, this, channels)
+      ).attr("y1", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).attr("y2", Y4 ? (i) => Y4[i] : (marginTop + height - marginBottom) / 2).call(applyChannelStyles2, this, channels).call(applyMarkers2, this, channels, context)
     ).node();
   }
 };
@@ -50857,7 +52014,7 @@ function ruleY2(data, options) {
   return new RuleY2(data, { ...rest, y: y7, x1: x13, x2: x22 });
 }
 function maybeOptionalZero2(x7, x13, x22) {
-  if (x7 === void 0) {
+  if (x7 == null) {
     if (x13 === void 0) {
       if (x22 !== void 0)
         return [0, x22];
@@ -50897,7 +52054,7 @@ function template2(strings, ...parts) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/text.js
-var defaults22 = {
+var defaults23 = {
   ariaLabel: "text",
   strokeLinejoin: "round",
   strokeWidth: 3,
@@ -50936,7 +52093,7 @@ var Text2 = class extends Mark2 {
         text: { value: text3, filter: nonempty2, optional: true }
       },
       options,
-      defaults22
+      defaults23
     );
     this.rotate = crotate;
     this.textAnchor = impliedString2(textAnchor, "middle");
@@ -50991,14 +52148,20 @@ function applyMultilineText2(selection3, mark, T, TL) {
     const n = lines.length;
     const y7 = lineAnchor === "top" ? 0.71 : lineAnchor === "bottom" ? 1 - n : (164 - n * 100) / 200;
     if (n > 1) {
+      let m5 = 0;
       for (let i2 = 0; i2 < n; ++i2) {
+        ++m5;
         if (!lines[i2])
           continue;
         const tspan = this.ownerDocument.createElementNS(namespaces_default2.svg, "tspan");
         tspan.setAttribute("x", 0);
-        tspan.setAttribute("y", `${(y7 + i2) * lineHeight}em`);
+        if (i2 === m5 - 1)
+          tspan.setAttribute("y", `${(y7 + i2) * lineHeight}em`);
+        else
+          tspan.setAttribute("dy", `${m5 * lineHeight}em`);
         tspan.textContent = lines[i2];
         this.appendChild(tspan);
+        m5 = 0;
       }
     } else {
       if (y7)
@@ -51012,19 +52175,16 @@ function applyMultilineText2(selection3, mark, T, TL) {
     }
   });
 }
-function text2(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function text2(data, { x: x7, y: y7, ...options } = {}) {
   if (options.frameAnchor === void 0)
     [x7, y7] = maybeTuple2(x7, y7);
-  return new Text2(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Text2(data, { ...options, x: x7, y: y7 });
 }
-function textX2(data, options = {}) {
-  const { x: x7 = identity13, ...remainingOptions } = options;
-  return new Text2(data, maybeIntervalMidY2({ ...remainingOptions, x: x7 }));
+function textX2(data, { x: x7 = identity13, ...options } = {}) {
+  return new Text2(data, maybeIntervalMidY2({ ...options, x: x7 }));
 }
-function textY2(data, options = {}) {
-  const { y: y7 = identity13, ...remainingOptions } = options;
-  return new Text2(data, maybeIntervalMidX2({ ...remainingOptions, y: y7 }));
+function textY2(data, { y: y7 = identity13, ...options } = {}) {
+  return new Text2(data, maybeIntervalMidX2({ ...options, y: y7 }));
 }
 function applyIndirectTextStyles2(selection3, mark, T) {
   applyAttr2(selection3, "text-anchor", mark.textAnchor);
@@ -51035,7 +52195,7 @@ function applyIndirectTextStyles2(selection3, mark, T) {
   applyAttr2(selection3, "font-weight", mark.fontWeight);
 }
 function inferFontVariant5(T) {
-  return isNumeric2(T) || isTemporal2(T) ? "tabular-nums" : void 0;
+  return T && (isNumeric2(T) || isTemporal2(T)) ? "tabular-nums" : void 0;
 }
 var fontSizes2 = /* @__PURE__ */ new Set([
   // global keywords
@@ -51230,13 +52390,14 @@ function clipper2({ monospace, lineWidth, textOverflow }) {
     case "clip-end":
       return (text3) => clipEnd2(text3, maxWidth, widthof, "");
     case "ellipsis-start":
-      return (text3) => clipStart2(text3, maxWidth, widthof, "\u2026");
+      return (text3) => clipStart2(text3, maxWidth, widthof, ellipsis2);
     case "ellipsis-middle":
-      return (text3) => clipMiddle2(text3, maxWidth, widthof, "\u2026");
+      return (text3) => clipMiddle2(text3, maxWidth, widthof, ellipsis2);
     case "ellipsis-end":
-      return (text3) => clipEnd2(text3, maxWidth, widthof, "\u2026");
+      return (text3) => clipEnd2(text3, maxWidth, widthof, ellipsis2);
   }
 }
+var ellipsis2 = "\u2026";
 function cut2(text3, width, widthof, inset) {
   const I = [];
   let w = 0;
@@ -51254,30 +52415,30 @@ function cut2(text3, width, widthof, inset) {
   }
   return [-1, 0];
 }
-function clipEnd2(text3, width, widthof, ellipsis) {
+function clipEnd2(text3, width, widthof, ellipsis3) {
   text3 = text3.trim();
-  const e = widthof(ellipsis);
+  const e = widthof(ellipsis3);
   const [i] = cut2(text3, width, widthof, e);
-  return i < 0 ? text3 : text3.slice(0, i).trimEnd() + ellipsis;
+  return i < 0 ? text3 : text3.slice(0, i).trimEnd() + ellipsis3;
 }
-function clipMiddle2(text3, width, widthof, ellipsis) {
+function clipMiddle2(text3, width, widthof, ellipsis3) {
   text3 = text3.trim();
   const w = widthof(text3);
   if (w <= width)
     return text3;
-  const e = widthof(ellipsis) / 2;
+  const e = widthof(ellipsis3) / 2;
   const [i, ei] = cut2(text3, width / 2, widthof, e);
   const [j] = cut2(text3, w - width / 2 - ei + e, widthof, -e);
-  return j < 0 ? ellipsis : text3.slice(0, i).trimEnd() + ellipsis + text3.slice(readCharacter2(text3, j)).trimStart();
+  return j < 0 ? ellipsis3 : text3.slice(0, i).trimEnd() + ellipsis3 + text3.slice(readCharacter2(text3, j)).trimStart();
 }
-function clipStart2(text3, width, widthof, ellipsis) {
+function clipStart2(text3, width, widthof, ellipsis3) {
   text3 = text3.trim();
   const w = widthof(text3);
   if (w <= width)
     return text3;
-  const e = widthof(ellipsis);
+  const e = widthof(ellipsis3);
   const [j] = cut2(text3, w - width + e, widthof, -e);
-  return j < 0 ? ellipsis : ellipsis + text3.slice(readCharacter2(text3, j)).trimStart();
+  return j < 0 ? ellipsis3 : ellipsis3 + text3.slice(readCharacter2(text3, j)).trimStart();
 }
 var reCombiner2 = /[\p{Combining_Mark}\p{Emoji_Modifier}]+/uy;
 var rePictographic2 = /\p{Extended_Pictographic}/uy;
@@ -51311,7 +52472,7 @@ function isPictographic2(text3, i) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/vector.js
-var defaults23 = {
+var defaults24 = {
   ariaLabel: "vector",
   fill: "none",
   stroke: "currentColor",
@@ -51367,7 +52528,7 @@ var Vector2 = class extends Mark2 {
         rotate: { value: vr, optional: true }
       },
       options,
-      defaults23
+      defaults24
     );
     this.r = +r;
     this.length = cl;
@@ -51417,7 +52578,7 @@ function vectorY2(data, options = {}) {
 function spike2(data, options = {}) {
   const {
     shape = shapeSpike2,
-    stroke = defaults23.stroke,
+    stroke = defaults24.stroke,
     strokeWidth = 1,
     fill = stroke,
     fillOpacity = 0.3,
@@ -51435,24 +52596,24 @@ function maybeData2(data, options) {
     options = {};
   return [data, options];
 }
-function maybeAnchor4({ anchor } = {}, anchors) {
+function maybeAnchor6({ anchor } = {}, anchors) {
   return anchor === void 0 ? anchors[0] : keyword2(anchor, "anchor", anchors);
 }
-function anchorY2(options) {
-  return maybeAnchor4(options, ["left", "right"]);
+function anchorY4(options) {
+  return maybeAnchor6(options, ["left", "right"]);
 }
 function anchorFy2(options) {
-  return maybeAnchor4(options, ["right", "left"]);
+  return maybeAnchor6(options, ["right", "left"]);
 }
-function anchorX2(options) {
-  return maybeAnchor4(options, ["bottom", "top"]);
+function anchorX4(options) {
+  return maybeAnchor6(options, ["bottom", "top"]);
 }
 function anchorFx2(options) {
-  return maybeAnchor4(options, ["top", "bottom"]);
+  return maybeAnchor6(options, ["top", "bottom"]);
 }
 function axisY2() {
   const [data, options] = maybeData2(...arguments);
-  return axisKy2("y", anchorY2(options), data, options);
+  return axisKy2("y", anchorY4(options), data, options);
 }
 function axisFy2() {
   const [data, options] = maybeData2(...arguments);
@@ -51460,7 +52621,7 @@ function axisFy2() {
 }
 function axisX2() {
   const [data, options] = maybeData2(...arguments);
-  return axisKx2("x", anchorX2(options), data, options);
+  return axisKx2("x", anchorX4(options), data, options);
 }
 function axisFx2() {
   const [data, options] = maybeData2(...arguments);
@@ -51488,8 +52649,9 @@ function axisKy2(k3, anchor, data, {
   marginBottom = margin === void 0 ? 20 : margin,
   marginLeft = margin === void 0 ? anchor === "left" ? 40 : 0 : margin,
   label,
-  labelOffset,
   labelAnchor,
+  labelArrow,
+  labelOffset,
   ...options
 }) {
   tickSize = number11(tickSize);
@@ -51497,6 +52659,7 @@ function axisKy2(k3, anchor, data, {
   tickRotate = number11(tickRotate);
   if (labelAnchor !== void 0)
     labelAnchor = keyword2(labelAnchor, "labelAnchor", ["center", "top", "bottom"]);
+  labelArrow = maybeLabelArrow2(labelArrow);
   return marks2(
     tickSize && !isNoneish2(stroke) ? axisTickKy2(k3, anchor, data, {
       stroke,
@@ -51548,11 +52711,7 @@ function axisKy2(k3, anchor, data, {
         this.ariaLabel = `${k3}-axis label`;
         return {
           facets: [[0]],
-          channels: {
-            text: {
-              value: [label === void 0 ? inferAxisLabel2(k3, scale5, cla) : label]
-            }
-          }
+          channels: { text: { value: [formatAxisLabel2(k3, scale5, { anchor, label, labelAnchor: cla, labelArrow })] } }
         };
       })
     ) : null
@@ -51581,6 +52740,7 @@ function axisKx2(k3, anchor, data, {
   marginLeft = margin === void 0 ? 20 : margin,
   label,
   labelAnchor,
+  labelArrow,
   labelOffset,
   ...options
 }) {
@@ -51589,6 +52749,7 @@ function axisKx2(k3, anchor, data, {
   tickRotate = number11(tickRotate);
   if (labelAnchor !== void 0)
     labelAnchor = keyword2(labelAnchor, "labelAnchor", ["center", "left", "right"]);
+  labelArrow = maybeLabelArrow2(labelArrow);
   return marks2(
     tickSize && !isNoneish2(stroke) ? axisTickKx2(k3, anchor, data, {
       stroke,
@@ -51637,11 +52798,7 @@ function axisKx2(k3, anchor, data, {
         this.ariaLabel = `${k3}-axis label`;
         return {
           facets: [[0]],
-          channels: {
-            text: {
-              value: [label === void 0 ? inferAxisLabel2(k3, scale5, cla) : label]
-            }
-          }
+          channels: { text: { value: [formatAxisLabel2(k3, scale5, { anchor, label, labelAnchor: cla, labelArrow })] } }
         };
       })
     ) : null
@@ -51791,7 +52948,7 @@ function axisTextKx2(k3, anchor, data, {
 }
 function gridY2() {
   const [data, options] = maybeData2(...arguments);
-  return gridKy2("y", anchorY2(options), data, options);
+  return gridKy2("y", anchorY4(options), data, options);
 }
 function gridFy2() {
   const [data, options] = maybeData2(...arguments);
@@ -51799,7 +52956,7 @@ function gridFy2() {
 }
 function gridX2() {
   const [data, options] = maybeData2(...arguments);
-  return gridKx2("x", anchorX2(options), data, options);
+  return gridKx2("x", anchorX4(options), data, options);
 }
 function gridFx2() {
   const [data, options] = maybeData2(...arguments);
@@ -51856,7 +53013,8 @@ function axisMark2(mark, k3, ariaLabel, data, options, initialize) {
   let channels;
   const m5 = mark(
     data,
-    initializer2(options, function(data2, facets, _channels, scales) {
+    initializer2(options, function(data2, facets, _channels, scales, dimensions, context) {
+      const initializeFacets = data2 == null && (k3 === "fx" || k3 === "fy");
       const { [k3]: scale5 } = scales;
       if (!scale5)
         throw new Error(`missing scale: ${k3}`);
@@ -51887,17 +53045,17 @@ function axisMark2(mark, k3, ariaLabel, data, options, initialize) {
           facets = [range8(data2)];
         } else {
           channels[k3] = { scale: k3, value: identity13 };
-          facets = void 0;
         }
       }
       initialize?.call(this, scale5, ticks3, channels);
-      return {
-        data: data2,
-        facets,
-        channels: Object.fromEntries(
-          Object.entries(channels).map(([name, channel]) => [name, { ...channel, value: valueof2(data2, channel.value) }])
-        )
-      };
+      const initializedChannels = Object.fromEntries(
+        Object.entries(channels).map(([name, channel]) => {
+          return [name, { ...channel, value: valueof2(data2, channel.value) }];
+        })
+      );
+      if (initializeFacets)
+        facets = context.filterFacets(data2, initializedChannels);
+      return { data: data2, facets, channels: initializedChannels };
     })
   );
   if (data == null) {
@@ -51913,7 +53071,7 @@ function inferTextChannel2(scale5, ticks3, tickFormat3) {
   return { value: inferTickFormat2(scale5, ticks3, tickFormat3) };
 }
 function inferTickFormat2(scale5, ticks3, tickFormat3) {
-  return scale5.tickFormat ? scale5.tickFormat(isIterable2(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? formatDefault2 : typeof tickFormat3 === "string" ? (isTemporal2(scale5.domain()) ? utcFormat2 : format3)(tickFormat3) : constant4(tickFormat3);
+  return scale5.tickFormat ? scale5.tickFormat(isIterable2(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? isUtcYear2(scale5.interval) ? utcFormat2("%Y") : isTimeYear2(scale5.interval) ? timeFormat2("%Y") : formatDefault2 : typeof tickFormat3 === "string" ? (isTemporal2(scale5.domain()) ? utcFormat2 : format3)(tickFormat3) : constant4(tickFormat3);
 }
 var shapeTickBottom2 = {
   draw(context, l) {
@@ -51940,21 +53098,45 @@ var shapeTickRight2 = {
   }
 };
 function inferFontVariant6(scale5) {
-  return scale5.bandwidth && scale5.interval === void 0 ? void 0 : "tabular-nums";
+  return scale5.bandwidth && !scale5.interval ? void 0 : "tabular-nums";
 }
 function inferScaleOrder2(scale5) {
   return Math.sign(orderof2(scale5.domain())) * Math.sign(orderof2(scale5.range()));
 }
-function inferAxisLabel2(key, scale5, labelAnchor) {
-  const label = scale5.label;
-  if (scale5.bandwidth || !label?.inferred)
+function formatAxisLabel2(k3, scale5, { anchor, label = scale5.label, labelAnchor, labelArrow } = {}) {
+  if (label == null || label.inferred && isTemporalish2(scale5) && /^(date|time|year)$/i.test(label))
+    return;
+  label = String(label);
+  if (labelArrow === "auto")
+    labelArrow = (!scale5.bandwidth || scale5.interval) && !/[↑↓→←]/.test(label);
+  if (!labelArrow)
     return label;
-  const order = inferScaleOrder2(scale5);
-  return order ? key === "x" || labelAnchor === "center" ? key === "x" === order < 0 ? `\u2190 ${label}` : `${label} \u2192` : `${order < 0 ? "\u2191 " : "\u2193 "}${label}` : label;
+  if (labelArrow === true) {
+    const order = inferScaleOrder2(scale5);
+    if (order)
+      labelArrow = /x$/.test(k3) || labelAnchor === "center" ? /x$/.test(k3) === order < 0 ? "left" : "right" : order < 0 ? "up" : "down";
+  }
+  switch (labelArrow) {
+    case "left":
+      return `\u2190 ${label}`;
+    case "right":
+      return `${label} \u2192`;
+    case "up":
+      return anchor === "right" ? `${label} \u2191` : `\u2191 ${label}`;
+    case "down":
+      return anchor === "right" ? `${label} \u2193` : `\u2193 ${label}`;
+  }
+  return label;
+}
+function maybeLabelArrow2(labelArrow = "auto") {
+  return isNoneish2(labelArrow) ? false : typeof labelArrow === "boolean" ? labelArrow : keyword2(labelArrow, "labelArrow", ["auto", "up", "right", "down", "left"]);
+}
+function isTemporalish2(scale5) {
+  return isTemporalScale2(scale5) || scale5.interval != null;
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/frame.js
-var defaults24 = {
+var defaults25 = {
   ariaLabel: "frame",
   fill: "none",
   stroke: "currentColor"
@@ -51977,7 +53159,7 @@ var Frame2 = class extends Mark2 {
       rx,
       ry
     } = options;
-    super(void 0, void 0, options, anchor == null ? defaults24 : lineDefaults2);
+    super(singleton2, void 0, options, anchor == null ? defaults25 : lineDefaults2);
     this.anchor = maybeKeyword2(anchor, "anchor", ["top", "right", "bottom", "left"]);
     this.insetTop = number11(insetTop);
     this.insetRight = number11(insetRight);
@@ -51993,7 +53175,7 @@ var Frame2 = class extends Mark2 {
     const x22 = width - marginRight - insetRight;
     const y13 = marginTop + insetTop;
     const y22 = height - marginBottom - insetBottom;
-    return create4(anchor ? "svg:line" : "svg:rect", context).call(applyIndirectStyles2, this, dimensions, context).call(applyDirectStyles2, this).call(applyTransform2, this, {}).call(
+    return create4(anchor ? "svg:line" : "svg:rect", context).datum(0).call(applyIndirectStyles2, this, dimensions, context).call(applyDirectStyles2, this).call(applyChannelStyles2, this, channels).call(applyTransform2, this, {}).call(
       anchor === "left" ? (line3) => line3.attr("x1", x13).attr("x2", x13).attr("y1", y13).attr("y2", y22) : anchor === "right" ? (line3) => line3.attr("x1", x22).attr("x2", x22).attr("y1", y13).attr("y2", y22) : anchor === "top" ? (line3) => line3.attr("x1", x13).attr("x2", x22).attr("y1", y13).attr("y2", y13) : anchor === "bottom" ? (line3) => line3.attr("x1", x13).attr("x2", x22).attr("y1", y22).attr("y2", y22) : (rect3) => rect3.attr("x", x13).attr("y", y13).attr("width", x22 - x13).attr("height", y22 - y13).attr("rx", rx).attr("ry", ry)
     ).node();
   }
@@ -52002,11 +53184,291 @@ function frame4(options) {
   return new Frame2(options);
 }
 
+// js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/tip.js
+var defaults26 = {
+  ariaLabel: "tip",
+  fill: "white",
+  stroke: "currentColor"
+};
+var ignoreChannels2 = /* @__PURE__ */ new Set(["geometry", "href", "src", "ariaLabel"]);
+var Tip2 = class extends Mark2 {
+  constructor(data, options = {}) {
+    if (options.tip)
+      options = { ...options, tip: false };
+    if (options.title === void 0 && isIterable2(data) && isTextual2(data))
+      options = { ...options, title: identity13 };
+    const {
+      x: x7,
+      y: y7,
+      x1: x13,
+      x2: x22,
+      y1: y13,
+      y2: y22,
+      anchor,
+      monospace,
+      fontFamily = monospace ? "ui-monospace, monospace" : void 0,
+      fontSize,
+      fontStyle,
+      fontVariant,
+      fontWeight,
+      lineHeight = 1,
+      lineWidth = 20,
+      frameAnchor,
+      textAnchor = "start",
+      textOverflow,
+      textPadding = 8,
+      pointerSize = 12,
+      pathFilter = "drop-shadow(0 3px 4px rgba(0,0,0,0.2))"
+    } = options;
+    super(
+      data,
+      {
+        x: { value: x13 != null && x22 != null ? null : x7, scale: "x", optional: true },
+        // ignore midpoint
+        y: { value: y13 != null && y22 != null ? null : y7, scale: "y", optional: true },
+        // ignore midpoint
+        x1: { value: x13, scale: "x", optional: x22 == null },
+        y1: { value: y13, scale: "y", optional: y22 == null },
+        x2: { value: x22, scale: "x", optional: x13 == null },
+        y2: { value: y22, scale: "y", optional: y13 == null }
+      },
+      options,
+      defaults26
+    );
+    this.anchor = maybeAnchor5(anchor, "anchor");
+    this.previousAnchor = this.anchor ?? "top-left";
+    this.frameAnchor = maybeFrameAnchor2(frameAnchor);
+    this.textAnchor = impliedString2(textAnchor, "middle");
+    this.textPadding = +textPadding;
+    this.pointerSize = +pointerSize;
+    this.pathFilter = string2(pathFilter);
+    this.lineHeight = +lineHeight;
+    this.lineWidth = +lineWidth;
+    this.textOverflow = maybeTextOverflow2(textOverflow);
+    this.monospace = !!monospace;
+    this.fontFamily = string2(fontFamily);
+    this.fontSize = number11(fontSize);
+    this.fontStyle = string2(fontStyle);
+    this.fontVariant = string2(fontVariant);
+    this.fontWeight = string2(fontWeight);
+    for (const key in defaults26)
+      if (key in this.channels)
+        this[key] = defaults26[key];
+    this.splitLines = splitter4(this);
+    this.clipLine = clipper2(this);
+  }
+  render(index5, scales, values3, dimensions, context) {
+    const mark = this;
+    const { x: x7, y: y7, fx, fy } = scales;
+    const { ownerSVGElement: svg3, document: document2 } = context;
+    const { anchor, monospace, lineHeight, lineWidth } = this;
+    const { textPadding: r, pointerSize: m5, pathFilter } = this;
+    const { marginTop, marginLeft } = dimensions;
+    const sources = getSources2(values3);
+    const { x1: X15, y1: Y15, x2: X25, y2: Y25, x: X4 = X15 ?? X25, y: Y4 = Y15 ?? Y25 } = values3;
+    const ox3 = fx ? fx(index5.fx) - marginLeft : 0;
+    const oy3 = fy ? fy(index5.fy) - marginTop : 0;
+    const [cx, cy] = applyFrameAnchor2(this, dimensions);
+    const px = anchorX3(values3, cx);
+    const py = anchorY3(values3, cy);
+    const widthof = monospace ? monospaceWidth2 : defaultWidth2;
+    const ee = widthof(ellipsis2);
+    const formatFx = fx && inferTickFormat2(fx);
+    const formatFy = fy && inferTickFormat2(fy);
+    function* format5(sources2, i) {
+      if ("title" in sources2) {
+        const text3 = sources2.title.value[i];
+        for (const line3 of mark.splitLines(formatDefault2(text3))) {
+          yield { name: "", value: mark.clipLine(line3) };
+        }
+        return;
+      }
+      for (const key in sources2) {
+        if (key === "x1" && "x2" in sources2)
+          continue;
+        if (key === "y1" && "y2" in sources2)
+          continue;
+        const channel = sources2[key];
+        const value = channel.value[i];
+        if (!defined2(value) && channel.scale == null)
+          continue;
+        if (key === "x2" && "x1" in sources2) {
+          yield { name: formatLabel2(scales, channel, "x"), value: formatPair2(sources2.x1, channel, i) };
+        } else if (key === "y2" && "y1" in sources2) {
+          yield { name: formatLabel2(scales, channel, "y"), value: formatPair2(sources2.y1, channel, i) };
+        } else {
+          const scale5 = channel.scale;
+          const line3 = { name: formatLabel2(scales, channel, key), value: formatDefault2(value) };
+          if (scale5 === "color" || scale5 === "opacity")
+            line3[scale5] = values3[key][i];
+          yield line3;
+        }
+      }
+      if (index5.fi != null && fx)
+        yield { name: String(fx.label ?? "fx"), value: formatFx(index5.fx) };
+      if (index5.fi != null && fy)
+        yield { name: String(fy.label ?? "fy"), value: formatFy(index5.fy) };
+    }
+    const g = create4("svg:g", context).call(applyIndirectStyles2, this, dimensions, context).call(applyIndirectTextStyles2, this).call(applyTransform2, this, { x: X4 && x7, y: Y4 && y7 }).call(
+      (g2) => g2.selectAll().data(index5).enter().append("g").attr("transform", (i) => `translate(${Math.round(px(i))},${Math.round(py(i))})`).call(applyDirectStyles2, this).call((g3) => g3.append("path").attr("filter", pathFilter)).call(
+        (g3) => g3.append("text").each(function(i) {
+          const that = select_default5(this);
+          this.setAttribute("fill", "currentColor");
+          this.setAttribute("fill-opacity", 1);
+          this.setAttribute("stroke", "none");
+          const names = /* @__PURE__ */ new Set();
+          for (const line3 of format5(sources, i)) {
+            const name = line3.name;
+            if (name && names.has(name))
+              continue;
+            else
+              names.add(name);
+            renderLine(that, line3);
+          }
+        })
+      )
+    );
+    function renderLine(selection3, { name, value, color: color5, opacity: opacity3 }) {
+      const swatch = color5 != null || opacity3 != null;
+      let title;
+      let w = lineWidth * 100;
+      const [j] = cut2(name, w, widthof, ee);
+      if (j >= 0) {
+        name = name.slice(0, j).trimEnd() + ellipsis2;
+        title = value.trim();
+        value = "";
+      } else {
+        if (name || !value && !swatch)
+          value = " " + value;
+        const [k3] = cut2(value, w - widthof(name), widthof, ee);
+        if (k3 >= 0) {
+          value = value.slice(0, k3).trimEnd() + ellipsis2;
+          title = value.trim();
+        }
+      }
+      const line3 = selection3.append("tspan").attr("x", 0).attr("dy", `${lineHeight}em`).text("\u200B");
+      if (name)
+        line3.append("tspan").attr("font-weight", "bold").text(name);
+      if (value)
+        line3.append(() => document2.createTextNode(value));
+      if (swatch)
+        line3.append("tspan").text(" \u25A0").attr("fill", color5).attr("fill-opacity", opacity3).style("user-select", "none");
+      if (title)
+        line3.append("title").text(title);
+    }
+    function postrender() {
+      const { width, height } = dimensions.facet ?? dimensions;
+      g.selectChildren().each(function(i) {
+        let { x: tx, width: w, height: h } = this.getBBox();
+        w = Math.round(w), h = Math.round(h);
+        let a7 = anchor;
+        if (a7 === void 0) {
+          a7 = mark.previousAnchor;
+          const x8 = px(i) + ox3;
+          const y8 = py(i) + oy3;
+          const fitLeft = x8 + w + r * 2 < width;
+          const fitRight = x8 - w - r * 2 > 0;
+          const fitTop = y8 + h + m5 + r * 2 + 7 < height;
+          const fitBottom = y8 - h - m5 - r * 2 > 0;
+          const ax = (/-left$/.test(a7) ? fitLeft || !fitRight : fitLeft && !fitRight) ? "left" : "right";
+          const ay = (/^top-/.test(a7) ? fitTop || !fitBottom : fitTop && !fitBottom) ? "top" : "bottom";
+          a7 = mark.previousAnchor = `${ay}-${ax}`;
+        }
+        const path3 = this.firstChild;
+        const text3 = this.lastChild;
+        path3.setAttribute("d", getPath2(a7, m5, r, w, h));
+        if (tx)
+          for (const t of text3.childNodes)
+            t.setAttribute("x", -tx);
+        text3.setAttribute("y", `${+getLineOffset2(a7, text3.childNodes.length, lineHeight).toFixed(6)}em`);
+        text3.setAttribute("transform", `translate(${getTextTranslate2(a7, m5, r, w, h)})`);
+      });
+    }
+    if (svg3.isConnected)
+      Promise.resolve().then(postrender);
+    else if (typeof requestAnimationFrame !== "undefined")
+      requestAnimationFrame(postrender);
+    return g.node();
+  }
+};
+function tip2(data, { x: x7, y: y7, ...options } = {}) {
+  if (options.frameAnchor === void 0)
+    [x7, y7] = maybeTuple2(x7, y7);
+  return new Tip2(data, { ...options, x: x7, y: y7 });
+}
+function getLineOffset2(anchor, length7, lineHeight) {
+  return /^top(?:-|$)/.test(anchor) ? 0.94 - lineHeight : /^bottom(?:-|$)/ ? -0.29 - length7 * lineHeight : length7 / 2 * lineHeight;
+}
+function getTextTranslate2(anchor, m5, r, width, height) {
+  switch (anchor) {
+    case "middle":
+      return [-width / 2, height / 2];
+    case "top-left":
+      return [r, m5 + r];
+    case "top":
+      return [-width / 2, m5 / 2 + r];
+    case "top-right":
+      return [-width - r, m5 + r];
+    case "right":
+      return [-m5 / 2 - width - r, height / 2];
+    case "bottom-left":
+      return [r, -m5 - r];
+    case "bottom":
+      return [-width / 2, -m5 / 2 - r];
+    case "bottom-right":
+      return [-width - r, -m5 - r];
+    case "left":
+      return [r + m5 / 2, height / 2];
+  }
+}
+function getPath2(anchor, m5, r, width, height) {
+  const w = width + r * 2;
+  const h = height + r * 2;
+  switch (anchor) {
+    case "middle":
+      return `M${-w / 2},${-h / 2}h${w}v${h}h${-w}z`;
+    case "top-left":
+      return `M0,0l${m5},${m5}h${w - m5}v${h}h${-w}z`;
+    case "top":
+      return `M0,0l${m5 / 2},${m5 / 2}h${(w - m5) / 2}v${h}h${-w}v${-h}h${(w - m5) / 2}z`;
+    case "top-right":
+      return `M0,0l${-m5},${m5}h${m5 - w}v${h}h${w}z`;
+    case "right":
+      return `M0,0l${-m5 / 2},${-m5 / 2}v${m5 / 2 - h / 2}h${-w}v${h}h${w}v${m5 / 2 - h / 2}z`;
+    case "bottom-left":
+      return `M0,0l${m5},${-m5}h${w - m5}v${-h}h${-w}z`;
+    case "bottom":
+      return `M0,0l${m5 / 2},${-m5 / 2}h${(w - m5) / 2}v${-h}h${-w}v${h}h${(w - m5) / 2}z`;
+    case "bottom-right":
+      return `M0,0l${-m5},${-m5}h${m5 - w}v${-h}h${w}z`;
+    case "left":
+      return `M0,0l${m5 / 2},${-m5 / 2}v${m5 / 2 - h / 2}h${w}v${h}h${-w}v${m5 / 2 - h / 2}z`;
+  }
+}
+function getSources2({ channels }) {
+  const sources = {};
+  for (const key in channels) {
+    if (ignoreChannels2.has(key))
+      continue;
+    const source = getSource2(channels, key);
+    if (source)
+      sources[key] = source;
+  }
+  return sources;
+}
+function formatPair2(c1, c22, i) {
+  return c22.hint?.length ? `${formatDefault2(c22.value[i] - c1.value[i])}` : `${formatDefault2(c1.value[i])}\u2013${formatDefault2(c22.value[i])}`;
+}
+function formatLabel2(scales, c11, defaultLabel) {
+  return String(scales[c11.scale]?.label ?? c11?.label ?? defaultLabel);
+}
+
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/plot.js
 function plot2(options = {}) {
   const { facet, style, caption, ariaLabel, ariaDescription } = options;
   const className = maybeClassName2(options.className);
   const marks3 = options.marks === void 0 ? [] : flatMarks2(options.marks);
+  marks3.push(...inferTips2(marks3));
   const topFacetState = maybeTopFacet2(facet, options);
   const facetStateByMark = /* @__PURE__ */ new Map();
   for (const mark of marks3) {
@@ -52065,7 +53527,7 @@ function plot2(options = {}) {
     if (stateByMark.has(mark))
       throw new Error("duplicate mark; each mark must be unique");
     const { facetsIndex, channels: facetChannels } = facetStateByMark.get(mark) ?? {};
-    const { data, facets: facets2, channels } = mark.initialize(facetsIndex, facetChannels);
+    const { data, facets: facets2, channels } = mark.initialize(facetsIndex, facetChannels, options);
     applyScaleTransforms2(channels, options);
     stateByMark.set(mark, { data, facets: facets2, channels });
   }
@@ -52076,7 +53538,27 @@ function plot2(options = {}) {
   const { fx, fy } = scales;
   const subdimensions = fx || fy ? innerDimensions2(scaleDescriptors, dimensions) : dimensions;
   const superdimensions = fx || fy ? actualDimensions2(scales, dimensions) : dimensions;
-  const context = createContext2(options, subdimensions, className);
+  const context = createContext2(options);
+  const document2 = context.document;
+  const svg3 = creator_default2("svg").call(document2.documentElement);
+  let figure = svg3;
+  context.ownerSVGElement = svg3;
+  context.className = className;
+  context.projection = createProjection2(options, subdimensions);
+  context.filterFacets = (data, channels) => {
+    return facetFilter2(facets, { channels, groups: facetGroups2(data, channels) });
+  };
+  context.getMarkState = (mark) => {
+    const state = stateByMark.get(mark);
+    const facetState = facetStateByMark.get(mark);
+    return { ...state, channels: { ...state.channels, ...facetState?.channels } };
+  };
+  context.dispatchValue = (value) => {
+    if (figure.value === value)
+      return;
+    figure.value = value;
+    figure.dispatchEvent(new Event("input", { bubbles: true }));
+  };
   const newByScale = /* @__PURE__ */ new Set();
   for (const [mark, state] of stateByMark) {
     if (mark.initializer != null) {
@@ -52089,26 +53571,18 @@ function plot2(options = {}) {
         state.facets = update.facets;
       }
       if (update.channels !== void 0) {
-        inferChannelScales2(update.channels);
-        Object.assign(state.channels, update.channels);
-        for (const channel of Object.values(update.channels)) {
+        const { fx: fx2, fy: fy2, ...channels } = update.channels;
+        inferChannelScales2(channels);
+        Object.assign(state.channels, channels);
+        for (const channel of Object.values(channels)) {
           const { scale: scale5 } = channel;
           if (scale5 != null && registry2.get(scale5) !== position3) {
             applyScaleTransform2(channel, options);
             newByScale.add(scale5);
           }
         }
-        const { fx: fx2, fy: fy2 } = update.channels;
-        if (fx2 != null || fy2 != null) {
-          const facetState = facetStateByMark.get(mark) ?? { channels: {} };
-          if (fx2 != null)
-            facetState.channels.fx = fx2;
-          if (fy2 != null)
-            facetState.channels.fy = fy2;
-          facetState.groups = facetGroups2(state.data, facetState.channels);
-          facetState.facetsIndex = state.facets = facetFilter2(facets, facetState);
-          facetStateByMark.set(mark, facetState);
-        }
+        if (fx2 != null || fy2 != null)
+          facetStateByMark.set(mark, true);
       }
     }
   }
@@ -52121,11 +53595,17 @@ function plot2(options = {}) {
     Object.assign(scaleDescriptors, newScaleDescriptors);
     Object.assign(scales, newScales);
   }
+  let facetDomains, facetTranslate;
+  if (facets !== void 0) {
+    facetDomains = { x: fx?.domain(), y: fy?.domain() };
+    facets = recreateFacets2(facets, facetDomains);
+    facetTranslate = facetTranslator2(fx, fy, dimensions);
+  }
   for (const [mark, state] of stateByMark) {
     state.values = mark.scale(state.channels, scales, context);
   }
   const { width, height } = dimensions;
-  const svg3 = create4("svg", context).attr("class", className).attr("fill", "currentColor").attr("font-family", "system-ui, sans-serif").attr("font-size", 10).attr("text-anchor", "middle").attr("width", width).attr("height", height).attr("viewBox", `0 0 ${width} ${height}`).attr("aria-label", ariaLabel).attr("aria-description", ariaDescription).call(
+  select_default5(svg3).attr("class", className).attr("fill", "currentColor").attr("font-family", "system-ui, sans-serif").attr("font-size", 10).attr("text-anchor", "middle").attr("width", width).attr("height", height).attr("viewBox", `0 0 ${width} ${height}`).attr("aria-label", ariaLabel).attr("aria-description", ariaDescription).call(
     (svg4) => (
       // Warning: if you edit this, change defaultClassName.
       svg4.append("style").text(
@@ -52142,55 +53622,52 @@ function plot2(options = {}) {
 }`
       )
     )
-  ).call(applyInlineStyles2, style).node();
-  if (facets !== void 0) {
-    const facetDomains = { x: fx?.domain(), y: fy?.domain() };
-    facets = recreateFacets2(facets, facetDomains);
-    select_default5(svg3).selectAll().data(facets).enter().append("g").attr("aria-label", "facet").attr("transform", facetTranslate2(fx, fy, dimensions)).each(function(f) {
-      let empty7 = true;
-      for (const mark of marks3) {
-        if (mark.facet === "super")
+  ).call(applyInlineStyles2, style);
+  for (const mark of marks3) {
+    const { channels, values: values3, facets: indexes3 } = stateByMark.get(mark);
+    if (facets === void 0 || mark.facet === "super") {
+      let index5 = null;
+      if (indexes3) {
+        index5 = indexes3[0];
+        index5 = mark.filter(index5, channels, values3);
+        if (index5.length === 0)
           continue;
-        const { channels, values: values3, facets: indexes3 } = stateByMark.get(mark);
+      }
+      const node = mark.render(index5, scales, values3, superdimensions, context);
+      if (node == null)
+        continue;
+      svg3.appendChild(node);
+    } else {
+      let g;
+      for (const f of facets) {
         if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty))
           continue;
         let index5 = null;
         if (indexes3) {
-          index5 = indexes3[facetStateByMark.has(mark) ? f.i : 0];
+          const faceted = facetStateByMark.has(mark);
+          index5 = indexes3[faceted ? f.i : 0];
           index5 = mark.filter(index5, channels, values3);
           if (index5.length === 0)
             continue;
-          index5.fi = f.i;
+          if (faceted)
+            index5.fx = f.x, index5.fy = f.y, index5.fi = f.i;
         }
         const node = mark.render(index5, scales, values3, subdimensions, context);
         if (node == null)
           continue;
-        empty7 = false;
-        this.appendChild(node);
+        (g ??= select_default5(svg3).append("g")).append(() => node).datum(f);
+        for (const name of ["aria-label", "aria-description", "aria-hidden", "transform"]) {
+          if (node.hasAttribute(name)) {
+            g.attr(name, node.getAttribute(name));
+            node.removeAttribute(name);
+          }
+        }
       }
-      if (empty7)
-        this.remove();
-    });
-  }
-  for (const mark of marks3) {
-    if (facets !== void 0 && mark.facet !== "super")
-      continue;
-    const { channels, values: values3, facets: indexes3 } = stateByMark.get(mark);
-    let index5 = null;
-    if (indexes3) {
-      index5 = indexes3[0];
-      index5 = mark.filter(index5, channels, values3);
-      if (index5.length === 0)
-        continue;
+      g?.selectChildren().attr("transform", facetTranslate);
     }
-    const node = mark.render(index5, scales, values3, superdimensions, context);
-    if (node != null)
-      svg3.appendChild(node);
   }
-  let figure = svg3;
   const legends = createLegends2(scaleDescriptors, context, options);
   if (caption != null || legends.length > 0) {
-    const { document: document2 } = context;
     figure = document2.createElement("figure");
     figure.style.maxWidth = "initial";
     for (const legend3 of legends)
@@ -52243,7 +53720,7 @@ function applyScaleTransform2(channel, options) {
     type: type3,
     percent,
     interval: interval3,
-    transform: transform3 = percent ? (x7) => x7 * 100 : maybeInterval2(interval3, type3)?.floor
+    transform: transform3 = percent ? (x7) => x7 * 100 : maybeIntervalTransform2(interval3, type3)
   } = options[scale5] ?? {};
   if (transform3 != null)
     channel.value = map9(channel.value, transform3);
@@ -52275,9 +53752,9 @@ function maybeTopFacet2(facet, options) {
   const { x: x7, y: y7 } = facet;
   if (x7 == null && y7 == null)
     return;
-  const data = arrayify4(facet.data ?? x7 ?? y7);
-  if (data === void 0)
-    throw new Error(`missing facet data`);
+  const data = arrayify4(facet.data);
+  if (data == null)
+    throw new Error("missing facet data");
   const channels = {};
   if (x7 != null)
     channels.fx = createChannel2(data, { value: x7, scale: "fx" });
@@ -52315,6 +53792,22 @@ function maybeMarkFacet2(mark, topFacetState, options) {
       `Warning: the ${mark.ariaLabel} mark appears to use faceted data, but isn\u2019t faceted. The mark data has the same length as the facet data and the mark facet option is "auto", but the mark data and facet data are distinct. If this mark should be faceted, set the mark facet option to true; otherwise, suppress this warning by setting the mark facet option to false.`
     );
   }
+}
+function derive2(mark, options = {}) {
+  return initializer2({ ...options, x: null, y: null }, (data, facets, channels, scales, dimensions, context) => {
+    return context.getMarkState(mark);
+  });
+}
+function inferTips2(marks3) {
+  const tips = [];
+  for (const mark of marks3) {
+    const t = mark.tip;
+    if (t) {
+      const p = t === "x" ? pointerX2 : t === "y" ? pointerY2 : pointer2;
+      tips.push(tip2(mark.data, p(derive2(mark))));
+    }
+  }
+  return tips;
 }
 function inferAxes2(marks3, channelsByScale, options) {
   let {
@@ -52367,11 +53860,11 @@ function inferAxes2(marks3, channelsByScale, options) {
   maybeAxis2(axes, xAxis, axisX2, "bottom", "top", options, x7);
   return axes;
 }
-function maybeAxis2(axes, axis3, axisType, primary, secondary, defaults41, options) {
+function maybeAxis2(axes, axis3, axisType, primary, secondary, defaults43, options) {
   if (!axis3)
     return;
   const both = isBoth2(axis3);
-  options = axisOptions2(both ? primary : axis3, defaults41, options);
+  options = axisOptions2(both ? primary : axis3, defaults43, options);
   const { line: line3 } = options;
   if ((axisType === axisY2 || axisType === axisX2) && line3 && !isNone2(line3))
     axes.push(frame4(lineOptions2(options)));
@@ -52387,8 +53880,8 @@ function maybeGrid2(axes, grid, gridType, options) {
 function isBoth2(value) {
   return /^\s*both\s*$/i.test(value);
 }
-function axisOptions2(anchor, defaults41, {
-  line: line3 = defaults41.line,
+function axisOptions2(anchor, defaults43, {
+  line: line3 = defaults43.line,
   ticks: ticks3,
   tickSize,
   tickSpacing,
@@ -52398,8 +53891,9 @@ function axisOptions2(anchor, defaults41, {
   fontVariant,
   ariaLabel,
   ariaDescription,
-  label = defaults41.label,
+  label = defaults43.label,
   labelAnchor,
+  labelArrow = defaults43.labelArrow,
   labelOffset
 }) {
   return {
@@ -52416,6 +53910,7 @@ function axisOptions2(anchor, defaults41, {
     ariaDescription,
     label,
     labelAnchor,
+    labelArrow,
     labelOffset
   };
 }
@@ -52567,11 +54062,11 @@ function bin4(outputs = { fill: "count" }, options = {}) {
 function maybeDenseInterval2(bin5, k3, options = {}) {
   return options?.interval == null ? options : bin5({ [k3]: options?.reduce === void 0 ? reduceFirst3 : options.reduce, filter: null }, options);
 }
-function maybeDenseIntervalX2(options) {
-  return maybeDenseInterval2(binX2, "y", options);
+function maybeDenseIntervalX2(options = {}) {
+  return maybeDenseInterval2(binX2, "y", withTip2(options, "x"));
 }
-function maybeDenseIntervalY2(options) {
-  return maybeDenseInterval2(binY2, "x", options);
+function maybeDenseIntervalY2(options = {}) {
+  return maybeDenseInterval2(binY2, "x", withTip2(options, "y"));
 }
 function binn2(bx, by, gx, gy, {
   data: reduceData = reduceIdentity2,
@@ -52626,8 +54121,8 @@ function binn2(bx, by, gx, gy, {
     ..."z" in inputs && { z: GZ || z },
     ..."fill" in inputs && { fill: GF || fill },
     ..."stroke" in inputs && { stroke: GS || stroke },
-    ...basic2(options, (data, facets) => {
-      const K3 = valueof2(data, k3);
+    ...basic2(options, (data, facets, plotOptions) => {
+      const K3 = maybeApplyInterval2(valueof2(data, k3), plotOptions?.[gk]);
       const Z = valueof2(data, z);
       const F = valueof2(data, vfill);
       const S = valueof2(data, vstroke);
@@ -52955,64 +54450,64 @@ var reduceY22 = {
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/transforms/identity.js
 function maybeIdentityX2(options = {}) {
-  const { x: x7, x1: x13, x2: x22 } = options;
-  return x13 === void 0 && x22 === void 0 && x7 === void 0 ? { ...options, x: identity13 } : options;
+  return hasX2(options) ? options : { ...options, x: identity13 };
 }
 function maybeIdentityY2(options = {}) {
-  const { y: y7, y1: y13, y2: y22 } = options;
-  return y13 === void 0 && y22 === void 0 && y7 === void 0 ? { ...options, y: identity13 } : options;
+  return hasY2(options) ? options : { ...options, y: identity13 };
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/transforms/stack.js
-function stackX3(stack3 = {}, options = {}) {
+function stackX3(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions5(stack3);
+    [stackOptions, options] = mergeOptions5(stackOptions);
   const { y1: y13, y: y7 = y13, x: x7, ...rest } = options;
-  const [transform3, Y4, x13, x22] = stackAlias2(y7, x7, "x", stack3, rest);
+  const [transform3, Y4, x13, x22] = stack2(y7, x7, "y", "x", stackOptions, rest);
   return { ...transform3, y1: y13, y: Y4, x1: x13, x2: x22, x: mid2(x13, x22) };
 }
-function stackX12(stack3 = {}, options = {}) {
+function stackX12(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions5(stack3);
+    [stackOptions, options] = mergeOptions5(stackOptions);
   const { y1: y13, y: y7 = y13, x: x7 } = options;
-  const [transform3, Y4, X4] = stackAlias2(y7, x7, "x", stack3, options);
+  const [transform3, Y4, X4] = stack2(y7, x7, "y", "x", stackOptions, options);
   return { ...transform3, y1: y13, y: Y4, x: X4 };
 }
-function stackX22(stack3 = {}, options = {}) {
+function stackX22(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions5(stack3);
+    [stackOptions, options] = mergeOptions5(stackOptions);
   const { y1: y13, y: y7 = y13, x: x7 } = options;
-  const [transform3, Y4, , X4] = stackAlias2(y7, x7, "x", stack3, options);
+  const [transform3, Y4, , X4] = stack2(y7, x7, "y", "x", stackOptions, options);
   return { ...transform3, y1: y13, y: Y4, x: X4 };
 }
-function stackY3(stack3 = {}, options = {}) {
+function stackY3(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions5(stack3);
+    [stackOptions, options] = mergeOptions5(stackOptions);
   const { x1: x13, x: x7 = x13, y: y7, ...rest } = options;
-  const [transform3, X4, y13, y22] = stackAlias2(x7, y7, "y", stack3, rest);
+  const [transform3, X4, y13, y22] = stack2(x7, y7, "x", "y", stackOptions, rest);
   return { ...transform3, x1: x13, x: X4, y1: y13, y2: y22, y: mid2(y13, y22) };
 }
-function stackY12(stack3 = {}, options = {}) {
+function stackY12(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions5(stack3);
+    [stackOptions, options] = mergeOptions5(stackOptions);
   const { x1: x13, x: x7 = x13, y: y7 } = options;
-  const [transform3, X4, Y4] = stackAlias2(x7, y7, "y", stack3, options);
+  const [transform3, X4, Y4] = stack2(x7, y7, "x", "y", stackOptions, options);
   return { ...transform3, x1: x13, x: X4, y: Y4 };
 }
-function stackY22(stack3 = {}, options = {}) {
+function stackY22(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
-    [stack3, options] = mergeOptions5(stack3);
+    [stackOptions, options] = mergeOptions5(stackOptions);
   const { x1: x13, x: x7 = x13, y: y7 } = options;
-  const [transform3, X4, , Y4] = stackAlias2(x7, y7, "y", stack3, options);
+  const [transform3, X4, , Y4] = stack2(x7, y7, "x", "y", stackOptions, options);
   return { ...transform3, x1: x13, x: X4, y: Y4 };
 }
 function maybeStackX2({ x: x7, x1: x13, x2: x22, ...options } = {}) {
+  options = withTip2(options, "y");
   if (x13 === void 0 && x22 === void 0)
     return stackX3({ x: x7, ...options });
   [x13, x22] = maybeZero2(x7, x13, x22);
   return { ...options, x1: x13, x2: x22 };
 }
 function maybeStackY2({ y: y7, y1: y13, y2: y22, ...options } = {}) {
+  options = withTip2(options, "x");
   if (y13 === void 0 && y22 === void 0)
     return stackY3({ y: y7, ...options });
   [y13, y22] = maybeZero2(y7, y13, y22);
@@ -53022,16 +54517,18 @@ function mergeOptions5(options) {
   const { offset: offset3, order, reverse: reverse5, ...rest } = options;
   return [{ offset: offset3, order, reverse: reverse5 }, rest];
 }
-function stack2(x7, y7 = one4, ky3, { offset: offset3, order, reverse: reverse5 }, options) {
+var lengthy2 = { length: true };
+function stack2(x7, y7 = one4, kx3, ky3, { offset: offset3, order, reverse: reverse5 }, options) {
   const z = maybeZ2(options);
   const [X4, setX] = maybeColumn2(x7);
   const [Y15, setY1] = column2(y7);
   const [Y25, setY2] = column2(y7);
+  Y15.hint = Y25.hint = lengthy2;
   offset3 = maybeOffset2(offset3);
-  order = maybeOrder2(order, offset3, ky3);
+  order = maybeOrder4(order, offset3, ky3);
   return [
-    basic2(options, (data, facets) => {
-      const X5 = x7 == null ? void 0 : setX(valueof2(data, x7));
+    basic2(options, (data, facets, plotOptions) => {
+      const X5 = x7 == null ? void 0 : setX(maybeApplyInterval2(valueof2(data, x7), plotOptions?.[kx3]));
       const Y4 = valueof2(data, y7, Float64Array);
       const Z = valueof2(data, z);
       const O = order && order(data, X5, Y4, Z);
@@ -53044,7 +54541,8 @@ function stack2(x7, y7 = one4, ky3, { offset: offset3, order, reverse: reverse5 
         if (O)
           applyOrder2(stacks, O);
         for (const stack3 of stacks) {
-          let yn = 0, yp = 0;
+          let yn = 0;
+          let yp = 0;
           if (reverse5)
             stack3.reverse();
           for (const i of stack3) {
@@ -53068,7 +54566,6 @@ function stack2(x7, y7 = one4, ky3, { offset: offset3, order, reverse: reverse5 
     Y25
   ];
 }
-var stackAlias2 = stack2;
 function maybeOffset2(offset3) {
   if (offset3 == null)
     return;
@@ -53174,7 +54671,7 @@ function offsetCenterFacets2(facetstacks, Y15, Y25) {
     }
   }
 }
-function maybeOrder2(order, offset3, ky3) {
+function maybeOrder4(order, offset3, ky3) {
   if (order === void 0 && offset3 === offsetWiggle2)
     return orderInsideOut2;
   if (order == null)
@@ -53271,7 +54768,7 @@ function applyOrder2(stacks, O) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/area.js
-var defaults25 = {
+var defaults27 = {
   ariaLabel: "area",
   strokeWidth: 1,
   strokeLinecap: "round",
@@ -53291,7 +54788,7 @@ var Area2 = class extends Mark2 {
         z: { value: maybeZ2(options), optional: true }
       },
       options,
-      defaults25
+      defaults27
     );
     this.z = z;
     this.curve = maybeCurve2(curve, tension);
@@ -53323,81 +54820,8 @@ function areaY2(data, options) {
   return new Area2(data, maybeStackY2(maybeIdentityY2({ ...rest, x1: x7, x2: void 0 })));
 }
 
-// js/pyobsplot-js/node_modules/@observablehq/plot/src/marker.js
-function markers2(mark, { marker, markerStart = marker, markerMid = marker, markerEnd = marker } = {}) {
-  mark.markerStart = maybeMarker2(markerStart);
-  mark.markerMid = maybeMarker2(markerMid);
-  mark.markerEnd = maybeMarker2(markerEnd);
-}
-function maybeMarker2(marker) {
-  if (marker == null || marker === false)
-    return null;
-  if (marker === true)
-    return markerCircleFill2;
-  if (typeof marker === "function")
-    return marker;
-  switch (`${marker}`.toLowerCase()) {
-    case "none":
-      return null;
-    case "arrow":
-      return markerArrow2;
-    case "dot":
-      return markerDot2;
-    case "circle":
-    case "circle-fill":
-      return markerCircleFill2;
-    case "circle-stroke":
-      return markerCircleStroke2;
-  }
-  throw new Error(`invalid marker: ${marker}`);
-}
-function markerArrow2(color5, context) {
-  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("orient", "auto").attr("fill", "none").attr("stroke", color5).attr("stroke-width", 1.5).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").call((marker) => marker.append("path").attr("d", "M-1.5,-3l3,3l-3,3")).node();
-}
-function markerDot2(color5, context) {
-  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "none").call((marker) => marker.append("circle").attr("r", 2.5)).node();
-}
-function markerCircleFill2(color5, context) {
-  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", color5).attr("stroke", "white").attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
-}
-function markerCircleStroke2(color5, context) {
-  return create4("svg:marker", context).attr("viewBox", "-5 -5 10 10").attr("markerWidth", 6.67).attr("markerHeight", 6.67).attr("fill", "white").attr("stroke", color5).attr("stroke-width", 1.5).call((marker) => marker.append("circle").attr("r", 3)).node();
-}
-var nextMarkerId2 = 0;
-function applyMarkers2(path3, mark, { stroke: S }, context) {
-  return applyMarkersColor2(path3, mark, S && ((i) => S[i]), context);
-}
-function applyGroupedMarkers2(path3, mark, { stroke: S }, context) {
-  return applyMarkersColor2(path3, mark, S && (([i]) => S[i]), context);
-}
-function applyMarkersColor2(path3, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, context) {
-  const iriByMarkerColor = /* @__PURE__ */ new Map();
-  function applyMarker(marker) {
-    return function(i) {
-      const color5 = strokeof(i);
-      let iriByColor = iriByMarkerColor.get(marker);
-      if (!iriByColor)
-        iriByMarkerColor.set(marker, iriByColor = /* @__PURE__ */ new Map());
-      let iri = iriByColor.get(color5);
-      if (!iri) {
-        const node = this.parentNode.insertBefore(marker(color5, context), this);
-        const id3 = `plot-marker-${++nextMarkerId2}`;
-        node.setAttribute("id", id3);
-        iriByColor.set(color5, iri = `url(#${id3})`);
-      }
-      return iri;
-    };
-  }
-  if (markerStart)
-    path3.attr("marker-start", applyMarker(markerStart));
-  if (markerMid)
-    path3.attr("marker-mid", applyMarker(markerMid));
-  if (markerEnd)
-    path3.attr("marker-end", applyMarker(markerEnd));
-}
-
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/link.js
-var defaults26 = {
+var defaults28 = {
   ariaLabel: "link",
   fill: "none",
   stroke: "currentColor",
@@ -53415,7 +54839,7 @@ var Link2 = class extends Mark2 {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults26
+      defaults28
     );
     this.curve = maybeCurveAuto2(curve, tension);
     markers2(this, options);
@@ -53458,11 +54882,10 @@ function sphereLink2(projection3, X15, Y15, X25, Y25) {
     ]
   });
 }
-function link6(data, options = {}) {
-  let { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...remainingOptions } = options;
+function link6(data, { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...options } = {}) {
   [x13, x22] = maybeSameValue2(x7, x13, x22);
   [y13, y22] = maybeSameValue2(y7, y13, y22);
-  return new Link2(data, { ...remainingOptions, x1: x13, x2: x22, y1: y13, y2: y22 });
+  return new Link2(data, { ...options, x1: x13, x2: x22, y1: y13, y2: y22 });
 }
 function maybeSameValue2(x7, x13, x22) {
   if (x7 === void 0) {
@@ -53482,7 +54905,7 @@ function maybeSameValue2(x7, x13, x22) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/arrow.js
-var defaults27 = {
+var defaults29 = {
   ariaLabel: "arrow",
   fill: "none",
   stroke: "currentColor",
@@ -53514,7 +54937,7 @@ var Arrow2 = class extends Mark2 {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults27
+      defaults29
     );
     this.bend = bend === true ? 22.5 : Math.max(-90, Math.min(90, bend));
     this.headAngle = +headAngle;
@@ -53581,17 +55004,16 @@ function circleCircleIntersect2([ax, ay, ar], [bx, by, br], sign5) {
   const y7 = sign5 * Math.sqrt(ar * ar - x7 * x7);
   return [ax + (dx * x7 + dy * y7) / d, ay + (dy * x7 - dx * y7) / d];
 }
-function arrow2(data, options = {}) {
-  let { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...remainingOptions } = options;
+function arrow2(data, { x: x7, x1: x13, x2: x22, y: y7, y1: y13, y2: y22, ...options } = {}) {
   [x13, x22] = maybeSameValue2(x7, x13, x22);
   [y13, y22] = maybeSameValue2(y7, y13, y22);
-  return new Arrow2(data, { ...remainingOptions, x1: x13, x2: x22, y1: y13, y2: y22 });
+  return new Arrow2(data, { ...options, x1: x13, x2: x22, y1: y13, y2: y22 });
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/bar.js
 var AbstractBar2 = class extends Mark2 {
-  constructor(data, channels, options = {}, defaults41) {
-    super(data, channels, options, defaults41);
+  constructor(data, channels, options = {}, defaults43) {
+    super(data, channels, options, defaults43);
     const { inset = 0, insetTop = inset, insetRight = inset, insetBottom = inset, insetLeft = inset, rx, ry } = options;
     this.insetTop = number11(insetTop);
     this.insetRight = number11(insetRight);
@@ -53625,7 +55047,7 @@ var AbstractBar2 = class extends Mark2 {
     return Math.max(0, bandwidth - insetTop - insetBottom);
   }
 };
-var defaults28 = {
+var defaults30 = {
   ariaLabel: "bar"
 };
 var BarX2 = class extends AbstractBar2 {
@@ -53639,7 +55061,7 @@ var BarX2 = class extends AbstractBar2 {
         y: { value: y7, scale: "y", type: "band", optional: true }
       },
       options,
-      defaults28
+      defaults30
     );
   }
   _transform(selection3, mark, { x: x7 }) {
@@ -53665,7 +55087,7 @@ var BarY2 = class extends AbstractBar2 {
         x: { value: x7, scale: "x", type: "band", optional: true }
       },
       options,
-      defaults28
+      defaults30
     );
   }
   _transform(selection3, mark, { y: y7 }) {
@@ -53680,15 +55102,19 @@ var BarY2 = class extends AbstractBar2 {
     return isCollapsed2(y7) ? height - marginTop - marginBottom - insetTop - insetBottom : (i) => Math.max(0, Math.abs(Y25[i] - Y15[i]) - insetTop - insetBottom);
   }
 };
-function barX2(data, options = { y: indexOf2, x2: identity13 }) {
+function barX2(data, options = {}) {
+  if (!hasXY2(options))
+    options = { ...options, y: indexOf2, x2: identity13 };
   return new BarX2(data, maybeStackX2(maybeIntervalX2(maybeIdentityX2(options))));
 }
-function barY2(data, options = { x: indexOf2, y2: identity13 }) {
+function barY2(data, options = {}) {
+  if (!hasXY2(options))
+    options = { ...options, x: indexOf2, y2: identity13 };
   return new BarY2(data, maybeStackY2(maybeIntervalY2(maybeIdentityY2(options))));
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/cell.js
-var defaults29 = {
+var defaults31 = {
   ariaLabel: "cell"
 };
 var Cell2 = class extends AbstractBar2 {
@@ -53700,40 +55126,37 @@ var Cell2 = class extends AbstractBar2 {
         y: { value: y7, scale: "y", type: "band", optional: true }
       },
       options,
-      defaults29
+      defaults31
     );
   }
   _transform(selection3, mark) {
     selection3.call(applyTransform2, mark, {}, 0, 0);
   }
 };
-function cell2(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function cell2(data, { x: x7, y: y7, ...options } = {}) {
   [x7, y7] = maybeTuple2(x7, y7);
-  return new Cell2(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Cell2(data, { ...options, x: x7, y: y7 });
 }
-function cellX2(data, options = {}) {
-  let { x: x7 = indexOf2, fill, stroke, ...remainingOptions } = options;
+function cellX2(data, { x: x7 = indexOf2, fill, stroke, ...options } = {}) {
   if (fill === void 0 && maybeColorChannel2(stroke)[0] === void 0)
     fill = identity13;
-  return new Cell2(data, { ...remainingOptions, x: x7, fill, stroke });
+  return new Cell2(data, { ...options, x: x7, fill, stroke });
 }
-function cellY2(data, options = {}) {
-  let { y: y7 = indexOf2, fill, stroke, ...remainingOptions } = options;
+function cellY2(data, { y: y7 = indexOf2, fill, stroke, ...options } = {}) {
   if (fill === void 0 && maybeColorChannel2(stroke)[0] === void 0)
     fill = identity13;
-  return new Cell2(data, { ...remainingOptions, y: y7, fill, stroke });
+  return new Cell2(data, { ...options, y: y7, fill, stroke });
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/dot.js
-var defaults30 = {
+var defaults32 = {
   ariaLabel: "dot",
   fill: "none",
   stroke: "currentColor",
   strokeWidth: 1.5
 };
 function withDefaultSort2(options) {
-  return options.sort === void 0 && options.reverse === void 0 ? sort4({ channel: "r", order: "descending" }, options) : options;
+  return options.sort === void 0 && options.reverse === void 0 ? sort4({ channel: "-r" }, options) : options;
 }
 var Dot2 = class extends Mark2 {
   constructor(data, options = {}) {
@@ -53751,7 +55174,7 @@ var Dot2 = class extends Mark2 {
         symbol: { value: vsymbol, scale: "auto", optional: true }
       },
       withDefaultSort2(options),
-      defaults30
+      defaults32
     );
     this.r = cr;
     this.rotate = crotate;
@@ -53772,7 +55195,7 @@ var Dot2 = class extends Mark2 {
     const { x: X4, y: Y4, r: R, rotate: A6, symbol: S } = channels;
     const { r, rotate, symbol: symbol3 } = this;
     const [cx, cy] = applyFrameAnchor2(this, dimensions);
-    const circle3 = this.symbol === circle_default6;
+    const circle3 = symbol3 === circle_default6;
     const size = R ? void 0 : r * r * Math.PI;
     if (negative2(r))
       index5 = [];
@@ -53809,19 +55232,16 @@ var Dot2 = class extends Mark2 {
     ).node();
   }
 };
-function dot2(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function dot2(data, { x: x7, y: y7, ...options } = {}) {
   if (options.frameAnchor === void 0)
     [x7, y7] = maybeTuple2(x7, y7);
-  return new Dot2(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Dot2(data, { ...options, x: x7, y: y7 });
 }
-function dotX2(data, options = {}) {
-  const { x: x7 = identity13, ...remainingOptions } = options;
-  return new Dot2(data, maybeIntervalMidY2({ ...remainingOptions, x: x7 }));
+function dotX2(data, { x: x7 = identity13, ...options } = {}) {
+  return new Dot2(data, maybeIntervalMidY2({ ...options, x: x7 }));
 }
-function dotY2(data, options = {}) {
-  const { y: y7 = identity13, ...remainingOptions } = options;
-  return new Dot2(data, maybeIntervalMidX2({ ...remainingOptions, y: y7 }));
+function dotY2(data, { y: y7 = identity13, ...options } = {}) {
+  return new Dot2(data, maybeIntervalMidX2({ ...options, y: y7 }));
 }
 function circle2(data, options) {
   return dot2(data, { ...options, symbol: "circle" });
@@ -53831,7 +55251,7 @@ function hexagon2(data, options) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/line.js
-var defaults31 = {
+var defaults33 = {
   ariaLabel: "line",
   fill: "none",
   stroke: "currentColor",
@@ -53851,7 +55271,7 @@ var Line2 = class extends Mark2 {
         z: { value: maybeZ2(options), optional: true }
       },
       options,
-      defaults31
+      defaults33
     );
     this.z = z;
     this.curve = maybeCurveAuto2(curve, tension);
@@ -53894,22 +55314,19 @@ function sphereLine2(projection3, X4, Y4) {
     return path3({ type: "MultiLineString", coordinates: lines });
   };
 }
-function line2(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function line2(data, { x: x7, y: y7, ...options } = {}) {
   [x7, y7] = maybeTuple2(x7, y7);
-  return new Line2(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Line2(data, { ...options, x: x7, y: y7 });
 }
-function lineX2(data, options = {}) {
-  const { x: x7 = identity13, y: y7 = indexOf2, ...remainingOptions } = options;
-  return new Line2(data, maybeDenseIntervalY2({ ...remainingOptions, x: x7, y: y7 }));
+function lineX2(data, { x: x7 = identity13, y: y7 = indexOf2, ...options } = {}) {
+  return new Line2(data, maybeDenseIntervalY2({ ...options, x: x7, y: y7 }));
 }
-function lineY2(data, options = {}) {
-  const { x: x7 = indexOf2, y: y7 = identity13, ...remainingOptions } = options;
-  return new Line2(data, maybeDenseIntervalX2({ ...remainingOptions, x: x7, y: y7 }));
+function lineY2(data, { x: x7 = indexOf2, y: y7 = identity13, ...options } = {}) {
+  return new Line2(data, maybeDenseIntervalX2({ ...options, x: x7, y: y7 }));
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/rect.js
-var defaults32 = {
+var defaults34 = {
   ariaLabel: "rect"
 };
 var Rect2 = class extends Mark2 {
@@ -53936,7 +55353,7 @@ var Rect2 = class extends Mark2 {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults32
+      defaults34
     );
     this.insetTop = number11(insetTop);
     this.insetRight = number11(insetRight);
@@ -53971,19 +55388,19 @@ var Rect2 = class extends Mark2 {
 function rect2(data, options) {
   return new Rect2(data, maybeTrivialIntervalX2(maybeTrivialIntervalY2(options)));
 }
-function rectX2(data, options = { y: indexOf2, interval: 1, x2: identity13 }) {
+function rectX2(data, options = {}) {
+  if (!hasXY2(options))
+    options = { ...options, y: indexOf2, x2: identity13, interval: 1 };
   return new Rect2(data, maybeStackX2(maybeTrivialIntervalY2(maybeIdentityX2(options))));
 }
-function rectY2(data, options = { x: indexOf2, interval: 1, y2: identity13 }) {
+function rectY2(data, options = {}) {
+  if (!hasXY2(options))
+    options = { ...options, x: indexOf2, y2: identity13, interval: 1 };
   return new Rect2(data, maybeStackY2(maybeTrivialIntervalX2(maybeIdentityY2(options))));
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/auto.js
 function autoSpec2(data, options) {
-  const { x: x7, y: y7, fx, fy, color: color5, size, mark } = autoImpl2(data, options);
-  return { x: x7, y: y7, fx, fy, color: color5, size, mark };
-}
-function autoImpl2(data, options) {
   options = normalizeOptions2(options);
   const { x: x7, y: y7, color: color5, size } = options;
   const X4 = materializeValue2(data, x7);
@@ -54029,13 +55446,13 @@ function autoImpl2(data, options) {
       colorMode = "stroke";
       break;
     case "line":
-      markImpl = X4 && Y4 ? line2 : X4 ? lineX2 : lineY2;
+      markImpl = X4 && Y4 || xReduce != null || yReduce != null ? yZero || yReduce != null || X4 && isMonotonic2(X4) ? lineY2 : xZero || xReduce != null || Y4 && isMonotonic2(Y4) ? lineX2 : line2 : X4 ? lineX2 : lineY2;
       colorMode = "stroke";
       if (isHighCardinality2(C4))
         Z = null;
       break;
     case "area":
-      markImpl = yZero ? areaY2 : xZero || Y4 && isMonotonic2(Y4) ? areaX2 : areaY2;
+      markImpl = !(yZero || yReduce != null) && (xZero || xReduce != null || Y4 && isMonotonic2(Y4)) ? areaX2 : areaY2;
       colorMode = "fill";
       if (isHighCardinality2(C4))
         Z = null;
@@ -54045,13 +55462,13 @@ function autoImpl2(data, options) {
       colorMode = "stroke";
       break;
     case "bar":
-      markImpl = yZero ? isOrdinalReduced2(xReduce, X4) ? barY2 : rectY2 : xZero ? isOrdinalReduced2(yReduce, Y4) ? barX2 : rectX2 : isOrdinalReduced2(xReduce, X4) && isOrdinalReduced2(yReduce, Y4) ? cell2 : isOrdinalReduced2(xReduce, X4) ? barY2 : isOrdinalReduced2(yReduce, Y4) ? barX2 : rectY2;
+      markImpl = yZero ? isOrdinalReduced2(xReduce, X4) ? barY2 : rectY2 : xZero ? isOrdinalReduced2(yReduce, Y4) ? barX2 : rectX2 : isOrdinalReduced2(xReduce, X4) && isOrdinalReduced2(yReduce, Y4) ? cell2 : isOrdinalReduced2(xReduce, X4) ? barY2 : isOrdinalReduced2(yReduce, Y4) ? barX2 : xReduce != null ? rectX2 : yReduce != null ? rectY2 : rect2;
       colorMode = "fill";
       break;
     default:
       throw new Error(`invalid mark: ${mark}`);
   }
-  let markOptions = {
+  let markOptions3 = {
     fx,
     fy,
     x: X4 ?? void 0,
@@ -54060,8 +55477,9 @@ function autoImpl2(data, options) {
     // treat null y as undefined for implicit stack
     [colorMode]: C4 ?? colorColor,
     z: Z,
-    r: S ?? void 0
+    r: S ?? void 0,
     // treat null size as undefined for default constant radius
+    tip: true
   };
   let transformImpl;
   let transformOptions = { [colorMode]: colorReduce ?? void 0, r: sizeReduce ?? void 0 };
@@ -54083,9 +55501,9 @@ function autoImpl2(data, options) {
     }
   }
   if (transformImpl === bin4 || transformImpl === binX2)
-    markOptions.x = { value: X4, ...xOptions };
+    markOptions3.x = { value: X4, ...xOptions };
   if (transformImpl === bin4 || transformImpl === binY2)
-    markOptions.y = { value: Y4, ...yOptions };
+    markOptions3.y = { value: Y4, ...yOptions };
   if (xZero === void 0)
     xZero = X4 && !(transformImpl === bin4 || transformImpl === binX2) && (markImpl === barX2 || markImpl === areaX2 || markImpl === rectX2 || markImpl === ruleY2);
   if (yZero === void 0)
@@ -54115,28 +55533,29 @@ function autoImpl2(data, options) {
       reduce: sizeReduce ?? null
     },
     mark,
-    markImpl,
-    markOptions,
-    transformImpl,
+    markImpl: implNames2[markImpl],
+    markOptions: markOptions3,
+    transformImpl: implNames2[transformImpl],
     transformOptions,
     colorMode
   };
 }
 function auto2(data, options) {
+  const spec = autoSpec2(data, options);
   const {
     fx,
     fy,
     x: { zero: xZero },
     y: { zero: yZero },
-    markImpl,
-    markOptions,
-    transformImpl,
+    markOptions: markOptions3,
     transformOptions,
     colorMode
-  } = autoImpl2(data, options);
+  } = spec;
+  const markImpl = impls2[spec.markImpl];
+  const transformImpl = impls2[spec.transformImpl];
   const frames = fx != null || fy != null ? frame4({ strokeOpacity: 0.1 }) : null;
   const rules = [xZero ? ruleX2([0]) : null, yZero ? ruleY2([0]) : null];
-  const mark = markImpl(data, transformImpl ? transformImpl(transformOptions, markOptions) : markOptions);
+  const mark = markImpl(data, transformImpl ? transformImpl(transformOptions, markOptions3) : markOptions3);
   return colorMode === "stroke" ? marks2(frames, rules, mark) : marks2(frames, mark, rules);
 }
 function isMonotonic2(values3) {
@@ -54227,19 +55646,56 @@ function isReducer2(reduce3) {
 function isHighCardinality2(value) {
   return value ? new InternSet2(value).size > value.length >> 1 : false;
 }
+var impls2 = {
+  dot: dot2,
+  line: line2,
+  lineX: lineX2,
+  lineY: lineY2,
+  areaX: areaX2,
+  areaY: areaY2,
+  ruleX: ruleX2,
+  ruleY: ruleY2,
+  barX: barX2,
+  barY: barY2,
+  rect: rect2,
+  rectX: rectX2,
+  rectY: rectY2,
+  cell: cell2,
+  bin: bin4,
+  binX: binX2,
+  binY: binY2,
+  group: group4,
+  groupX: groupX2,
+  groupY: groupY2
+};
+var implNames2 = Object.fromEntries(Object.entries(impls2).map(([name, impl]) => [impl, name]));
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/transforms/map.js
-function mapX2(map11, options = {}) {
-  return mapAlias2(
-    Object.fromEntries(["x", "x1", "x2"].filter((key) => options[key] != null).map((key) => [key, map11])),
-    options
-  );
+function mapX2(mapper, options = {}) {
+  let { x: x7, x1: x13, x2: x22 } = options;
+  if (x7 === void 0 && x13 === void 0 && x22 === void 0)
+    options = { ...options, x: x7 = identity13 };
+  const outputs = {};
+  if (x7 != null)
+    outputs.x = mapper;
+  if (x13 != null)
+    outputs.x1 = mapper;
+  if (x22 != null)
+    outputs.x2 = mapper;
+  return map10(outputs, options);
 }
-function mapY2(map11, options = {}) {
-  return mapAlias2(
-    Object.fromEntries(["y", "y1", "y2"].filter((key) => options[key] != null).map((key) => [key, map11])),
-    options
-  );
+function mapY2(mapper, options = {}) {
+  let { y: y7, y1: y13, y2: y22 } = options;
+  if (y7 === void 0 && y13 === void 0 && y22 === void 0)
+    options = { ...options, y: y7 = identity13 };
+  const outputs = {};
+  if (y7 != null)
+    outputs.y = mapper;
+  if (y13 != null)
+    outputs.y1 = mapper;
+  if (y22 != null)
+    outputs.y2 = mapper;
+  return map10(outputs, options);
 }
 function map10(outputs = {}, options = {}) {
   const z = maybeZ2(options);
@@ -54265,7 +55721,6 @@ function map10(outputs = {}, options = {}) {
     ...Object.fromEntries(channels.map(({ key, output }) => [key, output]))
   };
 }
-var mapAlias2 = map10;
 function maybeMap2(map11) {
   if (map11 == null)
     throw new Error("missing map");
@@ -54274,14 +55729,14 @@ function maybeMap2(map11) {
   if (typeof map11.map === "function" && isObject2(map11))
     return mapMap2(map11);
   if (typeof map11 === "function")
-    return mapFunction2(map11);
+    return mapFunction2(taker2(map11));
   switch (`${map11}`.toLowerCase()) {
     case "cumsum":
       return mapCumsum2;
     case "rank":
-      return mapFunction2(rank2);
+      return mapFunction2((I, V) => rank2(I, (i) => V[i]));
     case "quantile":
-      return mapFunction2(rankQuantile2);
+      return mapFunction2((I, V) => rankQuantile2(I, (i) => V[i]));
   }
   throw new Error(`invalid map: ${map11}`);
 }
@@ -54289,14 +55744,14 @@ function mapMap2(map11) {
   console.warn("deprecated map interface; implement mapIndex instead.");
   return { mapIndex: map11.map.bind(map11) };
 }
-function rankQuantile2(V) {
-  const n = count3(V) - 1;
-  return rank2(V).map((r) => r / n);
+function rankQuantile2(I, f) {
+  const n = count3(I, f) - 1;
+  return rank2(I, f).map((r) => r / n);
 }
 function mapFunction2(f) {
   return {
     mapIndex(I, S, T) {
-      const M3 = f(take2(S, I));
+      const M3 = f(I, S);
       if (M3.length !== I.length)
         throw new Error("map function returned a mismatched length");
       for (let i = 0, n = I.length; i < n; ++i)
@@ -54313,18 +55768,19 @@ var mapCumsum2 = {
 };
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/tick.js
-var defaults33 = {
+var defaults35 = {
   ariaLabel: "tick",
   fill: null,
   stroke: "currentColor"
 };
 var AbstractTick2 = class extends Mark2 {
   constructor(data, channels, options) {
-    super(data, channels, options, defaults33);
+    super(data, channels, options, defaults35);
+    markers2(this, options);
   }
   render(index5, scales, channels, dimensions, context) {
     return create4("svg:g", context).call(applyIndirectStyles2, this, dimensions, context).call(this._transform, this, scales).call(
-      (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles2, this).attr("x1", this._x1(scales, channels, dimensions)).attr("x2", this._x2(scales, channels, dimensions)).attr("y1", this._y1(scales, channels, dimensions)).attr("y2", this._y2(scales, channels, dimensions)).call(applyChannelStyles2, this, channels)
+      (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles2, this).attr("x1", this._x1(scales, channels, dimensions)).attr("x2", this._x2(scales, channels, dimensions)).attr("y1", this._y1(scales, channels, dimensions)).attr("y2", this._y2(scales, channels, dimensions)).call(applyChannelStyles2, this, channels).call(applyMarkers2, this, channels, context)
     ).node();
   }
 };
@@ -54392,54 +55848,50 @@ var TickY2 = class extends AbstractTick2 {
     return (i) => Y4[i];
   }
 };
-function tickX2(data, options = {}) {
-  const { x: x7 = identity13, ...remainingOptions } = options;
-  return new TickX2(data, { ...remainingOptions, x: x7 });
+function tickX2(data, { x: x7 = identity13, ...options } = {}) {
+  return new TickX2(data, { ...options, x: x7 });
 }
-function tickY2(data, options = {}) {
-  const { y: y7 = identity13, ...remainingOptions } = options;
-  return new TickY2(data, { ...remainingOptions, y: y7 });
+function tickY2(data, { y: y7 = identity13, ...options } = {}) {
+  return new TickY2(data, { ...options, y: y7 });
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/box.js
-function boxX2(data, options = {}) {
-  const {
-    x: x7 = identity13,
-    y: y7 = null,
-    fill = "#ccc",
-    fillOpacity,
-    stroke = "currentColor",
-    strokeOpacity,
-    strokeWidth = 2,
-    sort: sort5,
-    ...remainingOptions
-  } = options;
+function boxX2(data, {
+  x: x7 = identity13,
+  y: y7 = null,
+  fill = "#ccc",
+  fillOpacity,
+  stroke = "currentColor",
+  strokeOpacity,
+  strokeWidth = 2,
+  sort: sort5,
+  ...options
+} = {}) {
   const group5 = y7 != null ? groupY2 : groupZ3;
   return marks2(
-    ruleY2(data, group5({ x1: loqr12, x2: hiqr22 }, { x: x7, y: y7, stroke, strokeOpacity, ...remainingOptions })),
-    barX2(data, group5({ x1: "p25", x2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...remainingOptions })),
-    tickX2(data, group5({ x: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...remainingOptions })),
-    dot2(data, map10({ x: oqr2 }, { x: x7, y: y7, z: y7, stroke, strokeOpacity, ...remainingOptions }))
+    ruleY2(data, group5({ x1: loqr12, x2: hiqr22 }, { x: x7, y: y7, stroke, strokeOpacity, ...options })),
+    barX2(data, group5({ x1: "p25", x2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...options })),
+    tickX2(data, group5({ x: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...options })),
+    dot2(data, map10({ x: oqr2 }, { x: x7, y: y7, z: y7, stroke, strokeOpacity, ...options }))
   );
 }
-function boxY2(data, options = {}) {
-  const {
-    y: y7 = identity13,
-    x: x7 = null,
-    fill = "#ccc",
-    fillOpacity,
-    stroke = "currentColor",
-    strokeOpacity,
-    strokeWidth = 2,
-    sort: sort5,
-    ...remainingOptions
-  } = options;
+function boxY2(data, {
+  y: y7 = identity13,
+  x: x7 = null,
+  fill = "#ccc",
+  fillOpacity,
+  stroke = "currentColor",
+  strokeOpacity,
+  strokeWidth = 2,
+  sort: sort5,
+  ...options
+} = {}) {
   const group5 = x7 != null ? groupX2 : groupZ3;
   return marks2(
-    ruleX2(data, group5({ y1: loqr12, y2: hiqr22 }, { x: x7, y: y7, stroke, strokeOpacity, ...remainingOptions })),
-    barY2(data, group5({ y1: "p25", y2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...remainingOptions })),
-    tickY2(data, group5({ y: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...remainingOptions })),
-    dot2(data, map10({ y: oqr2 }, { x: x7, y: y7, z: x7, stroke, strokeOpacity, ...remainingOptions }))
+    ruleX2(data, group5({ y1: loqr12, y2: hiqr22 }, { x: x7, y: y7, stroke, strokeOpacity, ...options })),
+    barY2(data, group5({ y1: "p25", y2: "p75" }, { x: x7, y: y7, fill, fillOpacity, ...options })),
+    tickY2(data, group5({ y: "p50" }, { x: x7, y: y7, stroke, strokeOpacity, strokeWidth, sort: sort5, ...options })),
+    dot2(data, map10({ y: oqr2 }, { x: x7, y: y7, z: x7, stroke, strokeOpacity, ...options }))
   );
 }
 function oqr2(values3) {
@@ -54463,7 +55915,7 @@ function quartile32(values3) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/raster.js
-var defaults34 = {
+var defaults36 = {
   ariaLabel: "raster",
   stroke: null,
   pixelSize: 1
@@ -54481,7 +55933,7 @@ function integer2(input, name) {
   return x7;
 }
 var AbstractRaster2 = class extends Mark2 {
-  constructor(data, channels, options = {}, defaults41) {
+  constructor(data, channels, options = {}, defaults43) {
     let {
       width,
       height,
@@ -54491,7 +55943,7 @@ var AbstractRaster2 = class extends Mark2 {
       y1: y13 = y7 == null ? 0 : void 0,
       x2: x22 = x7 == null ? width : void 0,
       y2: y22 = y7 == null ? height : void 0,
-      pixelSize = defaults41.pixelSize,
+      pixelSize = defaults43.pixelSize,
       blur: blur4 = 0,
       interpolate
     } = options;
@@ -54529,7 +55981,7 @@ var AbstractRaster2 = class extends Mark2 {
         ...channels
       },
       options,
-      defaults41
+      defaults43
     );
     this.width = width;
     this.height = height;
@@ -54548,7 +56000,7 @@ var Raster2 = class extends AbstractRaster2 {
       if (maybeColorChannel2(fill)[0] !== void 0)
         options = sampler2("fill", options);
     }
-    super(data, void 0, options, defaults34);
+    super(data, void 0, options, defaults36);
     this.imageRendering = impliedString2(imageRendering, "auto");
   }
   // Ignore the color scale, so the fill channel is returned unscaled.
@@ -54859,7 +56311,7 @@ function denseY2(y13, y22, width, height) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/contour.js
-var defaults35 = {
+var defaults37 = {
   ariaLabel: "contour",
   fill: "none",
   stroke: "currentColor",
@@ -54868,7 +56320,7 @@ var defaults35 = {
 };
 var Contour2 = class extends AbstractRaster2 {
   constructor(data, { smooth = true, value, ...options } = {}) {
-    const channels = styles2({}, options, defaults35);
+    const channels = styles2({}, options, defaults37);
     if (value === void 0) {
       for (const key in channels) {
         if (channels[key].value != null) {
@@ -54899,7 +56351,7 @@ var Contour2 = class extends AbstractRaster2 {
       if (interpolate === void 0)
         options.interpolate = "nearest";
     }
-    super(data, { value: { value, optional: true } }, contourGeometry2(options), defaults35);
+    super(data, { value: { value, optional: true } }, contourGeometry2(options), defaults37);
     const contourChannels = { geometry: { value: identity13 } };
     for (const key in this.channels) {
       const channel = this.channels[key];
@@ -55005,6 +56457,99 @@ function finite6(x7) {
   return isFinite(x7) ? x7 : NaN;
 }
 
+// js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/crosshair.js
+function crosshair2(data, options) {
+  return crosshairK2(pointer2, data, options);
+}
+function crosshairX2(data, options = {}) {
+  return crosshairK2(pointerX2, data, options);
+}
+function crosshairY2(data, options = {}) {
+  return crosshairK2(pointerY2, data, options);
+}
+function crosshairK2(pointer3, data, options = {}) {
+  const { x: x7, y: y7, maxRadius } = options;
+  const p = pointer3({ px: x7, py: y7, maxRadius });
+  const M3 = [];
+  if (x7 != null)
+    M3.push(ruleX2(data, ruleOptions2("x", { ...p, inset: -6 }, options)));
+  if (y7 != null)
+    M3.push(ruleY2(data, ruleOptions2("y", { ...p, inset: -6 }, options)));
+  if (x7 != null)
+    M3.push(text2(data, textOptions2("x", { ...p, dy: 9, frameAnchor: "bottom", lineAnchor: "top" }, options)));
+  if (y7 != null)
+    M3.push(text2(data, textOptions2("y", { ...p, dx: -9, frameAnchor: "left", textAnchor: "end" }, options)));
+  for (const m5 of M3)
+    m5.ariaLabel = `crosshair ${m5.ariaLabel}`;
+  return marks2(...M3);
+}
+function markOptions2(k3, { channels: pointerChannels, ...pointerOptions }, { facet, facetAnchor, fx, fy, [k3]: p, channels, transform: transform3, initializer: initializer3 }) {
+  return {
+    ...pointerOptions,
+    facet,
+    facetAnchor,
+    fx,
+    fy,
+    [k3]: p,
+    channels: { ...pointerChannels, ...channels },
+    transform: transform3,
+    initializer: pxpy2(k3, initializer3)
+  };
+}
+function pxpy2(k3, i) {
+  if (i == null)
+    return i;
+  return function(data, facets, { x: x13, y: y13, px, py, ...c1 }, ...args) {
+    const { channels: { x: x7, y: y7, ...c11 } = {}, ...rest } = i.call(this, data, facets, { ...c1, x: px, y: py }, ...args);
+    return {
+      channels: {
+        ...c11,
+        ...x7 && { px: x7, ...k3 === "x" && { x: x7 } },
+        ...y7 && { py: y7, ...k3 === "y" && { y: y7 } }
+      },
+      ...rest
+    };
+  };
+}
+function ruleOptions2(k3, pointerOptions, options) {
+  const {
+    color: color5 = "currentColor",
+    opacity: opacity3 = 0.2,
+    ruleStroke: stroke = color5,
+    ruleStrokeOpacity: strokeOpacity = opacity3,
+    ruleStrokeWidth: strokeWidth
+  } = options;
+  return {
+    ...markOptions2(k3, pointerOptions, options),
+    stroke,
+    strokeOpacity,
+    strokeWidth
+  };
+}
+function textOptions2(k3, pointerOptions, options) {
+  const {
+    color: color5 = "currentColor",
+    textFill: fill = color5,
+    textFillOpacity: fillOpacity,
+    textStroke: stroke = "white",
+    textStrokeOpacity: strokeOpacity,
+    textStrokeWidth: strokeWidth = 5
+  } = options;
+  return {
+    ...markOptions2(k3, pointerOptions, textChannel2(k3, options)),
+    fill,
+    fillOpacity,
+    stroke,
+    strokeOpacity,
+    strokeWidth
+  };
+}
+function textChannel2(source, options) {
+  return initializer2(options, (data, facets, channels) => {
+    return { channels: { text: { value: getSource2(channels, source)?.value } } };
+  });
+}
+
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/delaunay.js
 var delaunayLinkDefaults2 = {
   ariaLabel: "delaunay link",
@@ -55107,7 +56652,7 @@ var DelaunayLink2 = class extends Mark2 {
   }
 };
 var AbstractDelaunayMark2 = class extends Mark2 {
-  constructor(data, options = {}, defaults41, zof = ({ z }) => z) {
+  constructor(data, options = {}, defaults43, zof = ({ z }) => z) {
     const { x: x7, y: y7 } = options;
     super(
       data,
@@ -55117,7 +56662,7 @@ var AbstractDelaunayMark2 = class extends Mark2 {
         z: { value: zof(options), optional: true }
       },
       options,
-      defaults41
+      defaults43
     );
   }
   render(index5, scales, channels, dimensions, context) {
@@ -55218,7 +56763,7 @@ function voronoiMesh2(data, options) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/density.js
-var defaults36 = {
+var defaults38 = {
   ariaLabel: "density",
   fill: "none",
   stroke: "currentColor",
@@ -55237,7 +56782,7 @@ var Density2 = class extends Mark2 {
         weight: { value: weight, optional: true }
       },
       densityInitializer2({ ...options, fill, stroke }, fillDensity, strokeDensity),
-      defaults36
+      defaults38
     );
     if (fillDensity)
       this.fill = void 0;
@@ -55256,10 +56801,9 @@ var Density2 = class extends Mark2 {
     ).node();
   }
 };
-function density2(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function density2(data, { x: x7, y: y7, ...options } = {}) {
   [x7, y7] = maybeTuple2(x7, y7);
-  return new Density2(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Density2(data, { ...options, x: x7, y: y7 });
 }
 var dropChannels2 = /* @__PURE__ */ new Set(["x", "y", "z", "weight"]);
 function densityInitializer2(options, fillDensity, strokeDensity) {
@@ -55341,7 +56885,7 @@ function isDensity2(value) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/geo.js
-var defaults37 = {
+var defaults39 = {
   ariaLabel: "geo",
   fill: "none",
   stroke: "currentColor",
@@ -55360,7 +56904,7 @@ var Geo2 = class extends Mark2 {
         r: { value: vr, scale: "r", filter: positive2, optional: true }
       },
       withDefaultSort2(options),
-      defaults37
+      defaults39
     );
     this.r = cr;
   }
@@ -55474,9 +57018,11 @@ function hexbin2(outputs = { fill: "count" }, { binWidth, ...options } = {}) {
       }
       binFacets.push(binFacet);
     }
+    const sx = channels.x.scale;
+    const sy = channels.y.scale;
     const binChannels = {
-      x: { value: BX },
-      y: { value: BY },
+      x: { value: BX, source: scales[sx] ? { value: map9(BX, scales[sx].invert), scale: sx } : null },
+      y: { value: BY, source: scales[sy] ? { value: map9(BY, scales[sy].invert), scale: sy } : null },
       ...Z && { z: { value: GZ } },
       ...F && { fill: { value: GF, scale: "auto" } },
       ...S && { stroke: { value: GS, scale: "auto" } },
@@ -55484,7 +57030,12 @@ function hexbin2(outputs = { fill: "count" }, { binWidth, ...options } = {}) {
       ...Object.fromEntries(
         outputs.map(({ name, output }) => [
           name,
-          { scale: "auto", radius: name === "r" ? binWidth / 2 : void 0, value: output.transform() }
+          {
+            scale: "auto",
+            label: output.label,
+            radius: name === "r" ? binWidth / 2 : void 0,
+            value: output.transform()
+          }
         ])
       )
     };
@@ -55517,7 +57068,7 @@ function hbin2(I, X4, Y4, dx) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/hexgrid.js
-var defaults38 = {
+var defaults40 = {
   ariaLabel: "hexgrid",
   fill: "none",
   stroke: "currentColor",
@@ -55528,7 +57079,7 @@ function hexgrid2(options) {
 }
 var Hexgrid2 = class extends Mark2 {
   constructor({ binWidth = 20, clip = true, ...options } = {}) {
-    super(void 0, void 0, { clip, ...options }, defaults38);
+    super(singleton2, void 0, { clip, ...options }, defaults40);
     this.binWidth = number11(binWidth);
   }
   render(index5, scales, channels, dimensions, context) {
@@ -55541,7 +57092,7 @@ var Hexgrid2 = class extends Mark2 {
         d += `M${round2(i * wx + (j & 1) * rx)},${round2(j * wy)}${path3}`;
       }
     }
-    return create4("svg:g", context).call(applyIndirectStyles2, this, dimensions, context).call(applyTransform2, this, {}, offset2 + ox2, offset2 + oy2).call((g) => g.append("path").call(applyDirectStyles2, this).attr("d", d)).node();
+    return create4("svg:g", context).datum(0).call(applyIndirectStyles2, this, dimensions, context).call(applyTransform2, this, {}, offset2 + ox2, offset2 + oy2).call((g) => g.append("path").call(applyDirectStyles2, this).call(applyChannelStyles2, this, channels).attr("d", d)).node();
   }
 };
 function round2(x7) {
@@ -55549,7 +57100,7 @@ function round2(x7) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/image.js
-var defaults39 = {
+var defaults41 = {
   ariaLabel: "image",
   fill: null,
   stroke: null
@@ -55591,7 +57142,7 @@ var Image3 = class extends Mark2 {
         src: { value: vs, optional: true }
       },
       withDefaultSort2(options),
-      defaults39
+      defaults41
     );
     this.src = cs;
     this.width = cw;
@@ -55616,11 +57167,10 @@ var Image3 = class extends Mark2 {
 function position4(X4, W, R, x7, w, r) {
   return W && X4 ? (i) => X4[i] - W[i] / 2 : W ? (i) => x7 - W[i] / 2 : X4 && w !== void 0 ? (i) => X4[i] - w / 2 : w !== void 0 ? x7 - w / 2 : R && X4 ? (i) => X4[i] - R[i] : R ? (i) => x7 - R[i] : X4 ? (i) => X4[i] - r : x7 - r;
 }
-function image2(data, options = {}) {
-  let { x: x7, y: y7, ...remainingOptions } = options;
+function image2(data, { x: x7, y: y7, ...options } = {}) {
   if (options.frameAnchor === void 0)
     [x7, y7] = maybeTuple2(x7, y7);
-  return new Image3(data, { ...remainingOptions, x: x7, y: y7 });
+  return new Image3(data, { ...options, x: x7, y: y7 });
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/stats.js
@@ -55744,7 +57294,7 @@ function qt2(p, dof) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/linearRegression.js
-var defaults40 = {
+var defaults42 = {
   ariaLabel: "linear-regression",
   fill: "currentColor",
   fillOpacity: 0.1,
@@ -55765,7 +57315,7 @@ var LinearRegression2 = class extends Mark2 {
         z: { value: maybeZ2(options), optional: true }
       },
       options,
-      defaults40
+      defaults42
     );
     this.z = z;
     this.ci = +ci;
@@ -55830,25 +57380,11 @@ var LinearRegressionY2 = class extends LinearRegression2 {
     return `M${x13},${f(x13)}L${x22},${f(x22)}`;
   }
 };
-function linearRegressionX2(data, options = {}) {
-  const {
-    y: y7 = indexOf2,
-    x: x7 = identity13,
-    stroke,
-    fill = isNoneish2(stroke) ? "currentColor" : stroke,
-    ...remainingOptions
-  } = options;
-  return new LinearRegressionX2(data, maybeDenseIntervalY2({ ...remainingOptions, x: x7, y: y7, fill, stroke }));
+function linearRegressionX2(data, { y: y7 = indexOf2, x: x7 = identity13, stroke, fill = isNoneish2(stroke) ? "currentColor" : stroke, ...options } = {}) {
+  return new LinearRegressionX2(data, maybeDenseIntervalY2({ ...options, x: x7, y: y7, fill, stroke }));
 }
-function linearRegressionY2(data, options = {}) {
-  const {
-    x: x7 = indexOf2,
-    y: y7 = identity13,
-    stroke,
-    fill = isNoneish2(stroke) ? "currentColor" : stroke,
-    ...remainingOptions
-  } = options;
-  return new LinearRegressionY2(data, maybeDenseIntervalX2({ ...remainingOptions, x: x7, y: y7, fill, stroke }));
+function linearRegressionY2(data, { x: x7 = indexOf2, y: y7 = identity13, stroke, fill = isNoneish2(stroke) ? "currentColor" : stroke, ...options } = {}) {
+  return new LinearRegressionY2(data, maybeDenseIntervalX2({ ...options, x: x7, y: y7, fill, stroke }));
 }
 function linearRegressionF2(I, X4, Y4) {
   let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
@@ -55882,32 +57418,31 @@ function confidenceIntervalF2(I, X4, Y4, p, f) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/transforms/tree.js
-function treeNode2(options = {}) {
-  let {
-    path: path3 = identity13,
-    // the delimited path
-    delimiter,
-    // how the path is separated
-    frameAnchor,
-    treeLayout = tree_default2,
-    treeSort,
-    treeSeparation,
-    treeAnchor,
-    ...remainingOptions
-  } = options;
+function treeNode2({
+  path: path3 = identity13,
+  // the delimited path
+  delimiter,
+  // how the path is separated
+  frameAnchor,
+  treeLayout = tree_default2,
+  treeSort,
+  treeSeparation,
+  treeAnchor,
+  ...options
+} = {}) {
   treeAnchor = maybeTreeAnchor2(treeAnchor);
   treeSort = maybeTreeSort2(treeSort);
   if (frameAnchor === void 0)
     frameAnchor = treeAnchor.frameAnchor;
   const normalize7 = normalizer2(delimiter);
-  const outputs = treeOutputs2(remainingOptions, maybeNodeValue2);
+  const outputs = treeOutputs2(options, maybeNodeValue2);
   const [X4, setX] = column2();
   const [Y4, setY] = column2();
   return {
     x: X4,
     y: Y4,
     frameAnchor,
-    ...basic2(remainingOptions, (data, facets) => {
+    ...basic2(options, (data, facets) => {
       const P = normalize7(valueof2(data, path3));
       const X5 = setX([]);
       const Y5 = setY([]);
@@ -55942,27 +57477,26 @@ function treeNode2(options = {}) {
     ...Object.fromEntries(outputs)
   };
 }
-function treeLink2(options = {}) {
-  let {
-    path: path3 = identity13,
-    // the delimited path
-    delimiter,
-    // how the path is separated
-    curve = "bump-x",
-    stroke = "#555",
-    strokeWidth = 1.5,
-    strokeOpacity = 0.5,
-    treeLayout = tree_default2,
-    treeSort,
-    treeSeparation,
-    treeAnchor,
-    ...remainingOptions
-  } = options;
+function treeLink2({
+  path: path3 = identity13,
+  // the delimited path
+  delimiter,
+  // how the path is separated
+  curve = "bump-x",
+  stroke = "#555",
+  strokeWidth = 1.5,
+  strokeOpacity = 0.5,
+  treeLayout = tree_default2,
+  treeSort,
+  treeSeparation,
+  treeAnchor,
+  ...options
+} = {}) {
   treeAnchor = maybeTreeAnchor2(treeAnchor);
   treeSort = maybeTreeSort2(treeSort);
-  remainingOptions = { curve, stroke, strokeWidth, strokeOpacity, ...remainingOptions };
+  options = { curve, stroke, strokeWidth, strokeOpacity, ...options };
   const normalize7 = normalizer2(delimiter);
-  const outputs = treeOutputs2(remainingOptions, maybeLinkValue2);
+  const outputs = treeOutputs2(options, maybeLinkValue2);
   const [X15, setX1] = column2();
   const [X25, setX2] = column2();
   const [Y15, setY1] = column2();
@@ -55972,7 +57506,7 @@ function treeLink2(options = {}) {
     x2: X25,
     y1: Y15,
     y2: Y25,
-    ...basic2(remainingOptions, (data, facets) => {
+    ...basic2(options, (data, facets) => {
       const P = normalize7(valueof2(data, path3));
       const X16 = setX1([]);
       const X26 = setX2([]);
@@ -56161,30 +57695,29 @@ function treeOutputs2(options, maybeTreeValue) {
 }
 
 // js/pyobsplot-js/node_modules/@observablehq/plot/src/marks/tree.js
-function tree2(data, options = {}) {
-  let {
-    fill,
-    stroke,
-    strokeWidth,
-    strokeOpacity,
-    strokeLinejoin,
-    strokeLinecap,
-    strokeMiterlimit,
-    strokeDasharray,
-    strokeDashoffset,
-    marker,
-    markerStart = marker,
-    markerEnd = marker,
-    dot: dotDot = isNoneish2(markerStart) && isNoneish2(markerEnd),
-    text: textText = "node:name",
-    textStroke = "white",
-    title = "node:path",
-    dx,
-    dy,
-    ...remainingOptions
-  } = options;
+function tree2(data, {
+  fill,
+  stroke,
+  strokeWidth,
+  strokeOpacity,
+  strokeLinejoin,
+  strokeLinecap,
+  strokeMiterlimit,
+  strokeDasharray,
+  strokeDashoffset,
+  marker,
+  markerStart = marker,
+  markerEnd = marker,
+  dot: dotDot = isNoneish2(markerStart) && isNoneish2(markerEnd),
+  text: textText = "node:name",
+  textStroke = "white",
+  title = "node:path",
+  dx,
+  dy,
+  ...options
+} = {}) {
   if (dx === void 0)
-    dx = maybeTreeAnchor2(remainingOptions.treeAnchor).dx;
+    dx = maybeTreeAnchor2(options.treeAnchor).dx;
   return marks2(
     link6(
       data,
@@ -56199,10 +57732,10 @@ function tree2(data, options = {}) {
         strokeMiterlimit,
         strokeDasharray,
         strokeDashoffset,
-        ...remainingOptions
+        ...options
       })
     ),
-    dotDot ? dot2(data, treeNode2({ fill: fill === void 0 ? "node:internal" : fill, title, ...remainingOptions })) : null,
+    dotDot ? dot2(data, treeNode2({ fill: fill === void 0 ? "node:internal" : fill, title, ...options })) : null,
     textText != null ? text2(
       data,
       treeNode2({
@@ -56212,7 +57745,7 @@ function tree2(data, options = {}) {
         dx,
         dy,
         title,
-        ...remainingOptions
+        ...options
       })
     ) : null
   );
@@ -56231,7 +57764,7 @@ function centroid2({ geometry = identity13, ...options } = {}) {
     const path3 = path_default3(projection3);
     for (let i = 0; i < n; ++i)
       [X4[i], Y4[i]] = path3.centroid(G[i]);
-    return { data, facets, channels: { x: { value: X4 }, y: { value: Y4 } } };
+    return { data, facets, channels: { x: { value: X4, source: null }, y: { value: Y4, source: null } } };
   });
 }
 function geoCentroid2({ geometry = identity13, ...options } = {}) {
@@ -56251,13 +57784,13 @@ var anchorXMiddle2 = ({ width, marginLeft, marginRight }) => [0, (marginLeft + w
 var anchorYTop2 = ({ marginTop }) => [1, marginTop];
 var anchorYBottom2 = ({ height, marginBottom }) => [-1, height - marginBottom];
 var anchorYMiddle2 = ({ height, marginTop, marginBottom }) => [0, (marginTop + height - marginBottom) / 2];
-function maybeAnchor5(anchor) {
+function maybeAnchor7(anchor) {
   return typeof anchor === "string" ? { anchor } : anchor;
 }
 function dodgeX2(dodgeOptions = {}, options = {}) {
   if (arguments.length === 1)
     [dodgeOptions, options] = mergeOptions6(dodgeOptions);
-  let { anchor = "left", padding = 1, r = options.r } = maybeAnchor5(dodgeOptions);
+  let { anchor = "left", padding = 1, r = options.r } = maybeAnchor7(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "left":
       anchor = anchorXLeft2;
@@ -56276,7 +57809,7 @@ function dodgeX2(dodgeOptions = {}, options = {}) {
 function dodgeY2(dodgeOptions = {}, options = {}) {
   if (arguments.length === 1)
     [dodgeOptions, options] = mergeOptions6(dodgeOptions);
-  let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor5(dodgeOptions);
+  let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor7(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "top":
       anchor = anchorYTop2;
@@ -56299,10 +57832,12 @@ function mergeOptions6(options) {
 }
 function dodge2(y7, x7, anchor, padding, r, options) {
   if (r != null && typeof r !== "number") {
-    const { channels, sort: sort5, reverse: reverse5 } = options;
-    options = { ...options, channels: { r: { value: r, scale: "r" }, ...maybeNamed2(channels) } };
+    let { channels, sort: sort5, reverse: reverse5 } = options;
+    channels = maybeNamed2(channels);
+    if (channels?.r === void 0)
+      options = { ...options, channels: { ...channels, r: { value: r, scale: "r" } } };
     if (sort5 === void 0 && reverse5 === void 0)
-      options.sort = { channel: "r", order: "descending" };
+      options.sort = { channel: "-r" };
   }
   return initializer2(options, function(data, facets, channels, scales, dimensions, context) {
     let { [x7]: X4, r: R } = channels;
@@ -56361,9 +57896,10 @@ function dodge2(y7, x7, anchor, padding, r, options) {
       data,
       facets,
       channels: {
-        [x7]: { value: X4 },
-        [y7]: { value: Y4 },
-        ...R && { r: { value: R } }
+        [y7]: { value: Y4, source: null },
+        // don’t show in tooltip
+        [x7]: { value: X4, source: channels[x7] },
+        ...R && { r: { value: R, source: channels.r } }
       }
     };
   });
@@ -56390,7 +57926,7 @@ function normalize6(basis3) {
   if (basis3 === void 0)
     return normalizeFirst2;
   if (typeof basis3 === "function")
-    return normalizeBasis2((I, S) => basis3(take2(S, I)));
+    return normalizeBasis2(taker2(basis3));
   if (/^p\d{2}$/i.test(basis3))
     return normalizeAccessor2(percentile2(basis3));
   switch (`${basis3}`.toLowerCase()) {
@@ -56487,9 +58023,9 @@ function window3(options = {}) {
   }
   if (!((k3 = Math.floor(k3)) > 0))
     throw new Error(`invalid k: ${k3}`);
-  return maybeReduce4(reduce3)(k3, maybeAnchor6(anchor, k3), strict);
+  return maybeReduce4(reduce3)(k3, maybeAnchor8(anchor, k3), strict);
 }
-function maybeAnchor6(anchor = "middle", k3) {
+function maybeAnchor8(anchor = "middle", k3) {
   switch (`${anchor}`.toLowerCase()) {
     case "middle":
       return k3 - 1 >> 1;
@@ -56514,24 +58050,24 @@ function maybeShift2(shift) {
 function maybeReduce4(reduce3 = "mean") {
   if (typeof reduce3 === "string") {
     if (/^p\d{2}$/i.test(reduce3))
-      return reduceNumbers2(percentile2(reduce3));
+      return reduceAccessor4(percentile2(reduce3));
     switch (reduce3.toLowerCase()) {
       case "deviation":
-        return reduceNumbers2(deviation2);
+        return reduceAccessor4(deviation2);
       case "max":
-        return reduceArray2(max5);
+        return reduceArray2((I, V) => max5(I, (i) => V[i]));
       case "mean":
         return reduceMean2;
       case "median":
-        return reduceNumbers2(median2);
+        return reduceAccessor4(median2);
       case "min":
-        return reduceArray2(min4);
+        return reduceArray2((I, V) => min4(I, (i) => V[i]));
       case "mode":
-        return reduceArray2(mode2);
+        return reduceArray2((I, V) => mode2(I, (i) => V[i]));
       case "sum":
         return reduceSum4;
       case "variance":
-        return reduceNumbers2(variance2);
+        return reduceAccessor4(variance2);
       case "difference":
         return reduceDifference2;
       case "ratio":
@@ -56544,35 +58080,35 @@ function maybeReduce4(reduce3 = "mean") {
   }
   if (typeof reduce3 !== "function")
     throw new Error(`invalid reduce: ${reduce3}`);
-  return reduceArray2(reduce3);
+  return reduceArray2(taker2(reduce3));
 }
 function slice12(I, i, j) {
   return I.subarray ? I.subarray(i, j) : I.slice(i, j);
 }
-function reduceNumbers2(f) {
+function reduceAccessor4(f) {
   return (k3, s3, strict) => strict ? {
     mapIndex(I, S, T) {
-      const C4 = Float64Array.from(I, (i) => S[i] === null ? NaN : S[i]);
+      const s4 = (i) => S[i] == null ? NaN : +S[i];
       let nans = 0;
       for (let i = 0; i < k3 - 1; ++i)
-        if (isNaN(C4[i]))
+        if (isNaN(s4(i)))
           ++nans;
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
-        if (isNaN(C4[i + k3 - 1]))
+        if (isNaN(s4(i + k3 - 1)))
           ++nans;
-        T[I[i + s3]] = nans === 0 ? f(C4.subarray(i, i + k3)) : NaN;
-        if (isNaN(C4[i]))
+        T[I[i + s4]] = nans === 0 ? f(slice12(I, i, i + k3), s4) : NaN;
+        if (isNaN(s4(i)))
           --nans;
       }
     }
   } : {
     mapIndex(I, S, T) {
-      const C4 = Float64Array.from(I, (i) => S[i] === null ? NaN : S[i]);
-      for (let i = -s3; i < 0; ++i) {
-        T[I[i + s3]] = f(C4.subarray(0, i + k3));
+      const s4 = (i) => S[i] == null ? NaN : +S[i];
+      for (let i = -s4; i < 0; ++i) {
+        T[I[i + s4]] = f(slice12(I, 0, i + k3), s4);
       }
-      for (let i = 0, n = I.length - s3; i < n; ++i) {
-        T[I[i + s3]] = f(C4.subarray(i, i + k3));
+      for (let i = 0, n = I.length - s4; i < n; ++i) {
+        T[I[i + s4]] = f(slice12(I, i, i + k3), s4);
       }
     }
   };
@@ -56586,17 +58122,17 @@ function reduceArray2(f) {
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
         count5 += defined2(S[I[i + k3 - 1]]);
         if (count5 === k3)
-          T[I[i + s3]] = f(take2(S, slice12(I, i, i + k3)));
+          T[I[i + s3]] = f(slice12(I, i, i + k3), S);
         count5 -= defined2(S[I[i]]);
       }
     }
   } : {
     mapIndex(I, S, T) {
       for (let i = -s3; i < 0; ++i) {
-        T[I[i + s3]] = f(take2(S, slice12(I, 0, i + k3)));
+        T[I[i + s3]] = f(slice12(I, 0, i + k3), S);
       }
       for (let i = 0, n = I.length - s3; i < n; ++i) {
-        T[I[i + s3]] = f(take2(S, slice12(I, i, i + k3)));
+        T[I[i + s3]] = f(slice12(I, i, i + k3), S);
       }
     }
   };
