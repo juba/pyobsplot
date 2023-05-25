@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
-    <lastmod>2023-05-09T16:56:13.326Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
-    <lastmod>2023-05-09T16:56:40.934Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/index.html</loc>
-    <lastmod>2023-05-09T16:56:54.398Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/development.html</loc>
-    <lastmod>2023-05-09T16:56:58.850Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
-    <lastmod>2023-05-09T16:57:16.378Z</lastmod>
+    <loc>https://juba.github.io/pyobsplot/gallery_marks.html</loc>
+    <lastmod>2023-05-25T13:50:30.832Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
-    <lastmod>2023-05-09T16:57:16.966Z</lastmod>
+    <lastmod>2023-05-25T13:50:31.888Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
+    <lastmod>2023-05-25T13:50:55.892Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/index.html</loc>
+    <lastmod>2023-05-25T13:51:07.860Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
+    <lastmod>2023-05-25T13:51:22.656Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/development.html</loc>
+    <lastmod>2023-05-25T13:51:26.892Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/usage.html</loc>
-    <lastmod>2023-05-09T16:57:29.406Z</lastmod>
+    <lastmod>2023-05-25T13:51:37.609Z</lastmod>
   </url>
   <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_marks.html</loc>
-    <lastmod>2023-05-09T16:57:51.266Z</lastmod>
+    <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
+    <lastmod>2023-05-25T13:51:59.053Z</lastmod>
   </url>
 </urlset>
