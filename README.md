@@ -72,6 +72,8 @@ If you just want to try this package without installing it on your computer, you
 **Limitations:**
 
 - Plots with legends don't work in Quarto in formats other than HTML. (<https://github.com/juba/pyobsplot/issues/9>)
+- Very limited integration with IDE (documentation and autocompletion) for Plot methods. (https://github.com/juba/pyobsplot/issues/13)
+
 
 
 ## Credits
