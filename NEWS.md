@@ -2,7 +2,7 @@
 
 - Update Observable Plot to 0.6.7 (tooltips ! interactions !)
 - Update apache-arrow to 12.0.0
-- Update anywidget to 0.3.0
+- Update anywidget to 0.3.1
 
 
 ## pyobsplot 0.3.4
