@@ -137,6 +137,11 @@ The following table lists the differences between the two renderers.
 <td>Moderate : size of the SVG or HTML output</td>
 </tr>
 <tr>
+<td>**Plot interactions<br>(tooltips...)**</td>
+<td>Supported</td>
+<td>Not supported. Only static plots are produced.</td>
+</tr>
+<tr>
 <td>**Jupyter<br>interactivity**</td>
 <td>Basic</td>
 <td>None</td>

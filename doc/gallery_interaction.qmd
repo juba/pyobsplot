@@ -1,0 +1,93 @@
+---
+title: "Interaction"
+---
+
+{{< include _setup_widget.qmd >}}
+
+::::{.callout-warning}
+As of now, interactions are only supported by the `widget` renderer. When using the `jsdom` renderer, only static plots can be produced.
+::::
+
+## Tooltips
+
+The [tip mark](https://observablehq.com/plot/marks/tip), introduced in Observable 0.6.7, allows to easily add tooltips to a plot.
+
+```{python}
+import polars as pl
+from pyobsplot import Plot, d3, js
+
+stocks = pl.read_csv("data/stocks.csv", try_parse_dates=True)
+
+Plot.plot(
+    {
+        "y": {"grid": True},
+        "color": {"legend": True},
+        "marks": [
+            Plot.lineY(
+                stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
+            )
+        ],
+    }
+)
+
+```
+
+
+## Crosshair mark
+
+The [crosshair mark](https://observablehq.com/plot/interactions/crosshair)  alows to display the coordinates of the nearest point.
+
+```{python}
+penguins = pl.read_csv("data/penguins.csv")
+
+Plot.plot(
+    {
+        "marks": [
+            Plot.dot(
+                penguins,
+                {"x": "culmen_length_mm", "y": "culmen_depth_mm", "stroke": "island"},
+            ),
+            Plot.crosshair(
+                penguins,
+                {"x": "culmen_length_mm", "y": "culmen_depth_mm", "color": "island"},
+            ),
+        ]
+    }
+)
+
+```
+
+## Pointer interaction
+
+More generally, the [pointer interaction](https://observablehq.com/plot/interactions/pointer) allows to filter out the closest data point and apply some custom marks to it.
+
+```{python}
+aapl = stocks.filter(pl.col("Symbol") == "AAPL")
+
+Plot.plot(
+    {
+        "height": 160,
+        "inset": 20,
+        "y": {"axis": "right", "grid": True, "nice": True},
+        "marks": [
+            Plot.lineY(aapl, {"x": "Date", "y": "Close"}),
+            Plot.ruleX(
+                aapl, Plot.pointerX({"x": "Date", "py": "Close", "stroke": "red"})
+            ),
+            Plot.dot(aapl, Plot.pointerX({"x": "Date", "y": "Close", "stroke": "red"})),
+            Plot.text(
+                aapl,
+                Plot.pointerX(
+                    {
+                        "x": "Date",
+                        "dy": -15,
+                        "frameAnchor": "top",
+                        "fill": "red",
+                        "text": js("(d) => Plot.formatIsoDate(d.Date)"),
+                    }
+                ),
+            ),
+        ],
+    }
+)
+```

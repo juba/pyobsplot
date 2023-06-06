@@ -1,0 +1,7 @@
+```{python}
+# | include: false
+import pyobsplot
+from pyobsplot import Plot, Obsplot, d3, Math, js
+
+pyobsplot.jsmodules._plot_renderer = "widget"
+```

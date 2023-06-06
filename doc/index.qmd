@@ -21,7 +21,13 @@ Plot.plot(
         "grid": True,
         "marks": [
             Plot.dot(
-                penguins, {"x": "flipper_length_mm", "y": "body_mass_g", "fill": "sex"}
+                penguins,
+                {
+                    "x": "flipper_length_mm",
+                    "y": "body_mass_g",
+                    "fill": "sex",
+                    "tip": True,
+                },
             )
         ],
     }
@@ -92,7 +98,9 @@ If you just want to try this package without installing it on your computer, you
 
 **Limitations:**
 
+- Plot interactions (tooltips, crosshair...) are not available with the `jsdom` renderer ([#16](https://github.com/juba/pyobsplot/issues/16)).
 - Plots with legends don't work in Quarto in formats other than HTML.
+- Very limited integration with IDE (documentation and autocompletion) for Plot methods (unlike in Observable notebooks).
 
 
 ## Credits
