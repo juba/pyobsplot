@@ -251,6 +251,23 @@ op_colors(
 )
 ```
 
+## Themes
+
+When using a plot generator object, it is possible to specify one of three output themes:
+
+- `light` theme (default) creates plots with a white background and a black foreground color
+- `dark` theme creates plots with a black background and a white foreground
+- `current` theme creates plots with a transparent background and a currentColor foreground
+
+You can specify a mode when creating the plot generator object by using the `theme` argument:
+
+```{python}
+#| eval: false
+op_dark = Obsplot(theme="dark")
+```
+
+You can see output examples in the [themes gallery](gallery_themes.qmd)
+
 
 ## DataFrames and Series
 

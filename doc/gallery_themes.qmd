@@ -1,0 +1,77 @@
+---
+title: "Themes"
+---
+
+{{< include _setup.qmd >}}
+
+
+When using a plot generator object, it is possible to specify one of three output themes: `light`, `dark` and `current`.
+
+## `light` theme
+
+The light theme produces plots with a white background and a black foreground color. This is the default theme:
+
+```{python}
+import polars as pl
+from pyobsplot import Plot, d3, js
+
+stocks = pl.read_csv("data/stocks.csv", try_parse_dates=True)
+
+op = Obsplot(theme="light")
+
+op(
+    {
+        "y": {"grid": True},
+        "color": {"legend": True},
+        "marks": [
+            Plot.lineY(
+                stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
+            )
+        ],
+    }
+)
+```
+
+## `dark` theme
+
+The dark theme produces plots with a black background and a white foreground color.
+
+```{python}
+op = Obsplot(theme="dark")
+
+op(
+    {
+        "y": {"grid": True},
+        "color": {"legend": True},
+        "marks": [
+            Plot.lineY(
+                stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
+            )
+        ],
+    }
+)
+```
+
+## `current` theme
+
+<div style='background-color: #ffeeee; color: #7e0c00; padding: 1em;'>
+
+The "current" theme uses a transparent background and a `currentColor` foreground, so it should keep the current color theme:
+
+```{python}
+op = Obsplot(theme="current")
+
+op(
+    {
+        "y": {"grid": True},
+        "color": {"legend": True},
+        "marks": [
+            Plot.lineY(
+                stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
+            )
+        ],
+    }
+)
+```
+
+</div>

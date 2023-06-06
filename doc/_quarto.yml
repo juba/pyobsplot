@@ -26,6 +26,7 @@ website:
           - gallery_transforms.qmd
           - gallery_geo.qmd
           - gallery_interaction.qmd
+          - gallery_themes.qmd
       - development.qmd
       - changelog.md
     tools:
