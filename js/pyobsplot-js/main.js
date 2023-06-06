@@ -22,20 +22,29 @@ global.d3 = d3
 global.Plot = Plot
 
 // jsdom plot generator
-function jsdom_plot(spec) {
+function jsdom_plot(request) {
 
-    spec = JSON.parse(spec)
-    let el = generate_plot(spec, "jsdom")
+    request = JSON.parse(request)
+    let el = generate_plot(request["spec"], "jsdom")
+
+    // foreground color
+    const bg = { light: "white", dark: "black", current: "transparent" };
+    // background color
+    const fg = { light: "black", dark: "white", current: "currentColor" };
+    const theme = request["theme"]
 
     for (const svg of el.tagName.toLowerCase() === "svg" ? [el] : el.querySelectorAll("svg")) {
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
         svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-        svg.style.color ||= "black";
+        // theming
+        svg.style.color ||= fg[theme];
+        svg.style.backgroundColor ||= bg[theme];
     }
     for (const figure of el.tagName.toLowerCase() === "figure" ? [el] : el.querySelectorAll("figure")) {
-        figure.style.color ||= "black"
-        figure.style.backgroundColor ||= "white"
         figure.style.padding ||= "0px 5px 5px 5px"
+        // theming
+        figure.style.color ||= fg[theme];
+        figure.style.backgroundColor ||= bg[theme];
     }
 
     return el.outerHTML

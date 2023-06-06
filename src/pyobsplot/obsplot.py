@@ -11,7 +11,7 @@ from typing import Any
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
-from .utils import allowed_defaults, min_npm_version
+from .utils import allowed_defaults, min_npm_version, available_themes, default_theme
 
 
 class Obsplot:
@@ -23,7 +23,11 @@ class Obsplot:
     """
 
     def __new__(
-        cls, renderer: str = "widget", default: dict = {}, debug: bool = False
+        cls,
+        renderer: str = "widget",
+        theme: str = default_theme,
+        default: dict = {},
+        debug: bool = False,
     ) -> Any:
         """
         Main Obsplot class constructor. Returns a Creator instance depending on the
@@ -31,6 +35,8 @@ class Obsplot:
 
         Args:
             renderer (str): renderer to be used.
+            theme (str): color theme to use, can be "light" (default), "dark" or
+                "current".
             default (dict): dict of default spec values.
             debug (bool): if True, activate debug mode (for widget renderer only)
 
@@ -38,13 +44,23 @@ class Obsplot:
             A Creator object of type depending of the renderer.
         """
 
+        # Check theme value
+        if theme not in available_themes:
+            raise ValueError(
+                f"""
+                Incorrect theme '{theme}'. 
+                Available renderers are {available_themes}
+                """
+            )
+
+        # Check renderer value
         available_renderers = ["widget", "jsdom"]
 
         # Plot spec with the configured renderer
         if renderer == "widget":
-            return ObsplotWidgetCreator(default=default, debug=debug)
+            return ObsplotWidgetCreator(theme=theme, default=default, debug=debug)
         elif renderer == "jsdom":
-            return ObsplotJsdomCreator(default=default, debug=debug)
+            return ObsplotJsdomCreator(theme=theme, default=default, debug=debug)
         else:
             raise ValueError(
                 f"""
@@ -59,7 +75,9 @@ class ObsplotCreator:
     Creator class.
     """
 
-    def __init__(self, default: dict = {}, debug: bool = False) -> None:
+    def __init__(
+        self, theme: str = default_theme, default: dict = {}, debug: bool = False
+    ) -> None:
         """Generic Creator constructor
 
         Args:
@@ -72,10 +90,12 @@ class ObsplotCreator:
                 )
         self._default = default
         self._debug = debug
+        self._theme = theme
 
     def __repr__(self):
         return (
             f"<{type(self).__name__}>\n"
+            f"theme: {self._theme!r}\n"
             f"debug: {self._debug!r}\n"
             f"default: {self._default!r}\n"
         )
@@ -108,15 +128,19 @@ class ObsplotWidgetCreator(ObsplotCreator):
     Widget renderer Creator class.
     """
 
-    def __init__(self, default: dict = {}, debug: bool = False) -> None:
-        super().__init__(default, debug)
+    def __init__(
+        self, theme: str = default_theme, default: dict = {}, debug: bool = False
+    ) -> None:
+        super().__init__(theme, default, debug)
 
     def __call__(self, *args, **kwargs) -> ObsplotWidget:
         """
         Method called when an instance is called.
         """
         spec = self.get_spec(*args, **kwargs)
-        return ObsplotWidget(spec, default=self._default, debug=self._debug)
+        return ObsplotWidget(
+            spec, theme=self._theme, default=self._default, debug=self._debug
+        )
 
 
 class ObsplotJsdomCreator(ObsplotCreator):
@@ -124,8 +148,10 @@ class ObsplotJsdomCreator(ObsplotCreator):
     Jsdom renderer Creator class.
     """
 
-    def __init__(self, default: dict = {}, debug: bool = False) -> None:
-        super().__init__(default, debug)
+    def __init__(
+        self, theme: str = default_theme, default: dict = {}, debug: bool = False
+    ) -> None:
+        super().__init__(theme, default, debug)
         self._proc = None
         self.start_server()
 
@@ -133,7 +159,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
         """
         Method called when an instance is called.
         """
-        if self._proc.poll() is not None:
+        if self._proc is not None and self._proc.poll() is not None:
             raise RuntimeError(
                 "Server has ended, please recreate your plot generator object."
             )
@@ -142,6 +168,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
             ObsplotJsdom(
                 spec,
                 port=self._port,
+                theme=self._theme,
                 default=self._default,
                 debug=self._debug,
             ).plot()
@@ -173,14 +200,14 @@ class ObsplotJsdomCreator(ObsplotCreator):
                 start_new_session=True,
             )
         except SubprocessError:
-            err = p.stderr.read()
+            err = p.stderr.read()  # type: ignore
             raise RuntimeError(f"Can't start server: {err}")
         # read back OS selected port from stdout
         try:
-            port = p.stdout.readline()
+            port = p.stdout.readline()  # type: ignore
             self._port = int(port.strip())
         except ValueError:
-            err = p.stderr.read()
+            err = p.stderr.read()  # type: ignore
             raise ValueError(f"Server not started: {err}")
         # store Popen process
         self._proc = p
@@ -189,4 +216,5 @@ class ObsplotJsdomCreator(ObsplotCreator):
         """
         Stop http node plot generator server.
         """
-        os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)
+        if self._proc is not None:
+            os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)

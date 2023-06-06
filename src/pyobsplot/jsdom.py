@@ -4,11 +4,13 @@ Obsplot jsdom handling.
 
 import json
 import requests
-from IPython.display import HTML, SVG
+from IPython.display import HTML, SVG  # type: ignore
+
 
 from typing import Any
 
 from .parsing import SpecParser
+from .utils import default_theme
 
 
 class ObsplotJsdom:
@@ -25,6 +27,7 @@ class ObsplotJsdom:
         self,
         spec: Any,
         port: int,
+        theme: str = default_theme,
         default: dict = {},
         debug: bool = False,
     ) -> None:
@@ -40,6 +43,7 @@ class ObsplotJsdom:
         spec = {"data": parser.serialize_data(), "code": code, "debug": debug}
         self.spec = spec
         self.port = port
+        self.theme = theme
 
     def plot(self):
         """Generates the plot by sending request to http node server.
@@ -51,15 +55,17 @@ class ObsplotJsdom:
         # Make POST request with plot spec
         url = f"http://localhost:{self.port}/plot"
         try:
-            r = requests.post(url, data=json.dumps(self.spec))
+            r = requests.post(
+                url, data=json.dumps({"spec": self.spec, "theme": self.theme})
+            )
         except ConnectionRefusedError:
             print(
                 f"Error: can't connect to generator server on port {self.port}. Please recreate your generator object."  # noqa: E501
             )
         # Read back result
-        if r.status_code == 500:
-            raise RuntimeError(r.content.decode())
-        out = r.content.decode()
+        if r.status_code == 500:  # type: ignore
+            raise RuntimeError(r.content.decode())  # type: ignore
+        out = r.content.decode()  # type: ignore
 
         # If output is svg, returns IPython.display.SVG
         if out[0:4] == "<svg":

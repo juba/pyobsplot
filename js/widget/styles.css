@@ -1,4 +1,14 @@
-.pyobsplot-plot {
+.pyobsplot-plot.light svg {
     color: #000;
     background-color: white;
+}
+
+.pyobsplot-plot.dark svg {
+    color: #FFF;
+    background-color: black;
+}
+
+.pyobsplot-plot.current svg {
+    color: currentColor;
+    background-color: transparent;
 }
