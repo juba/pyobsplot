@@ -71,8 +71,9 @@ If you just want to try this package without installing it on your computer, you
 
 **Limitations:**
 
+- Plot interactions (tooltips, crosshair...) are not available with the `jsdom` renderer (<https://github.com/juba/pyobsplot/issues/16>).
 - Plots with legends don't work in Quarto in formats other than HTML. (<https://github.com/juba/pyobsplot/issues/9>)
-- Very limited integration with IDE (documentation and autocompletion) for Plot methods. (https://github.com/juba/pyobsplot/issues/13)
+- Very limited integration with IDE (documentation and autocompletion) for Plot methods. (<https://github.com/juba/pyobsplot/issues/13>)
 
 
 
