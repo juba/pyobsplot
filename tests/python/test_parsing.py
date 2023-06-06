@@ -34,7 +34,7 @@ class TestSpecParser:
 
     def test_parse_plot_mark(self):
         parser = SpecParser()
-        parser.spec = Plot.lineY([1, 2, 3])
+        parser.spec = Plot.lineY([1, 2, 3])  # type: ignore
         assert parser.spec == {
             "marks": [
                 {
@@ -176,7 +176,7 @@ class TestParse:
         }
 
     def test_parse_js(self):
-        assert SpecParser().parse(jsmodules.Plot.dot()) == {
+        assert SpecParser().parse(jsmodules.Plot.dot()) == {  # type: ignore
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "dot",
@@ -200,7 +200,7 @@ class TestParse:
                 "module": "d3",
                 "method": "bar",
                 "args": [1, "baz"],
-            }
+            }  # type: ignore
         assert SpecParser().parse(js("d => d.foo")) == {
             "pyobsplot-type": "js",
             "value": "d => d.foo",

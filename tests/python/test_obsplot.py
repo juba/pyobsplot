@@ -8,6 +8,7 @@ import json
 
 import pyobsplot
 from pyobsplot import Obsplot, Plot
+from pyobsplot.utils import default_theme
 
 default = {"width": 100, "style": {"color": "red"}}
 
@@ -41,21 +42,31 @@ def ow_default():
 def oj():
     oj = Obsplot(renderer="jsdom")
     yield oj
-    oj.close()
+    oj.close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_debug():
     oj_debug = Obsplot(renderer="jsdom", debug=True)
     yield oj_debug
-    oj_debug.close()
+    oj_debug.close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_default():
     oj_default = Obsplot(renderer="jsdom", default=default)
     yield oj_default
-    oj_default.close()
+    oj_default.close()  # type: ignore
+
+
+@pytest.fixture(scope="module")
+def oj_theme_dark():
+    return Obsplot(renderer="jsdom", theme="dark")
+
+
+@pytest.fixture(scope="module")
+def oj_theme_current():
+    return Obsplot(renderer="jsdom", theme="current")
 
 
 class TestInit:
@@ -74,6 +85,13 @@ class TestInit:
         assert oj._debug is False
         assert oj_debug._debug
 
+    def test_themes(self, oj, oj_theme_dark, oj_theme_current):
+        assert oj._theme == default_theme
+        assert oj_theme_dark._theme == "dark"
+        assert oj_theme_current._theme == "current"
+        with pytest.raises(ValueError):
+            Obsplot(theme="foobar")
+
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     def test_init(self, op, ow, oj):
         with pytest.raises(ValueError):
@@ -84,14 +102,14 @@ class TestInit:
             oj("foo")
         with pytest.raises(ValueError):
             oj()
-        spec = Plot.lineY([1, 2])
+        spec = Plot.lineY([1, 2])  # type: ignore
         assert isinstance(op(spec), pyobsplot.obsplot.ObsplotWidget)
         assert isinstance(ow(spec), pyobsplot.obsplot.ObsplotWidget)
         assert oj(spec) is None
 
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     def test_plot_plot(self, ow, oj):
-        spec = Plot.lineY([1, 2])
+        spec = Plot.lineY([1, 2])  # type: ignore
         plot = Plot.plot(spec)
         assert isinstance(plot, pyobsplot.obsplot.ObsplotWidget)
         with pytest.raises(ValueError):
@@ -123,18 +141,21 @@ class TestInit:
         # correct /plot request
         req_data = json.dumps(
             {
-                "data": [],
-                "code": {
-                    "marks": [
-                        {
-                            "pyobsplot-type": "function",
-                            "module": "Plot",
-                            "method": "auto",
-                            "args": [],
-                        }
-                    ]
+                "theme": "light",
+                "spec": {
+                    "data": [],
+                    "code": {
+                        "marks": [
+                            {
+                                "pyobsplot-type": "function",
+                                "module": "Plot",
+                                "method": "auto",
+                                "args": [],
+                            }
+                        ]
+                    },
+                    "debug": False,
                 },
-                "debug": False,
             }
         )
         r = requests.post(url + "/plot", data=req_data)
