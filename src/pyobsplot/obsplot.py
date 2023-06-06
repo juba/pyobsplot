@@ -140,7 +140,7 @@ class ObsplotWidgetCreator(ObsplotCreator):
         spec = self.get_spec(*args, **kwargs)
         return ObsplotWidget(
             spec, theme=self._theme, default=self._default, debug=self._debug
-        )
+        )  # type: ignore
 
 
 class ObsplotJsdomCreator(ObsplotCreator):
