@@ -13,11 +13,10 @@ window.Plot = Plot
 export function render(view) {
     // Get spec and theme values and generate plot
     let spec = () => view.model.get("spec");
-    let theme = () => view.model.get("theme");
     // Add container div
     let plot_div = document.createElement("div");
     plot_div.classList.add("pyobsplot-plot");
-    plot_div.classList.add(theme());
+    plot_div.classList.add(spec()["theme"]);
     let plot = generate_plot(spec(), "widget")
     plot_div.appendChild(plot);
     view.el.appendChild(plot_div);
@@ -38,10 +37,3 @@ function _onSpecValueChanged(view, el) {
     plot.appendChild(generate_plot(spec(), "widget"));
 }
 
-// theme value change callback
-function _onThemeValueChanged(view, el) {
-    let plot = el.querySelector(".pyobsplot-plot")
-    let theme = () => view.model.get("theme");
-    plot.classList.remove("light", "dark", "current")
-    plot.classList.add(theme())
-}

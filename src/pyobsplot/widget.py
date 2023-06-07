@@ -6,7 +6,7 @@ Obsplot widget handling.
 import anywidget
 import traitlets
 
-from .utils import bundler_output_dir, available_themes, default_theme
+from .utils import bundler_output_dir, default_theme
 from .parsing import SpecParser
 
 
@@ -31,8 +31,6 @@ class ObsplotWidget(anywidget.AnyWidget):
     )
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
-    # theme traitlet : plot theme (dark, light or current)
-    theme = traitlets.Unicode().tag(sync=True)
 
     def __init__(
         self, spec, theme: str = default_theme, default: dict = {}, debug: bool = False
@@ -40,8 +38,9 @@ class ObsplotWidget(anywidget.AnyWidget):
         """Obsplot widget constructor."""
         self._debug = debug
         self._default = default
+        self._theme = theme
         # Init widget
-        super().__init__(spec=spec, theme=theme)
+        super().__init__(spec=spec)
 
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
@@ -49,12 +48,10 @@ class ObsplotWidget(anywidget.AnyWidget):
         parser = SpecParser(renderer="widget", default=self._default)
         parser.spec = spec
         code = parser.parse_spec()
-        spec = {"data": parser.serialize_data(), "code": code, "debug": self._debug}
+        spec = {
+            "data": parser.serialize_data(),
+            "code": code,
+            "debug": self._debug,
+            "theme": self._theme,
+        }
         return spec
-
-    @traitlets.validate("theme")
-    def _validate_theme(self, proposal):
-        new_theme = proposal["value"]
-        if new_theme not in available_themes:
-            new_theme = default_theme
-        return new_theme
