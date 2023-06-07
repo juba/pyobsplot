@@ -109,7 +109,7 @@
     "href": "index.html#installation-and-usage",
     "title": "pyobsplot",
     "section": "Installation and usage",
-    "text": "Installation and usage\n\n\n\n\n\n\nWarning\n\n\n\nThis project is at an early stage.\n\n\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
+    "text": "Installation and usage\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
   },
   {
     "objectID": "index.html#features-and-limitations",
