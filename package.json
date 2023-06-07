@@ -6,8 +6,8 @@
     "pyobsplot": "file:js/pyobsplot-js"
   },
   "scripts": {
-    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/*",
-    "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/* --watch",
+    "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/widget.js js/widget/styles.css",
+    "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static js/widget/widget.js js/widget/styles.css --watch",
     "build": "npm run bundle && poetry build",
     "pytest": "poetry run pytest",
     "jstest": "cd js/pyobsplot-js && npm run test",
