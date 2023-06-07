@@ -13,7 +13,7 @@ The light theme produces plots with a white background and a black foreground co
 
 ```{python}
 import polars as pl
-from pyobsplot import Plot, d3, js
+from pyobsplot import Obsplot, Plot, d3, js
 
 stocks = pl.read_csv("data/stocks.csv", try_parse_dates=True)
 
