@@ -1,6 +1,6 @@
-## pyobsplot 0.3.5-dev
+## pyobsplot 0.3.5
 
-- Update Observable Plot to 0.6.8 (tooltips ! interactions !)
+- Update Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)
 - Add light/dark/current modes
 - Update apache-arrow to 12.0.0
 - Update anywidget to 0.4.2
