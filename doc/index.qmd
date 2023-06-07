@@ -2,7 +2,7 @@
 title: "pyobsplot"
 ---
 
-{{< include _setup.qmd >}}
+{{< include _setup_widget.qmd >}}
 
 
 ## Overview
@@ -68,11 +68,6 @@ Plot.plot(
 ```
 
 ## Installation and usage
-
-
-::::{.callout-warning}
-This project is at an early stage.
-::::
 
 [Getting started](getting_started.qmd) gives installation instructions and a quick usage overview.
 
