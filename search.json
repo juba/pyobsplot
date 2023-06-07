@@ -410,7 +410,7 @@
     "href": "gallery_themes.html#light-theme",
     "title": "Themes",
     "section": "light theme",
-    "text": "light theme\nThe light theme produces plots with a white background and a black foreground color. This is the default theme:\n\nimport polars as pl\nfrom pyobsplot import Plot, d3, js\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nop = Obsplot(theme=\"light\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)"
+    "text": "light theme\nThe light theme produces plots with a white background and a black foreground color. This is the default theme:\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, js\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nop = Obsplot(theme=\"light\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)"
   },
   {
     "objectID": "gallery_themes.html#dark-theme",
