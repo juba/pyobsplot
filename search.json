@@ -235,14 +235,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Update Observable Plot to 0.6.8 (tooltips ! interactions !)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
+    "text": "Update Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
   },
   {
-    "objectID": "changelog.html#pyobsplot-0.3.5-dev",
-    "href": "changelog.html#pyobsplot-0.3.5-dev",
+    "objectID": "changelog.html#pyobsplot-0.3.5",
+    "href": "changelog.html#pyobsplot-0.3.5",
     "title": "Changelog",
     "section": "",
-    "text": "Update Observable Plot to 0.6.8 (tooltips ! interactions !)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
+    "text": "Update Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.4",
