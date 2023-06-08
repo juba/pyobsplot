@@ -12,7 +12,21 @@ export function unserialize_data(data, renderer) {
             if (renderer == "jsdom") {
                 value = Buffer.from(value, 'base64')
             }
-            result.push(arrow.tableFromIPC(value))
+            let table = arrow.tableFromIPC(value)
+            // Find timestamp column names
+            const date_columns = table.schema.fields
+                .filter((d) => d.type.toString().startsWith("Timestamp"))
+                .map((d) => d.name)
+            // Convert to JS array (it is done by Plot afterward anyway)
+            table = Array.from(table)
+            // Convert timestamp columns to Date
+            table = table.map(d => {
+                for (let col of date_columns) {
+                    d[col] = new Date(d[col])
+                }
+                return d
+            })
+            result.push(table)
         } else {
             result.push(d)
         }
@@ -39,7 +53,7 @@ export function parse_spec(code, data) {
     if (Object.entries(code).length == 0) {
         return code
     }
-    // If DataFrame-ref type, deserialize Arrow IPC from cache
+    // If DataFrame-ref type, get deserializes Arrow IPC from cache
     if (code["pyobsplot-type"] == "DataFrame-ref") {
         return data[code["value"]]
     }
