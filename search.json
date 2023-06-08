@@ -32,14 +32,14 @@
     "href": "getting_started.html",
     "title": "Getting started",
     "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
   },
   {
     "objectID": "getting_started.html#installation",
     "href": "getting_started.html#installation",
     "title": "Getting started",
     "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use the jsdom renderer, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot"
   },
   {
     "objectID": "getting_started.html#usage",
