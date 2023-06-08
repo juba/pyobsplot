@@ -12,7 +12,7 @@ title: "Getting started"
 pip install pyobsplot
 ```
 
-If you want to use the [`jsdom` renderer](usage.qmd#renderers), you must have a working installation of [node.js](https://nodejs.org/en) and you must install `pyobsplot` npm package globally or locally:
+If you want to use the [`jsdom` renderer](usage.qmd#renderers), you must have a working installation of [node.js](https://nodejs.org/en) and you must install the `pyobsplot` npm package globally or locally:
 
 ```sh
 # Install locally
