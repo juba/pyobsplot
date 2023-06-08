@@ -172,7 +172,7 @@
     "href": "development.html#maintenance-notes",
     "title": "Development",
     "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nCheck that the min_npm_version value in .utils is correct\nRelease the Python package with poetry build and poetry publish\nIf necessary release the npm package with npm publish in its directory\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot and npm install d3 for both pyobsplot and pyobsplot-js\nrun utils/get_plot_methods.js and update utils.py"
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in its directory\nCheck that the min_npm_version value in .utils is correct\nRelease the Python package with poetry build and poetry publish\nCreate a release on Github\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot and npm install d3 for both pyobsplot and pyobsplot-js\nrun utils/get_plot_methods.js and update utils.py"
   },
   {
     "objectID": "gallery_transforms.html",
@@ -245,18 +245,11 @@
     "text": "Pointer interaction\nMore generally, the pointer interaction allows to filter out the closest data point and apply some custom marks to it.\n\naapl = stocks.filter(pl.col(\"Symbol\") == \"AAPL\")\n\nPlot.plot(\n    {\n        \"height\": 160,\n        \"inset\": 20,\n        \"y\": {\"axis\": \"right\", \"grid\": True, \"nice\": True},\n        \"marks\": [\n            Plot.lineY(aapl, {\"x\": \"Date\", \"y\": \"Close\"}),\n            Plot.ruleX(\n                aapl, Plot.pointerX({\"x\": \"Date\", \"py\": \"Close\", \"stroke\": \"red\"})\n            ),\n            Plot.dot(aapl, Plot.pointerX({\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"red\"})),\n            Plot.text(\n                aapl,\n                Plot.pointerX(\n                    {\n                        \"x\": \"Date\",\n                        \"dy\": -15,\n                        \"frameAnchor\": \"top\",\n                        \"fill\": \"red\",\n                        \"text\": js(\"(d) =&gt; Plot.formatIsoDate(d.Date)\"),\n                    }\n                ),\n            ),\n        ],\n    }\n)"
   },
   {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
-    "section": "",
-    "text": "Fix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
-  },
-  {
     "objectID": "changelog.html#pyobsplot-0.3.6",
     "href": "changelog.html#pyobsplot-0.3.6",
     "title": "Changelog",
-    "section": "",
-    "text": "Fix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
+    "section": "pyobsplot 0.3.6",
+    "text": "pyobsplot 0.3.6\n\nFix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.5",
