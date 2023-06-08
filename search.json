@@ -249,14 +249,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Update Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
+    "text": "Fix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.6",
+    "href": "changelog.html#pyobsplot-0.3.6",
+    "title": "Changelog",
+    "section": "",
+    "text": "Fix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.5",
     "href": "changelog.html#pyobsplot-0.3.5",
     "title": "Changelog",
-    "section": "",
-    "text": "Update Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
+    "section": "pyobsplot 0.3.5",
+    "text": "pyobsplot 0.3.5\n\nUpdate Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.4",
