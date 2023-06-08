@@ -1,3 +1,7 @@
+## pyobsplot 0.3.7-dev
+
+
+
 ## pyobsplot 0.3.6
 
 - Fix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)
