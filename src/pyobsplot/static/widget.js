@@ -40618,7 +40618,16 @@ function unserialize_data(data, renderer) {
       if (renderer == "jsdom") {
         value = Buffer.from(value, "base64");
       }
-      result.push(tableFromIPC(value));
+      let table = tableFromIPC(value);
+      const date_columns = table.schema.fields.filter((d2) => d2.type.toString().startsWith("Timestamp")).map((d2) => d2.name);
+      table = Array.from(table);
+      table = table.map((d2) => {
+        for (let col of date_columns) {
+          d2[col] = new Date(d2[col]);
+        }
+        return d2;
+      });
+      result.push(table);
     } else {
       result.push(d);
     }
