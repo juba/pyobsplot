@@ -24,14 +24,14 @@ trio = ["trio (<0.22)"]
 
 [[package]]
 name = "anywidget"
-version = "0.4.2"
+version = "0.4.3"
 description = "custom jupyter widgets made easy"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "anywidget-0.4.2-py3-none-any.whl", hash = "sha256:a58a3b1257d2affd2d3238c785a59a6c29b560a34f505ebaeef1bd822c1bedd5"},
-    {file = "anywidget-0.4.2.tar.gz", hash = "sha256:f37eb1ded30b3de495c8a3c632577ad3896553a9d51bd52416cd9e992979ca8c"},
+    {file = "anywidget-0.4.3-py3-none-any.whl", hash = "sha256:6b6e0d3d7c40d2bb4eea2d1d72859ed6f27a9fe8e400b1088a32a8be04995bb1"},
+    {file = "anywidget-0.4.3.tar.gz", hash = "sha256:9aebff1053a456cb61566ed305d1a2785b181d1cfb83bdc7a69b280052be6d71"},
 ]
 
 [package.dependencies]
@@ -1680,18 +1680,18 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "polars"
-version = "0.18.0"
+version = "0.18.1"
 description = "Blazingly fast DataFrame library"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "polars-0.18.0-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:71595092f7a37f3a9ff45b28f07a08ef67e3bc984a581e87909e528aa6ffa663"},
-    {file = "polars-0.18.0-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:11e9058c23e64cfcd629fa07fff9e81efa445e7692a52afb24b240907e3f5c14"},
-    {file = "polars-0.18.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0460f19d6e6f71bc1d65bd25916e4f9234bf250f8c0e868028e81fe15dd7bf55"},
-    {file = "polars-0.18.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:68340c3a34c1555e1bfd72e4d2bbb40d116379de009e3196d616de9a67057ae1"},
-    {file = "polars-0.18.0-cp37-abi3-win_amd64.whl", hash = "sha256:be29aad699b636451bee013038464d5094254f196c3f93386eaeba79e2d844d7"},
-    {file = "polars-0.18.0.tar.gz", hash = "sha256:b8b5e149c53f44a3ba46cdf41b4e0ff74c8d75e4f2725ce6e277d4d7f2fea869"},
+    {file = "polars-0.18.1-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:1b9bb3a7711f7a4d805e8a4327c643983f5a55dfe727f27faff17c458100f4d3"},
+    {file = "polars-0.18.1-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:18d9c1b7d9d287bead14010cf91882ff5ab139867fe0411fb72600fabc60553a"},
+    {file = "polars-0.18.1-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ab8c4f7a031cd38e33d653d1efee0f4f1aa2ae14a935c7d817559a8d4718778a"},
+    {file = "polars-0.18.1-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:592b9df3e3ddee0a6f78ff27138d62a1c7b962304dedada409babb1823face7d"},
+    {file = "polars-0.18.1-cp37-abi3-win_amd64.whl", hash = "sha256:27cf52a673935ecbc6085808c81780bd439b226d34d1b61fee1e8b8ad5c6f9a7"},
+    {file = "polars-0.18.1.tar.gz", hash = "sha256:0022e594569a57c17776f1e5b39bf45f43462398a10697879800e25289812379"},
 ]
 
 [package.extras]
@@ -2556,14 +2556,14 @@ dev = ["flake8 (<4.0.0)", "flake8-annotations", "flake8-bugbear", "flake8-commas
 
 [[package]]
 name = "urllib3"
-version = "2.0.2"
+version = "2.0.3"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "urllib3-2.0.2-py3-none-any.whl", hash = "sha256:d055c2f9d38dc53c808f6fdc8eab7360b6fdbbde02340ed25cfbcd817c62469e"},
-    {file = "urllib3-2.0.2.tar.gz", hash = "sha256:61717a1095d7e155cdb737ac7bb2f4324a858a1e2e6466f6d03ff630ca68d3cc"},
+    {file = "urllib3-2.0.3-py3-none-any.whl", hash = "sha256:48e7fafa40319d358848e1bc6809b208340fafe2096f1725d05d67443d0483d1"},
+    {file = "urllib3-2.0.3.tar.gz", hash = "sha256:bee28b5e56addb8226c96f7f13ac28cb4c301dd5ea8a6ca179c0b9835e032825"},
 ]
 
 [package.extras]
@@ -2695,4 +2695,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e03b4b770bf6d283da25a36139d8e46738ffcb780a6575995381395f60da8459"
+content-hash = "50682d2410bf5b2aca2593ee4cde39177675e235b3591110825bec3e28196a51"
