@@ -100,9 +100,10 @@ npm run uitest
 
 ### Releases
 
+- If necessary release the npm package with `npm publish` in its directory
 - Check that the min_npm_version value in .utils is correct
 - Release the Python package with `poetry build` and `poetry publish`
-- If necessary release the npm package with `npm publish` in its directory
+- Create a release on Github
 
 ### New Plot versions
 
