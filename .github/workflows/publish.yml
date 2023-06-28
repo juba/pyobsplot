@@ -27,14 +27,13 @@ jobs:
       - run: cat pyobsplot-js/package-lock.json
       - run: echo $GITHUB_WORKSPACE
 
-
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           cache: "npm"
           cache-dependency-path: |
-            "package-lock.json"
-            "../pyobsplot-js/package-lock.json"
+            "${{github.workspace}}/pyobsplot/package-lock.json"
+            "${{github.workspace}}/pyobsplot-js/package-lock.json"
            
       - name: Install node dependencies
         run: npm ci
