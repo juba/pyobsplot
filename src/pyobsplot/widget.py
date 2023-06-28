@@ -24,10 +24,10 @@ class ObsplotWidget(anywidget.AnyWidget):
     # Disable _esm and _css watching and live reload to avoid "exception not rethrown"
     # error with pytest.
     _esm = anywidget._file_contents.FileContents(  # type: ignore
-        bundler_output_dir / "widget.js", start_thread=False
+        bundler_output_dir / "static-widget.js", start_thread=False
     )
     _css = anywidget._file_contents.FileContents(  # type: ignore
-        bundler_output_dir / "styles.css", start_thread=False
+        bundler_output_dir / "static-styles.css", start_thread=False
     )
     # spec traitlet : plot specification
     spec = traitlets.Dict().tag(sync=True)
