@@ -31,9 +31,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: "npm"
-          cache-dependency-path: |
-            "${{github.workspace}}/pyobsplot/package-lock.json"
-            "${{github.workspace}}/pyobsplot-js/package-lock.json"
+          cache-dependency-path: "**/package-lock.json"
            
       - name: Install node dependencies
         run: npm ci
