@@ -22,6 +22,11 @@ jobs:
         with:
           path: "pyobsplot"
 
+      - run: pwd
+      - run: ls
+      - run: ls ..
+
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -30,8 +35,6 @@ jobs:
             "pyobsplot/package-lock.json"
             "pyobsplot-js/package-lock.json"
 
-      - name: Show current directory
-        run: pwd
     
             
       - name: Install node dependencies
