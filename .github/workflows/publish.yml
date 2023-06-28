@@ -23,8 +23,8 @@ jobs:
           path: "pyobsplot"
 
       - run: pwd
-      - run: ls
-      - run: ls ..
+      - run: cat pyobsplot/package-lock.json
+      - run: cat pyobsplot-js/package-lock.json
 
 
       - name: Setup node
@@ -32,11 +32,9 @@ jobs:
         with:
           cache: "npm"
           cache-dependency-path: |
-            "pyobsplot/package-lock.json"
-            "pyobsplot-js/package-lock.json"
-
-    
-            
+            "package-lock.json"
+            "../pyobsplot-js/package-lock.json"
+           
       - name: Install node dependencies
         run: npm ci
 
