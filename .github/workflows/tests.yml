@@ -14,20 +14,10 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
-      - name: Check out pyobsplot-js repository
-        uses: actions/checkout@v3
-        with:
-          repository: juba/pyobsplot-js
-          path: "pyobsplot-js"
-
+      
       - name: Check out pyobsplot repository
         uses: actions/checkout@v3
-          
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          cache: "npm"
-          
+                  
       - name: Install poetry
         run: pipx install poetry
 
@@ -36,9 +26,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "poetry"
-
-      - name: Install node dependencies
-        run: npm install --production=false
 
       - name: Install Python dependencies
         run: poetry install
