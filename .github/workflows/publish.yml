@@ -25,6 +25,7 @@ jobs:
       - run: pwd
       - run: cat pyobsplot/package-lock.json
       - run: cat pyobsplot-js/package-lock.json
+      - run: echo $GITHUB_WORKSPACE
 
 
       - name: Setup node
