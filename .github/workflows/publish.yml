@@ -33,8 +33,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
            
-      - name: Install node dependencies
-        run: npm ci
+      - name: Install pyobsplot-js node dependencies
+        run: cd $GITHUB_WORKSPACE/pyobsplot-js && npm ci
+
+      - name: Install pyobsplot node dependencies
+        run: cd $GITHUB_WORKSPACE/pyobsplot && npm ci
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
