@@ -22,11 +22,6 @@ jobs:
         with:
           path: "pyobsplot"
 
-      - run: pwd
-      - run: cat pyobsplot/package-lock.json
-      - run: cat pyobsplot-js/package-lock.json
-      - run: echo $GITHUB_WORKSPACE
-
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -52,10 +47,10 @@ jobs:
           cache: "poetry"
 
       - name: Bundle
-        run: npm run bundle
+        run: cd $GITHUB_WORKSPACE/pyobsplot && npm run bundle
 
       - name: Install Python dependencies
-        run: poetry install
+        run: cd $GITHUB_WORKSPACE/pyobsplot && poetry install
 
       - name: Render and Publish
         shell: bash
@@ -64,4 +59,4 @@ jobs:
         run: |
           git config --global user.email "julien@nozav.org"
           git config --global user.name "Julien Barnier"
-          poetry run quarto publish gh-pages doc
+          cd $GITHUB_WORKSPACE/pyobsplot && poetry run quarto publish gh-pages doc
