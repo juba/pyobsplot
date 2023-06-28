@@ -41,13 +41,13 @@ If you want to build `pyobsplot` from source, you'll have to follow these steps:
 - Clone the [pyobsplot-js](https://github.com/juba/pyobsplot) repository in the same folder as the `pyobsplot` repository
 - Install `pyobsplot-js` dependencies with : `npm install`
 
-`pyobsplot` `widget` renderer uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot/widget.py`. JavaScript and CSS source code is in `js/` and `css/`.
+The `widget` renderer uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot/widget.py`. JavaScript and CSS source code is in `js/` and `css/`.
 
 The `jsdom` renderer is provided by `pyobsplot-js`. Python source code is in `src/pyobsplot/jsdom.py` in `pyobsplot`.
 
 ## Widget JavaScript modification and bundling
 
-Each time widget JavaScript or CSS code is modified in the `js/` or  `css` directories, it must be bundled with one of the following scripts:
+Each time the widget JavaScript or CSS code is modified in the `js/` or  `css/` directories, it must be bundled with one of the following commands in `pyobsplot`:
 
 ```sh
 # Bundle only once
