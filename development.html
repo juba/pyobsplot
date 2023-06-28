@@ -236,12 +236,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Clone the <a href="https://github.com/juba/pyobsplot">pyobsplot-js</a> repository in the same folder as the <code>pyobsplot</code> repository</li>
 <li>Install <code>pyobsplot-js</code> dependencies with : <code>npm install</code></li>
 </ul>
-<p><code>pyobsplot</code> <code>widget</code> renderer uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot/widget.py</code>. JavaScript and CSS source code is in <code>js/</code> and <code>css/</code>.</p>
+<p>The <code>widget</code> renderer uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot/widget.py</code>. JavaScript and CSS source code is in <code>js/</code> and <code>css/</code>.</p>
 <p>The <code>jsdom</code> renderer is provided by <code>pyobsplot-js</code>. Python source code is in <code>src/pyobsplot/jsdom.py</code> in <code>pyobsplot</code>.</p>
 </section>
 <section id="widget-javascript-modification-and-bundling" class="level2">
 <h2 class="anchored" data-anchor-id="widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</h2>
-<p>Each time widget JavaScript or CSS code is modified in the <code>js/</code> or <code>css</code> directories, it must be bundled with one of the following scripts:</p>
+<p>Each time the widget JavaScript or CSS code is modified in the <code>js/</code> or <code>css/</code> directories, it must be bundled with one of the following commands in <code>pyobsplot</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle only once</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run bundle</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and watch for code change</span></span>
