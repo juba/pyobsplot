@@ -26,8 +26,8 @@
 }
 
 /* VSCode workarounds */
-.p-Widget:has(.pyobsplot-plot.dark) {
-    background-color: black;
+.cell-output-ipywidget-background:has(.p-Widget):has(.pyobsplot-plot.dark) {
+    background-color: black !important;
 }
 
 .cell-output-ipywidget-background:has(.p-Widget):has(.pyobsplot-plot.current) {
