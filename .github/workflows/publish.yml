@@ -22,8 +22,8 @@ jobs:
            
       - name: Install node dependencies
         run: |
-          npm ci
-          npm ci --workspaces
+          npm ci --production=false
+          npm ci --production=false --workspaces
   
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2

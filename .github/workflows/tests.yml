@@ -25,8 +25,8 @@ jobs:
             
       - name: Install node dependencies
         run: |
-          npm ci
-          npm ci --workspaces
+          npm ci --production=false
+          npm ci --production=false --workspaces
                  
       - name: Install poetry
         run: pipx install poetry
@@ -56,9 +56,9 @@ jobs:
           cache: "npm"
 
       - name: Install node dependencies
-        run: npm ci --workspaces
+        run: npm ci --production=false --workspaces
 
       - name: Run tests
-        run: npm run test --workspaces
+        run: npm run test --production=false --workspaces
 
 
