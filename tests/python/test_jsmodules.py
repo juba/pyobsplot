@@ -1,5 +1,5 @@
 """
-Tests for jsmodules.
+Tests for js_modules.
 """
 
 import pytest
