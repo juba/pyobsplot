@@ -24,14 +24,14 @@ trio = ["trio (<0.22)"]
 
 [[package]]
 name = "anywidget"
-version = "0.6.0"
+version = "0.6.1"
 description = "custom jupyter widgets made easy"
 category = "main"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.7"
 files = [
-    {file = "anywidget-0.6.0-py3-none-any.whl", hash = "sha256:e1dbb8c627ee5f72cc3a923cb5142e511e5dee6be5b445e065a7ac19204a5bbf"},
-    {file = "anywidget-0.6.0.tar.gz", hash = "sha256:3afeefbffdbfac3fb6455bd7d6af7d48aa1d62d3aaaa69ee5df6ccb40d65f885"},
+    {file = "anywidget-0.6.1-py3-none-any.whl", hash = "sha256:de26eddacb0fc0c4b45417169b7699df57f4982320eb3d0931b813d429a8d9a6"},
+    {file = "anywidget-0.6.1.tar.gz", hash = "sha256:325bd9bfec6e0357e1914231e6180aeb0982eb269228731fe83140be9355f38c"},
 ]
 
 [package.dependencies]
@@ -2695,4 +2695,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "f27d84d068af6dafb2a7c586b98474a8bce6836a4340d066b8eb7e5d0cf6e9d2"
+content-hash = "ccbdddce95db3ebc8b405d82bcacb2275f0c2fca1e7b57fe2328a17cae841a89"
