@@ -8,7 +8,7 @@ import pandas as pd
 import polars as pl
 import datetime
 
-from pyobsplot import jsmodules, Plot
+from pyobsplot import js_modules, Plot
 from pyobsplot.parsing import SpecParser, js
 from pyobsplot.data import pd_to_arrow, pl_to_arrow
 
@@ -176,26 +176,26 @@ class TestParse:
         }
 
     def test_parse_js(self):
-        assert SpecParser().parse(jsmodules.Plot.dot()) == {  # type: ignore
+        assert SpecParser().parse(js_modules.Plot.dot()) == {  # type: ignore
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "dot",
             "args": [],
         }
-        assert SpecParser().parse(jsmodules.d3.bar(1, "baz")) == {
+        assert SpecParser().parse(js_modules.d3.bar(1, "baz")) == {
             "pyobsplot-type": "function",
             "module": "d3",
             "method": "bar",
             "args": [1, "baz"],
         }
-        assert SpecParser().parse(jsmodules.Math.random) == {
+        assert SpecParser().parse(js_modules.Math.random) == {
             "pyobsplot-type": "function-object",
             "module": "Math",
             "method": "random",
             "args": (),
         }
         with pytest.raises(ValueError):
-            SpecParser().parse(jsmodules.d3.bar(1, x="baz")) == {
+            SpecParser().parse(js_modules.d3.bar(1, x="baz")) == {
                 "pyobsplot-type": "function",
                 "module": "d3",
                 "method": "bar",

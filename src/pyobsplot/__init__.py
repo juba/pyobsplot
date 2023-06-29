@@ -12,6 +12,6 @@ except PackageNotFoundError:
 
 from .obsplot import Obsplot  # noqa:F401
 from .parsing import js  # noqa:F401
-from .jsmodules import Plot, d3, Math  # noqa:F401
+from .js_modules import Plot, d3, Math  # noqa:F401
 
 __all__ = ["Obsplot", "Plot", "d3", "Math", "js", "__version__"]
