@@ -15,12 +15,6 @@ jobs:
 
     steps:
 
-      - name: Check out pyobsplot-js repository
-        uses: actions/checkout@v3
-        with:
-          repository: juba/pyobsplot-js
-          path: "pyobsplot-js"      
-
       - name: Check out pyobsplot repository
         uses: actions/checkout@v3
         with:
@@ -32,12 +26,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
             
-      - name: Install pyobsplot-js node dependencies
-        run: cd $GITHUB_WORKSPACE/pyobsplot-js && npm ci
-
-      - name: Install pyobsplot node dependencies
-        run: cd $GITHUB_WORKSPACE/pyobsplot && npm ci
-                    
+      - name: Install node dependencies
+        run: |
+          npm ci
+          npm ci --workspaces
+                  
       - name: Install poetry
         run: pipx install poetry
 
@@ -52,4 +45,23 @@ jobs:
 
       - name: Run pytest
         run: cd $GITHUB_WORKSPACE/pyobsplot && poetry run pytest
+
+  JS-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: "npm"
+
+      - name: Install node dependencies
+        run: npm ci --workspaces
+
+      - name: Run tests
+        run: npm run test --workspaces
+
 
