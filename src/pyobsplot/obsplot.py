@@ -100,6 +100,22 @@ class ObsplotCreator:
             f"default: {self._default!r}\n"
         )
 
+    @property
+    def theme(self):
+        return self._theme
+
+    @theme.setter
+    def theme(self, val):
+        self._theme = val
+
+    @property
+    def default(self):
+        return self._default
+
+    @default.setter
+    def default(self, val):
+        self._default = val
+
     def get_spec(self, *args, **kwargs):
         """
         Extract plot specification from args and kwargs, taking into account
