@@ -1,8 +1,7 @@
 {
   "dependencies": {
     "@observablehq/plot": "^0.6.9",
-    "d3": "^7.8.5",
-    "pyobsplot": "file:packages/pyobsplot-js"
+    "d3": "^7.8.5"
   },
   "scripts": {
     "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css",
