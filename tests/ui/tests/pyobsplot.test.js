@@ -7,7 +7,7 @@ async function test_notebook(page, notebook, renderer) {
     await page.notebook.openByPath(notebook_file);
     await page.notebook.activate(notebook_file);
 
-    const captures = new Array<Buffer>();
+    const captures = new Array();
     const cellCount = await page.notebook.getCellCount();
 
     if (renderer) {
@@ -16,7 +16,7 @@ async function test_notebook(page, notebook, renderer) {
     }
 
     await page.notebook.runCellByCell({
-        onAfterCellRun: async (cellIndex: number) => {
+        onAfterCellRun: async (cellIndex) => {
             const cell = await page.notebook.getCellOutput(cellIndex);
             if (cell) {
                 captures.push(await cell.screenshot());
@@ -28,7 +28,7 @@ async function test_notebook(page, notebook, renderer) {
 
     for (let i = 0; i < (cellCount); i++) {
         const image = renderer ? `${renderer}-${notebook}-cell-${i}.png` : `${notebook}-cell-${i}.png`
-        expect(captures[i]).toMatchSnapshot(image);
+        expect.soft(captures[i]).toMatchSnapshot(image);
     }
 }
 
@@ -68,6 +68,15 @@ test.describe('Visual Regression', () => {
             await test_notebook(page, notebook, null);
         });
     }
+
+    // themes
+    let themes_notebooks = ["themes"]
+    for (let notebook of themes_notebooks) {
+        test(`Default / ${notebook}.ipynb`, async ({ page }) => {
+            await test_notebook(page, notebook, null);
+        });
+    }
+
 
 });
 
