@@ -38,10 +38,10 @@ jobs:
           cache: "poetry"
 
       - name: Install Python dependencies
-        run: cd $GITHUB_WORKSPACE/pyobsplot && poetry install
+        run: poetry install
 
       - name: Run pytest
-        run: cd $GITHUB_WORKSPACE/pyobsplot && poetry run pytest
+        run: poetry run pytest
 
   JS-tests:
     runs-on: ubuntu-latest
