@@ -158,14 +158,14 @@
     "href": "development.html#install-from-git",
     "title": "Development",
     "section": "Install from git",
-    "text": "Install from git\nTo install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install github:juba/pyobsplot-js"
+    "text": "Install from git\nTo install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'"
   },
   {
     "objectID": "development.html#install-fom-source",
     "href": "development.html#install-fom-source",
     "title": "Development",
     "section": "Install fom source",
-    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the pyobsplot repository\nInstall Python dependencies with : poetry install\nInstall pyobsplot JavaScript dependencies with : npm install\nClone the pyobsplot-js repository in the same folder as the pyobsplot repository\nInstall pyobsplot-js dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code is in js/ and css/.\nThe jsdom renderer is provided by pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py in pyobsplot."
+    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the pyobsplot repository\nInstall Python dependencies with : poetry install\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code is in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
   },
   {
     "objectID": "development.html#widget-javascript-modification-and-bundling",
@@ -179,14 +179,14 @@
     "href": "development.html#tests",
     "title": "Development",
     "section": "Tests",
-    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\n\nto run Python tests, use npm run test in pyobsplot\nto run JavaScript tests, use npm run test in pyobsplot-js\n\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest"
+    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\n\nto run Python tests, use npm run test\nto run JavaScript tests, use npm run test --workspaces\n\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest"
   },
   {
     "objectID": "development.html#maintenance-notes",
     "href": "development.html#maintenance-notes",
     "title": "Development",
     "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nRelease the Python package with poetry build and poetry publish in pyobsplot\nCreate a release on Github\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot and npm install d3 for both pyobsplot and pyobsplot-js\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nRelease the Python package with poetry build and poetry publish in pyobsplot\nCreate a release on Github\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 and npm install @observablehq/plot d3 --workspaces\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
   },
   {
     "objectID": "getting_started.html",

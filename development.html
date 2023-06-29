@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>To install <code>pyobsplot</code> from git:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/juba/pyobsplot.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>To install <code>pyobsplot</code> npm package from git:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install github:juba/pyobsplot-js</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="st">'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="install-fom-source" class="level2">
 <h2 class="anchored" data-anchor-id="install-fom-source">Install fom source</h2>
@@ -232,12 +232,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Install <a href="https://python-poetry.org">poetry</a> dependency management system</li>
 <li>Clone the <a href="https://github.com/juba/pyobsplot">pyobsplot</a> repository</li>
 <li>Install Python dependencies with : <code>poetry install</code></li>
-<li>Install <code>pyobsplot</code> JavaScript dependencies with : <code>npm install</code></li>
-<li>Clone the <a href="https://github.com/juba/pyobsplot">pyobsplot-js</a> repository in the same folder as the <code>pyobsplot</code> repository</li>
-<li>Install <code>pyobsplot-js</code> dependencies with : <code>npm install</code></li>
+<li>Install <code>pyobsplot-js</code> JavaScript dependencies with : <code>npm install --workspaces</code></li>
+<li>Install <code>pyobsplot</code> dependencies with : <code>npm install</code></li>
 </ul>
 <p>The <code>widget</code> renderer uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot/widget.py</code>. JavaScript and CSS source code is in <code>js/</code> and <code>css/</code>.</p>
-<p>The <code>jsdom</code> renderer is provided by <code>pyobsplot-js</code>. Python source code is in <code>src/pyobsplot/jsdom.py</code> in <code>pyobsplot</code>.</p>
+<p>The <code>jsdom</code> renderer is provided by the <code>pyobsplot-js</code> npm package whose source is in <code>packages/pyobsplot-js</code>. Python source code is in <code>src/pyobsplot/jsdom.py</code>.</p>
 </section>
 <section id="widget-javascript-modification-and-bundling" class="level2">
 <h2 class="anchored" data-anchor-id="widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</h2>
@@ -252,8 +251,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="tests">Tests</h2>
 <p><code>pyobsplot</code> comes with three types of tests : Python test, JavaScript tests and Visual regression tests.</p>
 <ul>
-<li>to run Python tests, use <code>npm run test</code> in <code>pyobsplot</code></li>
-<li>to run JavaScript tests, use <code>npm run test</code> in <code>pyobsplot-js</code></li>
+<li>to run Python tests, use <code>npm run test</code></li>
+<li>to run JavaScript tests, use <code>npm run test --workspaces</code></li>
 </ul>
 <p>Visual regression tests allow to test if generated plots stay the same. They use the <a href="https://github.com/jupyterlab/jupyterlab/tree/master/galata">galata</a> framework. To run them you first have to start a specific Jupyter instance with:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uistart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -269,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="releases" class="level3">
 <h3 class="anchored" data-anchor-id="releases">Releases</h3>
 <ul>
-<li>If necessary release the npm package with <code>npm publish</code> in <code>pyobsplot-js</code></li>
+<li>If necessary release the npm package with <code>npm publish</code> in <code>packages/pyobsplot-js</code></li>
 <li>Check that the min_npm_version value in .utils is correct</li>
 <li>Release the Python package with <code>poetry build</code> and <code>poetry publish</code> in <code>pyobsplot</code></li>
 <li>Create a release on Github</li>
@@ -279,7 +278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="new-plot-versions">New Plot versions</h3>
 <p>When a new Plot version is released:</p>
 <ul>
-<li>update with <code>npm install @observablehq/plot</code> and <code>npm install d3</code> for both <code>pyobsplot</code> and <code>pyobsplot-js</code></li>
+<li>update with <code>npm install @observablehq/plot d3</code> and <code>npm install @observablehq/plot d3 --workspaces</code></li>
 <li>run <code>utils/get_plot_methods.js</code> and update <code>utils.py</code> in <code>pyobsplot</code></li>
 </ul>
 
