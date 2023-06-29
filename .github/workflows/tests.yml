@@ -24,12 +24,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: "packages/*/package-lock.json"
             
       - name: Install node dependencies
-        run: |
-          npm ci
-          npm ci --workspaces
+        run: npm ci
+
+      - name: Install node packages dependencies
+        run: npm ci --workspaces
+
                   
       - name: Install poetry
         run: pipx install poetry
@@ -57,6 +59,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: "npm"
+          cache-dependency-path: "packages/*/package-lock.json"          
 
       - name: Install node dependencies
         run: npm ci --workspaces
