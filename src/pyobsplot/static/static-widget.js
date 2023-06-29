@@ -8821,8 +8821,8 @@ function pointY(p) {
 function collinear2(d) {
   const { triangles, coords } = d;
   for (let i = 0; i < triangles.length; i += 3) {
-    const a7 = 2 * triangles[i], b = 2 * triangles[i + 1], c11 = 2 * triangles[i + 2], cross3 = (coords[c11] - coords[a7]) * (coords[b + 1] - coords[a7 + 1]) - (coords[b] - coords[a7]) * (coords[c11 + 1] - coords[a7 + 1]);
-    if (cross3 > 1e-10)
+    const a7 = 2 * triangles[i], b = 2 * triangles[i + 1], c11 = 2 * triangles[i + 2], cross5 = (coords[c11] - coords[a7]) * (coords[b + 1] - coords[a7 + 1]) - (coords[b] - coords[a7]) * (coords[c11 + 1] - coords[a7 + 1]);
+    if (cross5 > 1e-10)
       return false;
   }
   return true;
@@ -15629,7 +15629,7 @@ function newDate(y7, m5, d) {
 function formatLocale(locale5) {
   var locale_dateTime = locale5.dateTime, locale_date = locale5.date, locale_time = locale5.time, locale_periods = locale5.periods, locale_weekdays = locale5.days, locale_shortWeekdays = locale5.shortDays, locale_months = locale5.months, locale_shortMonths = locale5.shortMonths;
   var periodRe = formatRe(locale_periods), periodLookup = formatLookup(locale_periods), weekdayRe = formatRe(locale_weekdays), weekdayLookup = formatLookup(locale_weekdays), shortWeekdayRe = formatRe(locale_shortWeekdays), shortWeekdayLookup = formatLookup(locale_shortWeekdays), monthRe = formatRe(locale_months), monthLookup = formatLookup(locale_months), shortMonthRe = formatRe(locale_shortMonths), shortMonthLookup = formatLookup(locale_shortMonths);
-  var formats = {
+  var formats3 = {
     "a": formatShortWeekday,
     "A": formatWeekday3,
     "b": formatShortMonth,
@@ -15731,13 +15731,13 @@ function formatLocale(locale5) {
     "Z": parseZone,
     "%": parseLiteralPercent
   };
-  formats.x = newFormat(locale_date, formats);
-  formats.X = newFormat(locale_time, formats);
-  formats.c = newFormat(locale_dateTime, formats);
+  formats3.x = newFormat(locale_date, formats3);
+  formats3.X = newFormat(locale_time, formats3);
+  formats3.c = newFormat(locale_dateTime, formats3);
   utcFormats.x = newFormat(locale_date, utcFormats);
   utcFormats.X = newFormat(locale_time, utcFormats);
   utcFormats.c = newFormat(locale_dateTime, utcFormats);
-  function newFormat(specifier, formats2) {
+  function newFormat(specifier, formats4) {
     return function(date3) {
       var string3 = [], i = -1, j = 0, n = specifier.length, c11, pad7, format5;
       if (!(date3 instanceof Date))
@@ -15749,7 +15749,7 @@ function formatLocale(locale5) {
             c11 = specifier.charAt(++i);
           else
             pad7 = c11 === "e" ? " " : "0";
-          if (format5 = formats2[c11])
+          if (format5 = formats4[c11])
             c11 = format5(date3, pad7);
           string3.push(c11);
           j = i + 1;
@@ -15893,7 +15893,7 @@ function formatLocale(locale5) {
   }
   return {
     format: function(specifier) {
-      var f = newFormat(specifier += "", formats);
+      var f = newFormat(specifier += "", formats3);
       f.toString = function() {
         return specifier;
       };
@@ -19211,6 +19211,28 @@ function parse(string3, fallback) {
 }
 
 // node_modules/@observablehq/plot/src/time.js
+var durationSecond2 = 1e3;
+var durationMinute2 = durationSecond2 * 60;
+var durationHour2 = durationMinute2 * 60;
+var durationDay2 = durationHour2 * 24;
+var durationWeek2 = durationDay2 * 7;
+var durationMonth2 = durationDay2 * 30;
+var durationYear2 = durationDay2 * 365;
+var formats = [
+  ["millisecond", 0.5 * durationSecond2],
+  ["second", durationSecond2],
+  ["second", 30 * durationSecond2],
+  ["minute", durationMinute2],
+  ["minute", 30 * durationMinute2],
+  ["hour", durationHour2],
+  ["hour", 12 * durationHour2],
+  ["day", durationDay2],
+  ["day", 2 * durationDay2],
+  ["week", durationWeek2],
+  ["month", durationMonth2],
+  ["month", 3 * durationMonth2],
+  ["year", durationYear2]
+];
 var timeIntervals = /* @__PURE__ */ new Map([
   ["second", second],
   ["minute", timeMinute],
@@ -19290,6 +19312,50 @@ function isTimeYear(i) {
     return false;
   const date3 = i.floor(new Date(2e3, 11, 31));
   return timeYear(date3) >= date3;
+}
+function formatTimeTicks(scale5, data, ticks3, anchor) {
+  const format5 = scale5.type === "time" ? timeFormat : utcFormat;
+  const template3 = anchor === "left" || anchor === "right" ? (f1, f2) => `
+${f1}
+${f2}` : anchor === "top" ? (f1, f2) => `${f2}
+${f1}` : (f1, f2) => `${f1}
+${f2}`;
+  switch (getTimeTicksInterval(scale5, data, ticks3)) {
+    case "millisecond":
+      return formatConditional(format5(".%L"), format5(":%M:%S"), template3);
+    case "second":
+      return formatConditional(format5(":%S"), format5("%-I:%M"), template3);
+    case "minute":
+      return formatConditional(format5("%-I:%M"), format5("%p"), template3);
+    case "hour":
+      return formatConditional(format5("%-I %p"), format5("%b %-d"), template3);
+    case "day":
+      return formatConditional(format5("%-d"), format5("%b"), template3);
+    case "week":
+      return formatConditional(format5("%-d"), format5("%b"), template3);
+    case "month":
+      return formatConditional(format5("%b"), format5("%Y"), template3);
+    case "year":
+      return format5("%Y");
+  }
+  throw new Error("unable to format time ticks");
+}
+function getTimeTicksInterval(scale5, data, ticks3) {
+  const medianStep = median(pairs(data, (a7, b) => Math.abs(b - a7) || NaN));
+  if (medianStep > 0)
+    return formats[bisector(([, step2]) => step2).right(formats, medianStep, 1, formats.length) - 1][0];
+  const [start3, stop] = extent(scale5.domain());
+  const count5 = typeof ticks3 === "number" ? ticks3 : 10;
+  const step = Math.abs(stop - start3) / count5;
+  return formats[bisector(([, step2]) => Math.log(step2)).center(formats, Math.log(step))][0];
+}
+function formatConditional(format1, format22, template3) {
+  return (x7, i, X4) => {
+    const f1 = format1(x7, i);
+    const f2 = format22(x7, i);
+    const j = i - orderof(X4);
+    return i !== j && X4[j] !== void 0 && f2 === format22(X4[j], j) ? f1 : template3(f1, f2);
+  };
 }
 
 // node_modules/@observablehq/plot/src/options.js
@@ -19418,6 +19484,9 @@ function take(values3, index5) {
 }
 function taker(f) {
   return f.length === 1 ? (index5, values3) => f(take(values3, index5)) : f;
+}
+function subarray(I, i, j) {
+  return I.subarray ? I.subarray(i, j) : I.slice(i, j);
 }
 function keyof2(value) {
   return value !== null && typeof value === "object" ? value.valueOf() : value;
@@ -20886,20 +20955,18 @@ function createScaleQ(key, scale5, channels, {
   interval3 = maybeRangeInterval(interval3, type3);
   if (type3 === "cyclical" || type3 === "sequential")
     type3 = "linear";
+  if (typeof interpolate !== "function")
+    interpolate = maybeInterpolator(interpolate);
   reverse5 = !!reverse5;
   if (range9 !== void 0) {
     const n = (domain = arrayify2(domain)).length;
     const m5 = (range9 = arrayify2(range9)).length;
-    if (n > m5) {
-      domain = domain.slice(0, m5);
-      warn(`Warning: the ${key} scale domain contains extra elements.`);
-    } else if (m5 > n) {
-      range9 = range9.slice(0, n);
-      warn(`Warning: the ${key} scale range contains extra elements.`);
+    if (n !== m5) {
+      if (interpolate.length === 1)
+        throw new Error("invalid piecewise interpolator");
+      interpolate = piecewise(interpolate, range9);
+      range9 = void 0;
     }
-  }
-  if (typeof interpolate !== "function") {
-    interpolate = maybeInterpolator(interpolate);
   }
   if (interpolate.length === 1) {
     if (reverse5) {
@@ -21940,9 +22007,9 @@ function styles(mark, {
   mark.pointerEvents = impliedString(pointerEvents, "auto");
   mark.shapeRendering = impliedString(shapeRendering, "auto");
   return {
-    title: { value: title, optional: true },
-    href: { value: href, optional: true },
-    ariaLabel: { value: variaLabel, optional: true },
+    title: { value: title, optional: true, filter: null },
+    href: { value: href, optional: true, filter: null },
+    ariaLabel: { value: variaLabel, optional: true, filter: null },
     fill: { value: vfill, scale: "auto", optional: true },
     fillOpacity: { value: vfillOpacity, scale: "auto", optional: true },
     stroke: { value: vstroke, scale: "auto", optional: true },
@@ -22138,7 +22205,8 @@ function applyIndirectStyles(selection3, mark, dimensions, context) {
   applyAttr(selection3, "shape-rendering", mark.shapeRendering);
   applyAttr(selection3, "filter", mark.imageFilter);
   applyAttr(selection3, "paint-order", mark.paintOrder);
-  applyAttr(selection3, "pointer-events", mark.pointerEvents);
+  const { pointerEvents = context.pointerSticky === false ? "none" : void 0 } = mark;
+  applyAttr(selection3, "pointer-events", pointerEvents);
 }
 function applyDirectStyles(selection3, mark) {
   applyStyle(selection3, "mix-blend-mode", mark.mixBlendMode);
@@ -22658,6 +22726,7 @@ function pointerK(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, re
     // outermost render function because it will re-render dynamically in
     // response to pointer events.
     render: composeRender(function(index5, scales, values3, dimensions, context, next) {
+      context = { ...context, pointerSticky: false };
       const svg3 = context.ownerSVGElement;
       const { data } = context.getMarkState(this);
       let state = states.get(svg3);
@@ -22687,6 +22756,7 @@ function pointerK(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, re
       const py2 = PY ? (i2) => PY[i2] : anchorY(values3, cy);
       let i;
       let g;
+      let s3;
       let f;
       function update(ii, ri) {
         if (faceted) {
@@ -22712,9 +22782,10 @@ function pointerK(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, re
         render3(ii);
       }
       function render3(ii) {
-        if (i === ii)
+        if (i === ii && s3 === state.sticky)
           return;
         i = ii;
+        s3 = context.pointerSticky = state.sticky;
         const I = i == null ? [] : [i];
         if (faceted)
           I.fx = index5.fx, I.fy = index5.fy, I.fi = index5.fi;
@@ -22762,7 +22833,7 @@ function pointerK(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, re
         if (state.sticky)
           state.sticky = false, state.renders.forEach((r) => r(null));
         else
-          state.sticky = true;
+          state.sticky = true, render3(i);
         event.stopImmediatePropagation();
       }
       function pointerleave(event) {
@@ -22798,9 +22869,6 @@ function anchorY({ y1: Y15, y2: Y25, y: Y4 = Y15 }, cy) {
 // node_modules/@observablehq/plot/src/axes.js
 function inferFontVariant(scale5) {
   return isOrdinalScale(scale5) && scale5.interval === void 0 ? void 0 : "tabular-nums";
-}
-function maybeAutoTickFormat(tickFormat3, domain) {
-  return tickFormat3 === void 0 ? isTemporal(domain) ? formatIsoDate : string : typeof tickFormat3 === "function" ? tickFormat3 : (typeof tickFormat3 === "string" ? isTemporal(domain) ? utcFormat : format : constant2)(tickFormat3);
 }
 
 // node_modules/@observablehq/plot/src/legends/ramp.js
@@ -22888,200 +22956,6 @@ function legendRamp(color5, options) {
     svg3.append("text").attr("x", marginLeft).attr("y", marginTop - 6).attr("fill", "currentColor").attr("font-weight", "bold").text(label);
   }
   return svg3.node();
-}
-
-// node_modules/@observablehq/plot/src/legends/swatches.js
-function maybeScale(scale5, key) {
-  if (key == null)
-    return key;
-  const s3 = scale5(key);
-  if (!s3)
-    throw new Error(`scale not found: ${key}`);
-  return s3;
-}
-function legendSwatches(color5, { opacity: opacity3, ...options } = {}) {
-  if (!isOrdinalScale(color5) && !isThresholdScale(color5))
-    throw new Error(`swatches legend requires ordinal or threshold color scale (not ${color5.type})`);
-  return legendItems(
-    color5,
-    options,
-    (selection3, scale5, width, height) => selection3.append("svg").attr("width", width).attr("height", height).attr("fill", scale5.scale).attr("fill-opacity", maybeNumberChannel(opacity3)[1]).append("rect").attr("width", "100%").attr("height", "100%")
-  );
-}
-function legendSymbols(symbol3, {
-  fill = symbol3.hint?.fill !== void 0 ? symbol3.hint.fill : "none",
-  fillOpacity = 1,
-  stroke = symbol3.hint?.stroke !== void 0 ? symbol3.hint.stroke : isNoneish(fill) ? "currentColor" : "none",
-  strokeOpacity = 1,
-  strokeWidth = 1.5,
-  r = 4.5,
-  ...options
-} = {}, scale5) {
-  const [vf, cf] = maybeColorChannel(fill);
-  const [vs, cs] = maybeColorChannel(stroke);
-  const sf = maybeScale(scale5, vf);
-  const ss = maybeScale(scale5, vs);
-  const size = r * r * Math.PI;
-  fillOpacity = maybeNumberChannel(fillOpacity)[1];
-  strokeOpacity = maybeNumberChannel(strokeOpacity)[1];
-  strokeWidth = maybeNumberChannel(strokeWidth)[1];
-  return legendItems(
-    symbol3,
-    options,
-    (selection3, scale6, width, height) => selection3.append("svg").attr("viewBox", "-8 -8 16 16").attr("width", width).attr("height", height).attr("fill", vf === "color" ? (d) => sf.scale(d) : cf).attr("fill-opacity", fillOpacity).attr("stroke", vs === "color" ? (d) => ss.scale(d) : cs).attr("stroke-opacity", strokeOpacity).attr("stroke-width", strokeWidth).append("path").attr("d", (d) => {
-      const p = pathRound();
-      symbol3.scale(d).draw(p, size);
-      return p;
-    })
-  );
-}
-function legendItems(scale5, options = {}, swatch) {
-  let {
-    columns,
-    tickFormat: tickFormat3,
-    fontVariant = inferFontVariant(scale5),
-    // TODO label,
-    swatchSize = 15,
-    swatchWidth = swatchSize,
-    swatchHeight = swatchSize,
-    marginLeft = 0,
-    className,
-    style,
-    width
-  } = options;
-  const context = createContext(options);
-  className = maybeClassName(className);
-  tickFormat3 = maybeAutoTickFormat(tickFormat3, scale5.domain);
-  const swatches = create2("div", context).attr(
-    "class",
-    `${className}-swatches ${className}-swatches-${columns != null ? "columns" : "wrap"}`
-  );
-  let extraStyle;
-  if (columns != null) {
-    extraStyle = `.${className}-swatches-columns .${className}-swatch {
-  display: flex;
-  align-items: center;
-  break-inside: avoid;
-  padding-bottom: 1px;
-}
-.${className}-swatches-columns .${className}-swatch::before {
-  flex-shrink: 0;
-}
-.${className}-swatches-columns .${className}-swatch-label {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}`;
-    swatches.style("columns", columns).selectAll().data(scale5.domain).enter().append("div").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).call(
-      (item) => item.append("div").attr("class", `${className}-swatch-label`).attr("title", tickFormat3).text(tickFormat3)
-    );
-  } else {
-    extraStyle = `.${className}-swatches-wrap {
-  display: flex;
-  align-items: center;
-  min-height: 33px;
-  flex-wrap: wrap;
-}
-.${className}-swatches-wrap .${className}-swatch {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 1em;
-}`;
-    swatches.selectAll().data(scale5.domain).enter().append("span").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).append(function() {
-      return this.ownerDocument.createTextNode(tickFormat3.apply(this, arguments));
-    });
-  }
-  return swatches.call(
-    (div) => div.insert("style", "*").text(
-      `.${className}-swatches {
-  font-family: system-ui, sans-serif;
-  font-size: 10px;
-  margin-bottom: 0.5em;
-}
-.${className}-swatch > svg {
-  margin-right: 0.5em;
-  overflow: visible;
-}
-${extraStyle}`
-    )
-  ).style("margin-left", marginLeft ? `${+marginLeft}px` : null).style("width", width === void 0 ? null : `${+width}px`).style("font-variant", impliedString(fontVariant, "normal")).call(applyInlineStyles, style).node();
-}
-
-// node_modules/@observablehq/plot/src/legends.js
-var legendRegistry = /* @__PURE__ */ new Map([
-  ["symbol", legendSymbols],
-  ["color", legendColor],
-  ["opacity", legendOpacity]
-]);
-function legend(options = {}) {
-  for (const [key, value] of legendRegistry) {
-    const scale5 = options[key];
-    if (isScaleOptions(scale5)) {
-      const context = createContext(options);
-      let hint;
-      if (key === "symbol") {
-        const { fill, stroke = fill === void 0 && isScaleOptions(options.color) ? "color" : void 0 } = options;
-        hint = { fill, stroke };
-      }
-      return value(
-        normalizeScale(key, scale5, hint),
-        legendOptions(context, scale5, options),
-        (key2) => isScaleOptions(options[key2]) ? normalizeScale(key2, options[key2]) : null
-      );
-    }
-  }
-  throw new Error("unknown legend type; no scale found");
-}
-function exposeLegends(scales, context, defaults43 = {}) {
-  return (key, options) => {
-    if (!legendRegistry.has(key))
-      throw new Error(`unknown legend type: ${key}`);
-    if (!(key in scales))
-      return;
-    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults43[key], options), (key2) => scales[key2]);
-  };
-}
-function legendOptions({ className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 } = {}, options) {
-  return inherit2(options, { className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 });
-}
-function legendColor(color5, { legend: legend3 = true, ...options }) {
-  if (legend3 === true)
-    legend3 = color5.type === "ordinal" ? "swatches" : "ramp";
-  if (color5.domain === void 0)
-    return;
-  switch (`${legend3}`.toLowerCase()) {
-    case "swatches":
-      return legendSwatches(color5, options);
-    case "ramp":
-      return legendRamp(color5, options);
-    default:
-      throw new Error(`unknown legend type: ${legend3}`);
-  }
-}
-function legendOpacity({ type: type3, interpolate, ...scale5 }, { legend: legend3 = true, color: color5 = rgb(0, 0, 0), ...options }) {
-  if (!interpolate)
-    throw new Error(`${type3} opacity scales are not supported`);
-  if (legend3 === true)
-    legend3 = "ramp";
-  if (`${legend3}`.toLowerCase() !== "ramp")
-    throw new Error(`${legend3} opacity legends are not supported`);
-  return legendColor({ type: type3, ...scale5, interpolate: interpolateOpacity(color5) }, { legend: legend3, ...options });
-}
-function interpolateOpacity(color5) {
-  const { r, g, b } = rgb(color5) || rgb(0, 0, 0);
-  return (t) => `rgba(${r},${g},${b},${t})`;
-}
-function createLegends(scales, context, options) {
-  const legends = [];
-  for (const [key, value] of legendRegistry) {
-    const o = options[key];
-    if (o?.legend && key in scales) {
-      const legend3 = value(scales[key], legendOptions(context, scales[key], o), (key2) => scales[key2]);
-      if (legend3 != null)
-        legends.push(legend3);
-    }
-  }
-  return legends;
 }
 
 // node_modules/@observablehq/plot/src/math.js
@@ -23276,7 +23150,7 @@ var RuleX = class extends Mark {
     const { x: X4, y1: Y15, y2: Y25 } = channels;
     const { width, height, marginTop, marginRight, marginLeft, marginBottom } = dimensions;
     const { insetTop, insetBottom } = this;
-    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions).call(applyTransform, this, { x: X4 && x7 }, offset, 0).call(
+    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, { x: X4 && x7 }, offset, 0).call(
       (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles, this).attr("x1", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("x2", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("y1", Y15 && !isCollapsed(y7) ? (i) => Y15[i] + insetTop : marginTop + insetTop).attr(
         "y2",
         Y25 && !isCollapsed(y7) ? y7.bandwidth ? (i) => Y25[i] + y7.bandwidth() - insetBottom : (i) => Y25[i] - insetBottom : height - marginBottom - insetBottom
@@ -24206,11 +24080,11 @@ function axisTextKy(k3, anchor, data, {
       ...options,
       dx: anchor === "left" ? +dx - tickSize - tickPadding + +insetLeft : +dx + +tickSize + +tickPadding - insetRight
     },
-    function(scale5, ticks3, channels) {
+    function(scale5, data2, ticks3, channels) {
       if (fontVariant === void 0)
         this.fontVariant = inferFontVariant3(scale5);
       if (text3 === void 0)
-        channels.text = inferTextChannel(scale5, ticks3, tickFormat3);
+        channels.text = inferTextChannel(scale5, data2, ticks3, tickFormat3, anchor);
     }
   );
 }
@@ -24249,11 +24123,11 @@ function axisTextKx(k3, anchor, data, {
       ...options,
       dy: anchor === "bottom" ? +dy + +tickSize + +tickPadding - insetBottom : +dy - tickSize - tickPadding + +insetTop
     },
-    function(scale5, ticks3, channels) {
+    function(scale5, data2, ticks3, channels) {
       if (fontVariant === void 0)
         this.fontVariant = inferFontVariant3(scale5);
       if (text3 === void 0)
-        channels.text = inferTextChannel(scale5, ticks3, tickFormat3);
+        channels.text = inferTextChannel(scale5, data2, ticks3, tickFormat3, anchor);
     }
   );
 }
@@ -24322,53 +24196,52 @@ function labelOptions({ fill, fillOpacity, fontFamily, fontSize, fontStyle, font
 }
 function axisMark(mark, k3, ariaLabel, data, options, initialize) {
   let channels;
-  const m5 = mark(
-    data,
-    initializer(options, function(data2, facets, _channels, scales, dimensions, context) {
-      const initializeFacets = data2 == null && (k3 === "fx" || k3 === "fy");
-      const { [k3]: scale5 } = scales;
-      if (!scale5)
-        throw new Error(`missing scale: ${k3}`);
-      let { ticks: ticks3, tickSpacing, interval: interval3 } = options;
-      if (isTemporalScale(scale5) && typeof ticks3 === "string")
-        interval3 = ticks3, ticks3 = void 0;
-      if (data2 == null) {
-        if (isIterable(ticks3)) {
-          data2 = arrayify2(ticks3);
-        } else if (scale5.ticks) {
-          if (ticks3 !== void 0) {
-            data2 = scale5.ticks(ticks3);
+  function axisInitializer(data2, facets, _channels, scales, dimensions, context) {
+    const initializeFacets = data2 == null && (k3 === "fx" || k3 === "fy");
+    const { [k3]: scale5 } = scales;
+    if (!scale5)
+      throw new Error(`missing scale: ${k3}`);
+    let { ticks: ticks3, tickSpacing, interval: interval3 } = options;
+    if (isTemporalScale(scale5) && typeof ticks3 === "string")
+      interval3 = ticks3, ticks3 = void 0;
+    if (data2 == null) {
+      if (isIterable(ticks3)) {
+        data2 = arrayify2(ticks3);
+      } else if (scale5.ticks) {
+        if (ticks3 !== void 0) {
+          data2 = scale5.ticks(ticks3);
+        } else {
+          interval3 = maybeRangeInterval(interval3 === void 0 ? scale5.interval : interval3, scale5.type);
+          if (interval3 !== void 0) {
+            const [min7, max9] = extent(scale5.domain());
+            data2 = interval3.range(min7, interval3.offset(interval3.floor(max9)));
           } else {
-            interval3 = maybeRangeInterval(interval3 === void 0 ? scale5.interval : interval3, scale5.type);
-            if (interval3 !== void 0) {
-              const [min7, max9] = extent(scale5.domain());
-              data2 = interval3.range(min7, interval3.offset(interval3.floor(max9)));
-            } else {
-              const [min7, max9] = extent(scale5.range());
-              ticks3 = (max9 - min7) / (tickSpacing === void 0 ? k3 === "x" ? 80 : 35 : tickSpacing);
-              data2 = scale5.ticks(ticks3);
-            }
+            const [min7, max9] = extent(scale5.range());
+            ticks3 = (max9 - min7) / (tickSpacing === void 0 ? k3 === "x" ? 80 : 35 : tickSpacing);
+            data2 = scale5.ticks(ticks3);
           }
-        } else {
-          data2 = scale5.domain();
         }
-        if (k3 === "y" || k3 === "x") {
-          facets = [range4(data2)];
-        } else {
-          channels[k3] = { scale: k3, value: identity6 };
-        }
+      } else {
+        data2 = scale5.domain();
       }
-      initialize?.call(this, scale5, ticks3, channels);
-      const initializedChannels = Object.fromEntries(
-        Object.entries(channels).map(([name, channel]) => {
-          return [name, { ...channel, value: valueof(data2, channel.value) }];
-        })
-      );
-      if (initializeFacets)
-        facets = context.filterFacets(data2, initializedChannels);
-      return { data: data2, facets, channels: initializedChannels };
-    })
-  );
+      if (k3 === "y" || k3 === "x") {
+        facets = [range4(data2)];
+      } else {
+        channels[k3] = { scale: k3, value: identity6 };
+      }
+    }
+    initialize?.call(this, scale5, data2, ticks3, channels);
+    const initializedChannels = Object.fromEntries(
+      Object.entries(channels).map(([name, channel]) => {
+        return [name, { ...channel, value: valueof(data2, channel.value) }];
+      })
+    );
+    if (initializeFacets)
+      facets = context.filterFacets(data2, initializedChannels);
+    return { data: data2, facets, channels: initializedChannels };
+  }
+  const basicInitializer = initializer(options).initializer;
+  const m5 = mark(data, initializer({ ...options, initializer: axisInitializer }, basicInitializer));
   if (data == null) {
     channels = m5.channels;
     m5.channels = {};
@@ -24378,11 +24251,11 @@ function axisMark(mark, k3, ariaLabel, data, options, initialize) {
   m5.ariaLabel = ariaLabel;
   return m5;
 }
-function inferTextChannel(scale5, ticks3, tickFormat3) {
-  return { value: inferTickFormat(scale5, ticks3, tickFormat3) };
+function inferTextChannel(scale5, data, ticks3, tickFormat3, anchor) {
+  return { value: inferTickFormat(scale5, data, ticks3, tickFormat3, anchor) };
 }
-function inferTickFormat(scale5, ticks3, tickFormat3) {
-  return scale5.tickFormat ? scale5.tickFormat(isIterable(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? isUtcYear(scale5.interval) ? utcFormat("%Y") : isTimeYear(scale5.interval) ? timeFormat("%Y") : formatDefault : typeof tickFormat3 === "string" ? (isTemporal(scale5.domain()) ? utcFormat : format)(tickFormat3) : constant2(tickFormat3);
+function inferTickFormat(scale5, data, ticks3, tickFormat3, anchor) {
+  return tickFormat3 === void 0 && isTemporalScale(scale5) ? formatTimeTicks(scale5, data, ticks3, anchor) : scale5.tickFormat ? scale5.tickFormat(isIterable(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? isUtcYear(scale5.interval) ? utcFormat("%Y") : isTimeYear(scale5.interval) ? timeFormat("%Y") : formatDefault : typeof tickFormat3 === "string" ? (isTemporal(scale5.domain()) ? utcFormat : format)(tickFormat3) : constant2(tickFormat3);
 }
 var shapeTickBottom = {
   draw(context, l) {
@@ -24444,6 +24317,201 @@ function maybeLabelArrow(labelArrow = "auto") {
 }
 function isTemporalish(scale5) {
   return isTemporalScale(scale5) || scale5.interval != null;
+}
+
+// node_modules/@observablehq/plot/src/legends/swatches.js
+function maybeScale(scale5, key) {
+  if (key == null)
+    return key;
+  const s3 = scale5(key);
+  if (!s3)
+    throw new Error(`scale not found: ${key}`);
+  return s3;
+}
+function legendSwatches(color5, { opacity: opacity3, ...options } = {}) {
+  if (!isOrdinalScale(color5) && !isThresholdScale(color5))
+    throw new Error(`swatches legend requires ordinal or threshold color scale (not ${color5.type})`);
+  return legendItems(
+    color5,
+    options,
+    (selection3, scale5, width, height) => selection3.append("svg").attr("width", width).attr("height", height).attr("fill", scale5.scale).attr("fill-opacity", maybeNumberChannel(opacity3)[1]).append("rect").attr("width", "100%").attr("height", "100%")
+  );
+}
+function legendSymbols(symbol3, {
+  fill = symbol3.hint?.fill !== void 0 ? symbol3.hint.fill : "none",
+  fillOpacity = 1,
+  stroke = symbol3.hint?.stroke !== void 0 ? symbol3.hint.stroke : isNoneish(fill) ? "currentColor" : "none",
+  strokeOpacity = 1,
+  strokeWidth = 1.5,
+  r = 4.5,
+  ...options
+} = {}, scale5) {
+  const [vf, cf] = maybeColorChannel(fill);
+  const [vs, cs] = maybeColorChannel(stroke);
+  const sf = maybeScale(scale5, vf);
+  const ss = maybeScale(scale5, vs);
+  const size = r * r * Math.PI;
+  fillOpacity = maybeNumberChannel(fillOpacity)[1];
+  strokeOpacity = maybeNumberChannel(strokeOpacity)[1];
+  strokeWidth = maybeNumberChannel(strokeWidth)[1];
+  return legendItems(
+    symbol3,
+    options,
+    (selection3, scale6, width, height) => selection3.append("svg").attr("viewBox", "-8 -8 16 16").attr("width", width).attr("height", height).attr("fill", vf === "color" ? (d) => sf.scale(d) : cf).attr("fill-opacity", fillOpacity).attr("stroke", vs === "color" ? (d) => ss.scale(d) : cs).attr("stroke-opacity", strokeOpacity).attr("stroke-width", strokeWidth).append("path").attr("d", (d) => {
+      const p = pathRound();
+      symbol3.scale(d).draw(p, size);
+      return p;
+    })
+  );
+}
+function legendItems(scale5, options = {}, swatch) {
+  let {
+    columns,
+    tickFormat: tickFormat3,
+    fontVariant = inferFontVariant(scale5),
+    // TODO label,
+    swatchSize = 15,
+    swatchWidth = swatchSize,
+    swatchHeight = swatchSize,
+    marginLeft = 0,
+    className,
+    style,
+    width
+  } = options;
+  const context = createContext(options);
+  className = maybeClassName(className);
+  if (typeof tickFormat3 !== "function")
+    tickFormat3 = inferTickFormat(scale5.scale, scale5.domain, void 0, tickFormat3);
+  const swatches = create2("div", context).attr(
+    "class",
+    `${className}-swatches ${className}-swatches-${columns != null ? "columns" : "wrap"}`
+  );
+  let extraStyle;
+  if (columns != null) {
+    extraStyle = `.${className}-swatches-columns .${className}-swatch {
+  display: flex;
+  align-items: center;
+  break-inside: avoid;
+  padding-bottom: 1px;
+}
+.${className}-swatches-columns .${className}-swatch::before {
+  flex-shrink: 0;
+}
+.${className}-swatches-columns .${className}-swatch-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}`;
+    swatches.style("columns", columns).selectAll().data(scale5.domain).enter().append("div").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).call(
+      (item) => item.append("div").attr("class", `${className}-swatch-label`).attr("title", tickFormat3).text(tickFormat3)
+    );
+  } else {
+    extraStyle = `.${className}-swatches-wrap {
+  display: flex;
+  align-items: center;
+  min-height: 33px;
+  flex-wrap: wrap;
+}
+.${className}-swatches-wrap .${className}-swatch {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1em;
+}`;
+    swatches.selectAll().data(scale5.domain).enter().append("span").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).append(function() {
+      return this.ownerDocument.createTextNode(tickFormat3.apply(this, arguments));
+    });
+  }
+  return swatches.call(
+    (div) => div.insert("style", "*").text(
+      `.${className}-swatches {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  margin-bottom: 0.5em;
+}
+.${className}-swatch > svg {
+  margin-right: 0.5em;
+  overflow: visible;
+}
+${extraStyle}`
+    )
+  ).style("margin-left", marginLeft ? `${+marginLeft}px` : null).style("width", width === void 0 ? null : `${+width}px`).style("font-variant", impliedString(fontVariant, "normal")).call(applyInlineStyles, style).node();
+}
+
+// node_modules/@observablehq/plot/src/legends.js
+var legendRegistry = /* @__PURE__ */ new Map([
+  ["symbol", legendSymbols],
+  ["color", legendColor],
+  ["opacity", legendOpacity]
+]);
+function legend(options = {}) {
+  for (const [key, value] of legendRegistry) {
+    const scale5 = options[key];
+    if (isScaleOptions(scale5)) {
+      const context = createContext(options);
+      let hint;
+      if (key === "symbol") {
+        const { fill, stroke = fill === void 0 && isScaleOptions(options.color) ? "color" : void 0 } = options;
+        hint = { fill, stroke };
+      }
+      return value(
+        normalizeScale(key, scale5, hint),
+        legendOptions(context, scale5, options),
+        (key2) => isScaleOptions(options[key2]) ? normalizeScale(key2, options[key2]) : null
+      );
+    }
+  }
+  throw new Error("unknown legend type; no scale found");
+}
+function exposeLegends(scales, context, defaults43 = {}) {
+  return (key, options) => {
+    if (!legendRegistry.has(key))
+      throw new Error(`unknown legend type: ${key}`);
+    if (!(key in scales))
+      return;
+    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults43[key], options), (key2) => scales[key2]);
+  };
+}
+function legendOptions({ className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 } = {}, options) {
+  return inherit2(options, { className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 });
+}
+function legendColor(color5, { legend: legend3 = true, ...options }) {
+  if (legend3 === true)
+    legend3 = color5.type === "ordinal" ? "swatches" : "ramp";
+  if (color5.domain === void 0)
+    return;
+  switch (`${legend3}`.toLowerCase()) {
+    case "swatches":
+      return legendSwatches(color5, options);
+    case "ramp":
+      return legendRamp(color5, options);
+    default:
+      throw new Error(`unknown legend type: ${legend3}`);
+  }
+}
+function legendOpacity({ type: type3, interpolate, ...scale5 }, { legend: legend3 = true, color: color5 = rgb(0, 0, 0), ...options }) {
+  if (!interpolate)
+    throw new Error(`${type3} opacity scales are not supported`);
+  if (legend3 === true)
+    legend3 = "ramp";
+  if (`${legend3}`.toLowerCase() !== "ramp")
+    throw new Error(`${legend3} opacity legends are not supported`);
+  return legendColor({ type: type3, ...scale5, interpolate: interpolateOpacity(color5) }, { legend: legend3, ...options });
+}
+function interpolateOpacity(color5) {
+  const { r, g, b } = rgb(color5) || rgb(0, 0, 0);
+  return (t) => `rgba(${r},${g},${b},${t})`;
+}
+function createLegends(scales, context, options) {
+  const legends = [];
+  for (const [key, value] of legendRegistry) {
+    const o = options[key];
+    if (o?.legend && key in scales) {
+      const legend3 = value(scales[key], legendOptions(context, scales[key], o), (key2) => scales[key2]);
+      if (legend3 != null)
+        legends.push(legend3);
+    }
+  }
+  return legends;
 }
 
 // node_modules/@observablehq/plot/src/marks/frame.js
@@ -24528,6 +24596,7 @@ var Tip = class extends Mark {
       textAnchor = "start",
       textOverflow,
       textPadding = 8,
+      title,
       pointerSize = 12,
       pathFilter = "drop-shadow(0 3px 4px rgba(0,0,0,0.2))"
     } = options;
@@ -24541,7 +24610,9 @@ var Tip = class extends Mark {
         x1: { value: x13, scale: "x", optional: x22 == null },
         y1: { value: y13, scale: "y", optional: y22 == null },
         x2: { value: x22, scale: "x", optional: x13 == null },
-        y2: { value: y22, scale: "y", optional: y13 == null }
+        y2: { value: y22, scale: "y", optional: y13 == null },
+        title: { value: title, optional: true }
+        // filter: defined
       },
       options,
       defaults5
@@ -24960,8 +25031,9 @@ function plot(options = {}) {
           index5 = mark.filter(index5, channels, values3);
           if (index5.length === 0)
             continue;
-          if (faceted)
-            index5.fx = f.x, index5.fy = f.y, index5.fi = f.i;
+          if (!faceted && index5 === indexes3[0])
+            index5 = subarray(index5);
+          index5.fx = f.x, index5.fy = f.y, index5.fi = f.i;
         }
         const node = mark.render(index5, scales, values3, subdimensions, context);
         if (node == null)
@@ -26803,7 +26875,7 @@ function autoSpec(data, options) {
       colorMode = "stroke";
       break;
     case "bar":
-      markImpl = yZero ? isOrdinalReduced(xReduce, X4) ? barY : rectY : xZero ? isOrdinalReduced(yReduce, Y4) ? barX : rectX : isOrdinalReduced(xReduce, X4) && isOrdinalReduced(yReduce, Y4) ? cell : isOrdinalReduced(xReduce, X4) ? barY : isOrdinalReduced(yReduce, Y4) ? barX : xReduce != null ? rectX : yReduce != null ? rectY : rect;
+      markImpl = yZero ? isOrdinalReduced(xReduce, X4) ? barY : rectY : xZero ? isOrdinalReduced(yReduce, Y4) ? barX : rectX : isOrdinalReduced(xReduce, X4) && isOrdinalReduced(yReduce, Y4) ? cell : isOrdinalReduced(xReduce, X4) ? barY : isOrdinalReduced(yReduce, Y4) ? barX : xReduce != null ? rectX : yReduce != null ? rectY : colorReduce != null ? rect : cell;
       colorMode = "fill";
       break;
     default:
@@ -27499,30 +27571,18 @@ function interpolateNone(index5, width, height, X4, Y4, V) {
 }
 function interpolatorBarycentric({ random = lcg(42) } = {}) {
   return (index5, width, height, X4, Y4, V) => {
-    const n = index5.length;
-    const nw = width >> 2;
-    const nh = (height >> 2) - 1;
-    const m5 = n + nw * 2 + nh * 2;
-    const XY3 = new Float64Array(m5 * 2);
-    for (let i2 = 0; i2 < n; ++i2)
-      XY3[i2 * 2] = X4[index5[i2]], XY3[i2 * 2 + 1] = Y4[index5[i2]];
-    let i = n;
-    const addPoint = (x7, y7) => (XY3[i * 2] = x7, XY3[i * 2 + 1] = y7, i++);
-    for (let j = 0; j <= nw; ++j)
-      addPoint(j / nw * width, 0), addPoint(j / nw * width, height);
-    for (let j = 0; j < nh; ++j)
-      addPoint(width, j / nh * height), addPoint(0, j / nh * height);
-    V = take(V, index5);
-    const delaunay = new Delaunay(XY3.subarray(0, n * 2));
-    for (let j = n, ij; j < m5; ++j)
-      V[j] = V[ij = delaunay.find(XY3[j * 2], XY3[j * 2 + 1], ij)];
-    const { points, triangles } = new Delaunay(XY3);
-    const W = new V.constructor(width * height);
+    const { points, triangles, hull: hull3 } = Delaunay.from(
+      index5,
+      (i) => X4[i],
+      (i) => Y4[i]
+    );
+    const W = new V.constructor(width * height).fill(NaN);
+    const S = new Uint8Array(width * height);
     const mix = mixer(V, random);
-    for (let i2 = 0; i2 < triangles.length; i2 += 3) {
-      const ta = triangles[i2];
-      const tb = triangles[i2 + 1];
-      const tc = triangles[i2 + 2];
+    for (let i = 0; i < triangles.length; i += 3) {
+      const ta = triangles[i];
+      const tb = triangles[i + 1];
+      const tc = triangles[i + 2];
       const Ax = points[2 * ta];
       const Bx = points[2 * tb];
       const Cx = points[2 * tc];
@@ -27536,9 +27596,9 @@ function interpolatorBarycentric({ random = lcg(42) } = {}) {
       const z = (By - Cy) * (Ax - Cx) + (Ay - Cy) * (Cx - Bx);
       if (!z)
         continue;
-      const va = V[ta];
-      const vb = V[tb];
-      const vc = V[tc];
+      const va = V[index5[ta]];
+      const vb = V[index5[tb]];
+      const vc = V[index5[tc]];
       for (let x7 = Math.floor(x13); x7 < x22; ++x7) {
         for (let y7 = Math.floor(y13); y7 < y22; ++y7) {
           if (x7 < 0 || x7 >= width || y7 < 0 || y7 >= height)
@@ -27554,11 +27614,77 @@ function interpolatorBarycentric({ random = lcg(42) } = {}) {
           const gc = 1 - ga - gb;
           if (gc < 0)
             continue;
-          W[x7 + width * y7] = mix(va, ga, vb, gb, vc, gc, x7, y7);
+          const i2 = x7 + width * y7;
+          W[i2] = mix(va, ga, vb, gb, vc, gc, x7, y7);
+          S[i2] = 1;
         }
       }
     }
+    extrapolateBarycentric(W, S, X4, Y4, V, width, height, hull3, index5, mix);
     return W;
+  };
+}
+function extrapolateBarycentric(W, S, X4, Y4, V, width, height, hull3, index5, mix) {
+  X4 = Float64Array.from(hull3, (i) => X4[index5[i]]);
+  Y4 = Float64Array.from(hull3, (i) => Y4[index5[i]]);
+  V = Array.from(hull3, (i) => V[index5[i]]);
+  const n = X4.length;
+  const rays = Array.from({ length: n }, (_, j) => ray(j, X4, Y4));
+  let k3 = 0;
+  for (let y7 = 0; y7 < height; ++y7) {
+    const yp = y7 + 0.5;
+    for (let x7 = 0; x7 < width; ++x7) {
+      const i = x7 + width * y7;
+      if (!S[i]) {
+        const xp = x7 + 0.5;
+        for (let l = 0; l < n; ++l) {
+          const j = (n + k3 + (l % 2 ? (l + 1) / 2 : -l / 2)) % n;
+          if (rays[j](xp, yp)) {
+            const t = segmentProject(X4.at(j - 1), Y4.at(j - 1), X4[j], Y4[j], xp, yp);
+            W[i] = mix(V.at(j - 1), t, V[j], 1 - t, V[j], 0, x7, y7);
+            k3 = j;
+            break;
+          }
+        }
+      }
+    }
+  }
+}
+function segmentProject(x13, y13, x22, y22, x7, y7) {
+  const dx = x22 - x13;
+  const dy = y22 - y13;
+  const a7 = dx * (x22 - x7) + dy * (y22 - y7);
+  const b = dx * (x7 - x13) + dy * (y7 - y13);
+  return a7 > 0 && b > 0 ? a7 / (a7 + b) : +(a7 > b);
+}
+function cross2(xa, ya, xb, yb) {
+  return xa * yb - xb * ya;
+}
+function ray(j, X4, Y4) {
+  const n = X4.length;
+  const xc = X4.at(j - 2);
+  const yc = Y4.at(j - 2);
+  const xa = X4.at(j - 1);
+  const ya = Y4.at(j - 1);
+  const xb = X4[j];
+  const yb = Y4[j];
+  const xd = X4.at(j + 1 - n);
+  const yd = Y4.at(j + 1 - n);
+  const dxab = xa - xb;
+  const dyab = ya - yb;
+  const dxca = xc - xa;
+  const dyca = yc - ya;
+  const dxbd = xb - xd;
+  const dybd = yb - yd;
+  const hab = Math.hypot(dxab, dyab);
+  const hca = Math.hypot(dxca, dyca);
+  const hbd = Math.hypot(dxbd, dybd);
+  return (x7, y7) => {
+    const dxa = x7 - xa;
+    const dya = y7 - ya;
+    const dxb = x7 - xb;
+    const dyb = y7 - yb;
+    return cross2(dxa, dya, dxb, dyb) > -1e-6 && cross2(dxa, dya, dxab, dyab) * hca - cross2(dxa, dya, dxca, dyca) * hab > -1e-6 && cross2(dxb, dyb, dxbd, dybd) * hab - cross2(dxb, dyb, dxab, dyab) * hbd <= 0;
   };
 }
 function interpolateNearest(index5, width, height, X4, Y4, V) {
@@ -28769,10 +28895,13 @@ function treeNode({
   treeSort,
   treeSeparation,
   treeAnchor,
+  treeFilter,
   ...options
 } = {}) {
   treeAnchor = maybeTreeAnchor(treeAnchor);
   treeSort = maybeTreeSort(treeSort);
+  if (treeFilter != null)
+    treeFilter = maybeNodeValue(treeFilter);
   if (frameAnchor === void 0)
     frameAnchor = treeAnchor.frameAnchor;
   const normalize7 = normalizer(delimiter);
@@ -28805,6 +28934,8 @@ function treeNode({
           root5.sort(treeSort);
         layout(root5);
         for (const node of root5.descendants()) {
+          if (treeFilter != null && !treeFilter(node))
+            continue;
           treeFacet.push(++treeIndex);
           treeData[treeIndex] = node.data;
           treeAnchor.position(node, treeIndex, X5, Y5);
@@ -28831,10 +28962,13 @@ function treeLink({
   treeSort,
   treeSeparation,
   treeAnchor,
+  treeFilter,
   ...options
 } = {}) {
   treeAnchor = maybeTreeAnchor(treeAnchor);
   treeSort = maybeTreeSort(treeSort);
+  if (treeFilter != null)
+    treeFilter = maybeLinkValue(treeFilter);
   options = { curve, stroke, strokeWidth, strokeOpacity, ...options };
   const normalize7 = normalizer(delimiter);
   const outputs = treeOutputs(options, maybeLinkValue);
@@ -28871,6 +29005,8 @@ function treeLink({
           root5.sort(treeSort);
         layout(root5);
         for (const { source, target } of root5.links()) {
+          if (treeFilter != null && !treeFilter(target, source))
+            continue;
           treeFacet.push(++treeIndex);
           treeData[treeIndex] = target.data;
           treeAnchor.position(source, treeIndex, X16, Y16);
@@ -28948,6 +29084,8 @@ function maybeNodeValue(value) {
       return nodePath;
     case "node:internal":
       return nodeInternal;
+    case "node:external":
+      return nodeExternal;
     case "node:depth":
       return nodeDepth;
     case "node:height":
@@ -28978,6 +29116,8 @@ function maybeLinkValue(value) {
       return nodePath;
     case "node:internal":
       return nodeInternal;
+    case "node:external":
+      return nodeExternal;
     case "node:depth":
       return nodeDepth;
     case "node:height":
@@ -28999,6 +29139,9 @@ function nodeHeight(node) {
 }
 function nodeInternal(node) {
   return !!node.children;
+}
+function nodeExternal(node) {
+  return !node.children;
 }
 function parentValue(evaluate) {
   return (child, parent) => parent == null ? void 0 : evaluate(parent);
@@ -29055,14 +29198,38 @@ function tree(data, {
   title = "node:path",
   dx,
   dy,
+  textAnchor,
+  treeLayout = tree_default,
+  textLayout = treeLayout === tree_default || treeLayout === cluster_default ? "mirrored" : "normal",
+  tip: tip3,
   ...options
 } = {}) {
   if (dx === void 0)
     dx = maybeTreeAnchor(options.treeAnchor).dx;
+  if (textAnchor !== void 0)
+    throw new Error("textAnchor is not a configurable tree option");
+  textLayout = keyword(textLayout, "textLayout", ["mirrored", "normal"]);
+  function treeText(textOptions3) {
+    return text(
+      data,
+      treeNode({
+        treeLayout,
+        text: textText,
+        fill: fill === void 0 ? "currentColor" : fill,
+        stroke: textStroke,
+        dx,
+        dy,
+        title,
+        ...textOptions3,
+        ...options
+      })
+    );
+  }
   return marks(
     link3(
       data,
       treeLink({
+        treeLayout,
         markerStart,
         markerEnd,
         stroke: stroke !== void 0 ? stroke : fill === void 0 ? "node:internal" : fill,
@@ -29076,19 +29243,11 @@ function tree(data, {
         ...options
       })
     ),
-    dotDot ? dot(data, treeNode({ fill: fill === void 0 ? "node:internal" : fill, title, ...options })) : null,
-    textText != null ? text(
-      data,
-      treeNode({
-        text: textText,
-        fill: fill === void 0 ? "currentColor" : fill,
-        stroke: textStroke,
-        dx,
-        dy,
-        title,
-        ...options
-      })
-    ) : null
+    dotDot ? dot(data, treeNode({ treeLayout, fill: fill === void 0 ? "node:internal" : fill, title, tip: tip3, ...options })) : null,
+    textText != null ? textLayout === "mirrored" ? [
+      treeText({ textAnchor: "start", treeFilter: "node:external" }),
+      treeText({ textAnchor: "end", treeFilter: "node:internal", dx: -dx })
+    ] : treeText() : null
   );
 }
 function cluster(data, options) {
@@ -29423,33 +29582,30 @@ function maybeReduce2(reduce3 = "mean") {
     throw new Error(`invalid reduce: ${reduce3}`);
   return reduceArray(taker(reduce3));
 }
-function slice6(I, i, j) {
-  return I.subarray ? I.subarray(i, j) : I.slice(i, j);
-}
 function reduceAccessor2(f) {
   return (k3, s3, strict) => strict ? {
     mapIndex(I, S, T) {
-      const s4 = (i) => S[i] == null ? NaN : +S[i];
+      const v3 = (i) => S[i] == null ? NaN : +S[i];
       let nans = 0;
       for (let i = 0; i < k3 - 1; ++i)
-        if (isNaN(s4(i)))
+        if (isNaN(v3(i)))
           ++nans;
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
-        if (isNaN(s4(i + k3 - 1)))
+        if (isNaN(v3(i + k3 - 1)))
           ++nans;
-        T[I[i + s4]] = nans === 0 ? f(slice6(I, i, i + k3), s4) : NaN;
-        if (isNaN(s4(i)))
+        T[I[i + s3]] = nans === 0 ? f(subarray(I, i, i + k3), v3) : NaN;
+        if (isNaN(v3(i)))
           --nans;
       }
     }
   } : {
     mapIndex(I, S, T) {
-      const s4 = (i) => S[i] == null ? NaN : +S[i];
-      for (let i = -s4; i < 0; ++i) {
-        T[I[i + s4]] = f(slice6(I, 0, i + k3), s4);
+      const v3 = (i) => S[i] == null ? NaN : +S[i];
+      for (let i = -s3; i < 0; ++i) {
+        T[I[i + s3]] = f(subarray(I, 0, i + k3), v3);
       }
-      for (let i = 0, n = I.length - s4; i < n; ++i) {
-        T[I[i + s4]] = f(slice6(I, i, i + k3), s4);
+      for (let i = 0, n = I.length - s3; i < n; ++i) {
+        T[I[i + s3]] = f(subarray(I, i, i + k3), v3);
       }
     }
   };
@@ -29463,17 +29619,17 @@ function reduceArray(f) {
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
         count5 += defined(S[I[i + k3 - 1]]);
         if (count5 === k3)
-          T[I[i + s3]] = f(slice6(I, i, i + k3), S);
+          T[I[i + s3]] = f(subarray(I, i, i + k3), S);
         count5 -= defined(S[I[i]]);
       }
     }
   } : {
     mapIndex(I, S, T) {
       for (let i = -s3; i < 0; ++i) {
-        T[I[i + s3]] = f(slice6(I, 0, i + k3), S);
+        T[I[i + s3]] = f(subarray(I, 0, i + k3), S);
       }
       for (let i = 0, n = I.length - s3; i < n; ++i) {
-        T[I[i + s3]] = f(slice6(I, i, i + k3), S);
+        T[I[i + s3]] = f(subarray(I, i, i + k3), S);
       }
     }
   };
@@ -29937,7 +30093,7 @@ __export(src_exports3, {
   count: () => count3,
   create: () => create_default2,
   creator: () => creator_default2,
-  cross: () => cross2,
+  cross: () => cross3,
   csv: () => csv4,
   csvFormat: () => csvFormat2,
   csvFormatBody: () => csvFormatBody2,
@@ -30705,7 +30861,7 @@ function arrayify3(values3) {
 function reducer2(reduce3) {
   return (values3) => reduce3(...values3);
 }
-function cross2(...values3) {
+function cross3(...values3) {
   const reduce3 = typeof values3[values3.length - 1] === "function" && reducer2(values3.pop());
   values3 = values3.map(arrayify3);
   const lengths = values3.map(length4);
@@ -31050,7 +31206,7 @@ function groupSort2(values3, reduce3, key) {
 
 // ../pyobsplot-js/node_modules/d3-array/src/array.js
 var array4 = Array.prototype;
-var slice7 = array4.slice;
+var slice6 = array4.slice;
 var map6 = array4.map;
 
 // ../pyobsplot-js/node_modules/d3-array/src/constant.js
@@ -31224,7 +31380,7 @@ function bin3() {
     return arguments.length ? (domain = typeof _ === "function" ? _ : constant3([_[0], _[1]]), histogram) : domain;
   };
   histogram.thresholds = function(_) {
-    return arguments.length ? (threshold3 = typeof _ === "function" ? _ : constant3(Array.isArray(_) ? slice7.call(_) : _), histogram) : threshold3;
+    return arguments.length ? (threshold3 = typeof _ === "function" ? _ : constant3(Array.isArray(_) ? slice6.call(_) : _), histogram) : threshold3;
   };
   return histogram;
 }
@@ -36004,7 +36160,7 @@ function pathRound2(digits = 3) {
 }
 
 // ../pyobsplot-js/node_modules/d3-chord/src/array.js
-var slice8 = Array.prototype.slice;
+var slice7 = Array.prototype.slice;
 
 // ../pyobsplot-js/node_modules/d3-chord/src/constant.js
 function constant_default16(x7) {
@@ -36038,7 +36194,7 @@ function defaultArrowheadRadius2() {
 function ribbon2(headRadius) {
   var source = defaultSource2, target = defaultTarget2, sourceRadius = defaultRadius4, targetRadius = defaultRadius4, startAngle = defaultStartAngle2, endAngle = defaultEndAngle2, padAngle = defaultPadAngle2, context = null;
   function ribbon3() {
-    var buffer, s3 = source.apply(this, arguments), t = target.apply(this, arguments), ap = padAngle.apply(this, arguments) / 2, argv = slice8.call(arguments), sr = +sourceRadius.apply(this, (argv[0] = s3, argv)), sa0 = startAngle.apply(this, argv) - halfPi6, sa1 = endAngle.apply(this, argv) - halfPi6, tr = +targetRadius.apply(this, (argv[0] = t, argv)), ta0 = startAngle.apply(this, argv) - halfPi6, ta1 = endAngle.apply(this, argv) - halfPi6;
+    var buffer, s3 = source.apply(this, arguments), t = target.apply(this, arguments), ap = padAngle.apply(this, arguments) / 2, argv = slice7.call(arguments), sr = +sourceRadius.apply(this, (argv[0] = s3, argv)), sa0 = startAngle.apply(this, argv) - halfPi6, sa1 = endAngle.apply(this, argv) - halfPi6, tr = +targetRadius.apply(this, (argv[0] = t, argv)), ta0 = startAngle.apply(this, argv) - halfPi6, ta1 = endAngle.apply(this, argv) - halfPi6;
     if (!context)
       context = buffer = path2();
     if (ap > epsilon10) {
@@ -36111,7 +36267,7 @@ function ribbonArrow2() {
 
 // ../pyobsplot-js/node_modules/d3-contour/src/array.js
 var array6 = Array.prototype;
-var slice9 = array6.slice;
+var slice8 = array6.slice;
 
 // ../pyobsplot-js/node_modules/d3-contour/src/ascending.js
 function ascending_default3(a7, b) {
@@ -36315,7 +36471,7 @@ function contours_default2() {
     return dx = _0, dy = _1, contours;
   };
   contours.thresholds = function(_) {
-    return arguments.length ? (threshold3 = typeof _ === "function" ? _ : Array.isArray(_) ? constant_default17(slice9.call(_)) : constant_default17(_), contours) : threshold3;
+    return arguments.length ? (threshold3 = typeof _ === "function" ? _ : Array.isArray(_) ? constant_default17(slice8.call(_)) : constant_default17(_), contours) : threshold3;
   };
   contours.smooth = function(_) {
     return arguments.length ? (smooth = _ ? smoothLinear : noop_default3, contours) : smooth === smoothLinear;
@@ -36427,7 +36583,7 @@ function density_default2() {
     return k3 = Math.floor(Math.log(_) / Math.LN2), resize();
   };
   density3.thresholds = function(_) {
-    return arguments.length ? (threshold3 = typeof _ === "function" ? _ : Array.isArray(_) ? constant_default17(slice9.call(_)) : constant_default17(_), density3) : threshold3;
+    return arguments.length ? (threshold3 = typeof _ === "function" ? _ : Array.isArray(_) ? constant_default17(slice8.call(_)) : constant_default17(_), density3) : threshold3;
   };
   density3.bandwidth = function(_) {
     if (!arguments.length)
@@ -37630,8 +37786,8 @@ function pointY2(p) {
 function collinear4(d) {
   const { triangles, coords } = d;
   for (let i = 0; i < triangles.length; i += 3) {
-    const a7 = 2 * triangles[i], b = 2 * triangles[i + 1], c11 = 2 * triangles[i + 2], cross3 = (coords[c11] - coords[a7]) * (coords[b + 1] - coords[a7 + 1]) - (coords[b] - coords[a7]) * (coords[c11 + 1] - coords[a7 + 1]);
-    if (cross3 > 1e-10)
+    const a7 = 2 * triangles[i], b = 2 * triangles[i + 1], c11 = 2 * triangles[i + 2], cross5 = (coords[c11] - coords[a7]) * (coords[b + 1] - coords[a7 + 1]) - (coords[b] - coords[a7]) * (coords[c11 + 1] - coords[a7 + 1]);
+    if (cross5 > 1e-10)
       return false;
   }
   return true;
@@ -44161,21 +44317,21 @@ millisecond2.every = (k3) => {
 var milliseconds2 = millisecond2.range;
 
 // ../pyobsplot-js/node_modules/d3-time/src/duration.js
-var durationSecond2 = 1e3;
-var durationMinute2 = durationSecond2 * 60;
-var durationHour2 = durationMinute2 * 60;
-var durationDay2 = durationHour2 * 24;
-var durationWeek2 = durationDay2 * 7;
-var durationMonth2 = durationDay2 * 30;
-var durationYear2 = durationDay2 * 365;
+var durationSecond3 = 1e3;
+var durationMinute3 = durationSecond3 * 60;
+var durationHour3 = durationMinute3 * 60;
+var durationDay3 = durationHour3 * 24;
+var durationWeek3 = durationDay3 * 7;
+var durationMonth3 = durationDay3 * 30;
+var durationYear3 = durationDay3 * 365;
 
 // ../pyobsplot-js/node_modules/d3-time/src/second.js
 var second3 = timeInterval2((date3) => {
   date3.setTime(date3 - date3.getMilliseconds());
 }, (date3, step) => {
-  date3.setTime(+date3 + step * durationSecond2);
+  date3.setTime(+date3 + step * durationSecond3);
 }, (start3, end) => {
-  return (end - start3) / durationSecond2;
+  return (end - start3) / durationSecond3;
 }, (date3) => {
   return date3.getUTCSeconds();
 });
@@ -44183,11 +44339,11 @@ var seconds2 = second3.range;
 
 // ../pyobsplot-js/node_modules/d3-time/src/minute.js
 var timeMinute2 = timeInterval2((date3) => {
-  date3.setTime(date3 - date3.getMilliseconds() - date3.getSeconds() * durationSecond2);
+  date3.setTime(date3 - date3.getMilliseconds() - date3.getSeconds() * durationSecond3);
 }, (date3, step) => {
-  date3.setTime(+date3 + step * durationMinute2);
+  date3.setTime(+date3 + step * durationMinute3);
 }, (start3, end) => {
-  return (end - start3) / durationMinute2;
+  return (end - start3) / durationMinute3;
 }, (date3) => {
   return date3.getMinutes();
 });
@@ -44195,9 +44351,9 @@ var timeMinutes2 = timeMinute2.range;
 var utcMinute2 = timeInterval2((date3) => {
   date3.setUTCSeconds(0, 0);
 }, (date3, step) => {
-  date3.setTime(+date3 + step * durationMinute2);
+  date3.setTime(+date3 + step * durationMinute3);
 }, (start3, end) => {
-  return (end - start3) / durationMinute2;
+  return (end - start3) / durationMinute3;
 }, (date3) => {
   return date3.getUTCMinutes();
 });
@@ -44205,11 +44361,11 @@ var utcMinutes2 = utcMinute2.range;
 
 // ../pyobsplot-js/node_modules/d3-time/src/hour.js
 var timeHour2 = timeInterval2((date3) => {
-  date3.setTime(date3 - date3.getMilliseconds() - date3.getSeconds() * durationSecond2 - date3.getMinutes() * durationMinute2);
+  date3.setTime(date3 - date3.getMilliseconds() - date3.getSeconds() * durationSecond3 - date3.getMinutes() * durationMinute3);
 }, (date3, step) => {
-  date3.setTime(+date3 + step * durationHour2);
+  date3.setTime(+date3 + step * durationHour3);
 }, (start3, end) => {
-  return (end - start3) / durationHour2;
+  return (end - start3) / durationHour3;
 }, (date3) => {
   return date3.getHours();
 });
@@ -44217,9 +44373,9 @@ var timeHours2 = timeHour2.range;
 var utcHour2 = timeInterval2((date3) => {
   date3.setUTCMinutes(0, 0, 0);
 }, (date3, step) => {
-  date3.setTime(+date3 + step * durationHour2);
+  date3.setTime(+date3 + step * durationHour3);
 }, (start3, end) => {
-  return (end - start3) / durationHour2;
+  return (end - start3) / durationHour3;
 }, (date3) => {
   return date3.getUTCHours();
 });
@@ -44229,7 +44385,7 @@ var utcHours2 = utcHour2.range;
 var timeDay2 = timeInterval2(
   (date3) => date3.setHours(0, 0, 0, 0),
   (date3, step) => date3.setDate(date3.getDate() + step),
-  (start3, end) => (end - start3 - (end.getTimezoneOffset() - start3.getTimezoneOffset()) * durationMinute2) / durationDay2,
+  (start3, end) => (end - start3 - (end.getTimezoneOffset() - start3.getTimezoneOffset()) * durationMinute3) / durationDay3,
   (date3) => date3.getDate() - 1
 );
 var timeDays2 = timeDay2.range;
@@ -44238,7 +44394,7 @@ var utcDay2 = timeInterval2((date3) => {
 }, (date3, step) => {
   date3.setUTCDate(date3.getUTCDate() + step);
 }, (start3, end) => {
-  return (end - start3) / durationDay2;
+  return (end - start3) / durationDay3;
 }, (date3) => {
   return date3.getUTCDate() - 1;
 });
@@ -44248,9 +44404,9 @@ var unixDay2 = timeInterval2((date3) => {
 }, (date3, step) => {
   date3.setUTCDate(date3.getUTCDate() + step);
 }, (start3, end) => {
-  return (end - start3) / durationDay2;
+  return (end - start3) / durationDay3;
 }, (date3) => {
-  return Math.floor(date3 / durationDay2);
+  return Math.floor(date3 / durationDay3);
 });
 var unixDays2 = unixDay2.range;
 
@@ -44262,7 +44418,7 @@ function timeWeekday2(i) {
   }, (date3, step) => {
     date3.setDate(date3.getDate() + step * 7);
   }, (start3, end) => {
-    return (end - start3 - (end.getTimezoneOffset() - start3.getTimezoneOffset()) * durationMinute2) / durationWeek2;
+    return (end - start3 - (end.getTimezoneOffset() - start3.getTimezoneOffset()) * durationMinute3) / durationWeek3;
   });
 }
 var timeSunday2 = timeWeekday2(0);
@@ -44286,7 +44442,7 @@ function utcWeekday2(i) {
   }, (date3, step) => {
     date3.setUTCDate(date3.getUTCDate() + step * 7);
   }, (start3, end) => {
-    return (end - start3) / durationWeek2;
+    return (end - start3) / durationWeek3;
   });
 }
 var utcSunday2 = utcWeekday2(0);
@@ -44373,24 +44529,24 @@ var utcYears2 = utcYear2.range;
 // ../pyobsplot-js/node_modules/d3-time/src/ticks.js
 function ticker2(year, month, week, day, hour, minute) {
   const tickIntervals = [
-    [second3, 1, durationSecond2],
-    [second3, 5, 5 * durationSecond2],
-    [second3, 15, 15 * durationSecond2],
-    [second3, 30, 30 * durationSecond2],
-    [minute, 1, durationMinute2],
-    [minute, 5, 5 * durationMinute2],
-    [minute, 15, 15 * durationMinute2],
-    [minute, 30, 30 * durationMinute2],
-    [hour, 1, durationHour2],
-    [hour, 3, 3 * durationHour2],
-    [hour, 6, 6 * durationHour2],
-    [hour, 12, 12 * durationHour2],
-    [day, 1, durationDay2],
-    [day, 2, 2 * durationDay2],
-    [week, 1, durationWeek2],
-    [month, 1, durationMonth2],
-    [month, 3, 3 * durationMonth2],
-    [year, 1, durationYear2]
+    [second3, 1, durationSecond3],
+    [second3, 5, 5 * durationSecond3],
+    [second3, 15, 15 * durationSecond3],
+    [second3, 30, 30 * durationSecond3],
+    [minute, 1, durationMinute3],
+    [minute, 5, 5 * durationMinute3],
+    [minute, 15, 15 * durationMinute3],
+    [minute, 30, 30 * durationMinute3],
+    [hour, 1, durationHour3],
+    [hour, 3, 3 * durationHour3],
+    [hour, 6, 6 * durationHour3],
+    [hour, 12, 12 * durationHour3],
+    [day, 1, durationDay3],
+    [day, 2, 2 * durationDay3],
+    [week, 1, durationWeek3],
+    [month, 1, durationMonth3],
+    [month, 3, 3 * durationMonth3],
+    [year, 1, durationYear3]
   ];
   function ticks3(start3, stop, count5) {
     const reverse5 = stop < start3;
@@ -44404,7 +44560,7 @@ function ticker2(year, month, week, day, hour, minute) {
     const target = Math.abs(stop - start3) / count5;
     const i = bisector2(([, , step2]) => step2).right(tickIntervals, target);
     if (i === tickIntervals.length)
-      return year.every(tickStep2(start3 / durationYear2, stop / durationYear2, count5));
+      return year.every(tickStep2(start3 / durationYear3, stop / durationYear3, count5));
     if (i === 0)
       return millisecond2.every(Math.max(tickStep2(start3, stop, count5), 1));
     const [t, step] = tickIntervals[target / tickIntervals[i - 1][2] < tickIntervals[i][2] / target ? i - 1 : i];
@@ -44438,7 +44594,7 @@ function newDate2(y7, m5, d) {
 function formatLocale2(locale5) {
   var locale_dateTime = locale5.dateTime, locale_date = locale5.date, locale_time = locale5.time, locale_periods = locale5.periods, locale_weekdays = locale5.days, locale_shortWeekdays = locale5.shortDays, locale_months = locale5.months, locale_shortMonths = locale5.shortMonths;
   var periodRe = formatRe2(locale_periods), periodLookup = formatLookup2(locale_periods), weekdayRe = formatRe2(locale_weekdays), weekdayLookup = formatLookup2(locale_weekdays), shortWeekdayRe = formatRe2(locale_shortWeekdays), shortWeekdayLookup = formatLookup2(locale_shortWeekdays), monthRe = formatRe2(locale_months), monthLookup = formatLookup2(locale_months), shortMonthRe = formatRe2(locale_shortMonths), shortMonthLookup = formatLookup2(locale_shortMonths);
-  var formats = {
+  var formats3 = {
     "a": formatShortWeekday,
     "A": formatWeekday3,
     "b": formatShortMonth,
@@ -44540,13 +44696,13 @@ function formatLocale2(locale5) {
     "Z": parseZone2,
     "%": parseLiteralPercent2
   };
-  formats.x = newFormat(locale_date, formats);
-  formats.X = newFormat(locale_time, formats);
-  formats.c = newFormat(locale_dateTime, formats);
+  formats3.x = newFormat(locale_date, formats3);
+  formats3.X = newFormat(locale_time, formats3);
+  formats3.c = newFormat(locale_dateTime, formats3);
   utcFormats.x = newFormat(locale_date, utcFormats);
   utcFormats.X = newFormat(locale_time, utcFormats);
   utcFormats.c = newFormat(locale_dateTime, utcFormats);
-  function newFormat(specifier, formats2) {
+  function newFormat(specifier, formats4) {
     return function(date3) {
       var string3 = [], i = -1, j = 0, n = specifier.length, c11, pad7, format5;
       if (!(date3 instanceof Date))
@@ -44558,7 +44714,7 @@ function formatLocale2(locale5) {
             c11 = specifier.charAt(++i);
           else
             pad7 = c11 === "e" ? " " : "0";
-          if (format5 = formats2[c11])
+          if (format5 = formats4[c11])
             c11 = format5(date3, pad7);
           string3.push(c11);
           j = i + 1;
@@ -44702,7 +44858,7 @@ function formatLocale2(locale5) {
   }
   return {
     format: function(specifier) {
-      var f = newFormat(specifier += "", formats);
+      var f = newFormat(specifier += "", formats3);
       f.toString = function() {
         return specifier;
       };
@@ -45847,7 +46003,7 @@ function arc_default2() {
 }
 
 // ../pyobsplot-js/node_modules/d3-shape/src/array.js
-var slice10 = Array.prototype.slice;
+var slice9 = Array.prototype.slice;
 function array_default6(x7) {
   return typeof x7 === "object" && "length" in x7 ? x7 : Array.from(x7);
 }
@@ -46240,7 +46396,7 @@ function link5(curve) {
   let source = linkSource2, target = linkTarget2, x7 = x6, y7 = y6, context = null, output = null, path3 = withPath2(link7);
   function link7() {
     let buffer;
-    const argv = slice10.call(arguments);
+    const argv = slice9.call(arguments);
     const s3 = source.apply(this, argv);
     const t = target.apply(this, argv);
     if (context == null)
@@ -48020,6 +48176,28 @@ function parse2(string3, fallback) {
 }
 
 // ../pyobsplot-js/node_modules/@observablehq/plot/src/time.js
+var durationSecond4 = 1e3;
+var durationMinute4 = durationSecond4 * 60;
+var durationHour4 = durationMinute4 * 60;
+var durationDay4 = durationHour4 * 24;
+var durationWeek4 = durationDay4 * 7;
+var durationMonth4 = durationDay4 * 30;
+var durationYear4 = durationDay4 * 365;
+var formats2 = [
+  ["millisecond", 0.5 * durationSecond4],
+  ["second", durationSecond4],
+  ["second", 30 * durationSecond4],
+  ["minute", durationMinute4],
+  ["minute", 30 * durationMinute4],
+  ["hour", durationHour4],
+  ["hour", 12 * durationHour4],
+  ["day", durationDay4],
+  ["day", 2 * durationDay4],
+  ["week", durationWeek4],
+  ["month", durationMonth4],
+  ["month", 3 * durationMonth4],
+  ["year", durationYear4]
+];
 var timeIntervals2 = /* @__PURE__ */ new Map([
   ["second", second3],
   ["minute", timeMinute2],
@@ -48100,6 +48278,50 @@ function isTimeYear2(i) {
   const date3 = i.floor(new Date(2e3, 11, 31));
   return timeYear2(date3) >= date3;
 }
+function formatTimeTicks2(scale5, data, ticks3, anchor) {
+  const format5 = scale5.type === "time" ? timeFormat2 : utcFormat2;
+  const template3 = anchor === "left" || anchor === "right" ? (f1, f2) => `
+${f1}
+${f2}` : anchor === "top" ? (f1, f2) => `${f2}
+${f1}` : (f1, f2) => `${f1}
+${f2}`;
+  switch (getTimeTicksInterval2(scale5, data, ticks3)) {
+    case "millisecond":
+      return formatConditional2(format5(".%L"), format5(":%M:%S"), template3);
+    case "second":
+      return formatConditional2(format5(":%S"), format5("%-I:%M"), template3);
+    case "minute":
+      return formatConditional2(format5("%-I:%M"), format5("%p"), template3);
+    case "hour":
+      return formatConditional2(format5("%-I %p"), format5("%b %-d"), template3);
+    case "day":
+      return formatConditional2(format5("%-d"), format5("%b"), template3);
+    case "week":
+      return formatConditional2(format5("%-d"), format5("%b"), template3);
+    case "month":
+      return formatConditional2(format5("%b"), format5("%Y"), template3);
+    case "year":
+      return format5("%Y");
+  }
+  throw new Error("unable to format time ticks");
+}
+function getTimeTicksInterval2(scale5, data, ticks3) {
+  const medianStep = median2(pairs2(data, (a7, b) => Math.abs(b - a7) || NaN));
+  if (medianStep > 0)
+    return formats2[bisector2(([, step2]) => step2).right(formats2, medianStep, 1, formats2.length) - 1][0];
+  const [start3, stop] = extent3(scale5.domain());
+  const count5 = typeof ticks3 === "number" ? ticks3 : 10;
+  const step = Math.abs(stop - start3) / count5;
+  return formats2[bisector2(([, step2]) => Math.log(step2)).center(formats2, Math.log(step))][0];
+}
+function formatConditional2(format1, format22, template3) {
+  return (x7, i, X4) => {
+    const f1 = format1(x7, i);
+    const f2 = format22(x7, i);
+    const j = i - orderof2(X4);
+    return i !== j && X4[j] !== void 0 && f2 === format22(X4[j], j) ? f1 : template3(f1, f2);
+  };
+}
 
 // ../pyobsplot-js/node_modules/@observablehq/plot/src/options.js
 var TypedArray2 = Object.getPrototypeOf(Uint8Array);
@@ -48171,7 +48393,7 @@ function arrayify4(data) {
 function map9(values3, f, type3 = Array) {
   return values3 == null ? values3 : values3 instanceof type3 ? values3.map(f) : type3.from(values3, f);
 }
-function slice11(values3, type3 = Array) {
+function slice10(values3, type3 = Array) {
   return values3 instanceof type3 ? values3.slice() : type3.from(values3);
 }
 function hasX2({ x: x7, x1: x13, x2: x22 }) {
@@ -48227,6 +48449,9 @@ function take2(values3, index5) {
 }
 function taker2(f) {
   return f.length === 1 ? (index5, values3) => f(take2(values3, index5)) : f;
+}
+function subarray2(I, i, j) {
+  return I.subarray ? I.subarray(i, j) : I.slice(i, j);
 }
 function keyof4(value) {
   return value !== null && typeof value === "object" ? value.valueOf() : value;
@@ -49695,20 +49920,18 @@ function createScaleQ2(key, scale5, channels, {
   interval3 = maybeRangeInterval2(interval3, type3);
   if (type3 === "cyclical" || type3 === "sequential")
     type3 = "linear";
+  if (typeof interpolate !== "function")
+    interpolate = maybeInterpolator2(interpolate);
   reverse5 = !!reverse5;
   if (range9 !== void 0) {
     const n = (domain = arrayify4(domain)).length;
     const m5 = (range9 = arrayify4(range9)).length;
-    if (n > m5) {
-      domain = domain.slice(0, m5);
-      warn2(`Warning: the ${key} scale domain contains extra elements.`);
-    } else if (m5 > n) {
-      range9 = range9.slice(0, n);
-      warn2(`Warning: the ${key} scale range contains extra elements.`);
+    if (n !== m5) {
+      if (interpolate.length === 1)
+        throw new Error("invalid piecewise interpolator");
+      interpolate = piecewise2(interpolate, range9);
+      range9 = void 0;
     }
-  }
-  if (typeof interpolate !== "function") {
-    interpolate = maybeInterpolator2(interpolate);
   }
   if (interpolate.length === 1) {
     if (reverse5) {
@@ -49727,7 +49950,7 @@ function createScaleQ2(key, scale5, channels, {
   if (zero5) {
     const [min7, max9] = extent3(domain);
     if (min7 > 0 || max9 < 0) {
-      domain = slice11(domain);
+      domain = slice10(domain);
       if (orderof2(domain) !== Math.sign(min7))
         domain[domain.length - 1] = 0;
       else
@@ -50576,9 +50799,9 @@ function exposeScale2({ scale: scale5, type: type3, domain, range: range9, inter
   const unknown = scale5.unknown ? scale5.unknown() : void 0;
   return {
     type: type3,
-    domain: slice11(domain),
+    domain: slice10(domain),
     // defensive copy
-    ...range9 !== void 0 && { range: slice11(range9) },
+    ...range9 !== void 0 && { range: slice10(range9) },
     // defensive copy
     ...transform3 !== void 0 && { transform: transform3 },
     ...percent && { percent },
@@ -50749,9 +50972,9 @@ function styles2(mark, {
   mark.pointerEvents = impliedString2(pointerEvents, "auto");
   mark.shapeRendering = impliedString2(shapeRendering, "auto");
   return {
-    title: { value: title, optional: true },
-    href: { value: href, optional: true },
-    ariaLabel: { value: variaLabel, optional: true },
+    title: { value: title, optional: true, filter: null },
+    href: { value: href, optional: true, filter: null },
+    ariaLabel: { value: variaLabel, optional: true, filter: null },
     fill: { value: vfill, scale: "auto", optional: true },
     fillOpacity: { value: vfillOpacity, scale: "auto", optional: true },
     stroke: { value: vstroke, scale: "auto", optional: true },
@@ -50947,7 +51170,8 @@ function applyIndirectStyles2(selection3, mark, dimensions, context) {
   applyAttr2(selection3, "shape-rendering", mark.shapeRendering);
   applyAttr2(selection3, "filter", mark.imageFilter);
   applyAttr2(selection3, "paint-order", mark.paintOrder);
-  applyAttr2(selection3, "pointer-events", mark.pointerEvents);
+  const { pointerEvents = context.pointerSticky === false ? "none" : void 0 } = mark;
+  applyAttr2(selection3, "pointer-events", pointerEvents);
 }
 function applyDirectStyles2(selection3, mark) {
   applyStyle2(selection3, "mix-blend-mode", mark.mixBlendMode);
@@ -51138,7 +51362,7 @@ function createFacets2(channelsByScale, options) {
   const { fx, fy } = createScales2(channelsByScale, options);
   const fxDomain = fx?.scale.domain();
   const fyDomain = fy?.scale.domain();
-  return fxDomain && fyDomain ? cross2(fxDomain, fyDomain).map(([x7, y7], i) => ({ x: x7, y: y7, i })) : fxDomain ? fxDomain.map((x7, i) => ({ x: x7, i })) : fyDomain ? fyDomain.map((y7, i) => ({ y: y7, i })) : void 0;
+  return fxDomain && fyDomain ? cross3(fxDomain, fyDomain).map(([x7, y7], i) => ({ x: x7, y: y7, i })) : fxDomain ? fxDomain.map((x7, i) => ({ x: x7, i })) : fyDomain ? fyDomain.map((y7, i) => ({ y: y7, i })) : void 0;
 }
 function recreateFacets2(facets, { x: X4, y: Y4 }) {
   X4 &&= facetIndex2(X4);
@@ -51467,6 +51691,7 @@ function pointerK2(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, r
     // outermost render function because it will re-render dynamically in
     // response to pointer events.
     render: composeRender2(function(index5, scales, values3, dimensions, context, next) {
+      context = { ...context, pointerSticky: false };
       const svg3 = context.ownerSVGElement;
       const { data } = context.getMarkState(this);
       let state = states2.get(svg3);
@@ -51496,6 +51721,7 @@ function pointerK2(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, r
       const py2 = PY ? (i2) => PY[i2] : anchorY3(values3, cy);
       let i;
       let g;
+      let s3;
       let f;
       function update(ii, ri) {
         if (faceted) {
@@ -51521,9 +51747,10 @@ function pointerK2(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, r
         render3(ii);
       }
       function render3(ii) {
-        if (i === ii)
+        if (i === ii && s3 === state.sticky)
           return;
         i = ii;
+        s3 = context.pointerSticky = state.sticky;
         const I = i == null ? [] : [i];
         if (faceted)
           I.fx = index5.fx, I.fy = index5.fy, I.fi = index5.fi;
@@ -51571,7 +51798,7 @@ function pointerK2(kx3, ky3, { x: x7, y: y7, px, py, maxRadius = 40, channels, r
         if (state.sticky)
           state.sticky = false, state.renders.forEach((r) => r(null));
         else
-          state.sticky = true;
+          state.sticky = true, render3(i);
         event.stopImmediatePropagation();
       }
       function pointerleave(event) {
@@ -51607,9 +51834,6 @@ function anchorY3({ y1: Y15, y2: Y25, y: Y4 = Y15 }, cy) {
 // ../pyobsplot-js/node_modules/@observablehq/plot/src/axes.js
 function inferFontVariant4(scale5) {
   return isOrdinalScale2(scale5) && scale5.interval === void 0 ? void 0 : "tabular-nums";
-}
-function maybeAutoTickFormat2(tickFormat3, domain) {
-  return tickFormat3 === void 0 ? isTemporal2(domain) ? formatIsoDate2 : string2 : typeof tickFormat3 === "function" ? tickFormat3 : (typeof tickFormat3 === "string" ? isTemporal2(domain) ? utcFormat2 : format3 : constant4)(tickFormat3);
 }
 
 // ../pyobsplot-js/node_modules/@observablehq/plot/src/legends/ramp.js
@@ -51697,200 +51921,6 @@ function legendRamp2(color5, options) {
     svg3.append("text").attr("x", marginLeft).attr("y", marginTop - 6).attr("fill", "currentColor").attr("font-weight", "bold").text(label);
   }
   return svg3.node();
-}
-
-// ../pyobsplot-js/node_modules/@observablehq/plot/src/legends/swatches.js
-function maybeScale2(scale5, key) {
-  if (key == null)
-    return key;
-  const s3 = scale5(key);
-  if (!s3)
-    throw new Error(`scale not found: ${key}`);
-  return s3;
-}
-function legendSwatches2(color5, { opacity: opacity3, ...options } = {}) {
-  if (!isOrdinalScale2(color5) && !isThresholdScale2(color5))
-    throw new Error(`swatches legend requires ordinal or threshold color scale (not ${color5.type})`);
-  return legendItems2(
-    color5,
-    options,
-    (selection3, scale5, width, height) => selection3.append("svg").attr("width", width).attr("height", height).attr("fill", scale5.scale).attr("fill-opacity", maybeNumberChannel2(opacity3)[1]).append("rect").attr("width", "100%").attr("height", "100%")
-  );
-}
-function legendSymbols2(symbol3, {
-  fill = symbol3.hint?.fill !== void 0 ? symbol3.hint.fill : "none",
-  fillOpacity = 1,
-  stroke = symbol3.hint?.stroke !== void 0 ? symbol3.hint.stroke : isNoneish2(fill) ? "currentColor" : "none",
-  strokeOpacity = 1,
-  strokeWidth = 1.5,
-  r = 4.5,
-  ...options
-} = {}, scale5) {
-  const [vf, cf] = maybeColorChannel2(fill);
-  const [vs, cs] = maybeColorChannel2(stroke);
-  const sf = maybeScale2(scale5, vf);
-  const ss = maybeScale2(scale5, vs);
-  const size = r * r * Math.PI;
-  fillOpacity = maybeNumberChannel2(fillOpacity)[1];
-  strokeOpacity = maybeNumberChannel2(strokeOpacity)[1];
-  strokeWidth = maybeNumberChannel2(strokeWidth)[1];
-  return legendItems2(
-    symbol3,
-    options,
-    (selection3, scale6, width, height) => selection3.append("svg").attr("viewBox", "-8 -8 16 16").attr("width", width).attr("height", height).attr("fill", vf === "color" ? (d) => sf.scale(d) : cf).attr("fill-opacity", fillOpacity).attr("stroke", vs === "color" ? (d) => ss.scale(d) : cs).attr("stroke-opacity", strokeOpacity).attr("stroke-width", strokeWidth).append("path").attr("d", (d) => {
-      const p = pathRound2();
-      symbol3.scale(d).draw(p, size);
-      return p;
-    })
-  );
-}
-function legendItems2(scale5, options = {}, swatch) {
-  let {
-    columns,
-    tickFormat: tickFormat3,
-    fontVariant = inferFontVariant4(scale5),
-    // TODO label,
-    swatchSize = 15,
-    swatchWidth = swatchSize,
-    swatchHeight = swatchSize,
-    marginLeft = 0,
-    className,
-    style,
-    width
-  } = options;
-  const context = createContext2(options);
-  className = maybeClassName2(className);
-  tickFormat3 = maybeAutoTickFormat2(tickFormat3, scale5.domain);
-  const swatches = create4("div", context).attr(
-    "class",
-    `${className}-swatches ${className}-swatches-${columns != null ? "columns" : "wrap"}`
-  );
-  let extraStyle;
-  if (columns != null) {
-    extraStyle = `.${className}-swatches-columns .${className}-swatch {
-  display: flex;
-  align-items: center;
-  break-inside: avoid;
-  padding-bottom: 1px;
-}
-.${className}-swatches-columns .${className}-swatch::before {
-  flex-shrink: 0;
-}
-.${className}-swatches-columns .${className}-swatch-label {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}`;
-    swatches.style("columns", columns).selectAll().data(scale5.domain).enter().append("div").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).call(
-      (item) => item.append("div").attr("class", `${className}-swatch-label`).attr("title", tickFormat3).text(tickFormat3)
-    );
-  } else {
-    extraStyle = `.${className}-swatches-wrap {
-  display: flex;
-  align-items: center;
-  min-height: 33px;
-  flex-wrap: wrap;
-}
-.${className}-swatches-wrap .${className}-swatch {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 1em;
-}`;
-    swatches.selectAll().data(scale5.domain).enter().append("span").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).append(function() {
-      return this.ownerDocument.createTextNode(tickFormat3.apply(this, arguments));
-    });
-  }
-  return swatches.call(
-    (div) => div.insert("style", "*").text(
-      `.${className}-swatches {
-  font-family: system-ui, sans-serif;
-  font-size: 10px;
-  margin-bottom: 0.5em;
-}
-.${className}-swatch > svg {
-  margin-right: 0.5em;
-  overflow: visible;
-}
-${extraStyle}`
-    )
-  ).style("margin-left", marginLeft ? `${+marginLeft}px` : null).style("width", width === void 0 ? null : `${+width}px`).style("font-variant", impliedString2(fontVariant, "normal")).call(applyInlineStyles2, style).node();
-}
-
-// ../pyobsplot-js/node_modules/@observablehq/plot/src/legends.js
-var legendRegistry2 = /* @__PURE__ */ new Map([
-  ["symbol", legendSymbols2],
-  ["color", legendColor2],
-  ["opacity", legendOpacity2]
-]);
-function legend2(options = {}) {
-  for (const [key, value] of legendRegistry2) {
-    const scale5 = options[key];
-    if (isScaleOptions2(scale5)) {
-      const context = createContext2(options);
-      let hint;
-      if (key === "symbol") {
-        const { fill, stroke = fill === void 0 && isScaleOptions2(options.color) ? "color" : void 0 } = options;
-        hint = { fill, stroke };
-      }
-      return value(
-        normalizeScale2(key, scale5, hint),
-        legendOptions2(context, scale5, options),
-        (key2) => isScaleOptions2(options[key2]) ? normalizeScale2(key2, options[key2]) : null
-      );
-    }
-  }
-  throw new Error("unknown legend type; no scale found");
-}
-function exposeLegends2(scales, context, defaults43 = {}) {
-  return (key, options) => {
-    if (!legendRegistry2.has(key))
-      throw new Error(`unknown legend type: ${key}`);
-    if (!(key in scales))
-      return;
-    return legendRegistry2.get(key)(scales[key], legendOptions2(context, defaults43[key], options), (key2) => scales[key2]);
-  };
-}
-function legendOptions2({ className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 } = {}, options) {
-  return inherit4(options, { className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 });
-}
-function legendColor2(color5, { legend: legend3 = true, ...options }) {
-  if (legend3 === true)
-    legend3 = color5.type === "ordinal" ? "swatches" : "ramp";
-  if (color5.domain === void 0)
-    return;
-  switch (`${legend3}`.toLowerCase()) {
-    case "swatches":
-      return legendSwatches2(color5, options);
-    case "ramp":
-      return legendRamp2(color5, options);
-    default:
-      throw new Error(`unknown legend type: ${legend3}`);
-  }
-}
-function legendOpacity2({ type: type3, interpolate, ...scale5 }, { legend: legend3 = true, color: color5 = rgb2(0, 0, 0), ...options }) {
-  if (!interpolate)
-    throw new Error(`${type3} opacity scales are not supported`);
-  if (legend3 === true)
-    legend3 = "ramp";
-  if (`${legend3}`.toLowerCase() !== "ramp")
-    throw new Error(`${legend3} opacity legends are not supported`);
-  return legendColor2({ type: type3, ...scale5, interpolate: interpolateOpacity2(color5) }, { legend: legend3, ...options });
-}
-function interpolateOpacity2(color5) {
-  const { r, g, b } = rgb2(color5) || rgb2(0, 0, 0);
-  return (t) => `rgba(${r},${g},${b},${t})`;
-}
-function createLegends2(scales, context, options) {
-  const legends = [];
-  for (const [key, value] of legendRegistry2) {
-    const o = options[key];
-    if (o?.legend && key in scales) {
-      const legend3 = value(scales[key], legendOptions2(context, scales[key], o), (key2) => scales[key2]);
-      if (legend3 != null)
-        legends.push(legend3);
-    }
-  }
-  return legends;
 }
 
 // ../pyobsplot-js/node_modules/@observablehq/plot/src/math.js
@@ -52085,7 +52115,7 @@ var RuleX2 = class extends Mark2 {
     const { x: X4, y1: Y15, y2: Y25 } = channels;
     const { width, height, marginTop, marginRight, marginLeft, marginBottom } = dimensions;
     const { insetTop, insetBottom } = this;
-    return create4("svg:g", context).call(applyIndirectStyles2, this, dimensions).call(applyTransform2, this, { x: X4 && x7 }, offset2, 0).call(
+    return create4("svg:g", context).call(applyIndirectStyles2, this, dimensions, context).call(applyTransform2, this, { x: X4 && x7 }, offset2, 0).call(
       (g) => g.selectAll().data(index5).enter().append("line").call(applyDirectStyles2, this).attr("x1", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("x2", X4 ? (i) => X4[i] : (marginLeft + width - marginRight) / 2).attr("y1", Y15 && !isCollapsed2(y7) ? (i) => Y15[i] + insetTop : marginTop + insetTop).attr(
         "y2",
         Y25 && !isCollapsed2(y7) ? y7.bandwidth ? (i) => Y25[i] + y7.bandwidth() - insetBottom : (i) => Y25[i] - insetBottom : height - marginBottom - insetBottom
@@ -53015,11 +53045,11 @@ function axisTextKy2(k3, anchor, data, {
       ...options,
       dx: anchor === "left" ? +dx - tickSize - tickPadding + +insetLeft : +dx + +tickSize + +tickPadding - insetRight
     },
-    function(scale5, ticks3, channels) {
+    function(scale5, data2, ticks3, channels) {
       if (fontVariant === void 0)
         this.fontVariant = inferFontVariant6(scale5);
       if (text3 === void 0)
-        channels.text = inferTextChannel2(scale5, ticks3, tickFormat3);
+        channels.text = inferTextChannel2(scale5, data2, ticks3, tickFormat3, anchor);
     }
   );
 }
@@ -53058,11 +53088,11 @@ function axisTextKx2(k3, anchor, data, {
       ...options,
       dy: anchor === "bottom" ? +dy + +tickSize + +tickPadding - insetBottom : +dy - tickSize - tickPadding + +insetTop
     },
-    function(scale5, ticks3, channels) {
+    function(scale5, data2, ticks3, channels) {
       if (fontVariant === void 0)
         this.fontVariant = inferFontVariant6(scale5);
       if (text3 === void 0)
-        channels.text = inferTextChannel2(scale5, ticks3, tickFormat3);
+        channels.text = inferTextChannel2(scale5, data2, ticks3, tickFormat3, anchor);
     }
   );
 }
@@ -53131,53 +53161,52 @@ function labelOptions2({ fill, fillOpacity, fontFamily, fontSize, fontStyle, fon
 }
 function axisMark2(mark, k3, ariaLabel, data, options, initialize) {
   let channels;
-  const m5 = mark(
-    data,
-    initializer2(options, function(data2, facets, _channels, scales, dimensions, context) {
-      const initializeFacets = data2 == null && (k3 === "fx" || k3 === "fy");
-      const { [k3]: scale5 } = scales;
-      if (!scale5)
-        throw new Error(`missing scale: ${k3}`);
-      let { ticks: ticks3, tickSpacing, interval: interval3 } = options;
-      if (isTemporalScale2(scale5) && typeof ticks3 === "string")
-        interval3 = ticks3, ticks3 = void 0;
-      if (data2 == null) {
-        if (isIterable2(ticks3)) {
-          data2 = arrayify4(ticks3);
-        } else if (scale5.ticks) {
-          if (ticks3 !== void 0) {
-            data2 = scale5.ticks(ticks3);
+  function axisInitializer(data2, facets, _channels, scales, dimensions, context) {
+    const initializeFacets = data2 == null && (k3 === "fx" || k3 === "fy");
+    const { [k3]: scale5 } = scales;
+    if (!scale5)
+      throw new Error(`missing scale: ${k3}`);
+    let { ticks: ticks3, tickSpacing, interval: interval3 } = options;
+    if (isTemporalScale2(scale5) && typeof ticks3 === "string")
+      interval3 = ticks3, ticks3 = void 0;
+    if (data2 == null) {
+      if (isIterable2(ticks3)) {
+        data2 = arrayify4(ticks3);
+      } else if (scale5.ticks) {
+        if (ticks3 !== void 0) {
+          data2 = scale5.ticks(ticks3);
+        } else {
+          interval3 = maybeRangeInterval2(interval3 === void 0 ? scale5.interval : interval3, scale5.type);
+          if (interval3 !== void 0) {
+            const [min7, max9] = extent3(scale5.domain());
+            data2 = interval3.range(min7, interval3.offset(interval3.floor(max9)));
           } else {
-            interval3 = maybeRangeInterval2(interval3 === void 0 ? scale5.interval : interval3, scale5.type);
-            if (interval3 !== void 0) {
-              const [min7, max9] = extent3(scale5.domain());
-              data2 = interval3.range(min7, interval3.offset(interval3.floor(max9)));
-            } else {
-              const [min7, max9] = extent3(scale5.range());
-              ticks3 = (max9 - min7) / (tickSpacing === void 0 ? k3 === "x" ? 80 : 35 : tickSpacing);
-              data2 = scale5.ticks(ticks3);
-            }
+            const [min7, max9] = extent3(scale5.range());
+            ticks3 = (max9 - min7) / (tickSpacing === void 0 ? k3 === "x" ? 80 : 35 : tickSpacing);
+            data2 = scale5.ticks(ticks3);
           }
-        } else {
-          data2 = scale5.domain();
         }
-        if (k3 === "y" || k3 === "x") {
-          facets = [range8(data2)];
-        } else {
-          channels[k3] = { scale: k3, value: identity13 };
-        }
+      } else {
+        data2 = scale5.domain();
       }
-      initialize?.call(this, scale5, ticks3, channels);
-      const initializedChannels = Object.fromEntries(
-        Object.entries(channels).map(([name, channel]) => {
-          return [name, { ...channel, value: valueof2(data2, channel.value) }];
-        })
-      );
-      if (initializeFacets)
-        facets = context.filterFacets(data2, initializedChannels);
-      return { data: data2, facets, channels: initializedChannels };
-    })
-  );
+      if (k3 === "y" || k3 === "x") {
+        facets = [range8(data2)];
+      } else {
+        channels[k3] = { scale: k3, value: identity13 };
+      }
+    }
+    initialize?.call(this, scale5, data2, ticks3, channels);
+    const initializedChannels = Object.fromEntries(
+      Object.entries(channels).map(([name, channel]) => {
+        return [name, { ...channel, value: valueof2(data2, channel.value) }];
+      })
+    );
+    if (initializeFacets)
+      facets = context.filterFacets(data2, initializedChannels);
+    return { data: data2, facets, channels: initializedChannels };
+  }
+  const basicInitializer = initializer2(options).initializer;
+  const m5 = mark(data, initializer2({ ...options, initializer: axisInitializer }, basicInitializer));
   if (data == null) {
     channels = m5.channels;
     m5.channels = {};
@@ -53187,11 +53216,11 @@ function axisMark2(mark, k3, ariaLabel, data, options, initialize) {
   m5.ariaLabel = ariaLabel;
   return m5;
 }
-function inferTextChannel2(scale5, ticks3, tickFormat3) {
-  return { value: inferTickFormat2(scale5, ticks3, tickFormat3) };
+function inferTextChannel2(scale5, data, ticks3, tickFormat3, anchor) {
+  return { value: inferTickFormat2(scale5, data, ticks3, tickFormat3, anchor) };
 }
-function inferTickFormat2(scale5, ticks3, tickFormat3) {
-  return scale5.tickFormat ? scale5.tickFormat(isIterable2(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? isUtcYear2(scale5.interval) ? utcFormat2("%Y") : isTimeYear2(scale5.interval) ? timeFormat2("%Y") : formatDefault2 : typeof tickFormat3 === "string" ? (isTemporal2(scale5.domain()) ? utcFormat2 : format3)(tickFormat3) : constant4(tickFormat3);
+function inferTickFormat2(scale5, data, ticks3, tickFormat3, anchor) {
+  return tickFormat3 === void 0 && isTemporalScale2(scale5) ? formatTimeTicks2(scale5, data, ticks3, anchor) : scale5.tickFormat ? scale5.tickFormat(isIterable2(ticks3) ? null : ticks3, tickFormat3) : tickFormat3 === void 0 ? isUtcYear2(scale5.interval) ? utcFormat2("%Y") : isTimeYear2(scale5.interval) ? timeFormat2("%Y") : formatDefault2 : typeof tickFormat3 === "string" ? (isTemporal2(scale5.domain()) ? utcFormat2 : format3)(tickFormat3) : constant4(tickFormat3);
 }
 var shapeTickBottom2 = {
   draw(context, l) {
@@ -53253,6 +53282,201 @@ function maybeLabelArrow2(labelArrow = "auto") {
 }
 function isTemporalish2(scale5) {
   return isTemporalScale2(scale5) || scale5.interval != null;
+}
+
+// ../pyobsplot-js/node_modules/@observablehq/plot/src/legends/swatches.js
+function maybeScale2(scale5, key) {
+  if (key == null)
+    return key;
+  const s3 = scale5(key);
+  if (!s3)
+    throw new Error(`scale not found: ${key}`);
+  return s3;
+}
+function legendSwatches2(color5, { opacity: opacity3, ...options } = {}) {
+  if (!isOrdinalScale2(color5) && !isThresholdScale2(color5))
+    throw new Error(`swatches legend requires ordinal or threshold color scale (not ${color5.type})`);
+  return legendItems2(
+    color5,
+    options,
+    (selection3, scale5, width, height) => selection3.append("svg").attr("width", width).attr("height", height).attr("fill", scale5.scale).attr("fill-opacity", maybeNumberChannel2(opacity3)[1]).append("rect").attr("width", "100%").attr("height", "100%")
+  );
+}
+function legendSymbols2(symbol3, {
+  fill = symbol3.hint?.fill !== void 0 ? symbol3.hint.fill : "none",
+  fillOpacity = 1,
+  stroke = symbol3.hint?.stroke !== void 0 ? symbol3.hint.stroke : isNoneish2(fill) ? "currentColor" : "none",
+  strokeOpacity = 1,
+  strokeWidth = 1.5,
+  r = 4.5,
+  ...options
+} = {}, scale5) {
+  const [vf, cf] = maybeColorChannel2(fill);
+  const [vs, cs] = maybeColorChannel2(stroke);
+  const sf = maybeScale2(scale5, vf);
+  const ss = maybeScale2(scale5, vs);
+  const size = r * r * Math.PI;
+  fillOpacity = maybeNumberChannel2(fillOpacity)[1];
+  strokeOpacity = maybeNumberChannel2(strokeOpacity)[1];
+  strokeWidth = maybeNumberChannel2(strokeWidth)[1];
+  return legendItems2(
+    symbol3,
+    options,
+    (selection3, scale6, width, height) => selection3.append("svg").attr("viewBox", "-8 -8 16 16").attr("width", width).attr("height", height).attr("fill", vf === "color" ? (d) => sf.scale(d) : cf).attr("fill-opacity", fillOpacity).attr("stroke", vs === "color" ? (d) => ss.scale(d) : cs).attr("stroke-opacity", strokeOpacity).attr("stroke-width", strokeWidth).append("path").attr("d", (d) => {
+      const p = pathRound2();
+      symbol3.scale(d).draw(p, size);
+      return p;
+    })
+  );
+}
+function legendItems2(scale5, options = {}, swatch) {
+  let {
+    columns,
+    tickFormat: tickFormat3,
+    fontVariant = inferFontVariant4(scale5),
+    // TODO label,
+    swatchSize = 15,
+    swatchWidth = swatchSize,
+    swatchHeight = swatchSize,
+    marginLeft = 0,
+    className,
+    style,
+    width
+  } = options;
+  const context = createContext2(options);
+  className = maybeClassName2(className);
+  if (typeof tickFormat3 !== "function")
+    tickFormat3 = inferTickFormat2(scale5.scale, scale5.domain, void 0, tickFormat3);
+  const swatches = create4("div", context).attr(
+    "class",
+    `${className}-swatches ${className}-swatches-${columns != null ? "columns" : "wrap"}`
+  );
+  let extraStyle;
+  if (columns != null) {
+    extraStyle = `.${className}-swatches-columns .${className}-swatch {
+  display: flex;
+  align-items: center;
+  break-inside: avoid;
+  padding-bottom: 1px;
+}
+.${className}-swatches-columns .${className}-swatch::before {
+  flex-shrink: 0;
+}
+.${className}-swatches-columns .${className}-swatch-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}`;
+    swatches.style("columns", columns).selectAll().data(scale5.domain).enter().append("div").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).call(
+      (item) => item.append("div").attr("class", `${className}-swatch-label`).attr("title", tickFormat3).text(tickFormat3)
+    );
+  } else {
+    extraStyle = `.${className}-swatches-wrap {
+  display: flex;
+  align-items: center;
+  min-height: 33px;
+  flex-wrap: wrap;
+}
+.${className}-swatches-wrap .${className}-swatch {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1em;
+}`;
+    swatches.selectAll().data(scale5.domain).enter().append("span").attr("class", `${className}-swatch`).call(swatch, scale5, swatchWidth, swatchHeight).append(function() {
+      return this.ownerDocument.createTextNode(tickFormat3.apply(this, arguments));
+    });
+  }
+  return swatches.call(
+    (div) => div.insert("style", "*").text(
+      `.${className}-swatches {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  margin-bottom: 0.5em;
+}
+.${className}-swatch > svg {
+  margin-right: 0.5em;
+  overflow: visible;
+}
+${extraStyle}`
+    )
+  ).style("margin-left", marginLeft ? `${+marginLeft}px` : null).style("width", width === void 0 ? null : `${+width}px`).style("font-variant", impliedString2(fontVariant, "normal")).call(applyInlineStyles2, style).node();
+}
+
+// ../pyobsplot-js/node_modules/@observablehq/plot/src/legends.js
+var legendRegistry2 = /* @__PURE__ */ new Map([
+  ["symbol", legendSymbols2],
+  ["color", legendColor2],
+  ["opacity", legendOpacity2]
+]);
+function legend2(options = {}) {
+  for (const [key, value] of legendRegistry2) {
+    const scale5 = options[key];
+    if (isScaleOptions2(scale5)) {
+      const context = createContext2(options);
+      let hint;
+      if (key === "symbol") {
+        const { fill, stroke = fill === void 0 && isScaleOptions2(options.color) ? "color" : void 0 } = options;
+        hint = { fill, stroke };
+      }
+      return value(
+        normalizeScale2(key, scale5, hint),
+        legendOptions2(context, scale5, options),
+        (key2) => isScaleOptions2(options[key2]) ? normalizeScale2(key2, options[key2]) : null
+      );
+    }
+  }
+  throw new Error("unknown legend type; no scale found");
+}
+function exposeLegends2(scales, context, defaults43 = {}) {
+  return (key, options) => {
+    if (!legendRegistry2.has(key))
+      throw new Error(`unknown legend type: ${key}`);
+    if (!(key in scales))
+      return;
+    return legendRegistry2.get(key)(scales[key], legendOptions2(context, defaults43[key], options), (key2) => scales[key2]);
+  };
+}
+function legendOptions2({ className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 } = {}, options) {
+  return inherit4(options, { className, ...context }, { label, ticks: ticks3, tickFormat: tickFormat3 });
+}
+function legendColor2(color5, { legend: legend3 = true, ...options }) {
+  if (legend3 === true)
+    legend3 = color5.type === "ordinal" ? "swatches" : "ramp";
+  if (color5.domain === void 0)
+    return;
+  switch (`${legend3}`.toLowerCase()) {
+    case "swatches":
+      return legendSwatches2(color5, options);
+    case "ramp":
+      return legendRamp2(color5, options);
+    default:
+      throw new Error(`unknown legend type: ${legend3}`);
+  }
+}
+function legendOpacity2({ type: type3, interpolate, ...scale5 }, { legend: legend3 = true, color: color5 = rgb2(0, 0, 0), ...options }) {
+  if (!interpolate)
+    throw new Error(`${type3} opacity scales are not supported`);
+  if (legend3 === true)
+    legend3 = "ramp";
+  if (`${legend3}`.toLowerCase() !== "ramp")
+    throw new Error(`${legend3} opacity legends are not supported`);
+  return legendColor2({ type: type3, ...scale5, interpolate: interpolateOpacity2(color5) }, { legend: legend3, ...options });
+}
+function interpolateOpacity2(color5) {
+  const { r, g, b } = rgb2(color5) || rgb2(0, 0, 0);
+  return (t) => `rgba(${r},${g},${b},${t})`;
+}
+function createLegends2(scales, context, options) {
+  const legends = [];
+  for (const [key, value] of legendRegistry2) {
+    const o = options[key];
+    if (o?.legend && key in scales) {
+      const legend3 = value(scales[key], legendOptions2(context, scales[key], o), (key2) => scales[key2]);
+      if (legend3 != null)
+        legends.push(legend3);
+    }
+  }
+  return legends;
 }
 
 // ../pyobsplot-js/node_modules/@observablehq/plot/src/marks/frame.js
@@ -53337,6 +53561,7 @@ var Tip2 = class extends Mark2 {
       textAnchor = "start",
       textOverflow,
       textPadding = 8,
+      title,
       pointerSize = 12,
       pathFilter = "drop-shadow(0 3px 4px rgba(0,0,0,0.2))"
     } = options;
@@ -53350,7 +53575,9 @@ var Tip2 = class extends Mark2 {
         x1: { value: x13, scale: "x", optional: x22 == null },
         y1: { value: y13, scale: "y", optional: y22 == null },
         x2: { value: x22, scale: "x", optional: x13 == null },
-        y2: { value: y22, scale: "y", optional: y13 == null }
+        y2: { value: y22, scale: "y", optional: y13 == null },
+        title: { value: title, optional: true }
+        // filter: defined
       },
       options,
       defaults26
@@ -53769,8 +53996,9 @@ function plot2(options = {}) {
           index5 = mark.filter(index5, channels, values3);
           if (index5.length === 0)
             continue;
-          if (faceted)
-            index5.fx = f.x, index5.fy = f.y, index5.fi = f.i;
+          if (!faceted && index5 === indexes3[0])
+            index5 = subarray2(index5);
+          index5.fx = f.x, index5.fy = f.y, index5.fi = f.i;
         }
         const node = mark.render(index5, scales, values3, subdimensions, context);
         if (node == null)
@@ -55612,7 +55840,7 @@ function autoSpec2(data, options) {
       colorMode = "stroke";
       break;
     case "bar":
-      markImpl = yZero ? isOrdinalReduced2(xReduce, X4) ? barY2 : rectY2 : xZero ? isOrdinalReduced2(yReduce, Y4) ? barX2 : rectX2 : isOrdinalReduced2(xReduce, X4) && isOrdinalReduced2(yReduce, Y4) ? cell2 : isOrdinalReduced2(xReduce, X4) ? barY2 : isOrdinalReduced2(yReduce, Y4) ? barX2 : xReduce != null ? rectX2 : yReduce != null ? rectY2 : rect2;
+      markImpl = yZero ? isOrdinalReduced2(xReduce, X4) ? barY2 : rectY2 : xZero ? isOrdinalReduced2(yReduce, Y4) ? barX2 : rectX2 : isOrdinalReduced2(xReduce, X4) && isOrdinalReduced2(yReduce, Y4) ? cell2 : isOrdinalReduced2(xReduce, X4) ? barY2 : isOrdinalReduced2(yReduce, Y4) ? barX2 : xReduce != null ? rectX2 : yReduce != null ? rectY2 : colorReduce != null ? rect2 : cell2;
       colorMode = "fill";
       break;
     default:
@@ -56308,30 +56536,18 @@ function interpolateNone2(index5, width, height, X4, Y4, V) {
 }
 function interpolatorBarycentric2({ random = lcg2(42) } = {}) {
   return (index5, width, height, X4, Y4, V) => {
-    const n = index5.length;
-    const nw = width >> 2;
-    const nh = (height >> 2) - 1;
-    const m5 = n + nw * 2 + nh * 2;
-    const XY3 = new Float64Array(m5 * 2);
-    for (let i2 = 0; i2 < n; ++i2)
-      XY3[i2 * 2] = X4[index5[i2]], XY3[i2 * 2 + 1] = Y4[index5[i2]];
-    let i = n;
-    const addPoint = (x7, y7) => (XY3[i * 2] = x7, XY3[i * 2 + 1] = y7, i++);
-    for (let j = 0; j <= nw; ++j)
-      addPoint(j / nw * width, 0), addPoint(j / nw * width, height);
-    for (let j = 0; j < nh; ++j)
-      addPoint(width, j / nh * height), addPoint(0, j / nh * height);
-    V = take2(V, index5);
-    const delaunay = new Delaunay2(XY3.subarray(0, n * 2));
-    for (let j = n, ij; j < m5; ++j)
-      V[j] = V[ij = delaunay.find(XY3[j * 2], XY3[j * 2 + 1], ij)];
-    const { points, triangles } = new Delaunay2(XY3);
-    const W = new V.constructor(width * height);
+    const { points, triangles, hull: hull3 } = Delaunay2.from(
+      index5,
+      (i) => X4[i],
+      (i) => Y4[i]
+    );
+    const W = new V.constructor(width * height).fill(NaN);
+    const S = new Uint8Array(width * height);
     const mix = mixer2(V, random);
-    for (let i2 = 0; i2 < triangles.length; i2 += 3) {
-      const ta = triangles[i2];
-      const tb = triangles[i2 + 1];
-      const tc = triangles[i2 + 2];
+    for (let i = 0; i < triangles.length; i += 3) {
+      const ta = triangles[i];
+      const tb = triangles[i + 1];
+      const tc = triangles[i + 2];
       const Ax = points[2 * ta];
       const Bx = points[2 * tb];
       const Cx = points[2 * tc];
@@ -56345,9 +56561,9 @@ function interpolatorBarycentric2({ random = lcg2(42) } = {}) {
       const z = (By - Cy) * (Ax - Cx) + (Ay - Cy) * (Cx - Bx);
       if (!z)
         continue;
-      const va = V[ta];
-      const vb = V[tb];
-      const vc = V[tc];
+      const va = V[index5[ta]];
+      const vb = V[index5[tb]];
+      const vc = V[index5[tc]];
       for (let x7 = Math.floor(x13); x7 < x22; ++x7) {
         for (let y7 = Math.floor(y13); y7 < y22; ++y7) {
           if (x7 < 0 || x7 >= width || y7 < 0 || y7 >= height)
@@ -56363,11 +56579,77 @@ function interpolatorBarycentric2({ random = lcg2(42) } = {}) {
           const gc = 1 - ga - gb;
           if (gc < 0)
             continue;
-          W[x7 + width * y7] = mix(va, ga, vb, gb, vc, gc, x7, y7);
+          const i2 = x7 + width * y7;
+          W[i2] = mix(va, ga, vb, gb, vc, gc, x7, y7);
+          S[i2] = 1;
         }
       }
     }
+    extrapolateBarycentric2(W, S, X4, Y4, V, width, height, hull3, index5, mix);
     return W;
+  };
+}
+function extrapolateBarycentric2(W, S, X4, Y4, V, width, height, hull3, index5, mix) {
+  X4 = Float64Array.from(hull3, (i) => X4[index5[i]]);
+  Y4 = Float64Array.from(hull3, (i) => Y4[index5[i]]);
+  V = Array.from(hull3, (i) => V[index5[i]]);
+  const n = X4.length;
+  const rays = Array.from({ length: n }, (_, j) => ray2(j, X4, Y4));
+  let k3 = 0;
+  for (let y7 = 0; y7 < height; ++y7) {
+    const yp = y7 + 0.5;
+    for (let x7 = 0; x7 < width; ++x7) {
+      const i = x7 + width * y7;
+      if (!S[i]) {
+        const xp = x7 + 0.5;
+        for (let l = 0; l < n; ++l) {
+          const j = (n + k3 + (l % 2 ? (l + 1) / 2 : -l / 2)) % n;
+          if (rays[j](xp, yp)) {
+            const t = segmentProject2(X4.at(j - 1), Y4.at(j - 1), X4[j], Y4[j], xp, yp);
+            W[i] = mix(V.at(j - 1), t, V[j], 1 - t, V[j], 0, x7, y7);
+            k3 = j;
+            break;
+          }
+        }
+      }
+    }
+  }
+}
+function segmentProject2(x13, y13, x22, y22, x7, y7) {
+  const dx = x22 - x13;
+  const dy = y22 - y13;
+  const a7 = dx * (x22 - x7) + dy * (y22 - y7);
+  const b = dx * (x7 - x13) + dy * (y7 - y13);
+  return a7 > 0 && b > 0 ? a7 / (a7 + b) : +(a7 > b);
+}
+function cross4(xa, ya, xb, yb) {
+  return xa * yb - xb * ya;
+}
+function ray2(j, X4, Y4) {
+  const n = X4.length;
+  const xc = X4.at(j - 2);
+  const yc = Y4.at(j - 2);
+  const xa = X4.at(j - 1);
+  const ya = Y4.at(j - 1);
+  const xb = X4[j];
+  const yb = Y4[j];
+  const xd = X4.at(j + 1 - n);
+  const yd = Y4.at(j + 1 - n);
+  const dxab = xa - xb;
+  const dyab = ya - yb;
+  const dxca = xc - xa;
+  const dyca = yc - ya;
+  const dxbd = xb - xd;
+  const dybd = yb - yd;
+  const hab = Math.hypot(dxab, dyab);
+  const hca = Math.hypot(dxca, dyca);
+  const hbd = Math.hypot(dxbd, dybd);
+  return (x7, y7) => {
+    const dxa = x7 - xa;
+    const dya = y7 - ya;
+    const dxb = x7 - xb;
+    const dyb = y7 - yb;
+    return cross4(dxa, dya, dxb, dyb) > -1e-6 && cross4(dxa, dya, dxab, dyab) * hca - cross4(dxa, dya, dxca, dyca) * hab > -1e-6 && cross4(dxb, dyb, dxbd, dybd) * hab - cross4(dxb, dyb, dxab, dyab) * hbd <= 0;
   };
 }
 function interpolateNearest2(index5, width, height, X4, Y4, V) {
@@ -57578,10 +57860,13 @@ function treeNode2({
   treeSort,
   treeSeparation,
   treeAnchor,
+  treeFilter,
   ...options
 } = {}) {
   treeAnchor = maybeTreeAnchor2(treeAnchor);
   treeSort = maybeTreeSort2(treeSort);
+  if (treeFilter != null)
+    treeFilter = maybeNodeValue2(treeFilter);
   if (frameAnchor === void 0)
     frameAnchor = treeAnchor.frameAnchor;
   const normalize7 = normalizer2(delimiter);
@@ -57614,6 +57899,8 @@ function treeNode2({
           root5.sort(treeSort);
         layout(root5);
         for (const node of root5.descendants()) {
+          if (treeFilter != null && !treeFilter(node))
+            continue;
           treeFacet.push(++treeIndex);
           treeData[treeIndex] = node.data;
           treeAnchor.position(node, treeIndex, X5, Y5);
@@ -57640,10 +57927,13 @@ function treeLink2({
   treeSort,
   treeSeparation,
   treeAnchor,
+  treeFilter,
   ...options
 } = {}) {
   treeAnchor = maybeTreeAnchor2(treeAnchor);
   treeSort = maybeTreeSort2(treeSort);
+  if (treeFilter != null)
+    treeFilter = maybeLinkValue2(treeFilter);
   options = { curve, stroke, strokeWidth, strokeOpacity, ...options };
   const normalize7 = normalizer2(delimiter);
   const outputs = treeOutputs2(options, maybeLinkValue2);
@@ -57680,6 +57970,8 @@ function treeLink2({
           root5.sort(treeSort);
         layout(root5);
         for (const { source, target } of root5.links()) {
+          if (treeFilter != null && !treeFilter(target, source))
+            continue;
           treeFacet.push(++treeIndex);
           treeData[treeIndex] = target.data;
           treeAnchor.position(source, treeIndex, X16, Y16);
@@ -57757,6 +58049,8 @@ function maybeNodeValue2(value) {
       return nodePath2;
     case "node:internal":
       return nodeInternal2;
+    case "node:external":
+      return nodeExternal2;
     case "node:depth":
       return nodeDepth2;
     case "node:height":
@@ -57787,6 +58081,8 @@ function maybeLinkValue2(value) {
       return nodePath2;
     case "node:internal":
       return nodeInternal2;
+    case "node:external":
+      return nodeExternal2;
     case "node:depth":
       return nodeDepth2;
     case "node:height":
@@ -57808,6 +58104,9 @@ function nodeHeight2(node) {
 }
 function nodeInternal2(node) {
   return !!node.children;
+}
+function nodeExternal2(node) {
+  return !node.children;
 }
 function parentValue2(evaluate) {
   return (child, parent) => parent == null ? void 0 : evaluate(parent);
@@ -57864,14 +58163,38 @@ function tree2(data, {
   title = "node:path",
   dx,
   dy,
+  textAnchor,
+  treeLayout = tree_default2,
+  textLayout = treeLayout === tree_default2 || treeLayout === cluster_default2 ? "mirrored" : "normal",
+  tip: tip3,
   ...options
 } = {}) {
   if (dx === void 0)
     dx = maybeTreeAnchor2(options.treeAnchor).dx;
+  if (textAnchor !== void 0)
+    throw new Error("textAnchor is not a configurable tree option");
+  textLayout = keyword2(textLayout, "textLayout", ["mirrored", "normal"]);
+  function treeText(textOptions3) {
+    return text2(
+      data,
+      treeNode2({
+        treeLayout,
+        text: textText,
+        fill: fill === void 0 ? "currentColor" : fill,
+        stroke: textStroke,
+        dx,
+        dy,
+        title,
+        ...textOptions3,
+        ...options
+      })
+    );
+  }
   return marks2(
     link6(
       data,
       treeLink2({
+        treeLayout,
         markerStart,
         markerEnd,
         stroke: stroke !== void 0 ? stroke : fill === void 0 ? "node:internal" : fill,
@@ -57885,19 +58208,11 @@ function tree2(data, {
         ...options
       })
     ),
-    dotDot ? dot2(data, treeNode2({ fill: fill === void 0 ? "node:internal" : fill, title, ...options })) : null,
-    textText != null ? text2(
-      data,
-      treeNode2({
-        text: textText,
-        fill: fill === void 0 ? "currentColor" : fill,
-        stroke: textStroke,
-        dx,
-        dy,
-        title,
-        ...options
-      })
-    ) : null
+    dotDot ? dot2(data, treeNode2({ treeLayout, fill: fill === void 0 ? "node:internal" : fill, title, tip: tip3, ...options })) : null,
+    textText != null ? textLayout === "mirrored" ? [
+      treeText({ textAnchor: "start", treeFilter: "node:external" }),
+      treeText({ textAnchor: "end", treeFilter: "node:internal", dx: -dx })
+    ] : treeText() : null
   );
 }
 function cluster2(data, options) {
@@ -58232,33 +58547,30 @@ function maybeReduce4(reduce3 = "mean") {
     throw new Error(`invalid reduce: ${reduce3}`);
   return reduceArray2(taker2(reduce3));
 }
-function slice12(I, i, j) {
-  return I.subarray ? I.subarray(i, j) : I.slice(i, j);
-}
 function reduceAccessor4(f) {
   return (k3, s3, strict) => strict ? {
     mapIndex(I, S, T) {
-      const s4 = (i) => S[i] == null ? NaN : +S[i];
+      const v3 = (i) => S[i] == null ? NaN : +S[i];
       let nans = 0;
       for (let i = 0; i < k3 - 1; ++i)
-        if (isNaN(s4(i)))
+        if (isNaN(v3(i)))
           ++nans;
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
-        if (isNaN(s4(i + k3 - 1)))
+        if (isNaN(v3(i + k3 - 1)))
           ++nans;
-        T[I[i + s4]] = nans === 0 ? f(slice12(I, i, i + k3), s4) : NaN;
-        if (isNaN(s4(i)))
+        T[I[i + s3]] = nans === 0 ? f(subarray2(I, i, i + k3), v3) : NaN;
+        if (isNaN(v3(i)))
           --nans;
       }
     }
   } : {
     mapIndex(I, S, T) {
-      const s4 = (i) => S[i] == null ? NaN : +S[i];
-      for (let i = -s4; i < 0; ++i) {
-        T[I[i + s4]] = f(slice12(I, 0, i + k3), s4);
+      const v3 = (i) => S[i] == null ? NaN : +S[i];
+      for (let i = -s3; i < 0; ++i) {
+        T[I[i + s3]] = f(subarray2(I, 0, i + k3), v3);
       }
-      for (let i = 0, n = I.length - s4; i < n; ++i) {
-        T[I[i + s4]] = f(slice12(I, i, i + k3), s4);
+      for (let i = 0, n = I.length - s3; i < n; ++i) {
+        T[I[i + s3]] = f(subarray2(I, i, i + k3), v3);
       }
     }
   };
@@ -58272,17 +58584,17 @@ function reduceArray2(f) {
       for (let i = 0, n = I.length - k3 + 1; i < n; ++i) {
         count5 += defined2(S[I[i + k3 - 1]]);
         if (count5 === k3)
-          T[I[i + s3]] = f(slice12(I, i, i + k3), S);
+          T[I[i + s3]] = f(subarray2(I, i, i + k3), S);
         count5 -= defined2(S[I[i]]);
       }
     }
   } : {
     mapIndex(I, S, T) {
       for (let i = -s3; i < 0; ++i) {
-        T[I[i + s3]] = f(slice12(I, 0, i + k3), S);
+        T[I[i + s3]] = f(subarray2(I, 0, i + k3), S);
       }
       for (let i = 0, n = I.length - s3; i < n; ++i) {
-        T[I[i + s3]] = f(slice12(I, i, i + k3), S);
+        T[I[i + s3]] = f(subarray2(I, i, i + k3), S);
       }
     }
   };
@@ -60930,8 +61242,8 @@ var getList = (data, index5) => {
   const { valueOffsets, stride, children: children3 } = data;
   const { [index5 * stride]: begin, [index5 * stride + 1]: end } = valueOffsets;
   const child = children3[0];
-  const slice13 = child.slice(begin, end - begin);
-  return new Vector3([slice13]);
+  const slice11 = child.slice(begin, end - begin);
+  return new Vector3([slice11]);
 };
 var getMap = (data, index5) => {
   const { valueOffsets, children: children3 } = data;
@@ -60971,8 +61283,8 @@ var getIntervalYearMonth = ({ values: values3 }, index5) => {
 var getFixedSizeList = (data, index5) => {
   const { stride, children: children3 } = data;
   const child = children3[0];
-  const slice13 = child.slice(index5 * stride, stride);
-  return new Vector3([slice13]);
+  const slice11 = child.slice(index5 * stride, stride);
+  return new Vector3([slice11]);
 };
 GetVisitor.prototype.visitNull = wrapGet(getNull);
 GetVisitor.prototype.visitBool = wrapGet(getBool);
@@ -61023,9 +61335,9 @@ var instance2 = new GetVisitor();
 var kKeys = Symbol.for("keys");
 var kVals = Symbol.for("vals");
 var MapRow = class {
-  constructor(slice13) {
-    this[kKeys] = new Vector3([slice13.children[0]]).memoize();
-    this[kVals] = slice13.children[1];
+  constructor(slice11) {
+    this[kKeys] = new Vector3([slice11.children[0]]).memoize();
+    this[kVals] = slice11.children[1];
     return new Proxy(this, new MapRowProxyHandler());
   }
   [Symbol.iterator]() {
@@ -61997,20 +62309,20 @@ var getListByteLength = ({ valueOffsets, stride, children: children3 }, index5) 
   const { [index5 * stride]: start3 } = valueOffsets;
   const { [index5 * stride + 1]: end } = valueOffsets;
   const visit = instance5.getVisitFn(child.type);
-  const slice13 = child.slice(start3, end - start3);
+  const slice11 = child.slice(start3, end - start3);
   let size = 8;
   for (let idx = -1, len = end - start3; ++idx < len; ) {
-    size += visit(slice13, idx);
+    size += visit(slice11, idx);
   }
   return size;
 };
 var getFixedSizeListByteLength = ({ stride, children: children3 }, index5) => {
   const child = children3[0];
-  const slice13 = child.slice(index5 * stride, stride);
+  const slice11 = child.slice(index5 * stride, stride);
   const visit = instance5.getVisitFn(child.type);
   let size = 0;
-  for (let idx = -1, len = slice13.length; ++idx < len; ) {
-    size += visit(slice13, idx);
+  for (let idx = -1, len = slice11.length; ++idx < len; ) {
+    size += visit(slice11, idx);
   }
   return size;
 };
@@ -62318,7 +62630,7 @@ var MemoizedVector = class extends Vector3 {
     super(vector3.data);
     const get5 = this.get;
     const set7 = this.set;
-    const slice13 = this.slice;
+    const slice11 = this.slice;
     const cache = new Array(this.length);
     Object.defineProperty(this, "get", {
       value(index5) {
@@ -62338,7 +62650,7 @@ var MemoizedVector = class extends Vector3 {
       }
     });
     Object.defineProperty(this, "slice", {
-      value: (begin, end) => new MemoizedVector(slice13.call(this, begin, end))
+      value: (begin, end) => new MemoizedVector(slice11.call(this, begin, end))
     });
     Object.defineProperty(this, "isMemoized", { value: true });
     Object.defineProperty(this, "unmemoize", {
@@ -67082,8 +67394,8 @@ var RecordBatch = class {
    * @param end The end of the specified portion of the RecordBatch. This is exclusive of the element at the index 'end'.
    */
   slice(begin, end) {
-    const [slice13] = new Vector3([this.data]).slice(begin, end).data;
-    return new RecordBatch(this.schema, slice13);
+    const [slice11] = new Vector3([this.data]).slice(begin, end).data;
+    return new RecordBatch(this.schema, slice11);
   }
   /**
    * Returns a child Vector by name, or null if this Vector has no child with the given name.
