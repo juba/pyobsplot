@@ -1,6 +1,6 @@
 ## pyobsplot 0.3.7-dev
 
-
+- Update anywidget to 0.6.0
 
 ## pyobsplot 0.3.6
 

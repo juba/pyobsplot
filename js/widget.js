@@ -10,30 +10,30 @@ window.Plot = Plot
 
 
 // Main render function
-export function render(view) {
+export function render({ model, el }) {
     // Get spec and theme values and generate plot
-    let spec = () => view.model.get("spec");
+    let spec = () => model.get("spec");
     // Add container div
     let plot_div = document.createElement("div");
     plot_div.classList.add("pyobsplot-plot");
     plot_div.classList.add(spec()["theme"]);
     let plot = generate_plot(spec(), "widget")
     plot_div.appendChild(plot);
-    view.el.appendChild(plot_div);
+    el.appendChild(plot_div);
     // Add spec change callback
-    view.model.on('change:spec', () => _onSpecValueChanged(view, view.el));
+    model.on('change:spec', () => _onSpecValueChanged(model, el));
     // Add theme change callback
-    view.model.on('change:theme', () => _onThemeValueChanged(view, view.el));
+    model.on('change:theme', () => _onThemeValueChanged(model, el));
 
 }
 
 // specification value change callback
-function _onSpecValueChanged(view, el) {
+function _onSpecValueChanged(model, el) {
     // Remove current plot
     let plot = el.querySelector(".pyobsplot-plot")
     plot.replaceChildren()
     // Regenerate it
-    let spec = () => view.model.get("spec");
+    let spec = () => model.get("spec");
     plot.appendChild(generate_plot(spec(), "widget"));
 }
 

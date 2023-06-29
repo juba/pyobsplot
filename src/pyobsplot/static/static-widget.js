@@ -70000,21 +70000,21 @@ function debug_output(out, renderer) {
 // js/widget.js
 window.d3 = src_exports;
 window.Plot = src_exports2;
-function render(view) {
-  let spec = () => view.model.get("spec");
+function render({ model, el }) {
+  let spec = () => model.get("spec");
   let plot_div = document.createElement("div");
   plot_div.classList.add("pyobsplot-plot");
   plot_div.classList.add(spec()["theme"]);
   let plot3 = generate_plot(spec(), "widget");
   plot_div.appendChild(plot3);
-  view.el.appendChild(plot_div);
-  view.model.on("change:spec", () => _onSpecValueChanged(view, view.el));
-  view.model.on("change:theme", () => _onThemeValueChanged(view, view.el));
+  el.appendChild(plot_div);
+  model.on("change:spec", () => _onSpecValueChanged(model, el));
+  model.on("change:theme", () => _onThemeValueChanged(model, el));
 }
-function _onSpecValueChanged(view, el) {
+function _onSpecValueChanged(model, el) {
   let plot3 = el.querySelector(".pyobsplot-plot");
   plot3.replaceChildren();
-  let spec = () => view.model.get("spec");
+  let spec = () => model.get("spec");
   plot3.appendChild(generate_plot(spec(), "widget"));
 }
 export {

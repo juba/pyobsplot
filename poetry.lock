@@ -24,14 +24,14 @@ trio = ["trio (<0.22)"]
 
 [[package]]
 name = "anywidget"
-version = "0.4.3"
+version = "0.6.0"
 description = "custom jupyter widgets made easy"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "anywidget-0.4.3-py3-none-any.whl", hash = "sha256:6b6e0d3d7c40d2bb4eea2d1d72859ed6f27a9fe8e400b1088a32a8be04995bb1"},
-    {file = "anywidget-0.4.3.tar.gz", hash = "sha256:9aebff1053a456cb61566ed305d1a2785b181d1cfb83bdc7a69b280052be6d71"},
+    {file = "anywidget-0.6.0-py3-none-any.whl", hash = "sha256:e1dbb8c627ee5f72cc3a923cb5142e511e5dee6be5b445e065a7ac19204a5bbf"},
+    {file = "anywidget-0.6.0.tar.gz", hash = "sha256:3afeefbffdbfac3fb6455bd7d6af7d48aa1d62d3aaaa69ee5df6ccb40d65f885"},
 ]
 
 [package.dependencies]
@@ -43,7 +43,7 @@ watchfiles = {version = ">=0.18.0", optional = true, markers = "extra == \"dev\"
 
 [package.extras]
 dev = ["comm (>=0.1.0)", "watchfiles (>=0.18.0)"]
-test = ["black[jupyter]", "ipython (<8.13)", "pydantic", "pytest", "pytest-cov", "ruff"]
+test = ["black[jupyter]", "ipython (<8.13)", "msgspec", "pydantic", "pytest", "pytest-cov", "ruff"]
 
 [[package]]
 name = "appnope"
@@ -2695,4 +2695,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "50682d2410bf5b2aca2593ee4cde39177675e235b3591110825bec3e28196a51"
+content-hash = "ccbdddce95db3ebc8b405d82bcacb2275f0c2fca1e7b57fe2328a17cae841a89"
