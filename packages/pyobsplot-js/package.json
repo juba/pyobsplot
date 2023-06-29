@@ -10,7 +10,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/juba/pyobsplot-js.git"
+    "url": "https://github.com/juba/pyobsplot.git"
   },
   "homepage": "https://juba.github.io/pyobsplot",
   "dependencies": {
