@@ -14,10 +14,30 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
-      
+
+      - name: Check out pyobsplot-js repository
+        uses: actions/checkout@v3
+        with:
+          repository: juba/pyobsplot-js
+          path: "pyobsplot-js"      
+
       - name: Check out pyobsplot repository
         uses: actions/checkout@v3
-                  
+        with:
+          path: "pyobsplot"
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+            
+      - name: Install pyobsplot-js node dependencies
+        run: cd $GITHUB_WORKSPACE/pyobsplot-js && npm ci
+
+      - name: Install pyobsplot node dependencies
+        run: cd $GITHUB_WORKSPACE/pyobsplot && npm ci
+                    
       - name: Install poetry
         run: pipx install poetry
 
@@ -28,8 +48,8 @@ jobs:
           cache: "poetry"
 
       - name: Install Python dependencies
-        run: poetry install
+        run: cd $GITHUB_WORKSPACE/pyobsplot && poetry install
 
       - name: Run pytest
-        run: poetry run pytest
+        run: cd $GITHUB_WORKSPACE/pyobsplot && poetry run pytest
 
