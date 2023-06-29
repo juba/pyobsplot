@@ -1,0 +1,26 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+name: Tests
+
+jobs:
+ 
+  JS-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: "npm"
+
+      - name: Install node dependencies
+        run: npm install --production=false
+
+      - name: Run tests
+        run: npm run test
