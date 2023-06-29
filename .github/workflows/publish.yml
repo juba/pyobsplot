@@ -11,29 +11,20 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Check out pyobsplot-js repository
-        uses: actions/checkout@v3
-        with:
-          repository: juba/pyobsplot-js
-          path: "pyobsplot-js"
 
       - name: Check out repository
         uses: actions/checkout@v3
-        with:
-          path: "pyobsplot"
 
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
            
-      - name: Install pyobsplot-js node dependencies
-        run: cd $GITHUB_WORKSPACE/pyobsplot-js && npm ci
-
-      - name: Install pyobsplot node dependencies
-        run: cd $GITHUB_WORKSPACE/pyobsplot && npm ci
-
+      - name: Install node dependencies
+        run: |
+          npm ci
+          npm ci --workspaces
+  
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
@@ -46,11 +37,11 @@ jobs:
           python-version: "3.10"
           cache: "poetry"
 
-      - name: Bundle
-        run: cd $GITHUB_WORKSPACE/pyobsplot && npm run bundle
-
       - name: Install Python dependencies
-        run: cd $GITHUB_WORKSPACE/pyobsplot && poetry install
+        run: poetry install
+
+      - name: Bundle
+        run: npm run bundle
 
       - name: Render and Publish
         shell: bash
@@ -59,4 +50,4 @@ jobs:
         run: |
           git config --global user.email "julien@nozav.org"
           git config --global user.name "Julien Barnier"
-          cd $GITHUB_WORKSPACE/pyobsplot && poetry run quarto publish gh-pages doc
+          poetry run quarto publish gh-pages doc

@@ -24,12 +24,10 @@ jobs:
           cache: "npm"
             
       - name: Install node dependencies
-        run: npm ci
-
-      - name: Install node packages dependencies
-        run: npm ci --workspaces
-
-                  
+        run: |
+          npm ci
+          npm ci --workspaces
+                 
       - name: Install poetry
         run: pipx install poetry
 
