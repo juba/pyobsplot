@@ -1,4 +1,4 @@
-## pyobsplot 0.3.7-dev
+## pyobsplot 0.3.7
 
 - Update Observable Plot to 0.6.9
 - Update anywidget to 0.6.1
