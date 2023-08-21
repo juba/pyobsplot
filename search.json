@@ -56,18 +56,11 @@
     "text": "Contour mark\nThe contour mark allows for nice representations of spatial data. The following example taken from the Contour mark notebook shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to pyobsplot specificities).\n\nvapor = (\n    pl.read_csv(\"data/vapor.csv\", has_header=False, null_values=\"99999.0\")\n    .transpose()\n    .melt(variable_name=\"column\", value_name=\"values\")\n)\n\nPlot.plot(\n    {\n        \"width\": 850,\n        \"projection\": \"equal-earth\",\n        \"color\": {\n            \"scheme\": \"blues\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"nice\": True,\n            \"label\": \"Water vapor (cm)\",\n        },\n        \"marks\": [\n            Plot.contour(\n                vapor,\n                {\n                    \"fill\": \"values\",\n                    \"width\": 360,\n                    \"height\": 180,\n                    \"x1\": -180,\n                    \"y1\": 90,\n                    \"x2\": 180,\n                    \"y2\": -90,\n                    \"interval\": 0.25,\n                    \"blur\": 0.5,\n                    \"interpolate\": \"barycentric\",\n                    \"stroke\": \"currentColor\",\n                    \"strokeWidth\": 0.5,\n                    \"clip\": \"sphere\",\n                },\n            ),\n            Plot.sphere(),\n        ],\n    }\n)\n\n0123456Water vapor (cm)"
   },
   {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
-    "section": "",
-    "text": "Update Observable Plot to 0.6.10\nAdd styling for titles, subtitles and captions\nUpdate anywidget to 0.6.3"
-  },
-  {
     "objectID": "changelog.html#pyobsplot-0.3.8",
     "href": "changelog.html#pyobsplot-0.3.8",
     "title": "Changelog",
-    "section": "",
-    "text": "Update Observable Plot to 0.6.10\nAdd styling for titles, subtitles and captions\nUpdate anywidget to 0.6.3"
+    "section": "pyobsplot 0.3.8",
+    "text": "pyobsplot 0.3.8\n\nUpdate Observable Plot to 0.6.10\nAdd styling for titles, subtitles and captions\nUpdate anywidget to 0.6.3"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.3.7",
