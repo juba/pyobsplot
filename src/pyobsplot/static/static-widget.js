@@ -526,6 +526,9 @@ __export(src_exports2, {
   bin: () => bin2,
   binX: () => binX,
   binY: () => binY,
+  bollinger: () => bollinger,
+  bollingerX: () => bollingerX,
+  bollingerY: () => bollingerY,
   boxX: () => boxX,
   boxY: () => boxY,
   cell: () => cell,
@@ -19247,10 +19250,10 @@ function orderof(values2) {
 }
 function inherit2(options = {}, ...rest) {
   let o = options;
-  for (const defaults22 of rest) {
-    for (const key in defaults22) {
+  for (const defaults23 of rest) {
+    for (const key in defaults23) {
       if (o[key] === void 0) {
-        const value = defaults22[key];
+        const value = defaults23[key];
         if (o === options)
           o = { ...o, [key]: value };
         else
@@ -19302,6 +19305,9 @@ var registry = /* @__PURE__ */ new Map([
   ["length", length3],
   ["projection", projection2]
 ]);
+function isPosition(kind) {
+  return kind === position || kind === projection2;
+}
 
 // node_modules/@observablehq/plot/src/symbol.js
 var sqrt35 = Math.sqrt(3);
@@ -20008,14 +20014,48 @@ function getSource(channels, key) {
   return channel.source === null ? null : channel;
 }
 
-// node_modules/@observablehq/plot/src/context.js
-function createContext(options = {}) {
-  const { document: document2 = typeof window !== "undefined" ? window.document : void 0 } = options;
-  return { document: document2 };
+// node_modules/@observablehq/plot/src/memoize.js
+function memoize1(compute) {
+  let cacheValue, cacheKeys;
+  return (...keys) => {
+    if (cacheKeys?.length !== keys.length || cacheKeys.some((k2, i) => k2 !== keys[i])) {
+      cacheKeys = keys;
+      cacheValue = compute(...keys);
+    }
+    return cacheValue;
+  };
 }
-function create2(name, { document: document2 }) {
-  return select_default2(creator_default(name).call(document2.documentElement));
+
+// node_modules/@observablehq/plot/src/format.js
+var numberFormat = memoize1((locale3) => {
+  return new Intl.NumberFormat(locale3);
+});
+var monthFormat = memoize1((locale3, month) => {
+  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...month && { month } });
+});
+var weekdayFormat = memoize1((locale3, weekday) => {
+  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...weekday && { weekday } });
+});
+function formatNumber(locale3 = "en-US") {
+  const format3 = numberFormat(locale3);
+  return (i) => i != null && !isNaN(i) ? format3.format(i) : void 0;
 }
+function formatMonth(locale3 = "en-US", format3 = "short") {
+  const fmt = monthFormat(locale3, format3);
+  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2e3, +i))) ? fmt.format(i) : void 0;
+}
+function formatWeekday(locale3 = "en-US", format3 = "short") {
+  const fmt = weekdayFormat(locale3, format3);
+  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2001, 0, +i))) ? fmt.format(i) : void 0;
+}
+function formatIsoDate(date2) {
+  return format2(date2, "Invalid Date");
+}
+function formatAuto(locale3 = "en-US") {
+  const number7 = formatNumber(locale3);
+  return (v2) => (v2 instanceof Date ? formatIsoDate : typeof v2 === "number" ? number7 : string)(v2);
+}
+var formatDefault = formatAuto();
 
 // node_modules/@observablehq/plot/src/warnings.js
 var warnings = 0;
@@ -20027,6 +20067,387 @@ function consumeWarnings() {
 function warn(message) {
   console.warn(message);
   ++warnings;
+}
+
+// node_modules/@observablehq/plot/src/style.js
+var offset = (typeof window !== "undefined" ? window.devicePixelRatio > 1 : typeof it === "undefined") ? 0 : 0.5;
+var nextClipId = 0;
+function getClipId() {
+  return `plot-clip-${++nextClipId}`;
+}
+function styles(mark, {
+  title,
+  href,
+  ariaLabel: variaLabel,
+  ariaDescription,
+  ariaHidden,
+  target,
+  fill,
+  fillOpacity,
+  stroke,
+  strokeWidth,
+  strokeOpacity,
+  strokeLinejoin,
+  strokeLinecap,
+  strokeMiterlimit,
+  strokeDasharray,
+  strokeDashoffset,
+  opacity: opacity2,
+  mixBlendMode,
+  imageFilter,
+  paintOrder,
+  pointerEvents,
+  shapeRendering,
+  channels
+}, {
+  ariaLabel: cariaLabel,
+  fill: defaultFill = "currentColor",
+  fillOpacity: defaultFillOpacity,
+  stroke: defaultStroke = "none",
+  strokeOpacity: defaultStrokeOpacity,
+  strokeWidth: defaultStrokeWidth,
+  strokeLinecap: defaultStrokeLinecap,
+  strokeLinejoin: defaultStrokeLinejoin,
+  strokeMiterlimit: defaultStrokeMiterlimit,
+  paintOrder: defaultPaintOrder
+}) {
+  if (defaultFill === null) {
+    fill = null;
+    fillOpacity = null;
+  }
+  if (defaultStroke === null) {
+    stroke = null;
+    strokeOpacity = null;
+  }
+  if (isNoneish(defaultFill)) {
+    if (!isNoneish(defaultStroke) && (!isNoneish(fill) || channels?.fill))
+      defaultStroke = "none";
+  } else {
+    if (isNoneish(defaultStroke) && (!isNoneish(stroke) || channels?.stroke))
+      defaultFill = "none";
+  }
+  const [vfill, cfill] = maybeColorChannel(fill, defaultFill);
+  const [vfillOpacity, cfillOpacity] = maybeNumberChannel(fillOpacity, defaultFillOpacity);
+  const [vstroke, cstroke] = maybeColorChannel(stroke, defaultStroke);
+  const [vstrokeOpacity, cstrokeOpacity] = maybeNumberChannel(strokeOpacity, defaultStrokeOpacity);
+  const [vopacity, copacity] = maybeNumberChannel(opacity2);
+  if (!isNone(cstroke)) {
+    if (strokeWidth === void 0)
+      strokeWidth = defaultStrokeWidth;
+    if (strokeLinecap === void 0)
+      strokeLinecap = defaultStrokeLinecap;
+    if (strokeLinejoin === void 0)
+      strokeLinejoin = defaultStrokeLinejoin;
+    if (strokeMiterlimit === void 0 && !isRound(strokeLinejoin))
+      strokeMiterlimit = defaultStrokeMiterlimit;
+    if (!isNone(cfill) && paintOrder === void 0)
+      paintOrder = defaultPaintOrder;
+  }
+  const [vstrokeWidth, cstrokeWidth] = maybeNumberChannel(strokeWidth);
+  if (defaultFill !== null) {
+    mark.fill = impliedString(cfill, "currentColor");
+    mark.fillOpacity = impliedNumber(cfillOpacity, 1);
+  }
+  if (defaultStroke !== null) {
+    mark.stroke = impliedString(cstroke, "none");
+    mark.strokeWidth = impliedNumber(cstrokeWidth, 1);
+    mark.strokeOpacity = impliedNumber(cstrokeOpacity, 1);
+    mark.strokeLinejoin = impliedString(strokeLinejoin, "miter");
+    mark.strokeLinecap = impliedString(strokeLinecap, "butt");
+    mark.strokeMiterlimit = impliedNumber(strokeMiterlimit, 4);
+    mark.strokeDasharray = impliedString(strokeDasharray, "none");
+    mark.strokeDashoffset = impliedString(strokeDashoffset, "0");
+  }
+  mark.target = string(target);
+  mark.ariaLabel = string(cariaLabel);
+  mark.ariaDescription = string(ariaDescription);
+  mark.ariaHidden = string(ariaHidden);
+  mark.opacity = impliedNumber(copacity, 1);
+  mark.mixBlendMode = impliedString(mixBlendMode, "normal");
+  mark.imageFilter = impliedString(imageFilter, "none");
+  mark.paintOrder = impliedString(paintOrder, "normal");
+  mark.pointerEvents = impliedString(pointerEvents, "auto");
+  mark.shapeRendering = impliedString(shapeRendering, "auto");
+  return {
+    title: { value: title, optional: true, filter: null },
+    href: { value: href, optional: true, filter: null },
+    ariaLabel: { value: variaLabel, optional: true, filter: null },
+    fill: { value: vfill, scale: "auto", optional: true },
+    fillOpacity: { value: vfillOpacity, scale: "auto", optional: true },
+    stroke: { value: vstroke, scale: "auto", optional: true },
+    strokeOpacity: { value: vstrokeOpacity, scale: "auto", optional: true },
+    strokeWidth: { value: vstrokeWidth, optional: true },
+    opacity: { value: vopacity, scale: "auto", optional: true }
+  };
+}
+function applyTitle(selection2, L) {
+  if (L)
+    selection2.filter((i) => nonempty(L[i])).append("title").call(applyText, L);
+}
+function applyTitleGroup(selection2, L) {
+  if (L)
+    selection2.filter(([i]) => nonempty(L[i])).append("title").call(applyTextGroup, L);
+}
+function applyText(selection2, T) {
+  if (T)
+    selection2.text((i) => formatDefault(T[i]));
+}
+function applyTextGroup(selection2, T) {
+  if (T)
+    selection2.text(([i]) => formatDefault(T[i]));
+}
+function applyChannelStyles(selection2, { target, tip: tip2 }, {
+  ariaLabel: AL,
+  title: T,
+  fill: F,
+  fillOpacity: FO,
+  stroke: S,
+  strokeOpacity: SO,
+  strokeWidth: SW,
+  opacity: O,
+  href: H
+}) {
+  if (AL)
+    applyAttr(selection2, "aria-label", (i) => AL[i]);
+  if (F)
+    applyAttr(selection2, "fill", (i) => F[i]);
+  if (FO)
+    applyAttr(selection2, "fill-opacity", (i) => FO[i]);
+  if (S)
+    applyAttr(selection2, "stroke", (i) => S[i]);
+  if (SO)
+    applyAttr(selection2, "stroke-opacity", (i) => SO[i]);
+  if (SW)
+    applyAttr(selection2, "stroke-width", (i) => SW[i]);
+  if (O)
+    applyAttr(selection2, "opacity", (i) => O[i]);
+  if (H)
+    applyHref(selection2, (i) => H[i], target);
+  if (!tip2)
+    applyTitle(selection2, T);
+}
+function applyGroupedChannelStyles(selection2, { target, tip: tip2 }, {
+  ariaLabel: AL,
+  title: T,
+  fill: F,
+  fillOpacity: FO,
+  stroke: S,
+  strokeOpacity: SO,
+  strokeWidth: SW,
+  opacity: O,
+  href: H
+}) {
+  if (AL)
+    applyAttr(selection2, "aria-label", ([i]) => AL[i]);
+  if (F)
+    applyAttr(selection2, "fill", ([i]) => F[i]);
+  if (FO)
+    applyAttr(selection2, "fill-opacity", ([i]) => FO[i]);
+  if (S)
+    applyAttr(selection2, "stroke", ([i]) => S[i]);
+  if (SO)
+    applyAttr(selection2, "stroke-opacity", ([i]) => SO[i]);
+  if (SW)
+    applyAttr(selection2, "stroke-width", ([i]) => SW[i]);
+  if (O)
+    applyAttr(selection2, "opacity", ([i]) => O[i]);
+  if (H)
+    applyHref(selection2, ([i]) => H[i], target);
+  if (!tip2)
+    applyTitleGroup(selection2, T);
+}
+function groupAesthetics({
+  ariaLabel: AL,
+  title: T,
+  fill: F,
+  fillOpacity: FO,
+  stroke: S,
+  strokeOpacity: SO,
+  strokeWidth: SW,
+  opacity: O,
+  href: H
+}, { tip: tip2 }) {
+  return [AL, tip2 ? void 0 : T, F, FO, S, SO, SW, O, H].filter((c6) => c6 !== void 0);
+}
+function groupZ2(I, Z, z) {
+  const G = group(I, (i) => Z[i]);
+  if (z === void 0 && G.size > 1 + I.length >> 1) {
+    warn(
+      `Warning: the implicit z channel has high cardinality. This may occur when the fill or stroke channel is associated with quantitative data rather than ordinal or categorical data. You can suppress this warning by setting the z option explicitly; if this data represents a single series, set z to null.`
+    );
+  }
+  return G.values();
+}
+function* groupIndex(I, position3, mark, channels) {
+  const { z } = mark;
+  const { z: Z } = channels;
+  const A5 = groupAesthetics(channels, mark);
+  const C3 = [...position3, ...A5];
+  for (const G of Z ? groupZ2(I, Z, z) : [I]) {
+    let Ag;
+    let Gg;
+    out:
+      for (const i of G) {
+        for (const c6 of C3) {
+          if (!defined(c6[i])) {
+            if (Gg)
+              Gg.push(-1);
+            continue out;
+          }
+        }
+        if (Ag === void 0) {
+          if (Gg)
+            yield Gg;
+          Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
+          continue;
+        }
+        Gg.push(i);
+        for (let j = 0; j < A5.length; ++j) {
+          const k2 = keyof2(A5[j][i]);
+          if (k2 !== Ag[j]) {
+            yield Gg;
+            Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
+            continue out;
+          }
+        }
+      }
+    if (Gg)
+      yield Gg;
+  }
+}
+function maybeClip(clip) {
+  if (clip === true)
+    clip = "frame";
+  else if (clip === false)
+    clip = null;
+  else if (clip != null)
+    clip = keyword(clip, "clip", ["frame", "sphere"]);
+  return clip;
+}
+function applyClip(selection2, mark, dimensions, context) {
+  let clipUrl;
+  const { clip = context.clip } = mark;
+  switch (clip) {
+    case "frame": {
+      const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
+      const id2 = getClipId();
+      clipUrl = `url(#${id2})`;
+      selection2 = create2("svg:g", context).call(
+        (g) => g.append("svg:clipPath").attr("id", id2).append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom)
+      ).each(function() {
+        this.appendChild(selection2.node());
+        selection2.node = () => this;
+      });
+      break;
+    }
+    case "sphere": {
+      const { projection: projection3 } = context;
+      if (!projection3)
+        throw new Error(`the "sphere" clip option requires a projection`);
+      const id2 = getClipId();
+      clipUrl = `url(#${id2})`;
+      selection2.append("clipPath").attr("id", id2).append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
+      break;
+    }
+  }
+  applyAttr(selection2, "aria-label", mark.ariaLabel);
+  applyAttr(selection2, "aria-description", mark.ariaDescription);
+  applyAttr(selection2, "aria-hidden", mark.ariaHidden);
+  applyAttr(selection2, "clip-path", clipUrl);
+}
+function applyIndirectStyles(selection2, mark, dimensions, context) {
+  applyClip(selection2, mark, dimensions, context);
+  applyAttr(selection2, "fill", mark.fill);
+  applyAttr(selection2, "fill-opacity", mark.fillOpacity);
+  applyAttr(selection2, "stroke", mark.stroke);
+  applyAttr(selection2, "stroke-width", mark.strokeWidth);
+  applyAttr(selection2, "stroke-opacity", mark.strokeOpacity);
+  applyAttr(selection2, "stroke-linejoin", mark.strokeLinejoin);
+  applyAttr(selection2, "stroke-linecap", mark.strokeLinecap);
+  applyAttr(selection2, "stroke-miterlimit", mark.strokeMiterlimit);
+  applyAttr(selection2, "stroke-dasharray", mark.strokeDasharray);
+  applyAttr(selection2, "stroke-dashoffset", mark.strokeDashoffset);
+  applyAttr(selection2, "shape-rendering", mark.shapeRendering);
+  applyAttr(selection2, "filter", mark.imageFilter);
+  applyAttr(selection2, "paint-order", mark.paintOrder);
+  const { pointerEvents = context.pointerSticky === false ? "none" : void 0 } = mark;
+  applyAttr(selection2, "pointer-events", pointerEvents);
+}
+function applyDirectStyles(selection2, mark) {
+  applyStyle(selection2, "mix-blend-mode", mark.mixBlendMode);
+  applyAttr(selection2, "opacity", mark.opacity);
+}
+function applyHref(selection2, href, target) {
+  selection2.each(function(i) {
+    const h = href(i);
+    if (h != null) {
+      const a4 = this.ownerDocument.createElementNS(namespaces_default.svg, "a");
+      a4.setAttribute("fill", "inherit");
+      a4.setAttributeNS(namespaces_default.xlink, "href", h);
+      if (target != null)
+        a4.setAttribute("target", target);
+      this.parentNode.insertBefore(a4, this).appendChild(this);
+    }
+  });
+}
+function applyAttr(selection2, name, value) {
+  if (value != null)
+    selection2.attr(name, value);
+}
+function applyStyle(selection2, name, value) {
+  if (value != null)
+    selection2.style(name, value);
+}
+function applyTransform(selection2, mark, { x: x4, y: y4 }, tx = offset, ty = offset) {
+  tx += mark.dx;
+  ty += mark.dy;
+  if (x4?.bandwidth)
+    tx += x4.bandwidth() / 2;
+  if (y4?.bandwidth)
+    ty += y4.bandwidth() / 2;
+  if (tx || ty)
+    selection2.attr("transform", `translate(${tx},${ty})`);
+}
+function impliedString(value, impliedValue) {
+  if ((value = string(value)) !== impliedValue)
+    return value;
+}
+function impliedNumber(value, impliedValue) {
+  if ((value = number5(value)) !== impliedValue)
+    return value;
+}
+var validClassName = /^-?([_a-z]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])([_a-z0-9-]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*$/i;
+function maybeClassName(name) {
+  if (name === void 0)
+    return "plot-d6a7b5";
+  name = `${name}`;
+  if (!validClassName.test(name))
+    throw new Error(`invalid class name: ${name}`);
+  return name;
+}
+function applyInlineStyles(selection2, style) {
+  if (typeof style === "string") {
+    selection2.property("style", style);
+  } else if (style != null) {
+    for (const element of selection2) {
+      Object.assign(element.style, style);
+    }
+  }
+}
+function applyFrameAnchor({ frameAnchor }, { width, height, marginTop, marginRight, marginBottom, marginLeft }) {
+  return [
+    /left$/.test(frameAnchor) ? marginLeft : /right$/.test(frameAnchor) ? width - marginRight : (marginLeft + width - marginRight) / 2,
+    /^top/.test(frameAnchor) ? marginTop : /^bottom/.test(frameAnchor) ? height - marginBottom : (marginTop + height - marginBottom) / 2
+  ];
+}
+
+// node_modules/@observablehq/plot/src/context.js
+function createContext(options = {}) {
+  const { document: document2 = typeof window !== "undefined" ? window.document : void 0, clip } = options;
+  return { document: document2, clip: maybeClip(clip) };
+}
+function create2(name, { document: document2 }) {
+  return select_default2(creator_default(name).call(document2.documentElement));
 }
 
 // node_modules/@observablehq/plot/src/projection.js
@@ -21408,418 +21829,6 @@ function exposeScale({ scale: scale3, type: type2, domain, range: range5, interp
   };
 }
 
-// node_modules/@observablehq/plot/src/memoize.js
-function memoize1(compute) {
-  let cacheValue, cacheKeys;
-  return (...keys) => {
-    if (cacheKeys?.length !== keys.length || cacheKeys.some((k2, i) => k2 !== keys[i])) {
-      cacheKeys = keys;
-      cacheValue = compute(...keys);
-    }
-    return cacheValue;
-  };
-}
-
-// node_modules/@observablehq/plot/src/format.js
-var numberFormat = memoize1((locale3) => {
-  return new Intl.NumberFormat(locale3);
-});
-var monthFormat = memoize1((locale3, month) => {
-  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...month && { month } });
-});
-var weekdayFormat = memoize1((locale3, weekday) => {
-  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...weekday && { weekday } });
-});
-function formatNumber(locale3 = "en-US") {
-  const format3 = numberFormat(locale3);
-  return (i) => i != null && !isNaN(i) ? format3.format(i) : void 0;
-}
-function formatMonth(locale3 = "en-US", format3 = "short") {
-  const fmt = monthFormat(locale3, format3);
-  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2e3, +i))) ? fmt.format(i) : void 0;
-}
-function formatWeekday(locale3 = "en-US", format3 = "short") {
-  const fmt = weekdayFormat(locale3, format3);
-  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2001, 0, +i))) ? fmt.format(i) : void 0;
-}
-function formatIsoDate(date2) {
-  return format2(date2, "Invalid Date");
-}
-function formatAuto(locale3 = "en-US") {
-  const number7 = formatNumber(locale3);
-  return (v2) => (v2 instanceof Date ? formatIsoDate : typeof v2 === "number" ? number7 : string)(v2);
-}
-var formatDefault = formatAuto();
-
-// node_modules/@observablehq/plot/src/style.js
-var offset = (typeof window !== "undefined" ? window.devicePixelRatio > 1 : typeof it === "undefined") ? 0 : 0.5;
-var nextClipId = 0;
-function getClipId() {
-  return `plot-clip-${++nextClipId}`;
-}
-function styles(mark, {
-  title,
-  href,
-  ariaLabel: variaLabel,
-  ariaDescription,
-  ariaHidden,
-  target,
-  fill,
-  fillOpacity,
-  stroke,
-  strokeWidth,
-  strokeOpacity,
-  strokeLinejoin,
-  strokeLinecap,
-  strokeMiterlimit,
-  strokeDasharray,
-  strokeDashoffset,
-  opacity: opacity2,
-  mixBlendMode,
-  imageFilter,
-  paintOrder,
-  pointerEvents,
-  shapeRendering,
-  channels
-}, {
-  ariaLabel: cariaLabel,
-  fill: defaultFill = "currentColor",
-  fillOpacity: defaultFillOpacity,
-  stroke: defaultStroke = "none",
-  strokeOpacity: defaultStrokeOpacity,
-  strokeWidth: defaultStrokeWidth,
-  strokeLinecap: defaultStrokeLinecap,
-  strokeLinejoin: defaultStrokeLinejoin,
-  strokeMiterlimit: defaultStrokeMiterlimit,
-  paintOrder: defaultPaintOrder
-}) {
-  if (defaultFill === null) {
-    fill = null;
-    fillOpacity = null;
-  }
-  if (defaultStroke === null) {
-    stroke = null;
-    strokeOpacity = null;
-  }
-  if (isNoneish(defaultFill)) {
-    if (!isNoneish(defaultStroke) && (!isNoneish(fill) || channels?.fill))
-      defaultStroke = "none";
-  } else {
-    if (isNoneish(defaultStroke) && (!isNoneish(stroke) || channels?.stroke))
-      defaultFill = "none";
-  }
-  const [vfill, cfill] = maybeColorChannel(fill, defaultFill);
-  const [vfillOpacity, cfillOpacity] = maybeNumberChannel(fillOpacity, defaultFillOpacity);
-  const [vstroke, cstroke] = maybeColorChannel(stroke, defaultStroke);
-  const [vstrokeOpacity, cstrokeOpacity] = maybeNumberChannel(strokeOpacity, defaultStrokeOpacity);
-  const [vopacity, copacity] = maybeNumberChannel(opacity2);
-  if (!isNone(cstroke)) {
-    if (strokeWidth === void 0)
-      strokeWidth = defaultStrokeWidth;
-    if (strokeLinecap === void 0)
-      strokeLinecap = defaultStrokeLinecap;
-    if (strokeLinejoin === void 0)
-      strokeLinejoin = defaultStrokeLinejoin;
-    if (strokeMiterlimit === void 0 && !isRound(strokeLinejoin))
-      strokeMiterlimit = defaultStrokeMiterlimit;
-    if (!isNone(cfill) && paintOrder === void 0)
-      paintOrder = defaultPaintOrder;
-  }
-  const [vstrokeWidth, cstrokeWidth] = maybeNumberChannel(strokeWidth);
-  if (defaultFill !== null) {
-    mark.fill = impliedString(cfill, "currentColor");
-    mark.fillOpacity = impliedNumber(cfillOpacity, 1);
-  }
-  if (defaultStroke !== null) {
-    mark.stroke = impliedString(cstroke, "none");
-    mark.strokeWidth = impliedNumber(cstrokeWidth, 1);
-    mark.strokeOpacity = impliedNumber(cstrokeOpacity, 1);
-    mark.strokeLinejoin = impliedString(strokeLinejoin, "miter");
-    mark.strokeLinecap = impliedString(strokeLinecap, "butt");
-    mark.strokeMiterlimit = impliedNumber(strokeMiterlimit, 4);
-    mark.strokeDasharray = impliedString(strokeDasharray, "none");
-    mark.strokeDashoffset = impliedString(strokeDashoffset, "0");
-  }
-  mark.target = string(target);
-  mark.ariaLabel = string(cariaLabel);
-  mark.ariaDescription = string(ariaDescription);
-  mark.ariaHidden = string(ariaHidden);
-  mark.opacity = impliedNumber(copacity, 1);
-  mark.mixBlendMode = impliedString(mixBlendMode, "normal");
-  mark.imageFilter = impliedString(imageFilter, "none");
-  mark.paintOrder = impliedString(paintOrder, "normal");
-  mark.pointerEvents = impliedString(pointerEvents, "auto");
-  mark.shapeRendering = impliedString(shapeRendering, "auto");
-  return {
-    title: { value: title, optional: true, filter: null },
-    href: { value: href, optional: true, filter: null },
-    ariaLabel: { value: variaLabel, optional: true, filter: null },
-    fill: { value: vfill, scale: "auto", optional: true },
-    fillOpacity: { value: vfillOpacity, scale: "auto", optional: true },
-    stroke: { value: vstroke, scale: "auto", optional: true },
-    strokeOpacity: { value: vstrokeOpacity, scale: "auto", optional: true },
-    strokeWidth: { value: vstrokeWidth, optional: true },
-    opacity: { value: vopacity, scale: "auto", optional: true }
-  };
-}
-function applyTitle(selection2, L) {
-  if (L)
-    selection2.filter((i) => nonempty(L[i])).append("title").call(applyText, L);
-}
-function applyTitleGroup(selection2, L) {
-  if (L)
-    selection2.filter(([i]) => nonempty(L[i])).append("title").call(applyTextGroup, L);
-}
-function applyText(selection2, T) {
-  if (T)
-    selection2.text((i) => formatDefault(T[i]));
-}
-function applyTextGroup(selection2, T) {
-  if (T)
-    selection2.text(([i]) => formatDefault(T[i]));
-}
-function applyChannelStyles(selection2, { target, tip: tip2 }, {
-  ariaLabel: AL,
-  title: T,
-  fill: F,
-  fillOpacity: FO,
-  stroke: S,
-  strokeOpacity: SO,
-  strokeWidth: SW,
-  opacity: O,
-  href: H
-}) {
-  if (AL)
-    applyAttr(selection2, "aria-label", (i) => AL[i]);
-  if (F)
-    applyAttr(selection2, "fill", (i) => F[i]);
-  if (FO)
-    applyAttr(selection2, "fill-opacity", (i) => FO[i]);
-  if (S)
-    applyAttr(selection2, "stroke", (i) => S[i]);
-  if (SO)
-    applyAttr(selection2, "stroke-opacity", (i) => SO[i]);
-  if (SW)
-    applyAttr(selection2, "stroke-width", (i) => SW[i]);
-  if (O)
-    applyAttr(selection2, "opacity", (i) => O[i]);
-  if (H)
-    applyHref(selection2, (i) => H[i], target);
-  if (!tip2)
-    applyTitle(selection2, T);
-}
-function applyGroupedChannelStyles(selection2, { target, tip: tip2 }, {
-  ariaLabel: AL,
-  title: T,
-  fill: F,
-  fillOpacity: FO,
-  stroke: S,
-  strokeOpacity: SO,
-  strokeWidth: SW,
-  opacity: O,
-  href: H
-}) {
-  if (AL)
-    applyAttr(selection2, "aria-label", ([i]) => AL[i]);
-  if (F)
-    applyAttr(selection2, "fill", ([i]) => F[i]);
-  if (FO)
-    applyAttr(selection2, "fill-opacity", ([i]) => FO[i]);
-  if (S)
-    applyAttr(selection2, "stroke", ([i]) => S[i]);
-  if (SO)
-    applyAttr(selection2, "stroke-opacity", ([i]) => SO[i]);
-  if (SW)
-    applyAttr(selection2, "stroke-width", ([i]) => SW[i]);
-  if (O)
-    applyAttr(selection2, "opacity", ([i]) => O[i]);
-  if (H)
-    applyHref(selection2, ([i]) => H[i], target);
-  if (!tip2)
-    applyTitleGroup(selection2, T);
-}
-function groupAesthetics({
-  ariaLabel: AL,
-  title: T,
-  fill: F,
-  fillOpacity: FO,
-  stroke: S,
-  strokeOpacity: SO,
-  strokeWidth: SW,
-  opacity: O,
-  href: H
-}, { tip: tip2 }) {
-  return [AL, tip2 ? void 0 : T, F, FO, S, SO, SW, O, H].filter((c6) => c6 !== void 0);
-}
-function groupZ2(I, Z, z) {
-  const G = group(I, (i) => Z[i]);
-  if (z === void 0 && G.size > 1 + I.length >> 1) {
-    warn(
-      `Warning: the implicit z channel has high cardinality. This may occur when the fill or stroke channel is associated with quantitative data rather than ordinal or categorical data. You can suppress this warning by setting the z option explicitly; if this data represents a single series, set z to null.`
-    );
-  }
-  return G.values();
-}
-function* groupIndex(I, position3, mark, channels) {
-  const { z } = mark;
-  const { z: Z } = channels;
-  const A5 = groupAesthetics(channels, mark);
-  const C3 = [...position3, ...A5];
-  for (const G of Z ? groupZ2(I, Z, z) : [I]) {
-    let Ag;
-    let Gg;
-    out:
-      for (const i of G) {
-        for (const c6 of C3) {
-          if (!defined(c6[i])) {
-            if (Gg)
-              Gg.push(-1);
-            continue out;
-          }
-        }
-        if (Ag === void 0) {
-          if (Gg)
-            yield Gg;
-          Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
-          continue;
-        }
-        Gg.push(i);
-        for (let j = 0; j < A5.length; ++j) {
-          const k2 = keyof2(A5[j][i]);
-          if (k2 !== Ag[j]) {
-            yield Gg;
-            Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
-            continue out;
-          }
-        }
-      }
-    if (Gg)
-      yield Gg;
-  }
-}
-function maybeClip(clip) {
-  if (clip === true)
-    clip = "frame";
-  else if (clip === false)
-    clip = null;
-  return maybeKeyword(clip, "clip", ["frame", "sphere"]);
-}
-function applyClip(selection2, mark, dimensions, context) {
-  let clipUrl;
-  switch (mark.clip) {
-    case "frame": {
-      const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
-      const id2 = getClipId();
-      clipUrl = `url(#${id2})`;
-      selection2 = create2("svg:g", context).call(
-        (g) => g.append("svg:clipPath").attr("id", id2).append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom)
-      ).each(function() {
-        this.appendChild(selection2.node());
-        selection2.node = () => this;
-      });
-      break;
-    }
-    case "sphere": {
-      const { projection: projection3 } = context;
-      if (!projection3)
-        throw new Error(`the "sphere" clip option requires a projection`);
-      const id2 = getClipId();
-      clipUrl = `url(#${id2})`;
-      selection2.append("clipPath").attr("id", id2).append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
-      break;
-    }
-  }
-  applyAttr(selection2, "aria-label", mark.ariaLabel);
-  applyAttr(selection2, "aria-description", mark.ariaDescription);
-  applyAttr(selection2, "aria-hidden", mark.ariaHidden);
-  applyAttr(selection2, "clip-path", clipUrl);
-}
-function applyIndirectStyles(selection2, mark, dimensions, context) {
-  applyClip(selection2, mark, dimensions, context);
-  applyAttr(selection2, "fill", mark.fill);
-  applyAttr(selection2, "fill-opacity", mark.fillOpacity);
-  applyAttr(selection2, "stroke", mark.stroke);
-  applyAttr(selection2, "stroke-width", mark.strokeWidth);
-  applyAttr(selection2, "stroke-opacity", mark.strokeOpacity);
-  applyAttr(selection2, "stroke-linejoin", mark.strokeLinejoin);
-  applyAttr(selection2, "stroke-linecap", mark.strokeLinecap);
-  applyAttr(selection2, "stroke-miterlimit", mark.strokeMiterlimit);
-  applyAttr(selection2, "stroke-dasharray", mark.strokeDasharray);
-  applyAttr(selection2, "stroke-dashoffset", mark.strokeDashoffset);
-  applyAttr(selection2, "shape-rendering", mark.shapeRendering);
-  applyAttr(selection2, "filter", mark.imageFilter);
-  applyAttr(selection2, "paint-order", mark.paintOrder);
-  const { pointerEvents = context.pointerSticky === false ? "none" : void 0 } = mark;
-  applyAttr(selection2, "pointer-events", pointerEvents);
-}
-function applyDirectStyles(selection2, mark) {
-  applyStyle(selection2, "mix-blend-mode", mark.mixBlendMode);
-  applyAttr(selection2, "opacity", mark.opacity);
-}
-function applyHref(selection2, href, target) {
-  selection2.each(function(i) {
-    const h = href(i);
-    if (h != null) {
-      const a4 = this.ownerDocument.createElementNS(namespaces_default.svg, "a");
-      a4.setAttribute("fill", "inherit");
-      a4.setAttributeNS(namespaces_default.xlink, "href", h);
-      if (target != null)
-        a4.setAttribute("target", target);
-      this.parentNode.insertBefore(a4, this).appendChild(this);
-    }
-  });
-}
-function applyAttr(selection2, name, value) {
-  if (value != null)
-    selection2.attr(name, value);
-}
-function applyStyle(selection2, name, value) {
-  if (value != null)
-    selection2.style(name, value);
-}
-function applyTransform(selection2, mark, { x: x4, y: y4 }, tx = offset, ty = offset) {
-  tx += mark.dx;
-  ty += mark.dy;
-  if (x4?.bandwidth)
-    tx += x4.bandwidth() / 2;
-  if (y4?.bandwidth)
-    ty += y4.bandwidth() / 2;
-  if (tx || ty)
-    selection2.attr("transform", `translate(${tx},${ty})`);
-}
-function impliedString(value, impliedValue) {
-  if ((value = string(value)) !== impliedValue)
-    return value;
-}
-function impliedNumber(value, impliedValue) {
-  if ((value = number5(value)) !== impliedValue)
-    return value;
-}
-var validClassName = /^-?([_a-z]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])([_a-z0-9-]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*$/i;
-function maybeClassName(name) {
-  if (name === void 0)
-    return "plot-d6a7b5";
-  name = `${name}`;
-  if (!validClassName.test(name))
-    throw new Error(`invalid class name: ${name}`);
-  return name;
-}
-function applyInlineStyles(selection2, style) {
-  if (typeof style === "string") {
-    selection2.property("style", style);
-  } else if (style != null) {
-    for (const element of selection2) {
-      Object.assign(element.style, style);
-    }
-  }
-}
-function applyFrameAnchor({ frameAnchor }, { width, height, marginTop, marginRight, marginBottom, marginLeft }) {
-  return [
-    /left$/.test(frameAnchor) ? marginLeft : /right$/.test(frameAnchor) ? width - marginRight : (marginLeft + width - marginRight) / 2,
-    /^top/.test(frameAnchor) ? marginTop : /^bottom/.test(frameAnchor) ? height - marginBottom : (marginTop + height - marginBottom) / 2
-  ];
-}
-
 // node_modules/@observablehq/plot/src/dimensions.js
 function createDimensions(scales, marks2, options = {}) {
   let marginTopDefault = 0.5 - offset, marginRightDefault = 0.5 + offset, marginBottomDefault = 0.5 + offset, marginLeftDefault = 0.5 - offset;
@@ -22092,7 +22101,7 @@ function facetFilter(facets, { channels: { fx, fy }, groups: groups2 }) {
 
 // node_modules/@observablehq/plot/src/mark.js
 var Mark = class {
-  constructor(data, channels = {}, options = {}, defaults22) {
+  constructor(data, channels = {}, options = {}, defaults23) {
     const {
       facet = "auto",
       facetAnchor,
@@ -22106,7 +22115,7 @@ var Mark = class {
       marginRight = margin,
       marginBottom = margin,
       marginLeft = margin,
-      clip,
+      clip = defaults23?.clip,
       channels: extraChannels,
       tip: tip2,
       render: render2
@@ -22126,8 +22135,8 @@ var Mark = class {
     channels = maybeNamed(channels);
     if (extraChannels !== void 0)
       channels = { ...maybeChannels(extraChannels), ...channels };
-    if (defaults22 !== void 0)
-      channels = { ...styles(this, options, defaults22), ...channels };
+    if (defaults23 !== void 0)
+      channels = { ...styles(this, options, defaults23), ...channels };
     this.channels = Object.fromEntries(
       Object.entries(channels).map(([name, channel]) => {
         if (isOptions(channel.value)) {
@@ -22312,8 +22321,8 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
             facetState.set(index3.fi, ri);
             f = requestAnimationFrame(() => {
               f = null;
-              for (const r of facetState.values()) {
-                if (r < ri) {
+              for (const [fi, r] of facetState) {
+                if (r < ri || r === ri && fi < index3.fi) {
                   ii = null;
                   break;
                 }
@@ -22348,7 +22357,8 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
           g.replaceWith(r);
         }
         state.roots[renderIndex] = g = r;
-        context.dispatchValue(i == null ? null : data[i]);
+        if (!(i == null && facetState?.size > 1))
+          context.dispatchValue(i == null ? null : data[i]);
         return r;
       }
       function pointermove(event) {
@@ -22356,14 +22366,21 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
           return;
         let [xp, yp] = pointer_default(event);
         xp -= tx, yp -= ty;
+        const kpx = xp < dimensions.marginLeft || xp > dimensions.width - dimensions.marginRight ? 1 : kx2;
+        const kpy = yp < dimensions.marginTop || yp > dimensions.height - dimensions.marginBottom ? 1 : ky2;
         let ii = null;
         let ri = maxRadius * maxRadius;
         for (const j of index3) {
-          const dx = kx2 * (px2(j) - xp);
-          const dy = ky2 * (py2(j) - yp);
+          const dx = kpx * (px2(j) - xp);
+          const dy = kpy * (py2(j) - yp);
           const rj = dx * dx + dy * dy;
           if (rj <= ri)
             ii = j, ri = rj;
+        }
+        if (ii != null && (kx2 !== 1 || ky2 !== 1)) {
+          const dx = px2(ii) - xp;
+          const dy = py2(ii) - yp;
+          ri = dx * dx + dy * dy;
         }
         update(ii, ri);
       }
@@ -23719,7 +23736,18 @@ function gridDefaults({
 }) {
   return { stroke, strokeOpacity, strokeWidth, ...options };
 }
-function labelOptions({ fill, fillOpacity, fontFamily, fontSize, fontStyle, fontWeight, monospace, pointerEvents, shapeRendering }, initializer2) {
+function labelOptions({
+  fill,
+  fillOpacity,
+  fontFamily,
+  fontSize,
+  fontStyle,
+  fontWeight,
+  monospace,
+  pointerEvents,
+  shapeRendering,
+  clip = false
+}, initializer2) {
   [, fill] = maybeColorChannel(fill);
   [, fillOpacity] = maybeNumberChannel(fillOpacity);
   return {
@@ -23735,6 +23763,7 @@ function labelOptions({ fill, fillOpacity, fontFamily, fontSize, fontStyle, font
     monospace,
     pointerEvents,
     shapeRendering,
+    clip,
     initializer: initializer2
   };
 }
@@ -23793,6 +23822,8 @@ function axisMark(mark, k2, ariaLabel, data, options, initialize) {
     channels = {};
   }
   m3.ariaLabel = ariaLabel;
+  if (m3.clip === void 0)
+    m3.clip = false;
   return m3;
 }
 function inferTextChannel(scale3, data, ticks2, tickFormat2, anchor) {
@@ -24006,13 +24037,13 @@ function legend(options = {}) {
   }
   throw new Error("unknown legend type; no scale found");
 }
-function exposeLegends(scales, context, defaults22 = {}) {
+function exposeLegends(scales, context, defaults23 = {}) {
   return (key, options) => {
     if (!legendRegistry.has(key))
       throw new Error(`unknown legend type: ${key}`);
     if (!(key in scales))
       return;
-    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults22[key], options), (key2) => scales[key2]);
+    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults23[key], options), (key2) => scales[key2]);
   };
 }
 function legendOptions({ className, ...context }, { label, ticks: ticks2, tickFormat: tickFormat2 } = {}, options) {
@@ -24062,13 +24093,15 @@ function createLegends(scales, context, options) {
 var defaults4 = {
   ariaLabel: "frame",
   fill: "none",
-  stroke: "currentColor"
+  stroke: "currentColor",
+  clip: false
 };
 var lineDefaults = {
   ariaLabel: "frame",
   fill: null,
   stroke: "currentColor",
-  strokeLinecap: "square"
+  strokeLinecap: "square",
+  clip: false
 };
 var Frame = class extends Mark {
   constructor(options = {}) {
@@ -24219,9 +24252,9 @@ var Tip = class extends Mark {
         if (!defined(value) && channel.scale == null)
           continue;
         if (key === "x2" && "x1" in sources2) {
-          yield { name: formatLabel(scales, channel, "x"), value: formatPair(sources2.x1, channel, i) };
+          yield { name: formatPairLabel(scales, sources2.x1, channel, "x"), value: formatPair(sources2.x1, channel, i) };
         } else if (key === "y2" && "y1" in sources2) {
-          yield { name: formatLabel(scales, channel, "y"), value: formatPair(sources2.y1, channel, i) };
+          yield { name: formatPairLabel(scales, sources2.y1, channel, "y"), value: formatPair(sources2.y1, channel, i) };
         } else {
           const scale3 = channel.scale;
           const line2 = { name: formatLabel(scales, channel, key), value: formatDefault(value) };
@@ -24385,13 +24418,18 @@ function getSources({ channels }) {
 function formatPair(c1, c22, i) {
   return c22.hint?.length ? `${formatDefault(c22.value[i] - c1.value[i])}` : `${formatDefault(c1.value[i])}\u2013${formatDefault(c22.value[i])}`;
 }
+function formatPairLabel(scales, c1, c22, defaultLabel) {
+  const l1 = formatLabel(scales, c1, defaultLabel);
+  const l2 = formatLabel(scales, c22, defaultLabel);
+  return l1 === l2 ? l1 : `${l1}\u2013${l2}`;
+}
 function formatLabel(scales, c6, defaultLabel) {
   return String(scales[c6.scale]?.label ?? c6?.label ?? defaultLabel);
 }
 
 // node_modules/@observablehq/plot/src/plot.js
 function plot(options = {}) {
-  const { facet, style, caption, ariaLabel, ariaDescription } = options;
+  const { facet, style, title, subtitle, caption, ariaLabel, ariaDescription } = options;
   const className = maybeClassName(options.className);
   const marks2 = options.marks === void 0 ? [] : flatMarks(options.marks);
   marks2.push(...inferTips(marks2));
@@ -24502,7 +24540,7 @@ function plot(options = {}) {
         Object.assign(state.channels, channels);
         for (const channel of Object.values(channels)) {
           const { scale: scale3 } = channel;
-          if (scale3 != null && registry.get(scale3) !== position) {
+          if (scale3 != null && !isPosition(registry.get(scale3))) {
             applyScaleTransform(channel, options);
             newByScale.add(scale3);
           }
@@ -24594,17 +24632,18 @@ function plot(options = {}) {
     }
   }
   const legends = createLegends(scaleDescriptors, context, options);
-  if (caption != null || legends.length > 0) {
+  const { figure: figured = title != null || subtitle != null || caption != null || legends.length > 0 } = options;
+  if (figured) {
     figure = document2.createElement("figure");
+    figure.className = `${className}-figure`;
     figure.style.maxWidth = "initial";
-    for (const legend2 of legends)
-      figure.appendChild(legend2);
-    figure.appendChild(svg2);
-    if (caption != null) {
-      const figcaption = document2.createElement("figcaption");
-      figcaption.appendChild(caption?.ownerDocument ? caption : document2.createTextNode(caption));
-      figure.appendChild(figcaption);
-    }
+    if (title != null)
+      figure.append(createTitleElement(document2, title, "h2"));
+    if (subtitle != null)
+      figure.append(createTitleElement(document2, subtitle, "h3"));
+    figure.append(...legends, svg2);
+    if (caption != null)
+      figure.append(createFigcaption(document2, caption));
   }
   figure.scale = exposeScales(scaleDescriptors);
   figure.legend = exposeLegends(scaleDescriptors, context, options);
@@ -24613,6 +24652,18 @@ function plot(options = {}) {
     select_default2(svg2).append("text").attr("x", width).attr("y", 20).attr("dy", "-1em").attr("text-anchor", "end").attr("font-family", "initial").text("\u26A0\uFE0F").append("title").text(`${w.toLocaleString("en-US")} warning${w === 1 ? "" : "s"}. Please check the console.`);
   }
   return figure;
+}
+function createTitleElement(document2, contents, tag) {
+  if (contents.ownerDocument)
+    return contents;
+  const e = document2.createElement(tag);
+  e.append(document2.createTextNode(contents));
+  return e;
+}
+function createFigcaption(document2, caption) {
+  const e = document2.createElement("figcaption");
+  e.append(caption.ownerDocument ? caption : document2.createTextNode(caption));
+  return e;
 }
 function plotThis({ marks: marks2 = [], ...options } = {}) {
   return plot({ ...options, marks: [...marks2, this] });
@@ -24808,11 +24859,11 @@ function inferAxes(marks2, channelsByScale, options) {
   maybeAxis(axes, xAxis, axisX, "bottom", "top", options, x4);
   return axes;
 }
-function maybeAxis(axes, axis2, axisType, primary, secondary, defaults22, options) {
+function maybeAxis(axes, axis2, axisType, primary, secondary, defaults23, options) {
   if (!axis2)
     return;
   const both = isBoth(axis2);
-  options = axisOptions(both ? primary : axis2, defaults22, options);
+  options = axisOptions(both ? primary : axis2, defaults23, options);
   const { line: line2 } = options;
   if ((axisType === axisY || axisType === axisX) && line2 && !isNone(line2))
     axes.push(frame2(lineOptions(options)));
@@ -24828,8 +24879,8 @@ function maybeGrid(axes, grid, gridType, options) {
 function isBoth(value) {
   return /^\s*both\s*$/i.test(value);
 }
-function axisOptions(anchor, defaults22, {
-  line: line2 = defaults22.line,
+function axisOptions(anchor, defaults23, {
+  line: line2 = defaults23.line,
   ticks: ticks2,
   tickSize,
   tickSpacing,
@@ -24839,9 +24890,9 @@ function axisOptions(anchor, defaults22, {
   fontVariant,
   ariaLabel,
   ariaDescription,
-  label = defaults22.label,
+  label = defaults23.label,
   labelAnchor,
-  labelArrow = defaults22.labelArrow,
+  labelArrow = defaults23.labelArrow,
   labelOffset
 }) {
   return {
@@ -25468,6 +25519,8 @@ function mergeOptions2(options) {
 }
 var lengthy = { length: true };
 function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: reverse3 }, options) {
+  if (y4 === null)
+    throw new Error(`stack requires ${ky2}`);
   const z = maybeZ(options);
   const [X3, setX] = maybeColumn(x4);
   const [Y13, setY1] = column(y4);
@@ -25883,7 +25936,8 @@ var Arrow = class extends Mark {
       // Disable the arrow with headLength = 0; or, use Plot.link.
       inset = 0,
       insetStart = inset,
-      insetEnd = inset
+      insetEnd = inset,
+      sweep
     } = options;
     super(
       data,
@@ -25901,12 +25955,12 @@ var Arrow = class extends Mark {
     this.headLength = +headLength;
     this.insetStart = +insetStart;
     this.insetEnd = +insetEnd;
+    this.sweep = maybeSweep(sweep);
   }
   render(index3, scales, channels, dimensions, context) {
     const { x1: X13, y1: Y13, x2: X23 = X13, y2: Y23 = Y13, SW } = channels;
     const { strokeWidth, bend, headAngle, headLength, insetStart, insetEnd } = this;
     const sw = SW ? (i) => SW[i] : constant2(strokeWidth === void 0 ? 1 : strokeWidth);
-    const bendAngle = bend * radians3;
     const wingAngle = headAngle * radians3 / 2;
     const wingScale = headLength / 1.5;
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, scales).call(
@@ -25917,6 +25971,7 @@ var Arrow = class extends Mark {
           return null;
         let lineAngle = Math.atan2(y22 - y12, x22 - x12);
         const headLength2 = Math.min(wingScale * sw(i), lineLength / 3);
+        const bendAngle = this.sweep(x12, y12, x22, y22) * bend * radians3;
         const r = Math.hypot(lineLength / Math.tan(bendAngle), lineLength) / 2;
         if (insetStart || insetEnd) {
           if (r < 1e5) {
@@ -25945,11 +26000,29 @@ var Arrow = class extends Mark {
         const y32 = y22 - headLength2 * Math.sin(leftAngle);
         const x4 = x22 - headLength2 * Math.cos(rightAngle);
         const y4 = y22 - headLength2 * Math.sin(rightAngle);
-        return `M${x12},${y12}${r < 1e5 ? `A${r},${r} 0,0,${bendAngle > 0 ? 1 : 0} ` : `L`}${x22},${y22}M${x32},${y32}L${x22},${y22}L${x4},${y4}`;
+        const a4 = r < 1e5 ? `A${r},${r} 0,0,${bendAngle > 0 ? 1 : 0} ` : `L`;
+        const h = headLength2 ? `M${x32},${y32}L${x22},${y22}L${x4},${y4}` : "";
+        return `M${x12},${y12}${a4}${x22},${y22}${h}`;
       }).call(applyChannelStyles, this, channels)
     ).node();
   }
 };
+function maybeSweep(sweep = 1) {
+  if (typeof sweep === "number")
+    return constant2(Math.sign(sweep));
+  if (typeof sweep === "function")
+    return (x12, y12, x22, y22) => Math.sign(sweep(x12, y12, x22, y22));
+  switch (keyword(sweep, "sweep", ["+x", "-x", "+y", "-y"])) {
+    case "+x":
+      return (x12, y12, x22) => ascending(x12, x22);
+    case "-x":
+      return (x12, y12, x22) => descending(x12, x22);
+    case "+y":
+      return (x12, y12, x22, y22) => ascending(y12, y22);
+    case "-y":
+      return (x12, y12, x22, y22) => descending(y12, y22);
+  }
+}
 function pointPointCenter([ax, ay], [bx, by], r, sign3) {
   const dx = bx - ax, dy = by - ay, d = Math.hypot(dx, dy);
   const k2 = sign3 * Math.sqrt(r * r - d * d / 4) / d;
@@ -25969,8 +26042,8 @@ function arrow(data, { x: x4, x1: x12, x2: x22, y: y4, y1: y12, y2: y22, ...opti
 
 // node_modules/@observablehq/plot/src/marks/bar.js
 var AbstractBar = class extends Mark {
-  constructor(data, channels, options = {}, defaults22) {
-    super(data, channels, options, defaults22);
+  constructor(data, channels, options = {}, defaults23) {
+    super(data, channels, options, defaults23);
     const { inset = 0, insetTop = inset, insetRight = inset, insetBottom = inset, insetLeft = inset, rx, ry } = options;
     this.insetTop = number5(insetTop);
     this.insetRight = number5(insetRight);
@@ -26419,7 +26492,7 @@ function autoSpec(data, options) {
       colorMode = "stroke";
       break;
     case "bar":
-      markImpl = yZero ? isOrdinalReduced(xReduce, X3) ? barY : rectY : xZero ? isOrdinalReduced(yReduce, Y3) ? barX : rectX : isOrdinalReduced(xReduce, X3) && isOrdinalReduced(yReduce, Y3) ? cell : isOrdinalReduced(xReduce, X3) ? barY : isOrdinalReduced(yReduce, Y3) ? barX : xReduce != null ? rectX : yReduce != null ? rectY : colorReduce != null ? rect : cell;
+      markImpl = xReduce != null ? isOrdinal(Y3) ? isSelectReducer(xReduce) && X3 && isOrdinal(X3) ? cell : barX : rectX : yReduce != null ? isOrdinal(X3) ? isSelectReducer(yReduce) && Y3 && isOrdinal(Y3) ? cell : barY : rectY : colorReduce != null || sizeReduce != null ? X3 && isOrdinal(X3) && Y3 && isOrdinal(Y3) ? cell : X3 && isOrdinal(X3) ? barY : Y3 && isOrdinal(Y3) ? barX : rect : X3 && isNumeric(X3) && !(Y3 && isNumeric(Y3)) ? barX : Y3 && isNumeric(Y3) && !(X3 && isNumeric(X3)) ? barY : cell;
       colorMode = "fill";
       break;
     default:
@@ -26566,9 +26639,6 @@ function isZeroReducer(reduce2) {
 }
 function isSelectReducer(reduce2) {
   return /^(?:first|last|mode)$/i.test(reduce2);
-}
-function isOrdinalReduced(reduce2, value) {
-  return reduce2 != null && !isSelectReducer(reduce2) || !value ? false : isOrdinal(value);
 }
 function isReducer(reduce2) {
   if (reduce2 == null)
@@ -26724,15 +26794,377 @@ var mapCumsum = {
   }
 };
 
-// node_modules/@observablehq/plot/src/marks/tick.js
+// node_modules/@observablehq/plot/src/transforms/window.js
+function windowX(windowOptions = {}, options) {
+  if (arguments.length === 1)
+    options = windowOptions;
+  return mapX(window2(windowOptions), options);
+}
+function windowY(windowOptions = {}, options) {
+  if (arguments.length === 1)
+    options = windowOptions;
+  return mapY(window2(windowOptions), options);
+}
+function window2(options = {}) {
+  if (typeof options === "number")
+    options = { k: options };
+  let { k: k2, reduce: reduce2, shift, anchor, strict } = options;
+  if (anchor === void 0 && shift !== void 0) {
+    anchor = maybeShift(shift);
+    warn(`Warning: the shift option is deprecated; please use anchor "${anchor}" instead.`);
+  }
+  if (!((k2 = Math.floor(k2)) > 0))
+    throw new Error(`invalid k: ${k2}`);
+  return maybeReduce2(reduce2)(k2, maybeAnchor3(anchor, k2), strict);
+}
+function maybeAnchor3(anchor = "middle", k2) {
+  switch (`${anchor}`.toLowerCase()) {
+    case "middle":
+      return k2 - 1 >> 1;
+    case "start":
+      return 0;
+    case "end":
+      return k2 - 1;
+  }
+  throw new Error(`invalid anchor: ${anchor}`);
+}
+function maybeShift(shift) {
+  switch (`${shift}`.toLowerCase()) {
+    case "centered":
+      return "middle";
+    case "leading":
+      return "start";
+    case "trailing":
+      return "end";
+  }
+  throw new Error(`invalid shift: ${shift}`);
+}
+function maybeReduce2(reduce2 = "mean") {
+  if (typeof reduce2 === "string") {
+    if (/^p\d{2}$/i.test(reduce2))
+      return reduceAccessor2(percentile(reduce2));
+    switch (reduce2.toLowerCase()) {
+      case "deviation":
+        return reduceAccessor2(deviation);
+      case "max":
+        return reduceArray((I, V) => max(I, (i) => V[i]));
+      case "mean":
+        return reduceMean;
+      case "median":
+        return reduceAccessor2(median);
+      case "min":
+        return reduceArray((I, V) => min(I, (i) => V[i]));
+      case "mode":
+        return reduceArray((I, V) => mode(I, (i) => V[i]));
+      case "sum":
+        return reduceSum2;
+      case "variance":
+        return reduceAccessor2(variance);
+      case "difference":
+        return reduceDifference;
+      case "ratio":
+        return reduceRatio;
+      case "first":
+        return reduceFirst2;
+      case "last":
+        return reduceLast2;
+    }
+  }
+  if (typeof reduce2 !== "function")
+    throw new Error(`invalid reduce: ${reduce2}`);
+  return reduceArray(taker(reduce2));
+}
+function reduceAccessor2(f) {
+  return (k2, s2, strict) => strict ? {
+    mapIndex(I, S, T) {
+      const v2 = (i) => S[i] == null ? NaN : +S[i];
+      let nans = 0;
+      for (let i = 0; i < k2 - 1; ++i)
+        if (isNaN(v2(i)))
+          ++nans;
+      for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
+        if (isNaN(v2(i + k2 - 1)))
+          ++nans;
+        T[I[i + s2]] = nans === 0 ? f(subarray(I, i, i + k2), v2) : NaN;
+        if (isNaN(v2(i)))
+          --nans;
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      const v2 = (i) => S[i] == null ? NaN : +S[i];
+      for (let i = -s2; i < 0; ++i) {
+        T[I[i + s2]] = f(subarray(I, 0, i + k2), v2);
+      }
+      for (let i = 0, n = I.length - s2; i < n; ++i) {
+        T[I[i + s2]] = f(subarray(I, i, i + k2), v2);
+      }
+    }
+  };
+}
+function reduceArray(f) {
+  return (k2, s2, strict) => strict ? {
+    mapIndex(I, S, T) {
+      let count3 = 0;
+      for (let i = 0; i < k2 - 1; ++i)
+        count3 += defined(S[I[i]]);
+      for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
+        count3 += defined(S[I[i + k2 - 1]]);
+        if (count3 === k2)
+          T[I[i + s2]] = f(subarray(I, i, i + k2), S);
+        count3 -= defined(S[I[i]]);
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      for (let i = -s2; i < 0; ++i) {
+        T[I[i + s2]] = f(subarray(I, 0, i + k2), S);
+      }
+      for (let i = 0, n = I.length - s2; i < n; ++i) {
+        T[I[i + s2]] = f(subarray(I, i, i + k2), S);
+      }
+    }
+  };
+}
+function reduceSum2(k2, s2, strict) {
+  return strict ? {
+    mapIndex(I, S, T) {
+      let nans = 0;
+      let sum5 = 0;
+      for (let i = 0; i < k2 - 1; ++i) {
+        const v2 = S[I[i]];
+        if (v2 === null || isNaN(v2))
+          ++nans;
+        else
+          sum5 += +v2;
+      }
+      for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
+        const a4 = S[I[i]];
+        const b = S[I[i + k2 - 1]];
+        if (b === null || isNaN(b))
+          ++nans;
+        else
+          sum5 += +b;
+        T[I[i + s2]] = nans === 0 ? sum5 : NaN;
+        if (a4 === null || isNaN(a4))
+          --nans;
+        else
+          sum5 -= +a4;
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      let sum5 = 0;
+      const n = I.length;
+      for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
+        sum5 += +S[I[i]] || 0;
+      }
+      for (let i = -s2, j = n - s2; i < j; ++i) {
+        sum5 += +S[I[i + k2 - 1]] || 0;
+        T[I[i + s2]] = sum5;
+        sum5 -= +S[I[i]] || 0;
+      }
+    }
+  };
+}
+function reduceMean(k2, s2, strict) {
+  if (strict) {
+    const sum5 = reduceSum2(k2, s2, strict);
+    return {
+      mapIndex(I, S, T) {
+        sum5.mapIndex(I, S, T);
+        for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
+          T[I[i + s2]] /= k2;
+        }
+      }
+    };
+  } else {
+    return {
+      mapIndex(I, S, T) {
+        let sum5 = 0;
+        let count3 = 0;
+        const n = I.length;
+        for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
+          let v2 = S[I[i]];
+          if (v2 !== null && !isNaN(v2 = +v2))
+            sum5 += v2, ++count3;
+        }
+        for (let i = -s2, j = n - s2; i < j; ++i) {
+          let a4 = S[I[i + k2 - 1]];
+          let b = S[I[i]];
+          if (a4 !== null && !isNaN(a4 = +a4))
+            sum5 += a4, ++count3;
+          T[I[i + s2]] = sum5 / count3;
+          if (b !== null && !isNaN(b = +b))
+            sum5 -= b, --count3;
+        }
+      }
+    };
+  }
+}
+function firstDefined(S, I, i, k2) {
+  for (let j = i + k2; i < j; ++i) {
+    const v2 = S[I[i]];
+    if (defined(v2))
+      return v2;
+  }
+}
+function lastDefined(S, I, i, k2) {
+  for (let j = i + k2 - 1; j >= i; --j) {
+    const v2 = S[I[j]];
+    if (defined(v2))
+      return v2;
+  }
+}
+function firstNumber(S, I, i, k2) {
+  for (let j = i + k2; i < j; ++i) {
+    let v2 = S[I[i]];
+    if (v2 !== null && !isNaN(v2 = +v2))
+      return v2;
+  }
+}
+function lastNumber(S, I, i, k2) {
+  for (let j = i + k2 - 1; j >= i; --j) {
+    let v2 = S[I[j]];
+    if (v2 !== null && !isNaN(v2 = +v2))
+      return v2;
+  }
+}
+function reduceDifference(k2, s2, strict) {
+  return strict ? {
+    mapIndex(I, S, T) {
+      for (let i = 0, n = I.length - k2; i < n; ++i) {
+        const a4 = S[I[i]];
+        const b = S[I[i + k2 - 1]];
+        T[I[i + s2]] = a4 === null || b === null ? NaN : b - a4;
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
+        T[I[i + s2]] = lastNumber(S, I, i, k2) - firstNumber(S, I, i, k2);
+      }
+    }
+  };
+}
+function reduceRatio(k2, s2, strict) {
+  return strict ? {
+    mapIndex(I, S, T) {
+      for (let i = 0, n = I.length - k2; i < n; ++i) {
+        const a4 = S[I[i]];
+        const b = S[I[i + k2 - 1]];
+        T[I[i + s2]] = a4 === null || b === null ? NaN : b / a4;
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
+        T[I[i + s2]] = lastNumber(S, I, i, k2) / firstNumber(S, I, i, k2);
+      }
+    }
+  };
+}
+function reduceFirst2(k2, s2, strict) {
+  return strict ? {
+    mapIndex(I, S, T) {
+      for (let i = 0, n = I.length - k2; i < n; ++i) {
+        T[I[i + s2]] = S[I[i]];
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
+        T[I[i + s2]] = firstDefined(S, I, i, k2);
+      }
+    }
+  };
+}
+function reduceLast2(k2, s2, strict) {
+  return strict ? {
+    mapIndex(I, S, T) {
+      for (let i = 0, n = I.length - k2; i < n; ++i) {
+        T[I[i + s2]] = S[I[i + k2 - 1]];
+      }
+    }
+  } : {
+    mapIndex(I, S, T) {
+      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
+        T[I[i + s2]] = lastDefined(S, I, i, k2);
+      }
+    }
+  };
+}
+
+// node_modules/@observablehq/plot/src/marks/bollinger.js
 var defaults14 = {
+  n: 20,
+  k: 2,
+  color: "currentColor",
+  opacity: 0.2,
+  strict: true,
+  anchor: "end"
+};
+function bollingerX(data, {
+  x: x4 = identity6,
+  y: y4,
+  k: k2 = defaults14.k,
+  color: color3 = defaults14.color,
+  opacity: opacity2 = defaults14.opacity,
+  fill = color3,
+  fillOpacity = opacity2,
+  stroke = color3,
+  strokeOpacity,
+  strokeWidth,
+  ...options
+} = {}) {
+  return marks(
+    isNoneish(fill) ? null : areaX(
+      data,
+      map5(
+        { x1: bollinger({ k: -k2, ...options }), x2: bollinger({ k: k2, ...options }) },
+        { x1: x4, x2: x4, y: y4, fill, fillOpacity, ...options }
+      )
+    ),
+    isNoneish(stroke) ? null : lineX(data, map5({ x: bollinger(options) }, { x: x4, y: y4, stroke, strokeOpacity, strokeWidth, ...options }))
+  );
+}
+function bollingerY(data, {
+  x: x4,
+  y: y4 = identity6,
+  k: k2 = defaults14.k,
+  color: color3 = defaults14.color,
+  opacity: opacity2 = defaults14.opacity,
+  fill = color3,
+  fillOpacity = opacity2,
+  stroke = color3,
+  strokeOpacity,
+  strokeWidth,
+  ...options
+} = {}) {
+  return marks(
+    isNoneish(fill) ? null : areaY(
+      data,
+      map5(
+        { y1: bollinger({ k: -k2, ...options }), y2: bollinger({ k: k2, ...options }) },
+        { x: x4, y1: y4, y2: y4, fill, fillOpacity, ...options }
+      )
+    ),
+    isNoneish(stroke) ? null : lineY(data, map5({ y: bollinger(options) }, { x: x4, y: y4, stroke, strokeOpacity, strokeWidth, ...options }))
+  );
+}
+function bollinger({ n = defaults14.n, k: k2 = 0, strict = defaults14.strict, anchor = defaults14.anchor } = {}) {
+  return window2({ k: n, reduce: (Y3) => mean(Y3) + k2 * (deviation(Y3) || 0), strict, anchor });
+}
+
+// node_modules/@observablehq/plot/src/marks/tick.js
+var defaults15 = {
   ariaLabel: "tick",
   fill: null,
   stroke: "currentColor"
 };
 var AbstractTick = class extends Mark {
   constructor(data, channels, options) {
-    super(data, channels, options, defaults14);
+    super(data, channels, options, defaults15);
     markers(this, options);
   }
   render(index3, scales, channels, dimensions, context) {
@@ -26872,7 +27304,7 @@ function quartile3(values2) {
 }
 
 // node_modules/@observablehq/plot/src/marks/raster.js
-var defaults15 = {
+var defaults16 = {
   ariaLabel: "raster",
   stroke: null,
   pixelSize: 1
@@ -26890,7 +27322,7 @@ function integer(input, name) {
   return x4;
 }
 var AbstractRaster = class extends Mark {
-  constructor(data, channels, options = {}, defaults22) {
+  constructor(data, channels, options = {}, defaults23) {
     let {
       width,
       height,
@@ -26900,7 +27332,7 @@ var AbstractRaster = class extends Mark {
       y1: y12 = y4 == null ? 0 : void 0,
       x2: x22 = x4 == null ? width : void 0,
       y2: y22 = y4 == null ? height : void 0,
-      pixelSize = defaults22.pixelSize,
+      pixelSize = defaults23.pixelSize,
       blur: blur3 = 0,
       interpolate
     } = options;
@@ -26938,7 +27370,7 @@ var AbstractRaster = class extends Mark {
         ...channels
       },
       options,
-      defaults22
+      defaults23
     );
     this.width = width;
     this.height = height;
@@ -26957,7 +27389,7 @@ var Raster = class extends AbstractRaster {
       if (maybeColorChannel(fill)[0] !== void 0)
         options = sampler("fill", options);
     }
-    super(data, void 0, options, defaults15);
+    super(data, void 0, options, defaults16);
     this.imageRendering = impliedString(imageRendering, "auto");
   }
   // Ignore the color scale, so the fill channel is returned unscaled.
@@ -27322,7 +27754,7 @@ function denseY(y12, y22, width, height) {
 }
 
 // node_modules/@observablehq/plot/src/marks/contour.js
-var defaults16 = {
+var defaults17 = {
   ariaLabel: "contour",
   fill: "none",
   stroke: "currentColor",
@@ -27331,7 +27763,7 @@ var defaults16 = {
 };
 var Contour = class extends AbstractRaster {
   constructor(data, { smooth = true, value, ...options } = {}) {
-    const channels = styles({}, options, defaults16);
+    const channels = styles({}, options, defaults17);
     if (value === void 0) {
       for (const key in channels) {
         if (channels[key].value != null) {
@@ -27362,7 +27794,7 @@ var Contour = class extends AbstractRaster {
       if (interpolate === void 0)
         options.interpolate = "nearest";
     }
-    super(data, { value: { value, optional: true } }, contourGeometry(options), defaults16);
+    super(data, { value: { value, optional: true } }, contourGeometry(options), defaults17);
     const contourChannels = { geometry: { value: identity6 } };
     for (const key in this.channels) {
       const channel = this.channels[key];
@@ -27663,7 +28095,7 @@ var DelaunayLink = class extends Mark {
   }
 };
 var AbstractDelaunayMark = class extends Mark {
-  constructor(data, options = {}, defaults22, zof = ({ z }) => z) {
+  constructor(data, options = {}, defaults23, zof = ({ z }) => z) {
     const { x: x4, y: y4 } = options;
     super(
       data,
@@ -27673,7 +28105,7 @@ var AbstractDelaunayMark = class extends Mark {
         z: { value: zof(options), optional: true }
       },
       options,
-      defaults22
+      defaults23
     );
   }
   render(index3, scales, channels, dimensions, context) {
@@ -27774,7 +28206,7 @@ function voronoiMesh(data, options) {
 }
 
 // node_modules/@observablehq/plot/src/marks/density.js
-var defaults17 = {
+var defaults18 = {
   ariaLabel: "density",
   fill: "none",
   stroke: "currentColor",
@@ -27793,7 +28225,7 @@ var Density = class extends Mark {
         weight: { value: weight, optional: true }
       },
       densityInitializer({ ...options, fill, stroke }, fillDensity, strokeDensity),
-      defaults17
+      defaults18
     );
     if (fillDensity)
       this.fill = void 0;
@@ -27896,7 +28328,7 @@ function isDensity(value) {
 }
 
 // node_modules/@observablehq/plot/src/marks/geo.js
-var defaults18 = {
+var defaults19 = {
   ariaLabel: "geo",
   fill: "none",
   stroke: "currentColor",
@@ -27915,7 +28347,7 @@ var Geo = class extends Mark {
         r: { value: vr, scale: "r", filter: positive, optional: true }
       },
       withDefaultSort(options),
-      defaults18
+      defaults19
     );
     this.r = cr;
   }
@@ -28079,7 +28511,7 @@ function hbin(I, X3, Y3, dx) {
 }
 
 // node_modules/@observablehq/plot/src/marks/hexgrid.js
-var defaults19 = {
+var defaults20 = {
   ariaLabel: "hexgrid",
   fill: "none",
   stroke: "currentColor",
@@ -28090,7 +28522,7 @@ function hexgrid(options) {
 }
 var Hexgrid = class extends Mark {
   constructor({ binWidth = 20, clip = true, ...options } = {}) {
-    super(singleton, void 0, { clip, ...options }, defaults19);
+    super(singleton, void 0, { clip, ...options }, defaults20);
     this.binWidth = number5(binWidth);
   }
   render(index3, scales, channels, dimensions, context) {
@@ -28111,7 +28543,7 @@ function round(x4) {
 }
 
 // node_modules/@observablehq/plot/src/marks/image.js
-var defaults20 = {
+var defaults21 = {
   ariaLabel: "image",
   fill: null,
   stroke: null
@@ -28153,7 +28585,7 @@ var Image2 = class extends Mark {
         src: { value: vs, optional: true }
       },
       withDefaultSort(options),
-      defaults20
+      defaults21
     );
     this.src = cs;
     this.width = cw;
@@ -28305,7 +28737,7 @@ function qt(p, dof) {
 }
 
 // node_modules/@observablehq/plot/src/marks/linearRegression.js
-var defaults21 = {
+var defaults22 = {
   ariaLabel: "linear-regression",
   fill: "currentColor",
   fillOpacity: 0.1,
@@ -28326,7 +28758,7 @@ var LinearRegression = class extends Mark {
         z: { value: maybeZ(options), optional: true }
       },
       options,
-      defaults21
+      defaults22
     );
     this.z = z;
     this.ci = +ci;
@@ -28808,7 +29240,14 @@ function centroid({ geometry = identity6, ...options } = {}) {
     const path2 = path_default(projection3);
     for (let i = 0; i < n; ++i)
       [X3[i], Y3[i]] = path2.centroid(G[i]);
-    return { data, facets, channels: { x: { value: X3, source: null }, y: { value: Y3, source: null } } };
+    return {
+      data,
+      facets,
+      channels: {
+        x: { value: X3, scale: projection3 == null ? "x" : null, source: null },
+        y: { value: Y3, scale: projection3 == null ? "y" : null, source: null }
+      }
+    };
   });
 }
 function geoCentroid({ geometry = identity6, ...options } = {}) {
@@ -28828,13 +29267,13 @@ var anchorXMiddle = ({ width, marginLeft, marginRight }) => [0, (marginLeft + wi
 var anchorYTop = ({ marginTop }) => [1, marginTop];
 var anchorYBottom = ({ height, marginBottom }) => [-1, height - marginBottom];
 var anchorYMiddle = ({ height, marginTop, marginBottom }) => [0, (marginTop + height - marginBottom) / 2];
-function maybeAnchor3(anchor) {
+function maybeAnchor4(anchor) {
   return typeof anchor === "string" ? { anchor } : anchor;
 }
 function dodgeX(dodgeOptions = {}, options = {}) {
   if (arguments.length === 1)
     [dodgeOptions, options] = mergeOptions3(dodgeOptions);
-  let { anchor = "left", padding = 1, r = options.r } = maybeAnchor3(dodgeOptions);
+  let { anchor = "left", padding = 1, r = options.r } = maybeAnchor4(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "left":
       anchor = anchorXLeft;
@@ -28853,7 +29292,7 @@ function dodgeX(dodgeOptions = {}, options = {}) {
 function dodgeY(dodgeOptions = {}, options = {}) {
   if (arguments.length === 1)
     [dodgeOptions, options] = mergeOptions3(dodgeOptions);
-  let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor3(dodgeOptions);
+  let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor4(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "top":
       anchor = anchorYTop;
@@ -29045,307 +29484,6 @@ var normalizeMean = normalizeAccessor(mean);
 var normalizeMedian = normalizeAccessor(median);
 var normalizeMin = normalizeAccessor(min);
 var normalizeSum = normalizeAccessor(sum);
-
-// node_modules/@observablehq/plot/src/transforms/window.js
-function windowX(windowOptions = {}, options) {
-  if (arguments.length === 1)
-    options = windowOptions;
-  return mapX(window2(windowOptions), options);
-}
-function windowY(windowOptions = {}, options) {
-  if (arguments.length === 1)
-    options = windowOptions;
-  return mapY(window2(windowOptions), options);
-}
-function window2(options = {}) {
-  if (typeof options === "number")
-    options = { k: options };
-  let { k: k2, reduce: reduce2, shift, anchor, strict } = options;
-  if (anchor === void 0 && shift !== void 0) {
-    anchor = maybeShift(shift);
-    warn(`Warning: the shift option is deprecated; please use anchor "${anchor}" instead.`);
-  }
-  if (!((k2 = Math.floor(k2)) > 0))
-    throw new Error(`invalid k: ${k2}`);
-  return maybeReduce2(reduce2)(k2, maybeAnchor4(anchor, k2), strict);
-}
-function maybeAnchor4(anchor = "middle", k2) {
-  switch (`${anchor}`.toLowerCase()) {
-    case "middle":
-      return k2 - 1 >> 1;
-    case "start":
-      return 0;
-    case "end":
-      return k2 - 1;
-  }
-  throw new Error(`invalid anchor: ${anchor}`);
-}
-function maybeShift(shift) {
-  switch (`${shift}`.toLowerCase()) {
-    case "centered":
-      return "middle";
-    case "leading":
-      return "start";
-    case "trailing":
-      return "end";
-  }
-  throw new Error(`invalid shift: ${shift}`);
-}
-function maybeReduce2(reduce2 = "mean") {
-  if (typeof reduce2 === "string") {
-    if (/^p\d{2}$/i.test(reduce2))
-      return reduceAccessor2(percentile(reduce2));
-    switch (reduce2.toLowerCase()) {
-      case "deviation":
-        return reduceAccessor2(deviation);
-      case "max":
-        return reduceArray((I, V) => max(I, (i) => V[i]));
-      case "mean":
-        return reduceMean;
-      case "median":
-        return reduceAccessor2(median);
-      case "min":
-        return reduceArray((I, V) => min(I, (i) => V[i]));
-      case "mode":
-        return reduceArray((I, V) => mode(I, (i) => V[i]));
-      case "sum":
-        return reduceSum2;
-      case "variance":
-        return reduceAccessor2(variance);
-      case "difference":
-        return reduceDifference;
-      case "ratio":
-        return reduceRatio;
-      case "first":
-        return reduceFirst2;
-      case "last":
-        return reduceLast2;
-    }
-  }
-  if (typeof reduce2 !== "function")
-    throw new Error(`invalid reduce: ${reduce2}`);
-  return reduceArray(taker(reduce2));
-}
-function reduceAccessor2(f) {
-  return (k2, s2, strict) => strict ? {
-    mapIndex(I, S, T) {
-      const v2 = (i) => S[i] == null ? NaN : +S[i];
-      let nans = 0;
-      for (let i = 0; i < k2 - 1; ++i)
-        if (isNaN(v2(i)))
-          ++nans;
-      for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
-        if (isNaN(v2(i + k2 - 1)))
-          ++nans;
-        T[I[i + s2]] = nans === 0 ? f(subarray(I, i, i + k2), v2) : NaN;
-        if (isNaN(v2(i)))
-          --nans;
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      const v2 = (i) => S[i] == null ? NaN : +S[i];
-      for (let i = -s2; i < 0; ++i) {
-        T[I[i + s2]] = f(subarray(I, 0, i + k2), v2);
-      }
-      for (let i = 0, n = I.length - s2; i < n; ++i) {
-        T[I[i + s2]] = f(subarray(I, i, i + k2), v2);
-      }
-    }
-  };
-}
-function reduceArray(f) {
-  return (k2, s2, strict) => strict ? {
-    mapIndex(I, S, T) {
-      let count3 = 0;
-      for (let i = 0; i < k2 - 1; ++i)
-        count3 += defined(S[I[i]]);
-      for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
-        count3 += defined(S[I[i + k2 - 1]]);
-        if (count3 === k2)
-          T[I[i + s2]] = f(subarray(I, i, i + k2), S);
-        count3 -= defined(S[I[i]]);
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      for (let i = -s2; i < 0; ++i) {
-        T[I[i + s2]] = f(subarray(I, 0, i + k2), S);
-      }
-      for (let i = 0, n = I.length - s2; i < n; ++i) {
-        T[I[i + s2]] = f(subarray(I, i, i + k2), S);
-      }
-    }
-  };
-}
-function reduceSum2(k2, s2, strict) {
-  return strict ? {
-    mapIndex(I, S, T) {
-      let nans = 0;
-      let sum5 = 0;
-      for (let i = 0; i < k2 - 1; ++i) {
-        const v2 = S[I[i]];
-        if (v2 === null || isNaN(v2))
-          ++nans;
-        else
-          sum5 += +v2;
-      }
-      for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
-        const a4 = S[I[i]];
-        const b = S[I[i + k2 - 1]];
-        if (b === null || isNaN(b))
-          ++nans;
-        else
-          sum5 += +b;
-        T[I[i + s2]] = nans === 0 ? sum5 : NaN;
-        if (a4 === null || isNaN(a4))
-          --nans;
-        else
-          sum5 -= +a4;
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      let sum5 = 0;
-      const n = I.length;
-      for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
-        sum5 += +S[I[i]] || 0;
-      }
-      for (let i = -s2, j = n - s2; i < j; ++i) {
-        sum5 += +S[I[i + k2 - 1]] || 0;
-        T[I[i + s2]] = sum5;
-        sum5 -= +S[I[i]] || 0;
-      }
-    }
-  };
-}
-function reduceMean(k2, s2, strict) {
-  if (strict) {
-    const sum5 = reduceSum2(k2, s2, strict);
-    return {
-      mapIndex(I, S, T) {
-        sum5.mapIndex(I, S, T);
-        for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
-          T[I[i + s2]] /= k2;
-        }
-      }
-    };
-  } else {
-    return {
-      mapIndex(I, S, T) {
-        let sum5 = 0;
-        let count3 = 0;
-        const n = I.length;
-        for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
-          let v2 = S[I[i]];
-          if (v2 !== null && !isNaN(v2 = +v2))
-            sum5 += v2, ++count3;
-        }
-        for (let i = -s2, j = n - s2; i < j; ++i) {
-          let a4 = S[I[i + k2 - 1]];
-          let b = S[I[i]];
-          if (a4 !== null && !isNaN(a4 = +a4))
-            sum5 += a4, ++count3;
-          T[I[i + s2]] = sum5 / count3;
-          if (b !== null && !isNaN(b = +b))
-            sum5 -= b, --count3;
-        }
-      }
-    };
-  }
-}
-function firstDefined(S, I, i, k2) {
-  for (let j = i + k2; i < j; ++i) {
-    const v2 = S[I[i]];
-    if (defined(v2))
-      return v2;
-  }
-}
-function lastDefined(S, I, i, k2) {
-  for (let j = i + k2 - 1; j >= i; --j) {
-    const v2 = S[I[j]];
-    if (defined(v2))
-      return v2;
-  }
-}
-function firstNumber(S, I, i, k2) {
-  for (let j = i + k2; i < j; ++i) {
-    let v2 = S[I[i]];
-    if (v2 !== null && !isNaN(v2 = +v2))
-      return v2;
-  }
-}
-function lastNumber(S, I, i, k2) {
-  for (let j = i + k2 - 1; j >= i; --j) {
-    let v2 = S[I[j]];
-    if (v2 !== null && !isNaN(v2 = +v2))
-      return v2;
-  }
-}
-function reduceDifference(k2, s2, strict) {
-  return strict ? {
-    mapIndex(I, S, T) {
-      for (let i = 0, n = I.length - k2; i < n; ++i) {
-        const a4 = S[I[i]];
-        const b = S[I[i + k2 - 1]];
-        T[I[i + s2]] = a4 === null || b === null ? NaN : b - a4;
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
-        T[I[i + s2]] = lastNumber(S, I, i, k2) - firstNumber(S, I, i, k2);
-      }
-    }
-  };
-}
-function reduceRatio(k2, s2, strict) {
-  return strict ? {
-    mapIndex(I, S, T) {
-      for (let i = 0, n = I.length - k2; i < n; ++i) {
-        const a4 = S[I[i]];
-        const b = S[I[i + k2 - 1]];
-        T[I[i + s2]] = a4 === null || b === null ? NaN : b / a4;
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
-        T[I[i + s2]] = lastNumber(S, I, i, k2) / firstNumber(S, I, i, k2);
-      }
-    }
-  };
-}
-function reduceFirst2(k2, s2, strict) {
-  return strict ? {
-    mapIndex(I, S, T) {
-      for (let i = 0, n = I.length - k2; i < n; ++i) {
-        T[I[i + s2]] = S[I[i]];
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
-        T[I[i + s2]] = firstDefined(S, I, i, k2);
-      }
-    }
-  };
-}
-function reduceLast2(k2, s2, strict) {
-  return strict ? {
-    mapIndex(I, S, T) {
-      for (let i = 0, n = I.length - k2; i < n; ++i) {
-        T[I[i + s2]] = S[I[i + k2 - 1]];
-      }
-    }
-  } : {
-    mapIndex(I, S, T) {
-      for (let i = -s2, n = I.length - k2 + s2 + 1; i < n; ++i) {
-        T[I[i + s2]] = lastDefined(S, I, i, k2);
-      }
-    }
-  };
-}
 
 // node_modules/@observablehq/plot/src/transforms/select.js
 function select(selector, options = {}) {

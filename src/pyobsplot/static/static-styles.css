@@ -1,4 +1,22 @@
 /* css/styles.css */
+.pyobsplot-plot h2 {
+  line-height: 28px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.pyobsplot-plot h3 {
+  margin: 0;
+  line-height: 24px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.pyobsplot-plot figcaption {
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
 .pyobsplot-plot.light svg,
 .pyobsplot-plot.light figure {
   color: black;
