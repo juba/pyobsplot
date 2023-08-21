@@ -1,4 +1,8 @@
-## pyobsplot 0.3.8-dev
+## pyobsplot 0.3.8
+
+- Update Observable Plot to 0.6.10
+- Add styling for titles, subtitles and captions
+- Update anywidget to 0.6.3
 
 
 ## pyobsplot 0.3.7
