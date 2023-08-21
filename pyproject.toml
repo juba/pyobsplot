@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyobsplot"
-version = "0.3.8-dev"
+version = "0.3.8"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
 authors = ["Julien Barnier <julien@nozav.org>"]
 license = "MIT"
@@ -15,7 +15,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: JavaScript",
-    "Topic :: Scientific/Engineering :: Visualization"
+    "Topic :: Scientific/Engineering :: Visualization",
 ]
 
 [tool.poetry.urls]
@@ -23,7 +23,7 @@ changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-anywidget = {extras = ["dev"], version = "^0.6.0"}
+anywidget = { extras = ["dev"], version = "^0.6.0" }
 pandas = ">=1.2.0"
 polars = ">=0.16.0"
 pyarrow = "^11.0.0"
