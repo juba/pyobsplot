@@ -45,6 +45,23 @@ function jsdom_plot(request) {
         // theming
         figure.style.color ||= fg[theme];
         figure.style.backgroundColor ||= bg[theme];
+        for (const h2 of figure.querySelectorAll("h2")) {
+            h2.style.lineHeight = "28px";
+            h2.style.fontSize = "20px";
+            h2.style.fontWeight = "600";
+            h2.style.margin = "0";
+        }
+        for (const h3 of figure.querySelectorAll("h3")) {
+            h3.style.lineHeight = "24px";
+            h3.style.fontSize = "16px";
+            h3.style.fontWeight = "400";
+            h3.style.margin = "0";
+        }
+        for (const figcaption of figure.querySelectorAll("figcaption")) {
+            figcaption.style.lineHeight = "20px";
+            figcaption.style.fontSize = "12px";
+            figcaption.style.fontWeight = "500";
+        }
     }
 
     return el.outerHTML
