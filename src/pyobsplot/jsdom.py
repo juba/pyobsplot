@@ -10,7 +10,7 @@ from IPython.display import HTML, SVG  # type: ignore
 from typing import Any
 
 from .parsing import SpecParser
-from .utils import default_theme
+from .utils import DEFAULT_THEME
 
 
 class ObsplotJsdom:
@@ -27,7 +27,7 @@ class ObsplotJsdom:
         self,
         spec: Any,
         port: int,
-        theme: str = default_theme,
+        theme: str = DEFAULT_THEME,
         default: dict = {},
         debug: bool = False,
     ) -> None:

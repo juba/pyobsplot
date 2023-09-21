@@ -11,7 +11,7 @@ from typing import Any
 
 from .widget import ObsplotWidget
 from .jsdom import ObsplotJsdom
-from .utils import allowed_defaults, min_npm_version, available_themes, default_theme
+from .utils import ALLOWED_DEFAULTS, MIN_NPM_VERSION, AVAILABLE_THEMES, DEFAULT_THEME
 
 
 class Obsplot:
@@ -25,7 +25,7 @@ class Obsplot:
     def __new__(
         cls,
         renderer: str = "widget",
-        theme: str = default_theme,
+        theme: str = DEFAULT_THEME,
         default: dict = {},
         debug: bool = False,
     ) -> Any:
@@ -45,11 +45,11 @@ class Obsplot:
         """
 
         # Check theme value
-        if theme not in available_themes:
+        if theme not in AVAILABLE_THEMES:
             raise ValueError(
                 f"""
                 Incorrect theme '{theme}'. 
-                Available renderers are {available_themes}
+                Available renderers are {AVAILABLE_THEMES}
                 """
             )
 
@@ -76,7 +76,7 @@ class ObsplotCreator:
     """
 
     def __init__(
-        self, theme: str = default_theme, default: dict = {}, debug: bool = False
+        self, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
     ) -> None:
         """Generic Creator constructor
 
@@ -84,9 +84,9 @@ class ObsplotCreator:
             default (dict, optional): dict of default spec values. Defaults to {}.
         """
         for k in default:
-            if k not in allowed_defaults:
+            if k not in ALLOWED_DEFAULTS:
                 raise ValueError(
-                    f"{k} is not allowed in default.\nAllowed values: {allowed_defaults}."  # noqa: E501
+                    f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
                 )
         self._default = default
         self._debug = debug
@@ -145,7 +145,7 @@ class ObsplotWidgetCreator(ObsplotCreator):
     """
 
     def __init__(
-        self, theme: str = default_theme, default: dict = {}, debug: bool = False
+        self, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
     ) -> None:
         super().__init__(theme, default, debug)
 
@@ -165,7 +165,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
     """
 
     def __init__(
-        self, theme: str = default_theme, default: dict = {}, debug: bool = False
+        self, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
     ) -> None:
         super().__init__(theme, default, debug)
         self._proc = None
@@ -205,7 +205,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
         # Run node script with JSON spec as input
         try:
             p = Popen(
-                ["npx", f"pyobsplot@{min_npm_version}"],
+                ["npx", f"pyobsplot@{MIN_NPM_VERSION}"],
                 stdin=None,
                 stdout=PIPE,
                 stderr=PIPE,

@@ -2,7 +2,7 @@ from functools import partial
 
 from .obsplot import ObsplotWidgetCreator, ObsplotJsdomCreator
 from .widget import ObsplotWidget
-from .utils import plot_methods
+from .utils import PLOT_METHODS
 
 # Default renderer for Plot.plot() calls.
 # Not documented, only internal use for documentation generation
@@ -45,7 +45,7 @@ def method_to_spec(*args, **kwargs) -> dict:
 
 # For each exitsting JS Plot method, create a static Python Plot method with the
 # same name which calls method_to_spec()
-for method in plot_methods:
+for method in PLOT_METHODS:
     if method != "plot":
         setattr(Plot, method, staticmethod(partial(method_to_spec, name=method)))
 

@@ -6,7 +6,7 @@ Obsplot widget handling.
 import anywidget
 import traitlets
 
-from .utils import bundler_output_dir, default_theme
+from .utils import bundler_output_dir, DEFAULT_THEME
 from .parsing import SpecParser
 
 
@@ -33,7 +33,7 @@ class ObsplotWidget(anywidget.AnyWidget):
     spec = traitlets.Dict().tag(sync=True)
 
     def __init__(
-        self, spec, theme: str = default_theme, default: dict = {}, debug: bool = False
+        self, spec, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
     ):
         """Obsplot widget constructor."""
         self._debug = debug

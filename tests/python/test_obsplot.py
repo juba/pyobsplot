@@ -8,7 +8,7 @@ import json
 
 import pyobsplot
 from pyobsplot import Obsplot, Plot
-from pyobsplot.utils import default_theme
+from pyobsplot.utils import DEFAULT_THEME
 
 default = {"width": 100, "style": {"color": "red"}}
 
@@ -86,7 +86,7 @@ class TestInit:
         assert oj_debug._debug
 
     def test_themes(self, oj, oj_theme_dark, oj_theme_current):
-        assert oj._theme == default_theme
+        assert oj._theme == DEFAULT_THEME
         assert oj_theme_dark._theme == "dark"
         assert oj_theme_current._theme == "current"
         with pytest.raises(ValueError):
