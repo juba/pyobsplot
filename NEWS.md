@@ -1,5 +1,7 @@
 ## pyobsplot 0.3.9-dev
 
+- Update Observable Plot to 0.6.11
+
 
 ## pyobsplot 0.3.8
 
@@ -13,11 +15,13 @@
 - Update Observable Plot to 0.6.9
 - Update anywidget to 0.6.1
 
+
 ## pyobsplot 0.3.6
 
 - Fix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)
 - Timestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)
 - Update anywidget to 0.4.3
+
 
 ## pyobsplot 0.3.5
 

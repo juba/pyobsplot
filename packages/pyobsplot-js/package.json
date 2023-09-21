@@ -14,7 +14,7 @@
   },
   "homepage": "https://juba.github.io/pyobsplot",
   "dependencies": {
-    "@observablehq/plot": "^0.6.10",
+    "@observablehq/plot": "^0.6.11",
     "apache-arrow": "^12.0.1",
     "canvas": "^2.11.2",
     "d3": "^7.8.5",
