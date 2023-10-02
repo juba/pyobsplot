@@ -225,8 +225,8 @@ The complete list of available default attributes is :
 
 ```{python}
 #| echo: false
-from pyobsplot.utils import allowed_defaults
-print(allowed_defaults)
+from pyobsplot.utils import ALLOWED_DEFAULTS
+print(ALLOWED_DEFAULTS)
 ```
 
 So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :
