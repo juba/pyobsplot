@@ -17,6 +17,8 @@ classifiers = [
     "Programming Language :: JavaScript",
     "Topic :: Scientific/Engineering :: Visualization",
 ]
+packages = [{ include = "pyobsplot", from = "src" }]
+
 
 [tool.poetry.urls]
 changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
