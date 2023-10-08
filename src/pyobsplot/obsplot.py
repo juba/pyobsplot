@@ -5,6 +5,7 @@ Obsplot main class.
 import shutil
 import os
 import signal
+import io
 from pathlib import Path
 from subprocess import Popen, PIPE, SubprocessError
 from IPython.display import display, SVG, HTML
@@ -287,6 +288,9 @@ class ObsplotJsdomCreator(ObsplotCreator):
         Raises:
             RuntimeWarning: if the file extension doesn't match the Obsplot type.
         """
+        if isinstance(path, io.StringIO):
+            path.write(res.data)
+            return
         extension = Path(path).suffix.lower()
         if extension not in [".html", ".svg", ".htm"]:
             warnings.warn(
