@@ -184,6 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#datetime-objects" id="toc-datetime-objects" class="nav-link" data-scroll-target="#datetime-objects">datetime objects</a></li>
   <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
   <li><a href="#interactivity" id="toc-interactivity" class="nav-link" data-scroll-target="#interactivity">Interactivity</a></li>
+  <li><a href="#saving-plots-to-file" id="toc-saving-plots-to-file" class="nav-link" data-scroll-target="#saving-plots-to-file">Saving plots to file</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -369,6 +370,17 @@ Supported
 </td>
 <td>
 Not supported. Only static plots are produced.
+</td>
+</tr>
+<tr>
+<td>
+<strong>Save plot to disk</strong>
+</td>
+<td>
+Plots can be saved as SVG or HTML files
+</td>
+<td>
+Not supported
 </td>
 </tr>
 <tr>
@@ -614,7 +626,7 @@ Output is saved between sessions
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"marks"</span>: [</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>            Plot.rectY(penguins, Plot.binX({<span class="st">"y"</span>: <span class="st">"count"</span>}, {<span class="st">"x"</span>: <span class="st">"body_mass_g"</span>, <span class="st">"fill"</span>: <span class="st">"steelblue"</span>, <span class="st">"fillOpacity"</span>: opacity})),</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY([<span class="dv">0</span>])</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            ]</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> op(generate_plot_spec(<span class="dv">1</span>))</span>
@@ -631,6 +643,25 @@ Output is saved between sessions
 <span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>display(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can see a live version of this example in the following Colab notebook: <a href="https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb"><img src="img/colab-badge.svg" class="img-fluid"></a></p>
+</section>
+<section id="saving-plots-to-file" class="level2">
+<h2 class="anchored" data-anchor-id="saving-plots-to-file">Saving plots to file</h2>
+<p>When using the <code>jsdom</code> renderer, generated plots can be savec to a file. To do this, just add a <code>path</code> argument to your generator call:</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"jsdom"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>op(Plot.lineY([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>]), path<span class="op">=</span><span class="st">"path_to/file.svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>By default Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a <code>&lt;figure&gt;</code> HTML tag. When using the <code>path</code> option, <code>pyobsplot</code> will warn you if you try to save an HTML output to a SVG file.</p>
+<p>In any case, you can also use Plot’s <code>figure</code> option to force the output to be wrapped in <code>&lt;figure&gt;</code>:</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"jsdom"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>op({</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"marks"</span>: Plot.lineY([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>]), </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"figure"</span>: <span class="va">True</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    }, </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">"/tmp/out.html"</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
