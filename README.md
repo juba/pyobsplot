@@ -38,8 +38,6 @@ Plot.plot({
 
 ## Installation and usage
 
-> **Warning**: this project is at an early stage.
-
 `pyobsplot` can be installed with `pip`:
 
 ```sh
