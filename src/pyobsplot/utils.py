@@ -8,7 +8,7 @@ import pathlib
 bundler_output_dir = pathlib.Path(__file__).parent / "static"
 
 # Minimum npm package version
-MIN_NPM_VERSION = "0.3.9"
+MIN_NPM_VERSION = "0.4.0"
 
 # Allowed default values
 ALLOWED_DEFAULTS = [
