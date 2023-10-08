@@ -45,7 +45,7 @@ class ObsplotJsdom:
         self.port = port
         self.theme = theme
 
-    def plot(self):
+    def plot(self) -> SVG | HTML:
         """Generates the plot by sending request to http node server.
 
         Returns:
