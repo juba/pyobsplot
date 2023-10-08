@@ -142,6 +142,11 @@ The following table lists the differences between the two renderers.
 <td>Not supported. Only static plots are produced.</td>
 </tr>
 <tr>
+<td>**Save plot to disk**</td>
+<td>Plots can be saved as SVG or HTML files</td>
+<td>Not supported</td>
+</tr>
+<tr>
 <td>**Jupyter<br>interactivity**</td>
 <td>Basic</td>
 <td>None</td>
@@ -398,7 +403,7 @@ def generate_plot_spec(opacity):
       "marks": [
             Plot.rectY(penguins, Plot.binX({"y": "count"}, {"x": "body_mass_g", "fill": "steelblue", "fillOpacity": opacity})),
             Plot.ruleY([0])
-        ]
+            ]
     }
 
 plot = op(generate_plot_spec(1))
@@ -417,3 +422,30 @@ display(plot)
 
 You can see a live version of this example in the following Colab notebook: [![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
 
+
+## Saving plots to file
+
+When using the `jsdom` renderer, generated plots can be savec to a file. To do this, just add a `path` argument to your generator call:
+
+```{python}
+#| eval: false
+
+op = Obsplot(renderer="jsdom")
+op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
+```
+
+By default Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. When using the `path` option, `pyobsplot` will warn you if you try to save an HTML output to a SVG file.
+
+In any case, you can also use Plot's `figure` option to force the output to be wrapped in `<figure>`:
+
+```{python}
+#| eval: false
+
+op = Obsplot(renderer="jsdom")
+op({
+        "marks": Plot.lineY([1, 2, 3, 2]), 
+        "figure": True
+    }, 
+    path="/tmp/out.html"
+)
+```
