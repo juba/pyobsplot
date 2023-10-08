@@ -93,6 +93,7 @@ class TestInit:
             Obsplot(theme="foobar")
 
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning:traitlets")
     def test_init(self, op, ow, oj):
         with pytest.raises(ValueError):
             op(0, x=1)
@@ -108,6 +109,7 @@ class TestInit:
         assert oj(spec) is None
 
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning:traitlets")
     def test_plot_plot(self, ow, oj):
         spec = Plot.lineY([1, 2])  # type: ignore
         plot = Plot.plot(spec)
