@@ -15110,7 +15110,7 @@ var utcYears = utcYear.range;
 
 // node_modules/d3-time/src/ticks.js
 function ticker(year, month, week, day, hour, minute) {
-  const tickIntervals = [
+  const tickIntervals2 = [
     [second, 1, durationSecond],
     [second, 5, 5 * durationSecond],
     [second, 15, 15 * durationSecond],
@@ -15140,12 +15140,12 @@ function ticker(year, month, week, day, hour, minute) {
   }
   function tickInterval(start2, stop, count3) {
     const target = Math.abs(stop - start2) / count3;
-    const i = bisector(([, , step2]) => step2).right(tickIntervals, target);
-    if (i === tickIntervals.length)
+    const i = bisector(([, , step2]) => step2).right(tickIntervals2, target);
+    if (i === tickIntervals2.length)
       return year.every(tickStep(start2 / durationYear, stop / durationYear, count3));
     if (i === 0)
       return millisecond.every(Math.max(tickStep(start2, stop, count3), 1));
-    const [t, step] = tickIntervals[target / tickIntervals[i - 1][2] < tickIntervals[i][2] / target ? i - 1 : i];
+    const [t, step] = tickIntervals2[target / tickIntervals2[i - 1][2] < tickIntervals2[i][2] / target ? i - 1 : i];
     return t.every(step);
   }
   return [ticks2, tickInterval];
@@ -15176,7 +15176,7 @@ function newDate(y4, m3, d) {
 function formatLocale(locale3) {
   var locale_dateTime = locale3.dateTime, locale_date = locale3.date, locale_time = locale3.time, locale_periods = locale3.periods, locale_weekdays = locale3.days, locale_shortWeekdays = locale3.shortDays, locale_months = locale3.months, locale_shortMonths = locale3.shortMonths;
   var periodRe = formatRe(locale_periods), periodLookup = formatLookup(locale_periods), weekdayRe = formatRe(locale_weekdays), weekdayLookup = formatLookup(locale_weekdays), shortWeekdayRe = formatRe(locale_shortWeekdays), shortWeekdayLookup = formatLookup(locale_shortWeekdays), monthRe = formatRe(locale_months), monthLookup = formatLookup(locale_months), shortMonthRe = formatRe(locale_shortMonths), shortMonthLookup = formatLookup(locale_shortMonths);
-  var formats2 = {
+  var formats = {
     "a": formatShortWeekday,
     "A": formatWeekday2,
     "b": formatShortMonth,
@@ -15278,13 +15278,13 @@ function formatLocale(locale3) {
     "Z": parseZone,
     "%": parseLiteralPercent
   };
-  formats2.x = newFormat(locale_date, formats2);
-  formats2.X = newFormat(locale_time, formats2);
-  formats2.c = newFormat(locale_dateTime, formats2);
+  formats.x = newFormat(locale_date, formats);
+  formats.X = newFormat(locale_time, formats);
+  formats.c = newFormat(locale_dateTime, formats);
   utcFormats.x = newFormat(locale_date, utcFormats);
   utcFormats.X = newFormat(locale_time, utcFormats);
   utcFormats.c = newFormat(locale_dateTime, utcFormats);
-  function newFormat(specifier, formats3) {
+  function newFormat(specifier, formats2) {
     return function(date2) {
       var string2 = [], i = -1, j = 0, n = specifier.length, c6, pad4, format3;
       if (!(date2 instanceof Date))
@@ -15296,7 +15296,7 @@ function formatLocale(locale3) {
             c6 = specifier.charAt(++i);
           else
             pad4 = c6 === "e" ? " " : "0";
-          if (format3 = formats3[c6])
+          if (format3 = formats2[c6])
             c6 = format3(date2, pad4);
           string2.push(c6);
           j = i + 1;
@@ -15440,7 +15440,7 @@ function formatLocale(locale3) {
   }
   return {
     format: function(specifier) {
-      var f = newFormat(specifier += "", formats2);
+      var f = newFormat(specifier += "", formats);
       f.toString = function() {
         return specifier;
       };
@@ -18765,55 +18765,120 @@ var durationDay2 = durationHour2 * 24;
 var durationWeek2 = durationDay2 * 7;
 var durationMonth2 = durationDay2 * 30;
 var durationYear2 = durationDay2 * 365;
-var formats = [
-  ["millisecond", 0.5 * durationSecond2],
+var tickIntervals = [
+  ["millisecond", 1],
+  ["2 milliseconds", 2],
+  ["5 milliseconds", 5],
+  ["10 milliseconds", 10],
+  ["20 milliseconds", 20],
+  ["50 milliseconds", 50],
+  ["100 milliseconds", 100],
+  ["200 milliseconds", 200],
+  ["500 milliseconds", 500],
   ["second", durationSecond2],
-  ["second", 30 * durationSecond2],
+  ["5 seconds", 5 * durationSecond2],
+  ["15 seconds", 15 * durationSecond2],
+  ["30 seconds", 30 * durationSecond2],
   ["minute", durationMinute2],
-  ["minute", 30 * durationMinute2],
+  ["5 minutes", 5 * durationMinute2],
+  ["15 minutes", 15 * durationMinute2],
+  ["30 minutes", 30 * durationMinute2],
   ["hour", durationHour2],
-  ["hour", 12 * durationHour2],
+  ["3 hours", 3 * durationHour2],
+  ["6 hours", 6 * durationHour2],
+  ["12 hours", 12 * durationHour2],
   ["day", durationDay2],
-  ["day", 2 * durationDay2],
+  ["2 days", 2 * durationDay2],
+  ["week", durationWeek2],
+  ["2 weeks", 2 * durationWeek2],
+  // https://github.com/d3/d3-time/issues/46
+  ["month", durationMonth2],
+  ["3 months", 3 * durationMonth2],
+  ["6 months", 6 * durationMonth2],
+  // https://github.com/d3/d3-time/issues/46
+  ["year", durationYear2],
+  ["2 years", 2 * durationYear2],
+  ["5 years", 5 * durationYear2],
+  ["10 years", 10 * durationYear2],
+  ["20 years", 20 * durationYear2],
+  ["50 years", 50 * durationYear2],
+  ["100 years", 100 * durationYear2]
+  // TODO generalize to longer time scales
+];
+var durations = /* @__PURE__ */ new Map([
+  ["second", durationSecond2],
+  ["minute", durationMinute2],
+  ["hour", durationHour2],
+  ["day", durationDay2],
+  ["monday", durationWeek2],
+  ["tuesday", durationWeek2],
+  ["wednesday", durationWeek2],
+  ["thursday", durationWeek2],
+  ["friday", durationWeek2],
+  ["saturday", durationWeek2],
+  ["sunday", durationWeek2],
   ["week", durationWeek2],
   ["month", durationMonth2],
-  ["month", 3 * durationMonth2],
   ["year", durationYear2]
-];
+]);
 var timeIntervals = /* @__PURE__ */ new Map([
   ["second", second],
   ["minute", timeMinute],
   ["hour", timeHour],
   ["day", timeDay],
-  // TODO local time equivalent of unixDay?
-  ["week", timeSunday],
-  ["month", timeMonth],
-  ["year", timeYear],
+  // https://github.com/d3/d3-time/issues/62
   ["monday", timeMonday],
   ["tuesday", timeTuesday],
   ["wednesday", timeWednesday],
   ["thursday", timeThursday],
   ["friday", timeFriday],
   ["saturday", timeSaturday],
-  ["sunday", timeSunday]
+  ["sunday", timeSunday],
+  ["week", timeSunday],
+  ["month", timeMonth],
+  ["year", timeYear]
 ]);
 var utcIntervals = /* @__PURE__ */ new Map([
   ["second", second],
   ["minute", utcMinute],
   ["hour", utcHour],
   ["day", unixDay],
-  ["week", utcSunday],
-  ["month", utcMonth],
-  ["year", utcYear],
   ["monday", utcMonday],
   ["tuesday", utcTuesday],
   ["wednesday", utcWednesday],
   ["thursday", utcThursday],
   ["friday", utcFriday],
   ["saturday", utcSaturday],
-  ["sunday", utcSunday]
+  ["sunday", utcSunday],
+  ["week", utcSunday],
+  ["month", utcMonth],
+  ["year", utcYear]
 ]);
-function parseInterval(input, intervals) {
+var intervalDuration = Symbol("intervalDuration");
+var intervalType = Symbol("intervalType");
+for (const [name, interval2] of timeIntervals) {
+  interval2[intervalDuration] = durations.get(name);
+  interval2[intervalType] = "time";
+}
+for (const [name, interval2] of utcIntervals) {
+  interval2[intervalDuration] = durations.get(name);
+  interval2[intervalType] = "utc";
+}
+var formatIntervals = [
+  ["year", utcYear, "utc"],
+  ["year", timeYear, "time"],
+  ["month", utcMonth, "utc"],
+  ["month", timeMonth, "time"],
+  ["day", unixDay, "utc", 6 * durationMonth2],
+  ["day", timeDay, "time", 6 * durationMonth2],
+  // Below day, local time typically has an hourly offset from UTC and hence the
+  // two are aligned and indistinguishable; therefore, we only consider UTC, and
+  // we don’t consider these if the domain only has a single value.
+  ["hour", utcHour, "utc", 3 * durationDay2],
+  ["minute", utcMinute, "utc", 6 * durationHour2],
+  ["second", second, "utc", 30 * durationMinute2]
+];
+function parseInterval(input, intervals, type2) {
   let name = `${input}`.toLowerCase();
   if (name.endsWith("s"))
     name = name.slice(0, -1);
@@ -18836,38 +18901,41 @@ function parseInterval(input, intervals) {
   let interval2 = intervals.get(name);
   if (!interval2)
     throw new Error(`unknown interval: ${input}`);
-  if (!(period2 > 1))
-    return interval2;
-  if (!interval2.every)
-    throw new Error(`non-periodic interval: ${name}`);
-  return interval2.every(period2);
+  if (period2 > 1) {
+    if (!interval2.every)
+      throw new Error(`non-periodic interval: ${name}`);
+    interval2 = interval2.every(period2);
+    interval2[intervalDuration] = durations.get(name) * period2;
+    interval2[intervalType] = type2;
+  }
+  return interval2;
 }
 function maybeTimeInterval(interval2) {
-  return parseInterval(interval2, timeIntervals);
+  return parseInterval(interval2, timeIntervals, "time");
 }
 function maybeUtcInterval(interval2) {
-  return parseInterval(interval2, utcIntervals);
+  return parseInterval(interval2, utcIntervals, "utc");
 }
-function isUtcYear(i) {
-  if (!i)
-    return false;
-  const date2 = i.floor(new Date(Date.UTC(2e3, 11, 31)));
-  return utcYear(date2) >= date2;
+function generalizeTimeInterval(interval2, n) {
+  if (!(n > 1))
+    return;
+  const duration = interval2[intervalDuration];
+  if (!tickIntervals.some(([, d]) => d === duration))
+    return;
+  if (duration % durationDay2 === 0 && durationDay2 < duration && duration < durationMonth2)
+    return;
+  const [i] = tickIntervals[bisector(([, step]) => Math.log(step)).center(tickIntervals, Math.log(duration * n))];
+  return (interval2[intervalType] === "time" ? maybeTimeInterval : maybeUtcInterval)(i);
 }
-function isTimeYear(i) {
-  if (!i)
-    return false;
-  const date2 = i.floor(new Date(2e3, 11, 31));
-  return timeYear(date2) >= date2;
-}
-function formatTimeTicks(scale3, data, ticks2, anchor) {
-  const format3 = scale3.type === "time" ? timeFormat : utcFormat;
-  const template2 = anchor === "left" || anchor === "right" ? (f1, f2) => `
-${f1}
-${f2}` : anchor === "top" ? (f1, f2) => `${f2}
-${f1}` : (f1, f2) => `${f1}
-${f2}`;
-  switch (getTimeTicksInterval(scale3, data, ticks2)) {
+function formatTimeInterval(name, type2, anchor) {
+  const format3 = type2 === "time" ? timeFormat : utcFormat;
+  if (anchor == null) {
+    return format3(
+      name === "year" ? "%Y" : name === "month" ? "%Y-%m" : name === "day" ? "%Y-%m-%d" : name === "hour" || name === "minute" ? "%Y-%m-%dT%H:%M" : name === "second" ? "%Y-%m-%dT%H:%M:%S" : "%Y-%m-%dT%H:%M:%S.%L"
+    );
+  }
+  const template2 = getTimeTemplate(anchor);
+  switch (name) {
     case "millisecond":
       return formatConditional(format3(".%L"), format3(":%M:%S"), template2);
     case "second":
@@ -18878,8 +18946,6 @@ ${f2}`;
       return formatConditional(format3("%-I %p"), format3("%b %-d"), template2);
     case "day":
       return formatConditional(format3("%-d"), format3("%b"), template2);
-    case "week":
-      return formatConditional(format3("%-d"), format3("%b"), template2);
     case "month":
       return formatConditional(format3("%b"), format3("%Y"), template2);
     case "year":
@@ -18887,14 +18953,25 @@ ${f2}`;
   }
   throw new Error("unable to format time ticks");
 }
-function getTimeTicksInterval(scale3, data, ticks2) {
-  const medianStep = median(pairs(data, (a4, b) => Math.abs(b - a4) || NaN));
-  if (medianStep > 0)
-    return formats[bisector(([, step2]) => step2).right(formats, medianStep, 1, formats.length) - 1][0];
-  const [start2, stop] = extent(scale3.domain());
-  const count3 = typeof ticks2 === "number" ? ticks2 : 10;
-  const step = Math.abs(stop - start2) / count3;
-  return formats[bisector(([, step2]) => Math.log(step2)).center(formats, Math.log(step))][0];
+function getTimeTemplate(anchor) {
+  return anchor === "left" || anchor === "right" ? (f1, f2) => `
+${f1}
+${f2}` : anchor === "top" ? (f1, f2) => `${f2}
+${f1}` : (f1, f2) => `${f1}
+${f2}`;
+}
+function inferTimeFormat(dates, anchor) {
+  const step = max(pairs(dates, (a4, b) => Math.abs(b - a4)));
+  if (step < 1e3)
+    return formatTimeInterval("millisecond", "utc", anchor);
+  for (const [name, interval2, type2, maxStep] of formatIntervals) {
+    if (step > maxStep)
+      break;
+    if (name === "hour" && !step)
+      break;
+    if (dates.every((d) => interval2.floor(d) >= d))
+      return formatTimeInterval(name, type2, anchor);
+  }
 }
 function formatConditional(format1, format22, template2) {
   return (x4, i, X3) => {
@@ -18908,9 +18985,13 @@ function formatConditional(format1, format22, template2) {
 // node_modules/@observablehq/plot/src/options.js
 var TypedArray = Object.getPrototypeOf(Uint8Array);
 var objectToString = Object.prototype.toString;
+var reindex = Symbol("reindex");
 function valueof(data, value, type2) {
   const valueType = typeof value;
-  return valueType === "string" ? maybeTypedMap(data, field(value), type2) : valueType === "function" ? maybeTypedMap(data, value, type2) : valueType === "number" || value instanceof Date || valueType === "boolean" ? map4(data, constant2(value), type2) : typeof value?.transform === "function" ? maybeTypedArrayify(value.transform(data), type2) : maybeTypedArrayify(value, type2);
+  return valueType === "string" ? maybeTypedMap(data, field(value), type2) : valueType === "function" ? maybeTypedMap(data, value, type2) : valueType === "number" || value instanceof Date || valueType === "boolean" ? map4(data, constant2(value), type2) : typeof value?.transform === "function" ? maybeTypedArrayify(value.transform(data), type2) : maybeTake(maybeTypedArrayify(value, type2), data?.[reindex]);
+}
+function maybeTake(values2, index3) {
+  return index3 ? take(values2, index3) : values2;
 }
 function maybeTypedMap(data, f, type2) {
   return map4(data, type2?.prototype instanceof TypedArray ? floater(f) : f, type2);
@@ -19027,7 +19108,7 @@ function range4(data) {
   return r;
 }
 function take(values2, index3) {
-  return map4(index3, (i) => values2[i]);
+  return map4(index3, (i) => values2[i], values2.constructor);
 }
 function taker(f) {
   return f.length === 1 ? (index3, values2) => f(take(values2, index3)) : f;
@@ -19126,6 +19207,12 @@ function maybeNiceInterval(interval2, type2) {
     throw new Error("invalid interval: missing ceil method");
   return interval2;
 }
+function isTimeInterval(t) {
+  return isInterval(t) && typeof t?.floor === "function" && t.floor() instanceof Date;
+}
+function isInterval(t) {
+  return typeof t?.range === "function";
+}
 function maybeValue(value) {
   return value === void 0 || isOptions(value) ? value : { value };
 }
@@ -19205,13 +19292,14 @@ function isEvery(values2, is) {
   }
   return every2;
 }
+var namedColors = new Set("none,currentcolor,transparent,aliceblue,antiquewhite,aqua,aquamarine,azure,beige,bisque,black,blanchedalmond,blue,blueviolet,brown,burlywood,cadetblue,chartreuse,chocolate,coral,cornflowerblue,cornsilk,crimson,cyan,darkblue,darkcyan,darkgoldenrod,darkgray,darkgreen,darkgrey,darkkhaki,darkmagenta,darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkseagreen,darkslateblue,darkslategray,darkslategrey,darkturquoise,darkviolet,deeppink,deepskyblue,dimgray,dimgrey,dodgerblue,firebrick,floralwhite,forestgreen,fuchsia,gainsboro,ghostwhite,gold,goldenrod,gray,green,greenyellow,grey,honeydew,hotpink,indianred,indigo,ivory,khaki,lavender,lavenderblush,lawngreen,lemonchiffon,lightblue,lightcoral,lightcyan,lightgoldenrodyellow,lightgray,lightgreen,lightgrey,lightpink,lightsalmon,lightseagreen,lightskyblue,lightslategray,lightslategrey,lightsteelblue,lightyellow,lime,limegreen,linen,magenta,maroon,mediumaquamarine,mediumblue,mediumorchid,mediumpurple,mediumseagreen,mediumslateblue,mediumspringgreen,mediumturquoise,mediumvioletred,midnightblue,mintcream,mistyrose,moccasin,navajowhite,navy,oldlace,olive,olivedrab,orange,orangered,orchid,palegoldenrod,palegreen,paleturquoise,palevioletred,papayawhip,peachpuff,peru,pink,plum,powderblue,purple,rebeccapurple,red,rosybrown,royalblue,saddlebrown,salmon,sandybrown,seagreen,seashell,sienna,silver,skyblue,slateblue,slategray,slategrey,snow,springgreen,steelblue,tan,teal,thistle,tomato,turquoise,violet,wheat,white,whitesmoke,yellow".split(","));
 function isColor(value) {
   if (typeof value !== "string")
     return false;
   value = value.toLowerCase().trim();
-  return value === "none" || value === "currentcolor" || value.startsWith("url(") && value.endsWith(")") || // <funciri>, e.g. pattern or gradient
-  value.startsWith("var(") && value.endsWith(")") || // CSS variable
-  color(value) !== null;
+  return /^#[0-9a-f]{3,8}$/.test(value) || // hex rgb, rgba, rrggbb, rrggbbaa
+  /^(?:url|var|rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|color-mix)\(.*\)$/.test(value) || // <funciri>, CSS variable, color, etc.
+  namedColors.has(value);
 }
 function isOpacity(value) {
   return typeof value === "number" && (0 <= value && value <= 1 || isNaN(value));
@@ -19307,6 +19395,9 @@ var registry = /* @__PURE__ */ new Map([
 ]);
 function isPosition(kind) {
   return kind === position || kind === projection2;
+}
+function hasNumericRange(kind) {
+  return kind === position || kind === radius || kind === length3 || kind === opacity;
 }
 
 // node_modules/@observablehq/plot/src/symbol.js
@@ -19849,14 +19940,14 @@ function reduceProportion(value, scope) {
 }
 
 // node_modules/@observablehq/plot/src/channel.js
-function createChannel(data, { scale: scale3, type: type2, value, filter: filter4, hint }, name) {
+function createChannel(data, { scale: scale3, type: type2, value, filter: filter4, hint, label = labelof(value) }, name) {
   if (hint === void 0 && typeof value?.transform === "function")
     hint = value.hint;
   return inferChannelScale(name, {
     scale: scale3,
     type: type2,
     value: valueof(data, value),
-    label: labelof(value),
+    label,
     filter: filter4,
     hint
   });
@@ -20059,12 +20150,17 @@ var formatDefault = formatAuto();
 
 // node_modules/@observablehq/plot/src/warnings.js
 var warnings = 0;
+var lastMessage;
 function consumeWarnings() {
   const w = warnings;
   warnings = 0;
+  lastMessage = void 0;
   return w;
 }
 function warn(message) {
+  if (message === lastMessage)
+    return;
+  lastMessage = message;
   console.warn(message);
   ++warnings;
 }
@@ -21063,8 +21159,8 @@ function isOrdered(domain, sign3) {
   }
   return true;
 }
-function createScaleIdentity() {
-  return { type: "identity", scale: identity4() };
+function createScaleIdentity(key) {
+  return { type: "identity", scale: hasNumericRange(registry.get(key)) ? identity4() : (d) => d };
 }
 function inferDomain(channels, f = finite2) {
   return channels.length ? [
@@ -21258,7 +21354,7 @@ function createScaleO(key, scale3, channels, { type: type2, interval: interval2,
     type2 = "ordinal";
   if (reverse3)
     domain = reverse(domain);
-  scale3.domain(domain);
+  domain = scale3.domain(domain).domain();
   if (range5 !== void 0) {
     if (typeof range5 === "function")
       range5 = range5(domain);
@@ -21431,17 +21527,20 @@ function createScales(channelsByScale, {
   }
   return scales;
 }
-function createScaleFunctions(scales) {
-  return Object.fromEntries(
-    Object.entries(scales).filter(([, { scale: scale3 }]) => scale3).map(([name, { scale: scale3, type: type2, interval: interval2, label }]) => {
-      scale3.type = type2;
-      if (interval2 != null)
-        scale3.interval = interval2;
-      if (label != null)
-        scale3.label = label;
-      return [name, scale3];
-    })
-  );
+function createScaleFunctions(descriptors) {
+  const scales = {};
+  const scaleFunctions = { scales };
+  for (const [key, descriptor] of Object.entries(descriptors)) {
+    const { scale: scale3, type: type2, interval: interval2, label } = descriptor;
+    scales[key] = exposeScale(descriptor);
+    scaleFunctions[key] = scale3;
+    scale3.type = type2;
+    if (interval2 != null)
+      scale3.interval = interval2;
+    if (label != null)
+      scale3.label = label;
+  }
+  return scaleFunctions;
 }
 function autoScaleRange(scales, dimensions) {
   const { x: x4, y: y4, fx, fy } = scales;
@@ -21664,7 +21763,7 @@ function createScale(key, channels = [], options = {}) {
     case "band":
       return createScaleBand(key, channels, options);
     case "identity":
-      return registry.get(key) === position ? createScaleIdentity() : { type: "identity" };
+      return createScaleIdentity(key);
     case void 0:
       return;
     default:
@@ -21733,9 +21832,6 @@ function asOrdinalType(kind) {
       return "ordinal";
   }
 }
-function isTemporalScale({ type: type2 }) {
-  return type2 === "time" || type2 === "utc";
-}
 function isOrdinalScale({ type: type2 }) {
   return type2 === "ordinal" || type2 === "point" || type2 === "band" || type2 === ordinalImplicit;
 }
@@ -21786,11 +21882,11 @@ function scale2(options = {}) {
     throw new Error("invalid scale definition; no scale found");
   return scale3;
 }
-function exposeScales(scaleDescriptors) {
+function exposeScales(scales) {
   return (key) => {
     if (!registry.has(key = `${key}`))
       throw new Error(`unknown scale: ${key}`);
-    return key in scaleDescriptors ? exposeScale(scaleDescriptors[key]) : void 0;
+    return scales[key];
   };
 }
 function exposeScale({ scale: scale3, type: type2, domain, range: range5, interpolate, interval: interval2, transform: transform2, percent, pivot }) {
@@ -22140,8 +22236,8 @@ var Mark = class {
     this.channels = Object.fromEntries(
       Object.entries(channels).map(([name, channel]) => {
         if (isOptions(channel.value)) {
-          const { value, scale: scale3 = channel.scale } = channel.value;
-          channel = { ...channel, scale: scale3, value };
+          const { value, label = channel.label, scale: scale3 = channel.scale } = channel.value;
+          channel = { ...channel, label, scale: scale3, value };
         }
         if (data === singleton && typeof channel.value === "string") {
           const { value } = channel;
@@ -22248,7 +22344,7 @@ function composeRender(r1, r2) {
 function maybeChannels(channels) {
   return Object.fromEntries(
     Object.entries(maybeNamed(channels)).map(([name, channel]) => {
-      channel = maybeValue(channel);
+      channel = typeof channel === "string" ? { value: channel, label: name } : maybeValue(channel);
       if (channel.filter === void 0 && channel.scale == null)
         channel = { ...channel, filter: null };
       return [name, channel];
@@ -22256,10 +22352,10 @@ function maybeChannels(channels) {
   );
 }
 function maybeTip(tip2) {
-  return tip2 === true ? "xy" : tip2 === false ? null : maybeKeyword(tip2, "tip", ["x", "y", "xy"]);
+  return tip2 === true ? "xy" : tip2 === false || tip2 == null ? null : typeof tip2 === "string" ? keyword(tip2, "tip", ["x", "y", "xy"]) : tip2;
 }
-function withTip(options, tip2) {
-  return options?.tip === true ? { ...options, tip: tip2 } : options;
+function withTip(options, pointer2) {
+  return options?.tip === true ? { ...options, tip: pointer2 } : isObject(options?.tip) && options.tip.pointer === void 0 ? { ...options, tip: { ...options.tip, pointer: pointer2 } } : options;
 }
 
 // node_modules/@observablehq/plot/src/interactions/pointer.js
@@ -23564,7 +23660,7 @@ function axisTickKy(k2, anchor, data, {
   y: y4 = k2 === "y" ? void 0 : null,
   ...options
 }) {
-  return axisMark(vectorY, k2, `${k2}-axis tick`, data, {
+  return axisMark(vectorY, k2, anchor, `${k2}-axis tick`, data, {
     strokeWidth,
     strokeLinecap,
     strokeLinejoin,
@@ -23592,7 +23688,7 @@ function axisTickKx(k2, anchor, data, {
   x: x4 = k2 === "x" ? void 0 : null,
   ...options
 }) {
-  return axisMark(vectorX, k2, `${k2}-axis tick`, data, {
+  return axisMark(vectorX, k2, anchor, `${k2}-axis tick`, data, {
     strokeWidth,
     strokeLinejoin,
     strokeLinecap,
@@ -23612,8 +23708,7 @@ function axisTextKy(k2, anchor, data, {
   tickSize,
   tickRotate = 0,
   tickPadding = Math.max(3, 9 - tickSize) + (Math.abs(tickRotate) > 60 ? 4 * Math.cos(tickRotate * radians3) : 0),
-  tickFormat: tickFormat2,
-  text: text2 = typeof tickFormat2 === "function" ? tickFormat2 : void 0,
+  text: text2,
   textAnchor = Math.abs(tickRotate) > 60 ? "middle" : anchor === "left" ? "end" : "start",
   lineAnchor = tickRotate > 60 ? "top" : tickRotate < -60 ? "bottom" : "middle",
   fontVariant,
@@ -23627,12 +23722,13 @@ function axisTextKy(k2, anchor, data, {
   return axisMark(
     textY,
     k2,
+    anchor,
     `${k2}-axis tick label`,
     data,
     {
       facetAnchor,
       frameAnchor,
-      text: text2 === void 0 ? null : text2,
+      text: text2,
       textAnchor,
       lineAnchor,
       fontVariant,
@@ -23641,7 +23737,7 @@ function axisTextKy(k2, anchor, data, {
       ...options,
       dx: anchor === "left" ? +dx - tickSize - tickPadding + +insetLeft : +dx + +tickSize + +tickPadding - insetRight
     },
-    function(scale3, data2, ticks2, channels) {
+    function(scale3, data2, ticks2, tickFormat2, channels) {
       if (fontVariant === void 0)
         this.fontVariant = inferFontVariant3(scale3);
       if (text2 === void 0)
@@ -23655,8 +23751,7 @@ function axisTextKx(k2, anchor, data, {
   tickSize,
   tickRotate = 0,
   tickPadding = Math.max(3, 9 - tickSize) + (Math.abs(tickRotate) >= 10 ? 4 * Math.cos(tickRotate * radians3) : 0),
-  tickFormat: tickFormat2,
-  text: text2 = typeof tickFormat2 === "function" ? tickFormat2 : void 0,
+  text: text2,
   textAnchor = Math.abs(tickRotate) >= 10 ? tickRotate < 0 ^ anchor === "bottom" ? "start" : "end" : "middle",
   lineAnchor = Math.abs(tickRotate) >= 10 ? "middle" : anchor === "bottom" ? "top" : "bottom",
   fontVariant,
@@ -23670,6 +23765,7 @@ function axisTextKx(k2, anchor, data, {
   return axisMark(
     textX,
     k2,
+    anchor,
     `${k2}-axis tick label`,
     data,
     {
@@ -23684,7 +23780,7 @@ function axisTextKx(k2, anchor, data, {
       ...options,
       dy: anchor === "bottom" ? +dy + +tickSize + +tickPadding - insetBottom : +dy - tickSize - tickPadding + +insetTop
     },
-    function(scale3, data2, ticks2, channels) {
+    function(scale3, data2, ticks2, tickFormat2, channels) {
       if (fontVariant === void 0)
         this.fontVariant = inferFontVariant3(scale3);
       if (text2 === void 0)
@@ -23715,7 +23811,7 @@ function gridKy(k2, anchor, data, {
   x2: x22 = anchor === "right" ? x4 : null,
   ...options
 }) {
-  return axisMark(ruleY, k2, `${k2}-grid`, data, { y: y4, x1: x12, x2: x22, ...gridDefaults(options) });
+  return axisMark(ruleY, k2, anchor, `${k2}-grid`, data, { y: y4, x1: x12, x2: x22, ...gridDefaults(options) });
 }
 function gridKx(k2, anchor, data, {
   x: x4 = k2 === "x" ? void 0 : null,
@@ -23724,7 +23820,7 @@ function gridKx(k2, anchor, data, {
   y2: y22 = anchor === "bottom" ? y4 : null,
   ...options
 }) {
-  return axisMark(ruleX, k2, `${k2}-grid`, data, { x: x4, y1: y12, y2: y22, ...gridDefaults(options) });
+  return axisMark(ruleX, k2, anchor, `${k2}-grid`, data, { x: x4, y1: y12, y2: y22, ...gridDefaults(options) });
 }
 function gridDefaults({
   color: color3 = "currentColor",
@@ -23742,6 +23838,7 @@ function labelOptions({
   fontFamily,
   fontSize,
   fontStyle,
+  fontVariant,
   fontWeight,
   monospace,
   pointerEvents,
@@ -23759,6 +23856,7 @@ function labelOptions({
     fontFamily,
     fontSize,
     fontStyle,
+    fontVariant,
     fontWeight,
     monospace,
     pointerEvents,
@@ -23767,35 +23865,53 @@ function labelOptions({
     initializer: initializer2
   };
 }
-function axisMark(mark, k2, ariaLabel, data, options, initialize) {
+function axisMark(mark, k2, anchor, ariaLabel, data, options, initialize) {
   let channels;
   function axisInitializer(data2, facets, _channels, scales, dimensions, context) {
     const initializeFacets = data2 == null && (k2 === "fx" || k2 === "fy");
     const { [k2]: scale3 } = scales;
     if (!scale3)
       throw new Error(`missing scale: ${k2}`);
-    let { ticks: ticks2, tickSpacing, interval: interval2 } = options;
-    if (isTemporalScale(scale3) && typeof ticks2 === "string")
+    const domain = scale3.domain();
+    let { interval: interval2, ticks: ticks2, tickFormat: tickFormat2, tickSpacing = k2 === "x" ? 80 : 35 } = options;
+    if (typeof ticks2 === "string" && hasTemporalDomain(scale3))
       interval2 = ticks2, ticks2 = void 0;
+    if (ticks2 === void 0)
+      ticks2 = maybeRangeInterval(interval2, scale3.type) ?? inferTickCount(scale3, tickSpacing);
     if (data2 == null) {
       if (isIterable(ticks2)) {
         data2 = arrayify2(ticks2);
-      } else if (scale3.ticks) {
-        if (ticks2 !== void 0) {
-          data2 = scale3.ticks(ticks2);
+      } else if (isInterval(ticks2)) {
+        data2 = inclusiveRange(ticks2, ...extent(domain));
+      } else if (scale3.interval) {
+        let interval3 = scale3.interval;
+        if (scale3.ticks) {
+          const [min4, max5] = extent(domain);
+          const n = (max5 - min4) / interval3[intervalDuration];
+          interval3 = generalizeTimeInterval(interval3, n / ticks2) ?? interval3;
+          data2 = inclusiveRange(interval3, min4, max5);
         } else {
-          interval2 = maybeRangeInterval(interval2 === void 0 ? scale3.interval : interval2, scale3.type);
-          if (interval2 !== void 0) {
-            const [min4, max5] = extent(scale3.domain());
-            data2 = interval2.range(min4, interval2.offset(interval2.floor(max5)));
-          } else {
-            const [min4, max5] = extent(scale3.range());
-            ticks2 = (max5 - min4) / (tickSpacing === void 0 ? k2 === "x" ? 80 : 35 : tickSpacing);
-            data2 = scale3.ticks(ticks2);
-          }
+          data2 = domain;
+          const n = data2.length;
+          interval3 = generalizeTimeInterval(interval3, n / ticks2) ?? interval3;
+          if (interval3 !== scale3.interval)
+            data2 = inclusiveRange(interval3, ...extent(data2));
         }
+        if (interval3 === scale3.interval) {
+          const n = Math.round(data2.length / ticks2);
+          if (n > 1)
+            data2 = data2.filter((d, i) => i % n === 0);
+        }
+      } else if (scale3.ticks) {
+        data2 = scale3.ticks(ticks2);
       } else {
-        data2 = scale3.domain();
+        data2 = domain;
+      }
+      if (!scale3.ticks && data2.length && data2 !== domain) {
+        const domainSet = new InternSet(domain);
+        data2 = data2.filter((d) => domainSet.has(d));
+        if (!data2.length)
+          warn(`Warning: the ${k2}-axis ticks appear to not align with the scale domain, resulting in no ticks. Try different ticks?`);
       }
       if (k2 === "y" || k2 === "x") {
         facets = [range4(data2)];
@@ -23803,7 +23919,7 @@ function axisMark(mark, k2, ariaLabel, data, options, initialize) {
         channels[k2] = { scale: k2, value: identity6 };
       }
     }
-    initialize?.call(this, scale3, data2, ticks2, channels);
+    initialize?.call(this, scale3, data2, ticks2, tickFormat2, channels);
     const initializedChannels = Object.fromEntries(
       Object.entries(channels).map(([name, channel]) => {
         return [name, { ...channel, value: valueof(data2, channel.value) }];
@@ -23826,11 +23942,18 @@ function axisMark(mark, k2, ariaLabel, data, options, initialize) {
     m3.clip = false;
   return m3;
 }
+function inferTickCount(scale3, tickSpacing) {
+  const [min4, max5] = extent(scale3.range());
+  return (max5 - min4) / tickSpacing;
+}
 function inferTextChannel(scale3, data, ticks2, tickFormat2, anchor) {
   return { value: inferTickFormat(scale3, data, ticks2, tickFormat2, anchor) };
 }
 function inferTickFormat(scale3, data, ticks2, tickFormat2, anchor) {
-  return tickFormat2 === void 0 && isTemporalScale(scale3) ? formatTimeTicks(scale3, data, ticks2, anchor) : scale3.tickFormat ? scale3.tickFormat(isIterable(ticks2) ? null : ticks2, tickFormat2) : tickFormat2 === void 0 ? isUtcYear(scale3.interval) ? utcFormat("%Y") : isTimeYear(scale3.interval) ? timeFormat("%Y") : formatDefault : typeof tickFormat2 === "string" ? (isTemporal(scale3.domain()) ? utcFormat : format)(tickFormat2) : constant2(tickFormat2);
+  return typeof tickFormat2 === "function" ? tickFormat2 : tickFormat2 === void 0 && data && isTemporal(data) ? inferTimeFormat(data, anchor) ?? formatDefault : scale3.tickFormat ? scale3.tickFormat(typeof ticks2 === "number" ? ticks2 : null, tickFormat2) : tickFormat2 === void 0 ? formatDefault : typeof tickFormat2 === "string" ? (isTemporal(scale3.domain()) ? utcFormat : format)(tickFormat2) : constant2(tickFormat2);
+}
+function inclusiveRange(interval2, min4, max5) {
+  return interval2.range(min4, interval2.offset(interval2.floor(max5)));
 }
 var shapeTickBottom = {
   draw(context, l) {
@@ -23863,7 +23986,7 @@ function inferScaleOrder(scale3) {
   return Math.sign(orderof(scale3.domain())) * Math.sign(orderof(scale3.range()));
 }
 function formatAxisLabel(k2, scale3, { anchor, label = scale3.label, labelAnchor, labelArrow } = {}) {
-  if (label == null || label.inferred && isTemporalish(scale3) && /^(date|time|year)$/i.test(label))
+  if (label == null || label.inferred && hasTemporalDomain(scale3) && /^(date|time|year)$/i.test(label))
     return;
   label = String(label);
   if (labelArrow === "auto")
@@ -23890,8 +24013,8 @@ function formatAxisLabel(k2, scale3, { anchor, label = scale3.label, labelAnchor
 function maybeLabelArrow(labelArrow = "auto") {
   return isNoneish(labelArrow) ? false : typeof labelArrow === "boolean" ? labelArrow : keyword(labelArrow, "labelArrow", ["auto", "up", "right", "down", "left"]);
 }
-function isTemporalish(scale3) {
-  return isTemporalScale(scale3) || scale3.interval != null;
+function hasTemporalDomain(scale3) {
+  return isTemporal(scale3.domain());
 }
 
 // node_modules/@observablehq/plot/src/legends/swatches.js
@@ -23955,8 +24078,7 @@ function legendItems(scale3, options = {}, swatch) {
   } = options;
   const context = createContext(options);
   className = maybeClassName(className);
-  if (typeof tickFormat2 !== "function")
-    tickFormat2 = inferTickFormat(scale3.scale, scale3.domain, void 0, tickFormat2);
+  tickFormat2 = inferTickFormat(scale3.scale, scale3.domain, void 0, tickFormat2);
   const swatches = create2("div", context).attr(
     "class",
     `${className}-swatches ${className}-swatches-${columns != null ? "columns" : "wrap"}`
@@ -24146,7 +24268,7 @@ var defaults5 = {
   fill: "white",
   stroke: "currentColor"
 };
-var ignoreChannels = /* @__PURE__ */ new Set(["geometry", "href", "src", "ariaLabel"]);
+var ignoreChannels = /* @__PURE__ */ new Set(["geometry", "href", "src", "ariaLabel", "scales"]);
 var Tip = class extends Mark {
   constructor(data, options = {}) {
     if (options.tip)
@@ -24170,6 +24292,7 @@ var Tip = class extends Mark {
       lineHeight = 1,
       lineWidth = 20,
       frameAnchor,
+      format: format3,
       textAnchor = "start",
       textOverflow,
       textPadding = 8,
@@ -24215,6 +24338,7 @@ var Tip = class extends Mark {
         this[key] = defaults5[key];
     this.splitLines = splitter2(this);
     this.clipLine = clipper(this);
+    this.format = { ...format3 };
   }
   render(index3, scales, values2, dimensions, context) {
     const mark = this;
@@ -24223,7 +24347,6 @@ var Tip = class extends Mark {
     const { anchor, monospace, lineHeight, lineWidth } = this;
     const { textPadding: r, pointerSize: m3, pathFilter } = this;
     const { marginTop, marginLeft } = dimensions;
-    const sources = getSources(values2);
     const { x1: X13, y1: Y13, x2: X23, y2: Y23, x: X3 = X13 ?? X23, y: Y3 = Y13 ?? Y23 } = values2;
     const ox2 = fx ? fx(index3.fx) - marginLeft : 0;
     const oy2 = fy ? fy(index3.fy) - marginTop : 0;
@@ -24232,41 +24355,13 @@ var Tip = class extends Mark {
     const py = anchorY(values2, cy);
     const widthof = monospace ? monospaceWidth : defaultWidth;
     const ee = widthof(ellipsis);
-    const formatFx = fx && inferTickFormat(fx);
-    const formatFy = fy && inferTickFormat(fy);
-    function* format3(sources2, i) {
-      if ("title" in sources2) {
-        const text2 = sources2.title.value[i];
-        for (const line2 of mark.splitLines(formatDefault(text2))) {
-          yield { name: "", value: mark.clipLine(line2) };
-        }
-        return;
-      }
-      for (const key in sources2) {
-        if (key === "x1" && "x2" in sources2)
-          continue;
-        if (key === "y1" && "y2" in sources2)
-          continue;
-        const channel = sources2[key];
-        const value = channel.value[i];
-        if (!defined(value) && channel.scale == null)
-          continue;
-        if (key === "x2" && "x1" in sources2) {
-          yield { name: formatPairLabel(scales, sources2.x1, channel, "x"), value: formatPair(sources2.x1, channel, i) };
-        } else if (key === "y2" && "y1" in sources2) {
-          yield { name: formatPairLabel(scales, sources2.y1, channel, "y"), value: formatPair(sources2.y1, channel, i) };
-        } else {
-          const scale3 = channel.scale;
-          const line2 = { name: formatLabel(scales, channel, key), value: formatDefault(value) };
-          if (scale3 === "color" || scale3 === "opacity")
-            line2[scale3] = values2[key][i];
-          yield line2;
-        }
-      }
-      if (index3.fi != null && fx)
-        yield { name: String(fx.label ?? "fx"), value: formatFx(index3.fx) };
-      if (index3.fi != null && fy)
-        yield { name: String(fy.label ?? "fy"), value: formatFy(index3.fy) };
+    let sources, format3;
+    if ("title" in values2) {
+      sources = values2.channels;
+      format3 = formatTitle;
+    } else {
+      sources = getSourceChannels.call(this, values2, scales);
+      format3 = formatChannels;
     }
     const g = create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyIndirectTextStyles, this).call(applyTransform, this, { x: X3 && x4, y: Y3 && y4 }).call(
       (g2) => g2.selectAll().data(index3).enter().append("g").attr("transform", (i) => `translate(${Math.round(px(i))},${Math.round(py(i))})`).call(applyDirectStyles, this).call((g3) => g3.append("path").attr("filter", pathFilter)).call(
@@ -24275,39 +24370,47 @@ var Tip = class extends Mark {
           this.setAttribute("fill", "currentColor");
           this.setAttribute("fill-opacity", 1);
           this.setAttribute("stroke", "none");
-          const names = /* @__PURE__ */ new Set();
-          for (const line2 of format3(sources, i)) {
-            const name = line2.name;
-            if (name && names.has(name))
-              continue;
-            else
-              names.add(name);
-            renderLine(that, line2);
+          const lines = format3.call(mark, i, index3, sources, scales, values2);
+          if (typeof lines === "string") {
+            for (const line2 of mark.splitLines(lines)) {
+              renderLine(that, { value: mark.clipLine(line2) });
+            }
+          } else {
+            const labels = /* @__PURE__ */ new Set();
+            for (const line2 of lines) {
+              const { label = "" } = line2;
+              if (label && labels.has(label))
+                continue;
+              else
+                labels.add(label);
+              renderLine(that, line2);
+            }
           }
         })
       )
     );
-    function renderLine(selection2, { name, value, color: color3, opacity: opacity2 }) {
+    function renderLine(selection2, { label, value, color: color3, opacity: opacity2 }) {
+      label ??= "", value ??= "";
       const swatch = color3 != null || opacity2 != null;
       let title;
       let w = lineWidth * 100;
-      const [j] = cut(name, w, widthof, ee);
+      const [j] = cut(label, w, widthof, ee);
       if (j >= 0) {
-        name = name.slice(0, j).trimEnd() + ellipsis;
+        label = label.slice(0, j).trimEnd() + ellipsis;
         title = value.trim();
         value = "";
       } else {
-        if (name || !value && !swatch)
+        if (label || !value && !swatch)
           value = " " + value;
-        const [k2] = cut(value, w - widthof(name), widthof, ee);
+        const [k2] = cut(value, w - widthof(label), widthof, ee);
         if (k2 >= 0) {
           value = value.slice(0, k2).trimEnd() + ellipsis;
           title = value.trim();
         }
       }
       const line2 = selection2.append("tspan").attr("x", 0).attr("dy", `${lineHeight}em`).text("\u200B");
-      if (name)
-        line2.append("tspan").attr("font-weight", "bold").text(name);
+      if (label)
+        line2.append("tspan").attr("font-weight", "bold").text(label);
       if (value)
         line2.append(() => document2.createTextNode(value));
       if (swatch)
@@ -24342,11 +24445,15 @@ var Tip = class extends Mark {
         text2.setAttribute("y", `${+getLineOffset(a4, text2.childNodes.length, lineHeight).toFixed(6)}em`);
         text2.setAttribute("transform", `translate(${getTextTranslate(a4, m3, r, w, h)})`);
       });
+      g.attr("visibility", null);
     }
-    if (svg2.isConnected)
-      Promise.resolve().then(postrender);
-    else if (typeof requestAnimationFrame !== "undefined")
-      requestAnimationFrame(postrender);
+    if (index3.length) {
+      g.attr("visibility", "hidden");
+      if (svg2.isConnected)
+        Promise.resolve().then(postrender);
+      else if (typeof requestAnimationFrame !== "undefined")
+        requestAnimationFrame(postrender);
+    }
     return g.node();
   }
 };
@@ -24404,27 +24511,114 @@ function getPath(anchor, m3, r, width, height) {
       return `M0,0l${m3 / 2},${-m3 / 2}v${m3 / 2 - h / 2}h${w}v${h}h${-w}v${m3 / 2 - h / 2}z`;
   }
 }
-function getSources({ channels }) {
+function getSourceChannels({ channels }, scales) {
   const sources = {};
+  let format3 = this.format;
+  format3 = maybeExpandPairedFormat(format3, channels, "x");
+  format3 = maybeExpandPairedFormat(format3, channels, "y");
+  this.format = format3;
+  for (const key in format3) {
+    const value = format3[key];
+    if (value === null || value === false) {
+      continue;
+    } else if (key === "fx" || key === "fy") {
+      sources[key] = true;
+    } else {
+      const source = getSource(channels, key);
+      if (source)
+        sources[key] = source;
+    }
+  }
   for (const key in channels) {
-    if (ignoreChannels.has(key))
+    if (key in sources || key in format3 || ignoreChannels.has(key))
       continue;
     const source = getSource(channels, key);
     if (source)
       sources[key] = source;
   }
+  if (this.facet) {
+    if (scales.fx && !("fx" in format3))
+      sources.fx = true;
+    if (scales.fy && !("fy" in format3))
+      sources.fy = true;
+  }
+  for (const key in sources) {
+    const format4 = this.format[key];
+    if (typeof format4 === "string") {
+      const value = sources[key]?.value ?? scales[key]?.domain() ?? [];
+      this.format[key] = (isTemporal(value) ? utcFormat : format)(format4);
+    } else if (format4 === void 0 || format4 === true) {
+      const scale3 = scales[key];
+      this.format[key] = scale3?.bandwidth ? inferTickFormat(scale3, scale3.domain()) : formatDefault;
+    }
+  }
   return sources;
 }
-function formatPair(c1, c22, i) {
-  return c22.hint?.length ? `${formatDefault(c22.value[i] - c1.value[i])}` : `${formatDefault(c1.value[i])}\u2013${formatDefault(c22.value[i])}`;
+function maybeExpandPairedFormat(format3, channels, key) {
+  if (!(key in format3))
+    return format3;
+  const key1 = `${key}1`;
+  const key2 = `${key}2`;
+  if ((key1 in format3 || !(key1 in channels)) && (key2 in format3 || !(key2 in channels)))
+    return format3;
+  const entries = Object.entries(format3);
+  const value = format3[key];
+  entries.splice(entries.findIndex(([name]) => name === key) + 1, 0, [key1, value], [key2, value]);
+  return Object.fromEntries(entries);
 }
-function formatPairLabel(scales, c1, c22, defaultLabel) {
-  const l1 = formatLabel(scales, c1, defaultLabel);
-  const l2 = formatLabel(scales, c22, defaultLabel);
+function formatTitle(i, index3, { title }) {
+  return formatDefault(title.value[i], i);
+}
+function* formatChannels(i, index3, channels, scales, values2) {
+  for (const key in channels) {
+    if (key === "fx" || key === "fy") {
+      yield {
+        label: formatLabel(scales, channels, key),
+        value: this.format[key](index3[key], i)
+      };
+      continue;
+    }
+    if (key === "x1" && "x2" in channels)
+      continue;
+    if (key === "y1" && "y2" in channels)
+      continue;
+    const channel = channels[key];
+    if (key === "x2" && "x1" in channels) {
+      yield {
+        label: formatPairLabel(scales, channels, "x"),
+        value: formatPair(this.format.x2, channels.x1, channel, i)
+      };
+    } else if (key === "y2" && "y1" in channels) {
+      yield {
+        label: formatPairLabel(scales, channels, "y"),
+        value: formatPair(this.format.y2, channels.y1, channel, i)
+      };
+    } else {
+      const value = channel.value[i];
+      const scale3 = channel.scale;
+      if (!defined(value) && scale3 == null)
+        continue;
+      yield {
+        label: formatLabel(scales, channels, key),
+        value: this.format[key](value, i),
+        color: scale3 === "color" ? values2[key][i] : null,
+        opacity: scale3 === "opacity" ? values2[key][i] : null
+      };
+    }
+  }
+}
+function formatPair(formatValue, c1, c22, i) {
+  return c22.hint?.length ? `${formatValue(c22.value[i] - c1.value[i], i)}` : `${formatValue(c1.value[i], i)}\u2013${formatValue(c22.value[i], i)}`;
+}
+function formatPairLabel(scales, channels, key) {
+  const l1 = formatLabel(scales, channels, `${key}1`, key);
+  const l2 = formatLabel(scales, channels, `${key}2`, key);
   return l1 === l2 ? l1 : `${l1}\u2013${l2}`;
 }
-function formatLabel(scales, c6, defaultLabel) {
-  return String(scales[c6.scale]?.label ?? c6?.label ?? defaultLabel);
+function formatLabel(scales, channels, key, defaultLabel = key) {
+  const channel = channels[key];
+  const scale3 = scales[channel?.scale ?? key];
+  return String(scale3?.label ?? channel?.label ?? defaultLabel);
 }
 
 // node_modules/@observablehq/plot/src/plot.js
@@ -24496,9 +24690,9 @@ function plot(options = {}) {
     stateByMark.set(mark, { data, facets: facets2, channels });
   }
   const scaleDescriptors = createScales(addScaleChannels(channelsByScale, stateByMark, options), options);
-  const scales = createScaleFunctions(scaleDescriptors);
   const dimensions = createDimensions(scaleDescriptors, marks2, options);
   autoScaleRange(scaleDescriptors, dimensions);
+  const scales = createScaleFunctions(scaleDescriptors);
   const { fx, fy } = scales;
   const subdimensions = fx || fy ? innerDimensions(scaleDescriptors, dimensions) : dimensions;
   const superdimensions = fx || fy ? actualDimensions(scales, dimensions) : dimensions;
@@ -24555,9 +24749,10 @@ function plot(options = {}) {
     addScaleChannels(newChannelsByScale, stateByMark, options, (key) => newByScale.has(key));
     addScaleChannels(channelsByScale, stateByMark, options, (key) => newByScale.has(key));
     const newScaleDescriptors = inheritScaleLabels(createScales(newChannelsByScale, options), scaleDescriptors);
-    const newScales = createScaleFunctions(newScaleDescriptors);
+    const { scales: newExposedScales, ...newScales } = createScaleFunctions(newScaleDescriptors);
     Object.assign(scaleDescriptors, newScaleDescriptors);
     Object.assign(scales, newScales);
+    Object.assign(scales.scales, newExposedScales);
   }
   let facetDomains, facetTranslate;
   if (facets !== void 0) {
@@ -24645,7 +24840,7 @@ function plot(options = {}) {
     if (caption != null)
       figure.append(createFigcaption(document2, caption));
   }
-  figure.scale = exposeScales(scaleDescriptors);
+  figure.scale = exposeScales(scales.scales);
   figure.legend = exposeLegends(scaleDescriptors, context, options);
   const w = consumeWarnings();
   if (w > 0) {
@@ -24657,12 +24852,12 @@ function createTitleElement(document2, contents, tag) {
   if (contents.ownerDocument)
     return contents;
   const e = document2.createElement(tag);
-  e.append(document2.createTextNode(contents));
+  e.append(contents);
   return e;
 }
 function createFigcaption(document2, caption) {
   const e = document2.createElement("figcaption");
-  e.append(caption.ownerDocument ? caption : document2.createTextNode(caption));
+  e.append(caption);
   return e;
 }
 function plotThis({ marks: marks2 = [], ...options } = {}) {
@@ -24798,12 +24993,20 @@ function derive(mark, options = {}) {
 function inferTips(marks2) {
   const tips = [];
   for (const mark of marks2) {
-    const t = mark.tip;
-    if (t) {
-      const p = t === "x" ? pointerX : t === "y" ? pointerY : pointer;
-      const options = p(derive(mark));
-      options.title = null;
-      tips.push(tip(mark.data, options));
+    let tipOptions = mark.tip;
+    if (tipOptions) {
+      if (tipOptions === true)
+        tipOptions = {};
+      else if (typeof tipOptions === "string")
+        tipOptions = { pointer: tipOptions };
+      let { pointer: p } = tipOptions;
+      p = /^x$/i.test(p) ? pointerX : /^y$/i.test(p) ? pointerY : pointer;
+      tipOptions = p(derive(mark, tipOptions));
+      tipOptions.title = null;
+      const t = tip(mark.data, tipOptions);
+      t.facet = mark.facet;
+      t.facetAnchor = mark.facetAnchor;
+      tips.push(t);
     }
   }
   return tips;
@@ -25060,7 +25263,17 @@ function bin2(outputs = { fill: "count" }, options = {}) {
   return binn(x4, y4, null, null, outputs, maybeInsetX(maybeInsetY(options)));
 }
 function maybeDenseInterval(bin3, k2, options = {}) {
-  return options?.interval == null ? options : bin3({ [k2]: options?.reduce === void 0 ? reduceFirst : options.reduce, filter: null }, options);
+  if (options?.interval == null)
+    return options;
+  const { reduce: reduce2 = reduceFirst } = options;
+  const outputs = { filter: null };
+  if (options[k2] != null)
+    outputs[k2] = reduce2;
+  if (options[`${k2}1`] != null)
+    outputs[`${k2}1`] = reduce2;
+  if (options[`${k2}2`] != null)
+    outputs[`${k2}2`] = reduce2;
+  return bin3(outputs, options);
 }
 function maybeDenseIntervalX(options = {}) {
   return maybeDenseInterval(binX, "y", withTip(options, "x"));
@@ -25163,11 +25376,11 @@ function binn(bx, by, gx, gy, {
               if (K2)
                 GK2.push(k3);
               if (Z)
-                GZ2.push(G === Z ? f : Z[b[0]]);
+                GZ2.push(G === Z ? f : Z[(b.length > 0 ? b : g)[0]]);
               if (F)
-                GF2.push(G === F ? f : F[b[0]]);
+                GF2.push(G === F ? f : F[(b.length > 0 ? b : g)[0]]);
               if (S)
-                GS2.push(G === S ? f : S[b[0]]);
+                GS2.push(G === S ? f : S[(b.length > 0 ? b : g)[0]]);
               if (BX12)
                 BX12.push(extent3.x1), BX22.push(extent3.x2);
               if (BY12)
@@ -25351,12 +25564,6 @@ function thresholdAuto(values2, min4, max5) {
 function isTimeThresholds(t) {
   return isTimeInterval(t) || isIterable(t) && isTemporal(t);
 }
-function isTimeInterval(t) {
-  return isInterval(t) && typeof t === "function" && t() instanceof Date;
-}
-function isInterval(t) {
-  return typeof t?.range === "function";
-}
 function bing(EX, EY) {
   return EX && EY ? function* (I) {
     const X3 = EX.bin(I);
@@ -25456,6 +25663,40 @@ function maybeIdentityY(options = {}) {
   return hasY(options) ? options : { ...options, y: identity6 };
 }
 
+// node_modules/@observablehq/plot/src/transforms/exclusiveFacets.js
+function exclusiveFacets(data, facets) {
+  if (facets.length === 1)
+    return { data, facets };
+  const n = data.length;
+  const O = new Uint8Array(n);
+  let overlaps = 0;
+  for (const facet of facets) {
+    for (const i of facet) {
+      if (O[i])
+        ++overlaps;
+      O[i] = 1;
+    }
+  }
+  if (overlaps === 0)
+    return { data, facets };
+  data = slice5(data);
+  const R = data[reindex] = new Uint32Array(n + overlaps);
+  facets = facets.map((facet) => slice5(facet, Uint32Array));
+  let j = n;
+  O.fill(0);
+  for (const facet of facets) {
+    for (let k2 = 0, m3 = facet.length; k2 < m3; ++k2) {
+      const i = facet[k2];
+      if (O[i])
+        facet[k2] = j, data[j] = data[i], R[j] = i, ++j;
+      else
+        R[i] = i;
+      O[i] = 1;
+    }
+  }
+  return { data, facets };
+}
+
 // node_modules/@observablehq/plot/src/transforms/stack.js
 function stackX(stackOptions = {}, options = {}) {
   if (arguments.length === 1)
@@ -25530,6 +25771,7 @@ function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: rever
   order = maybeOrder2(order, offset2, ky2);
   return [
     basic(options, (data, facets, plotOptions) => {
+      ({ data, facets } = exclusiveFacets(data, facets));
       const X4 = x4 == null ? void 0 : setX(maybeApplyInterval(valueof(data, x4), plotOptions?.[kx2]));
       const Y3 = valueof(data, y4, Float64Array);
       const Z = valueof(data, z);
@@ -26215,8 +26457,8 @@ var Dot = class extends Mark {
     if (symbolChannel) {
       const { fill: fillChannel, stroke: strokeChannel } = channels;
       symbolChannel.hint = {
-        fill: fillChannel ? fillChannel.value === symbolChannel.value ? "color" : "currentColor" : this.fill,
-        stroke: strokeChannel ? strokeChannel.value === symbolChannel.value ? "color" : "currentColor" : this.stroke
+        fill: fillChannel ? fillChannel.value === symbolChannel.value ? "color" : "currentColor" : this.fill ?? "currentColor",
+        stroke: strokeChannel ? strokeChannel.value === symbolChannel.value ? "color" : "currentColor" : this.stroke ?? "none"
       };
     }
   }
@@ -29032,14 +29274,65 @@ function nodeData(field2) {
   return (node) => node.data?.[field2];
 }
 function normalizer(delimiter = "/") {
-  return `${delimiter}` === "/" ? (P) => P : (P) => P.map(replaceAll(delimiter, "/"));
+  delimiter = `${delimiter}`;
+  if (delimiter === "/")
+    return (P) => P;
+  if (delimiter.length !== 1)
+    throw new Error("delimiter must be exactly one character");
+  const delimiterCode = delimiter.charCodeAt(0);
+  return (P) => P.map((p) => slashDelimiter(p, delimiterCode));
 }
-function replaceAll(search, replace) {
-  search = new RegExp(regexEscape(search), "g");
-  return (value) => value == null ? null : `${value}`.replace(search, replace);
+var CODE_BACKSLASH = 92;
+var CODE_SLASH = 47;
+function slashDelimiter(input, delimiterCode) {
+  if (delimiterCode === CODE_BACKSLASH)
+    throw new Error("delimiter cannot be backslash");
+  let afterBackslash = false;
+  for (let i = 0, n = input.length; i < n; ++i) {
+    switch (input.charCodeAt(i)) {
+      case CODE_BACKSLASH:
+        if (!afterBackslash) {
+          afterBackslash = true;
+          continue;
+        }
+        break;
+      case delimiterCode:
+        if (afterBackslash) {
+          input = input.slice(0, i - 1) + input.slice(i), --i, --n;
+        } else {
+          input = input.slice(0, i) + "/" + input.slice(i + 1);
+        }
+        break;
+      case CODE_SLASH:
+        if (afterBackslash) {
+          input = input.slice(0, i) + "\\\\" + input.slice(i), i += 2, n += 2;
+        } else {
+          input = input.slice(0, i) + "\\" + input.slice(i), ++i, ++n;
+        }
+        break;
+    }
+    afterBackslash = false;
+  }
+  return input;
 }
-function regexEscape(string2) {
-  return `${string2}`.replace(/[\\^$*+?.()|[\]{}]/g, "\\$&");
+function slashUnescape(input) {
+  let afterBackslash = false;
+  for (let i = 0, n = input.length; i < n; ++i) {
+    switch (input.charCodeAt(i)) {
+      case CODE_BACKSLASH:
+        if (!afterBackslash) {
+          afterBackslash = true;
+          continue;
+        }
+      case CODE_SLASH:
+        if (afterBackslash) {
+          input = input.slice(0, i - 1) + input.slice(i), --i, --n;
+        }
+        break;
+    }
+    afterBackslash = false;
+  }
+  return input;
 }
 function isNodeValue(option) {
   return isObject(option) && typeof option.node === "function";
@@ -29127,7 +29420,7 @@ function nameof(path2) {
   while (--i > 0)
     if (slash2(path2, i))
       break;
-  return path2.slice(i + 1);
+  return slashUnescape(path2.slice(i + 1));
 }
 function slash2(path2, i) {
   if (path2[i] === "/") {
