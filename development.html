@@ -175,11 +175,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#debug-mode" id="toc-debug-mode" class="nav-link active" data-scroll-target="#debug-mode">Debug mode</a></li>
-  <li><a href="#install-from-git" id="toc-install-from-git" class="nav-link" data-scroll-target="#install-from-git">Install from git</a></li>
+  <li><a href="#install-from-git" id="toc-install-from-git" class="nav-link active" data-scroll-target="#install-from-git">Install from git</a></li>
   <li><a href="#install-fom-source" id="toc-install-fom-source" class="nav-link" data-scroll-target="#install-fom-source">Install fom source</a></li>
   <li><a href="#widget-javascript-modification-and-bundling" id="toc-widget-javascript-modification-and-bundling" class="nav-link" data-scroll-target="#widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</a></li>
   <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests">Tests</a></li>
+  <li><a href="#debug-mode" id="toc-debug-mode" class="nav-link" data-scroll-target="#debug-mode">Debug mode</a></li>
   <li><a href="#maintenance-notes" id="toc-maintenance-notes" class="nav-link" data-scroll-target="#maintenance-notes">Maintenance notes</a>
   <ul class="collapse">
   <li><a href="#releases" id="toc-releases" class="nav-link" data-scroll-target="#releases">Releases</a></li>
@@ -208,21 +208,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="debug-mode" class="level2">
-<h2 class="anchored" data-anchor-id="debug-mode">Debug mode</h2>
-<p>“Debug mode” outputs the computed JavaScript plot structure (the one passed to <code>Plot.plot</code>).</p>
-<p>To activate it, add <code>debug=True</code> when creating your plot generator object:</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(render<span class="op">=</span><span class="st">"widget"</span>, debug<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>If using the <code>widget</code> renderer, debug output will be displayed in JavaScript console. With the <code>jsdom</code> renderer, it will be displayed directly in the notebook.</p>
-</section>
 <section id="install-from-git" class="level2">
 <h2 class="anchored" data-anchor-id="install-from-git">Install from git</h2>
 <p>To install <code>pyobsplot</code> from git:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/juba/pyobsplot.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/juba/pyobsplot.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>To install <code>pyobsplot</code> npm package from git:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="st">'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="st">'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="install-fom-source" class="level2">
 <h2 class="anchored" data-anchor-id="install-fom-source">Install fom source</h2>
@@ -235,33 +226,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Install <code>pyobsplot-js</code> JavaScript dependencies with : <code>npm install --workspaces</code></li>
 <li>Install <code>pyobsplot</code> dependencies with : <code>npm install</code></li>
 </ul>
-<p>The <code>widget</code> renderer uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot/widget.py</code>. JavaScript and CSS source code is in <code>js/</code> and <code>css/</code>.</p>
+<p>The <code>widget</code> renderer uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot/widget.py</code>. JavaScript and CSS source code are in <code>js/</code> and <code>css/</code>.</p>
 <p>The <code>jsdom</code> renderer is provided by the <code>pyobsplot-js</code> npm package whose source is in <code>packages/pyobsplot-js</code>. Python source code is in <code>src/pyobsplot/jsdom.py</code>.</p>
 </section>
 <section id="widget-javascript-modification-and-bundling" class="level2">
 <h2 class="anchored" data-anchor-id="widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</h2>
 <p>Each time the widget JavaScript or CSS code is modified in the <code>js/</code> or <code>css/</code> directories, it must be bundled with one of the following commands in <code>pyobsplot</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle only once</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run bundle</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and watch for code change</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run watch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle only once</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run bundle</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and watch for code change</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run watch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The result is put into <code>src/pyobsplot/static</code>.</p>
 </section>
 <section id="tests" class="level2">
 <h2 class="anchored" data-anchor-id="tests">Tests</h2>
 <p><code>pyobsplot</code> comes with three types of tests : Python test, JavaScript tests and Visual regression tests.</p>
-<ul>
-<li>to run Python tests, use <code>npm run test</code></li>
-<li>to run JavaScript tests, use <code>npm run test --workspaces</code></li>
-</ul>
+<p>To run Python tests, use:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To run JavaScript tests, use:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test <span class="at">--workspaces</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Visual regression tests allow to test if generated plots stay the same. They use the <a href="https://github.com/jupyterlab/jupyterlab/tree/master/galata">galata</a> framework. To run them you first have to start a specific Jupyter instance with:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uistart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uistart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If you use visual regression tests for the first time, you have to generate reference images with:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create / update reference images</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest:update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create / update reference images</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest:update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>After that, you can test that currently generated images are the same as the reference one with:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare with reference images</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare with reference images</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run uitest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="debug-mode" class="level2">
+<h2 class="anchored" data-anchor-id="debug-mode">Debug mode</h2>
+<p>“Debug mode” outputs the computed JavaScript plot structure (the one passed to <code>Plot.plot</code>).</p>
+<p>To activate it, add <code>debug=True</code> when creating your plot generator object:</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(render<span class="op">=</span><span class="st">"widget"</span>, debug<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If using the <code>widget</code> renderer, debug output will be displayed in JavaScript console. With the <code>jsdom</code> renderer, it will be displayed directly in the notebook.</p>
 </section>
 <section id="maintenance-notes" class="level2">
 <h2 class="anchored" data-anchor-id="maintenance-notes">Maintenance notes</h2>
@@ -271,6 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>If necessary release the npm package with <code>npm publish</code> in <code>packages/pyobsplot-js</code></li>
 <li>Check that the min_npm_version value in .utils is correct</li>
 <li>Release the Python package with <code>poetry build</code> and <code>poetry publish</code> in <code>pyobsplot</code></li>
+<li>Tag the version in git</li>
 <li>Create a release on Github</li>
 </ul>
 </section>
