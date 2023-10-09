@@ -2,18 +2,6 @@
 title: "Development"
 ---
 
-## Debug mode
-
-"Debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`).
-
-To activate it, add `debug=True` when creating your plot generator object:
-
-```{python}
-# | eval: false
-op = Obsplot(render="widget", debug=True)
-```
-
-If using the `widget` renderer, debug output will be displayed in JavaScript console. With the `jsdom` renderer, it will be displayed directly in the notebook.
 
 ## Install from git
 
@@ -40,7 +28,7 @@ If you want to build `pyobsplot` from source, you'll have to follow these steps:
 - Install `pyobsplot-js` JavaScript dependencies with : `npm install --workspaces`
 - Install `pyobsplot` dependencies with : `npm install`
 
-The `widget` renderer uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot/widget.py`. JavaScript and CSS source code is in `js/` and `css/`.
+The `widget` renderer uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot/widget.py`. JavaScript and CSS source code are in `js/` and `css/`.
 
 The `jsdom` renderer is provided by the `pyobsplot-js` npm package whose source is in `packages/pyobsplot-js`. Python source code is in `src/pyobsplot/jsdom.py`.
 
@@ -61,8 +49,17 @@ The result is put into `src/pyobsplot/static`.
 
 `pyobsplot` comes with three types of tests : Python test, JavaScript tests and Visual regression tests.
 
-- to run Python tests, use `npm run test`
-- to run JavaScript tests, use `npm run test --workspaces`
+To run Python tests, use:
+
+```sh
+npm run test
+```
+
+To run JavaScript tests, use:
+
+```sh
+npm run test --workspaces
+```
 
 Visual regression tests allow to test if generated plots stay the same. They use the [galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) framework. To run them you first have to start a specific Jupyter instance with:
 
@@ -84,6 +81,20 @@ After that, you can test that currently generated images are the same as the ref
 npm run uitest
 ```
 
+## Debug mode
+
+"Debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`).
+
+To activate it, add `debug=True` when creating your plot generator object:
+
+```{python}
+# | eval: false
+op = Obsplot(render="widget", debug=True)
+```
+
+If using the `widget` renderer, debug output will be displayed in JavaScript console. With the `jsdom` renderer, it will be displayed directly in the notebook.
+
+
 ## Maintenance notes
 
 ### Releases
@@ -91,6 +102,7 @@ npm run uitest
 - If necessary release the npm package with `npm publish` in `packages/pyobsplot-js`
 - Check that the min_npm_version value in .utils is correct
 - Release the Python package with `poetry build` and `poetry publish` in `pyobsplot`
+- Tag the version in git
 - Create a release on Github
 
 ### New Plot versions
