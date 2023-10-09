@@ -6,14 +6,15 @@ import pytest
 import io
 import pickle
 
-from pyobsplot import Obsplot, Plot
+from pyobsplot import Obsplot
+from pyobsplot.utils import DEFAULT_THEME
 
 
 @pytest.fixture(scope="module")
-def oj():
-    oj = Obsplot(renderer="jsdom")
-    yield oj
-    oj.close()  # type: ignore
+def op():
+    op = Obsplot(renderer="jsdom")
+    yield op
+    op.close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
@@ -23,14 +24,36 @@ def specs():
     return specs
 
 
+@pytest.fixture(scope="module")
+def themes():
+    with open("tests/python/reference/themes.pkl", "rb") as f:
+        themes = pickle.load(f)
+    return themes
+
+
+@pytest.fixture(scope="module")
+def defaults():
+    with open("tests/python/reference/defaults.pkl", "rb") as f:
+        defaults = pickle.load(f)
+    return defaults
+
+
 class TestSpecs:
-    def test_jsdom_plots(self, oj, specs):
+    def test_jsdom_plots(self, op, specs, themes, defaults):
         results = dict()
-        for k, spec in specs.items():
+        for key, spec in specs.items():
             out = io.StringIO()
-            oj(spec, path=out)
-            with open(f"tests/python/reference/{k}", "r") as f:
-                results[k] = out.getvalue() == f.read()
+            if key in themes:
+                op.theme = themes[key]
+            else:
+                op.theme = DEFAULT_THEME
+            if key in defaults:
+                op.default = defaults[key]
+            else:
+                op.default = {}
+            op(spec, path=out)
+            with open(f"tests/python/reference/{key}", "r") as f:
+                results[key] = out.getvalue() == f.read()
             out.close()
         print(results)
         assert all(results)
