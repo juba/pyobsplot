@@ -17,9 +17,9 @@
     "uitest:ui": "playwright test --workers=1 --config tests/ui/playwright.config.cjs --ui"
   },
   "devDependencies": {
-    "@jupyterlab/galata": "^5.0.2",
-    "@playwright/test": "^1.35.1",
-    "esbuild": "^0.17.18"
+    "@jupyterlab/galata": "^5.0.6",
+    "@playwright/test": "^1.38.1",
+    "esbuild": "^0.17.19"
   },
   "type": "module",
   "workspaces": [
