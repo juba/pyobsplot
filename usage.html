@@ -374,13 +374,13 @@ Not supported. Only static plots are produced.
 </tr>
 <tr>
 <td>
-<strong>Save plot to disk</strong>
+<strong>Save plot to file</strong>
 </td>
 <td>
-Plots can be saved as SVG or HTML files
+Plots can be saved as embeddable SVG or HTML files
 </td>
 <td>
-Not supported
+Plots can be saved to a full HTML file
 </td>
 </tr>
 <tr>
@@ -646,12 +646,12 @@ Output is saved between sessions
 </section>
 <section id="saving-plots-to-file" class="level2">
 <h2 class="anchored" data-anchor-id="saving-plots-to-file">Saving plots to file</h2>
-<p>When using the <code>jsdom</code> renderer, generated plots can be savec to a file. To do this, just add a <code>path</code> argument to your generator call:</p>
+<p>Generated plots can be savec to a file. To do this, just add a <code>path</code> argument to your generator call:</p>
 <div class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"jsdom"</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>op(Plot.lineY([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>]), path<span class="op">=</span><span class="st">"path_to/file.svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>By default Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a <code>&lt;figure&gt;</code> HTML tag. When using the <code>path</code> option, <code>pyobsplot</code> will warn you if you try to save an HTML output to a SVG file.</p>
+<p>When using the <code>jsdom</code> renderer, charts can be saved either as SVG or HTML files : Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a <code>&lt;figure&gt;</code> HTML tag. When using the <code>path</code> option, <code>pyobsplot</code> will warn you if you try to save an HTML output to a SVG file.</p>
 <p>In any case, you can also use Plot’s <code>figure</code> option to force the output to be wrapped in <code>&lt;figure&gt;</code>:</p>
 <div class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"jsdom"</span>)</span>
@@ -662,6 +662,7 @@ Output is saved between sessions
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">"/tmp/out.html"</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>When using the <code>widget</code> renderer, plots can only be saved to full HTML files. These files retain interactivity features such as tooltips. To embed widgets into an HTML website or document, Quarto documents can be more practical.</p>
 
 
 </section>
