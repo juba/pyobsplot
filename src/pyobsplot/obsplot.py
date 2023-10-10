@@ -179,19 +179,13 @@ class ObsplotWidgetCreator(ObsplotCreator):
         Args:
             path (str): path to output file.
             res (ObsplotWidget): result of a call to Obsplot().
-
-        Raises:
-           NotImplementedError: this feature is not implemented.
         """
-        # raise NotImplementedError(
-        #     "Saving widget renderer output to disk is not implemented."
-        # )
         extension = Path(path).suffix.lower()
         if extension not in [".html", ".htm"]:
             warnings.warn(
                 "Output file extension should be one of 'html' or 'htm'", RuntimeWarning
             )
-        embed_minimal_html(path, views=[res], state=dependency_state([res]))
+        embed_minimal_html(path, views=[res], drop_defaults=False)
 
 
 class ObsplotJsdomCreator(ObsplotCreator):
