@@ -142,9 +142,9 @@ The following table lists the differences between the two renderers.
 <td>Not supported. Only static plots are produced.</td>
 </tr>
 <tr>
-<td>**Save plot to disk**</td>
-<td>Plots can be saved as SVG or HTML files</td>
-<td>Not supported</td>
+<td>**Save plot to file**</td>
+<td>Plots can be saved as embeddable SVG or HTML files</td>
+<td>Plots can be saved to a full HTML file</td>
 </tr>
 <tr>
 <td>**Jupyter<br>interactivity**</td>
@@ -425,7 +425,7 @@ You can see a live version of this example in the following Colab notebook: [![]
 
 ## Saving plots to file
 
-When using the `jsdom` renderer, generated plots can be savec to a file. To do this, just add a `path` argument to your generator call:
+Generated plots can be savec to a file. To do this, just add a `path` argument to your generator call:
 
 ```{python}
 #| eval: false
@@ -434,7 +434,7 @@ op = Obsplot(renderer="jsdom")
 op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 ```
 
-By default Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. When using the `path` option, `pyobsplot` will warn you if you try to save an HTML output to a SVG file.
+When using the `jsdom` renderer, charts can be saved either as SVG or HTML files : Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. When using the `path` option, `pyobsplot` will warn you if you try to save an HTML output to a SVG file.
 
 In any case, you can also use Plot's `figure` option to force the output to be wrapped in `<figure>`:
 
@@ -449,3 +449,5 @@ op({
     path="/tmp/out.html"
 )
 ```
+
+When using the `widget` renderer, plots can only be saved to full HTML files. These files retain interactivity features such as tooltips. To embed widgets into an HTML website or document, Quarto documents can be more practical.
