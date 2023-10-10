@@ -7,7 +7,7 @@ import requests
 from IPython.display import HTML, SVG  # type: ignore
 
 
-from typing import Any
+from typing import Any, Union
 
 from .parsing import SpecParser
 from .utils import DEFAULT_THEME
@@ -45,7 +45,7 @@ class ObsplotJsdom:
         self.port = port
         self.theme = theme
 
-    def plot(self) -> SVG | HTML:
+    def plot(self) -> Union[SVG, HTML]:
         """Generates the plot by sending request to http node server.
 
         Returns:
