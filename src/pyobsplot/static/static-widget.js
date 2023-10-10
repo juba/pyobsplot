@@ -29993,7 +29993,7 @@ function __asyncValues(o) {
   }
 }
 
-// node_modules/apache-arrow/util/buffer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/buffer.mjs
 var buffer_exports = {};
 __export(buffer_exports, {
   compareArrayLike: () => compareArrayLike,
@@ -30034,53 +30034,13 @@ __export(buffer_exports, {
   toUint8ClampedArrayIterator: () => toUint8ClampedArrayIterator
 });
 
-// node_modules/apache-arrow/util/utf8.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/utf8.mjs
 var decoder = new TextDecoder("utf-8");
 var decodeUtf8 = (buffer) => decoder.decode(buffer);
 var encoder = new TextEncoder();
 var encodeUtf8 = (value) => encoder.encode(value);
 
-// node_modules/apache-arrow/util/compat.mjs
-var [BigInt64ArrayCtor, BigInt64ArrayAvailable] = (() => {
-  const BigInt64ArrayUnavailableError = () => {
-    throw new Error("BigInt64Array is not available in this environment");
-  };
-  class BigInt64ArrayUnavailable {
-    static get BYTES_PER_ELEMENT() {
-      return 8;
-    }
-    static of() {
-      throw BigInt64ArrayUnavailableError();
-    }
-    static from() {
-      throw BigInt64ArrayUnavailableError();
-    }
-    constructor() {
-      throw BigInt64ArrayUnavailableError();
-    }
-  }
-  return typeof BigInt64Array !== "undefined" ? [BigInt64Array, true] : [BigInt64ArrayUnavailable, false];
-})();
-var [BigUint64ArrayCtor, BigUint64ArrayAvailable] = (() => {
-  const BigUint64ArrayUnavailableError = () => {
-    throw new Error("BigUint64Array is not available in this environment");
-  };
-  class BigUint64ArrayUnavailable {
-    static get BYTES_PER_ELEMENT() {
-      return 8;
-    }
-    static of() {
-      throw BigUint64ArrayUnavailableError();
-    }
-    static from() {
-      throw BigUint64ArrayUnavailableError();
-    }
-    constructor() {
-      throw BigUint64ArrayUnavailableError();
-    }
-  }
-  return typeof BigUint64Array !== "undefined" ? [BigUint64Array, true] : [BigUint64ArrayUnavailable, false];
-})();
+// packages/pyobsplot-js/node_modules/apache-arrow/util/compat.mjs
 var isNumber = (x4) => typeof x4 === "number";
 var isBoolean = (x4) => typeof x4 === "boolean";
 var isFunction = (x4) => typeof x4 === "function";
@@ -30123,7 +30083,7 @@ var isFlatbuffersByteBuffer = (x4) => {
   return isObject2(x4) && isFunction(x4["clear"]) && isFunction(x4["bytes"]) && isFunction(x4["position"]) && isFunction(x4["setPosition"]) && isFunction(x4["capacity"]) && isFunction(x4["getBufferIdentifier"]) && isFunction(x4["createLong"]);
 };
 
-// node_modules/apache-arrow/util/buffer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/buffer.mjs
 var SharedArrayBuf = typeof SharedArrayBuffer !== "undefined" ? SharedArrayBuffer : ArrayBuffer;
 function collapseContiguousByteRanges(chunks) {
   const result = chunks[0] ? [chunks[0]] : [];
@@ -30203,11 +30163,11 @@ function toArrayBufferView(ArrayBufferViewCtor, input) {
 var toInt8Array = (input) => toArrayBufferView(Int8Array, input);
 var toInt16Array = (input) => toArrayBufferView(Int16Array, input);
 var toInt32Array = (input) => toArrayBufferView(Int32Array, input);
-var toBigInt64Array = (input) => toArrayBufferView(BigInt64ArrayCtor, input);
+var toBigInt64Array = (input) => toArrayBufferView(BigInt64Array, input);
 var toUint8Array = (input) => toArrayBufferView(Uint8Array, input);
 var toUint16Array = (input) => toArrayBufferView(Uint16Array, input);
 var toUint32Array = (input) => toArrayBufferView(Uint32Array, input);
-var toBigUint64Array = (input) => toArrayBufferView(BigUint64ArrayCtor, input);
+var toBigUint64Array = (input) => toArrayBufferView(BigUint64Array, input);
 var toFloat32Array = (input) => toArrayBufferView(Float32Array, input);
 var toFloat64Array = (input) => toArrayBufferView(Float64Array, input);
 var toUint8ClampedArray = (input) => toArrayBufferView(Uint8ClampedArray, input);
@@ -30306,7 +30266,7 @@ function compareArrayLike(a4, b) {
   return true;
 }
 
-// node_modules/apache-arrow/io/adapters.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/adapters.mjs
 var adapters_default = {
   fromIterable(source) {
     return pump2(fromIterable(source));
@@ -30550,7 +30510,7 @@ function fromNodeStream(stream) {
   });
 }
 
-// node_modules/apache-arrow/enum.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/enum.mjs
 var MetadataVersion;
 (function(MetadataVersion3) {
   MetadataVersion3[MetadataVersion3["V1"] = 0] = "V1";
@@ -30652,7 +30612,7 @@ var BufferType;
   BufferType2[BufferType2["TYPE"] = 3] = "TYPE";
 })(BufferType || (BufferType = {}));
 
-// node_modules/apache-arrow/util/vector.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/vector.mjs
 var vector_exports = {};
 __export(vector_exports, {
   clampIndex: () => clampIndex,
@@ -30660,7 +30620,7 @@ __export(vector_exports, {
   createElementComparator: () => createElementComparator
 });
 
-// node_modules/apache-arrow/util/pretty.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/pretty.mjs
 var undf = void 0;
 function valueToString(x4) {
   if (x4 === null) {
@@ -30681,7 +30641,7 @@ function valueToString(x4) {
     return x4[Symbol.toPrimitive]("string");
   }
   if (ArrayBuffer.isView(x4)) {
-    if (x4 instanceof BigInt64ArrayCtor || x4 instanceof BigUint64ArrayCtor) {
+    if (x4 instanceof BigInt64Array || x4 instanceof BigUint64Array) {
       return `[${[...x4].map((x5) => valueToString(x5))}]`;
     }
     return `[${x4}]`;
@@ -30689,12 +30649,12 @@ function valueToString(x4) {
   return ArrayBuffer.isView(x4) ? `[${x4}]` : JSON.stringify(x4, (_, y4) => typeof y4 === "bigint" ? `${y4}` : y4);
 }
 
-// node_modules/apache-arrow/util/bn.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/bn.mjs
 var bn_exports = {};
 __export(bn_exports, {
   BN: () => BN,
-  bignumToBigInt: () => bignumToBigInt,
-  bignumToString: () => bignumToString,
+  bigNumToBigInt: () => bigNumToBigInt,
+  bigNumToString: () => bigNumToString,
   isArrowBigNumSymbol: () => isArrowBigNumSymbol
 });
 var isArrowBigNumSymbol = Symbol.for("isArrowBigNum");
@@ -30706,24 +30666,24 @@ function BigNum(x4, ...xs) {
 }
 BigNum.prototype[isArrowBigNumSymbol] = true;
 BigNum.prototype.toJSON = function() {
-  return `"${bignumToString(this)}"`;
+  return `"${bigNumToString(this)}"`;
 };
 BigNum.prototype.valueOf = function() {
-  return bignumToNumber(this);
+  return bigNumToNumber(this);
 };
 BigNum.prototype.toString = function() {
-  return bignumToString(this);
+  return bigNumToString(this);
 };
 BigNum.prototype[Symbol.toPrimitive] = function(hint = "default") {
   switch (hint) {
     case "number":
-      return bignumToNumber(this);
+      return bigNumToNumber(this);
     case "string":
-      return bignumToString(this);
+      return bigNumToString(this);
     case "default":
-      return bignumToBigInt(this);
+      return bigNumToBigInt(this);
   }
-  return bignumToString(this);
+  return bigNumToString(this);
 };
 function SignedBigNum(...args) {
   return BigNum.apply(this, args);
@@ -30737,13 +30697,13 @@ function DecimalBigNum(...args) {
 Object.setPrototypeOf(SignedBigNum.prototype, Object.create(Int32Array.prototype));
 Object.setPrototypeOf(UnsignedBigNum.prototype, Object.create(Uint32Array.prototype));
 Object.setPrototypeOf(DecimalBigNum.prototype, Object.create(Uint32Array.prototype));
-Object.assign(SignedBigNum.prototype, BigNum.prototype, { "constructor": SignedBigNum, "signed": true, "TypedArray": Int32Array, "BigIntArray": BigInt64ArrayCtor });
-Object.assign(UnsignedBigNum.prototype, BigNum.prototype, { "constructor": UnsignedBigNum, "signed": false, "TypedArray": Uint32Array, "BigIntArray": BigUint64ArrayCtor });
-Object.assign(DecimalBigNum.prototype, BigNum.prototype, { "constructor": DecimalBigNum, "signed": true, "TypedArray": Uint32Array, "BigIntArray": BigUint64ArrayCtor });
-function bignumToNumber(bn) {
+Object.assign(SignedBigNum.prototype, BigNum.prototype, { "constructor": SignedBigNum, "signed": true, "TypedArray": Int32Array, "BigIntArray": BigInt64Array });
+Object.assign(UnsignedBigNum.prototype, BigNum.prototype, { "constructor": UnsignedBigNum, "signed": false, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
+Object.assign(DecimalBigNum.prototype, BigNum.prototype, { "constructor": DecimalBigNum, "signed": true, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
+function bigNumToNumber(bn) {
   const { buffer, byteOffset, length: length4, "signed": signed } = bn;
-  const words = new BigUint64ArrayCtor(buffer, byteOffset, length4);
-  const negative2 = signed && words[words.length - 1] & BigInt(1) << BigInt(63);
+  const words = new BigUint64Array(buffer, byteOffset, length4);
+  const negative2 = signed && words.at(-1) & BigInt(1) << BigInt(63);
   let number7 = negative2 ? BigInt(1) : BigInt(0);
   let i = BigInt(0);
   if (!negative2) {
@@ -30758,9 +30718,39 @@ function bignumToNumber(bn) {
   }
   return number7;
 }
-var bignumToString = (a4) => a4.byteLength === 8 ? `${new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1)[0]}` : decimalToString(a4);
-var bignumToBigInt = (a4) => a4.byteLength === 8 ? new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1)[0] : decimalToString(a4);
-function decimalToString(a4) {
+var bigNumToString = (a4) => {
+  if (a4.byteLength === 8) {
+    const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
+    return `${bigIntArray[0]}`;
+  }
+  if (!a4["signed"]) {
+    return unsignedBigNumToString(a4);
+  }
+  let array4 = new Uint16Array(a4.buffer, a4.byteOffset, a4.byteLength / 2);
+  const highOrderWord = new Int16Array([array4.at(-1)])[0];
+  if (highOrderWord >= 0) {
+    return unsignedBigNumToString(a4);
+  }
+  array4 = array4.slice();
+  let carry = 1;
+  for (let i = 0; i < array4.length; i++) {
+    const elem = array4[i];
+    const updated = ~elem + carry;
+    array4[i] = updated;
+    carry &= elem === 0 ? 1 : 0;
+  }
+  const negated = unsignedBigNumToString(array4);
+  return `-${negated}`;
+};
+var bigNumToBigInt = (a4) => {
+  if (a4.byteLength === 8) {
+    const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
+    return bigIntArray[0];
+  } else {
+    return bigNumToString(a4);
+  }
+};
+function unsignedBigNumToString(a4) {
   let digits = "";
   const base64 = new Uint32Array(2);
   let base32 = new Uint16Array(a4.buffer, a4.byteOffset, a4.byteLength / 2);
@@ -30791,7 +30781,7 @@ var BN = class {
       case Int8Array:
       case Int16Array:
       case Int32Array:
-      case BigInt64ArrayCtor:
+      case BigInt64Array:
         return new SignedBigNum(num);
     }
     if (num.byteLength === 16) {
@@ -30816,7 +30806,7 @@ var BN = class {
   }
 };
 
-// node_modules/apache-arrow/util/bigint.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/bigint.mjs
 function bigIntToNumber(number7) {
   if (typeof number7 === "bigint" && (number7 < Number.MIN_SAFE_INTEGER || number7 > Number.MAX_SAFE_INTEGER)) {
     throw new TypeError(`${number7} is not safe to convert to a number.`);
@@ -30824,7 +30814,7 @@ function bigIntToNumber(number7) {
   return Number(number7);
 }
 
-// node_modules/apache-arrow/type.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/type.mjs
 var _a;
 var _b;
 var _c;
@@ -30963,7 +30953,7 @@ var Int_ = class extends DataType {
       case 32:
         return this.isSigned ? Int32Array : Uint32Array;
       case 64:
-        return this.isSigned ? BigInt64ArrayCtor : BigUint64ArrayCtor;
+        return this.isSigned ? BigInt64Array : BigUint64Array;
     }
     throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
   }
@@ -31006,7 +30996,7 @@ var Int64 = class extends Int_ {
     super(true, 64);
   }
   get ArrayType() {
-    return BigInt64ArrayCtor;
+    return BigInt64Array;
   }
 };
 var Uint8 = class extends Int_ {
@@ -31038,17 +31028,17 @@ var Uint64 = class extends Int_ {
     super(false, 64);
   }
   get ArrayType() {
-    return BigUint64ArrayCtor;
+    return BigUint64Array;
   }
 };
 Object.defineProperty(Int8.prototype, "ArrayType", { value: Int8Array });
 Object.defineProperty(Int16.prototype, "ArrayType", { value: Int16Array });
 Object.defineProperty(Int32.prototype, "ArrayType", { value: Int32Array });
-Object.defineProperty(Int64.prototype, "ArrayType", { value: BigInt64ArrayCtor });
+Object.defineProperty(Int64.prototype, "ArrayType", { value: BigInt64Array });
 Object.defineProperty(Uint8.prototype, "ArrayType", { value: Uint8Array });
 Object.defineProperty(Uint16.prototype, "ArrayType", { value: Uint16Array });
 Object.defineProperty(Uint32.prototype, "ArrayType", { value: Uint32Array });
-Object.defineProperty(Uint64.prototype, "ArrayType", { value: BigUint64ArrayCtor });
+Object.defineProperty(Uint64.prototype, "ArrayType", { value: BigUint64Array });
 var Float = class extends DataType {
   constructor(precision) {
     super();
@@ -31199,7 +31189,7 @@ var Time_ = class extends DataType {
       case 32:
         return Int32Array;
       case 64:
-        return BigInt64ArrayCtor;
+        return BigInt64Array;
     }
     throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
   }
@@ -31442,7 +31432,7 @@ function strideForType(type2) {
   }
 }
 
-// node_modules/apache-arrow/visitor.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor.mjs
 var Visitor = class {
   visitMany(nodes, ...args) {
     return nodes.map((node, i) => this.visit(node, ...args.map((x4) => x4[i])));
@@ -31790,7 +31780,7 @@ Visitor.prototype.visitSparseUnion = null;
 Visitor.prototype.visitIntervalDayTime = null;
 Visitor.prototype.visitIntervalYearMonth = null;
 
-// node_modules/apache-arrow/util/math.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/math.mjs
 var math_exports = {};
 __export(math_exports, {
   float64ToUint16: () => float64ToUint16,
@@ -31835,7 +31825,7 @@ function float64ToUint16(d) {
   return sign3 | expo | sigf & 65535;
 }
 
-// node_modules/apache-arrow/visitor/set.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/set.mjs
 var SetVisitor = class extends Visitor {
 };
 function wrapSet(fn) {
@@ -32066,7 +32056,7 @@ SetVisitor.prototype.visitFixedSizeList = wrapSet(setFixedSizeList);
 SetVisitor.prototype.visitMap = wrapSet(setMap);
 var instance = new SetVisitor();
 
-// node_modules/apache-arrow/row/struct.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/row/struct.mjs
 var kParent = Symbol.for("parent");
 var kRowIndex = Symbol.for("rowIndex");
 var StructRow = class {
@@ -32174,7 +32164,7 @@ var StructRowProxyHandler = class {
   }
 };
 
-// node_modules/apache-arrow/visitor/get.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/get.mjs
 var GetVisitor = class extends Visitor {
 };
 function wrapGet(fn) {
@@ -32341,7 +32331,7 @@ GetVisitor.prototype.visitFixedSizeList = wrapGet(getFixedSizeList);
 GetVisitor.prototype.visitMap = wrapGet(getMap);
 var instance2 = new GetVisitor();
 
-// node_modules/apache-arrow/row/map.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/row/map.mjs
 var kKeys = Symbol.for("keys");
 var kVals = Symbol.for("vals");
 var MapRow = class {
@@ -32451,7 +32441,7 @@ Object.defineProperties(MapRow.prototype, {
   [kVals]: { writable: true, enumerable: false, configurable: false, value: null }
 });
 
-// node_modules/apache-arrow/util/vector.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/vector.mjs
 function clampIndex(source, index3, then) {
   const length4 = source.length;
   const adjust = index3 > -1 ? index3 : length4 + index3 % length4;
@@ -32593,7 +32583,7 @@ function compareObject(comparators, obj, keys) {
   return false;
 }
 
-// node_modules/apache-arrow/util/bit.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/bit.mjs
 var bit_exports = {};
 __export(bit_exports, {
   BitIterator: () => BitIterator,
@@ -32716,7 +32706,7 @@ function popcnt_uint32(uint32) {
   return (i + (i >>> 4) & 252645135) * 16843009 >>> 24;
 }
 
-// node_modules/apache-arrow/data.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/data.mjs
 var kUnknownNullCount = -1;
 var Data = class {
   get typeId() {
@@ -32975,7 +32965,7 @@ function makeData(props) {
   return new MakeDataVisitor().visit(props);
 }
 
-// node_modules/apache-arrow/util/chunk.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/chunk.mjs
 var ChunkedIterator = class {
   constructor(numChunks = 0, getChunkIterator) {
     this.numChunks = numChunks;
@@ -33091,7 +33081,7 @@ function wrapChunkedIndexOf(indexOf2) {
   };
 }
 
-// node_modules/apache-arrow/visitor/indexof.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/indexof.mjs
 var IndexOfVisitor = class extends Visitor {
 };
 function nullIndexOf(data, searchElement) {
@@ -33182,7 +33172,7 @@ IndexOfVisitor.prototype.visitFixedSizeList = indexOfValue;
 IndexOfVisitor.prototype.visitMap = indexOfValue;
 var instance3 = new IndexOfVisitor();
 
-// node_modules/apache-arrow/visitor/iterator.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/iterator.mjs
 var IteratorVisitor = class extends Visitor {
 };
 function vectorIterator(vector2) {
@@ -33264,7 +33254,7 @@ IteratorVisitor.prototype.visitFixedSizeList = vectorIterator;
 IteratorVisitor.prototype.visitMap = vectorIterator;
 var instance4 = new IteratorVisitor();
 
-// node_modules/apache-arrow/visitor/bytelength.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/bytelength.mjs
 var sum4 = (x4, y4) => x4 + y4;
 var GetByteLengthVisitor = class extends Visitor {
   visitNull(____, _) {
@@ -33355,7 +33345,7 @@ GetByteLengthVisitor.prototype.visitDenseUnion = getDenseUnionByteLength;
 GetByteLengthVisitor.prototype.visitSparseUnion = getSparseUnionByteLength;
 var instance5 = new GetByteLengthVisitor();
 
-// node_modules/apache-arrow/vector.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/vector.mjs
 var _a2;
 var visitorsByTypeId = {};
 var vectorPrototypesByTypeId = {};
@@ -33391,7 +33381,7 @@ var Vector2 = class {
     this.type = type2;
     this.stride = strideForType(type2);
     this.numChildren = (_d2 = (_c2 = type2.children) === null || _c2 === void 0 ? void 0 : _c2.length) !== null && _d2 !== void 0 ? _d2 : 0;
-    this.length = this._offsets[this._offsets.length - 1];
+    this.length = this._offsets.at(-1);
   }
   /**
    * The aggregate size (in bytes) of this Vector's buffers and/or child Vectors.
@@ -33412,7 +33402,7 @@ var Vector2 = class {
     return this._nullCount;
   }
   /**
-   * The Array or TypedAray constructor used for the JS representation
+   * The Array or TypedArray constructor used for the JS representation
    *  of the element's values in {@link Vector.prototype.toArray `toArray()`}.
    */
   get ArrayType() {
@@ -33672,7 +33662,7 @@ var MemoizedVector = class extends Vector2 {
   }
 };
 
-// node_modules/apache-arrow/builder/valid.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/valid.mjs
 function createIsValidFunction(nullValues) {
   if (!nullValues || nullValues.length <= 0) {
     return function isValid(value) {
@@ -33702,7 +33692,7 @@ function valueToCase(x4) {
   return `${valueToString(x4)}n`;
 }
 
-// node_modules/apache-arrow/builder/buffer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/buffer.mjs
 var roundLengthUpToNearest64Bytes = (len, BPE) => (Math.ceil(len) * BPE + 63 & ~63 || 64) / BPE;
 var sliceOrExtendArray = (arr, len = 0) => arr.length >= len ? arr.subarray(0, len) : memcpy(new arr.constructor(len), arr, 0);
 var BufferBuilder = class {
@@ -33816,7 +33806,7 @@ var OffsetsBufferBuilder = class extends DataBufferBuilder {
   }
 };
 
-// node_modules/apache-arrow/builder.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder.mjs
 var Builder = class {
   /** @nocollapse */
   // @ts-ignore
@@ -34083,7 +34073,7 @@ var VariableWidthBuilder = class extends Builder {
   }
 };
 
-// node_modules/apache-arrow/fb/block.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/block.mjs
 var Block = class {
   constructor() {
     this.bb = null;
@@ -34126,26 +34116,26 @@ var Block = class {
   }
 };
 
-// node_modules/flatbuffers/mjs/constants.js
+// packages/pyobsplot-js/node_modules/flatbuffers/mjs/constants.js
 var SIZEOF_SHORT = 2;
 var SIZEOF_INT = 4;
 var FILE_IDENTIFIER_LENGTH = 4;
 var SIZE_PREFIX_LENGTH = 4;
 
-// node_modules/flatbuffers/mjs/utils.js
+// packages/pyobsplot-js/node_modules/flatbuffers/mjs/utils.js
 var int32 = new Int32Array(2);
 var float32 = new Float32Array(int32.buffer);
 var float64 = new Float64Array(int32.buffer);
 var isLittleEndian = new Uint16Array(new Uint8Array([1, 0]).buffer)[0] === 1;
 
-// node_modules/flatbuffers/mjs/encoding.js
+// packages/pyobsplot-js/node_modules/flatbuffers/mjs/encoding.js
 var Encoding;
 (function(Encoding2) {
   Encoding2[Encoding2["UTF8_BYTES"] = 1] = "UTF8_BYTES";
   Encoding2[Encoding2["UTF16_STRING"] = 2] = "UTF16_STRING";
 })(Encoding || (Encoding = {}));
 
-// node_modules/flatbuffers/mjs/byte-buffer.js
+// packages/pyobsplot-js/node_modules/flatbuffers/mjs/byte-buffer.js
 var ByteBuffer = class {
   /**
    * Create a new ByteBuffer with a given array of bytes (`Uint8Array`)
@@ -34389,7 +34379,7 @@ var ByteBuffer = class {
   }
 };
 
-// node_modules/flatbuffers/mjs/builder.js
+// packages/pyobsplot-js/node_modules/flatbuffers/mjs/builder.js
 var Builder2 = class {
   /**
    * Create a FlatBufferBuilder.
@@ -34602,7 +34592,7 @@ var Builder2 = class {
    */
   nested(obj) {
     if (obj != this.offset()) {
-      throw new Error("FlatBuffers: struct must be serialized inline.");
+      throw new TypeError("FlatBuffers: struct must be serialized inline.");
     }
   }
   /**
@@ -34611,7 +34601,7 @@ var Builder2 = class {
    */
   notNested() {
     if (this.isNested) {
-      throw new Error("FlatBuffers: object serialization must not be nested.");
+      throw new TypeError("FlatBuffers: object serialization must not be nested.");
     }
   }
   /**
@@ -34732,7 +34722,7 @@ var Builder2 = class {
       const file_identifier = opt_file_identifier;
       this.prep(this.minalign, SIZEOF_INT + FILE_IDENTIFIER_LENGTH + size_prefix);
       if (file_identifier.length != FILE_IDENTIFIER_LENGTH) {
-        throw new Error("FlatBuffers: file identifier must be length " + FILE_IDENTIFIER_LENGTH);
+        throw new TypeError("FlatBuffers: file identifier must be length " + FILE_IDENTIFIER_LENGTH);
       }
       for (let i = FILE_IDENTIFIER_LENGTH - 1; i >= 0; i--) {
         this.writeInt8(file_identifier.charCodeAt(i));
@@ -34760,7 +34750,7 @@ var Builder2 = class {
     const vtable_start = table_start - this.bb.readInt32(table_start);
     const ok = field2 < this.bb.readInt16(vtable_start) && this.bb.readInt16(vtable_start + field2) != 0;
     if (!ok) {
-      throw new Error("FlatBuffers: field " + field2 + " must be set");
+      throw new TypeError("FlatBuffers: field " + field2 + " must be set");
     }
   }
   /**
@@ -34862,7 +34852,7 @@ var Builder2 = class {
       if (val !== null) {
         ret.push(this.createObjectOffset(val));
       } else {
-        throw new Error("FlatBuffers: Argument for createObjectOffsetList cannot contain null.");
+        throw new TypeError("FlatBuffers: Argument for createObjectOffsetList cannot contain null.");
       }
     }
     return ret;
@@ -34874,7 +34864,7 @@ var Builder2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/key-value.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/key-value.mjs
 var KeyValue = class {
   constructor() {
     this.bb = null;
@@ -34921,7 +34911,7 @@ var KeyValue = class {
   }
 };
 
-// node_modules/apache-arrow/fb/metadata-version.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/metadata-version.mjs
 var MetadataVersion2;
 (function(MetadataVersion3) {
   MetadataVersion3[MetadataVersion3["V1"] = 0] = "V1";
@@ -34931,20 +34921,20 @@ var MetadataVersion2;
   MetadataVersion3[MetadataVersion3["V5"] = 4] = "V5";
 })(MetadataVersion2 || (MetadataVersion2 = {}));
 
-// node_modules/apache-arrow/fb/endianness.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/endianness.mjs
 var Endianness;
 (function(Endianness2) {
   Endianness2[Endianness2["Little"] = 0] = "Little";
   Endianness2[Endianness2["Big"] = 1] = "Big";
 })(Endianness || (Endianness = {}));
 
-// node_modules/apache-arrow/fb/dictionary-kind.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/dictionary-kind.mjs
 var DictionaryKind;
 (function(DictionaryKind2) {
   DictionaryKind2[DictionaryKind2["DenseArray"] = 0] = "DenseArray";
 })(DictionaryKind || (DictionaryKind = {}));
 
-// node_modules/apache-arrow/fb/int.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/int.mjs
 var Int = class {
   constructor() {
     this.bb = null;
@@ -34991,7 +34981,7 @@ var Int = class {
   }
 };
 
-// node_modules/apache-arrow/fb/dictionary-encoding.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/dictionary-encoding.mjs
 var DictionaryEncoding = class {
   constructor() {
     this.bb = null;
@@ -35064,7 +35054,7 @@ var DictionaryEncoding = class {
   }
 };
 
-// node_modules/apache-arrow/fb/binary.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/binary.mjs
 var Binary2 = class {
   constructor() {
     this.bb = null;
@@ -35095,7 +35085,7 @@ var Binary2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/bool.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/bool.mjs
 var Bool2 = class {
   constructor() {
     this.bb = null;
@@ -35126,14 +35116,14 @@ var Bool2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/date-unit.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/date-unit.mjs
 var DateUnit2;
 (function(DateUnit3) {
   DateUnit3[DateUnit3["DAY"] = 0] = "DAY";
   DateUnit3[DateUnit3["MILLISECOND"] = 1] = "MILLISECOND";
 })(DateUnit2 || (DateUnit2 = {}));
 
-// node_modules/apache-arrow/fb/date.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/date.mjs
 var Date2 = class {
   constructor() {
     this.bb = null;
@@ -35172,7 +35162,7 @@ var Date2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/decimal.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/decimal.mjs
 var Decimal2 = class {
   constructor() {
     this.bb = null;
@@ -35237,7 +35227,7 @@ var Decimal2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/time-unit.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/time-unit.mjs
 var TimeUnit2;
 (function(TimeUnit3) {
   TimeUnit3[TimeUnit3["SECOND"] = 0] = "SECOND";
@@ -35246,7 +35236,7 @@ var TimeUnit2;
   TimeUnit3[TimeUnit3["NANOSECOND"] = 3] = "NANOSECOND";
 })(TimeUnit2 || (TimeUnit2 = {}));
 
-// node_modules/apache-arrow/fb/fixed-size-binary.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/fixed-size-binary.mjs
 var FixedSizeBinary2 = class {
   constructor() {
     this.bb = null;
@@ -35288,7 +35278,7 @@ var FixedSizeBinary2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/fixed-size-list.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/fixed-size-list.mjs
 var FixedSizeList2 = class {
   constructor() {
     this.bb = null;
@@ -35330,7 +35320,7 @@ var FixedSizeList2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/precision.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/precision.mjs
 var Precision2;
 (function(Precision3) {
   Precision3[Precision3["HALF"] = 0] = "HALF";
@@ -35338,7 +35328,7 @@ var Precision2;
   Precision3[Precision3["DOUBLE"] = 2] = "DOUBLE";
 })(Precision2 || (Precision2 = {}));
 
-// node_modules/apache-arrow/fb/floating-point.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/floating-point.mjs
 var FloatingPoint = class {
   constructor() {
     this.bb = null;
@@ -35377,7 +35367,7 @@ var FloatingPoint = class {
   }
 };
 
-// node_modules/apache-arrow/fb/interval-unit.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/interval-unit.mjs
 var IntervalUnit2;
 (function(IntervalUnit3) {
   IntervalUnit3[IntervalUnit3["YEAR_MONTH"] = 0] = "YEAR_MONTH";
@@ -35385,7 +35375,7 @@ var IntervalUnit2;
   IntervalUnit3[IntervalUnit3["MONTH_DAY_NANO"] = 2] = "MONTH_DAY_NANO";
 })(IntervalUnit2 || (IntervalUnit2 = {}));
 
-// node_modules/apache-arrow/fb/interval.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/interval.mjs
 var Interval = class {
   constructor() {
     this.bb = null;
@@ -35424,7 +35414,7 @@ var Interval = class {
   }
 };
 
-// node_modules/apache-arrow/fb/list.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/list.mjs
 var List2 = class {
   constructor() {
     this.bb = null;
@@ -35455,7 +35445,7 @@ var List2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/map.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/map.mjs
 var Map2 = class {
   constructor() {
     this.bb = null;
@@ -35497,7 +35487,7 @@ var Map2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/null.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/null.mjs
 var Null2 = class {
   constructor() {
     this.bb = null;
@@ -35528,7 +35518,7 @@ var Null2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/struct-.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/struct-.mjs
 var Struct_ = class {
   constructor() {
     this.bb = null;
@@ -35559,7 +35549,7 @@ var Struct_ = class {
   }
 };
 
-// node_modules/apache-arrow/fb/time.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/time.mjs
 var Time = class {
   constructor() {
     this.bb = null;
@@ -35606,7 +35596,7 @@ var Time = class {
   }
 };
 
-// node_modules/apache-arrow/fb/timestamp.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/timestamp.mjs
 var Timestamp = class {
   constructor() {
     this.bb = null;
@@ -35653,14 +35643,14 @@ var Timestamp = class {
   }
 };
 
-// node_modules/apache-arrow/fb/union-mode.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/union-mode.mjs
 var UnionMode2;
 (function(UnionMode3) {
   UnionMode3[UnionMode3["Sparse"] = 0] = "Sparse";
   UnionMode3[UnionMode3["Dense"] = 1] = "Dense";
 })(UnionMode2 || (UnionMode2 = {}));
 
-// node_modules/apache-arrow/fb/union.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/union.mjs
 var Union = class {
   constructor() {
     this.bb = null;
@@ -35725,7 +35715,7 @@ var Union = class {
   }
 };
 
-// node_modules/apache-arrow/fb/utf8.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/utf8.mjs
 var Utf82 = class {
   constructor() {
     this.bb = null;
@@ -35756,7 +35746,7 @@ var Utf82 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/type.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/type.mjs
 var Type2;
 (function(Type3) {
   Type3[Type3["NONE"] = 0] = "NONE";
@@ -35784,7 +35774,7 @@ var Type2;
   Type3[Type3["RunEndEncoded"] = 22] = "RunEndEncoded";
 })(Type2 || (Type2 = {}));
 
-// node_modules/apache-arrow/fb/field.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/field.mjs
 var Field = class {
   constructor() {
     this.bb = null;
@@ -35904,7 +35894,7 @@ var Field = class {
   }
 };
 
-// node_modules/apache-arrow/fb/schema.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/schema.mjs
 var Schema = class {
   constructor() {
     this.bb = null;
@@ -36023,7 +36013,7 @@ var Schema = class {
   }
 };
 
-// node_modules/apache-arrow/fb/footer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/footer.mjs
 var Footer = class {
   constructor() {
     this.bb = null;
@@ -36122,7 +36112,7 @@ var Footer = class {
   }
 };
 
-// node_modules/apache-arrow/schema.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/schema.mjs
 var Schema2 = class {
   constructor(fields = [], metadata, dictionaries) {
     this.fields = fields || [];
@@ -36237,7 +36227,7 @@ function generateDictionaryMap(fields, dictionaries = /* @__PURE__ */ new Map())
   return dictionaries;
 }
 
-// node_modules/apache-arrow/ipc/metadata/file.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/file.mjs
 var Builder3 = Builder2;
 var ByteBuffer2 = ByteBuffer;
 var Footer_ = class {
@@ -36352,7 +36342,7 @@ var FileBlock = class {
   }
 };
 
-// node_modules/apache-arrow/io/interfaces.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/interfaces.mjs
 var ITERATOR_DONE = Object.freeze({ done: true, value: void 0 });
 var ArrowJSON = class {
   constructor(_json) {
@@ -36475,7 +36465,7 @@ var AsyncQueue = class extends ReadableInterop {
   }
 };
 
-// node_modules/apache-arrow/io/stream.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/stream.mjs
 var AsyncByteQueue = class extends AsyncQueue {
   write(value) {
     if ((value = toUint8Array(value)).byteLength > 0) {
@@ -36491,16 +36481,12 @@ var AsyncByteQueue = class extends AsyncQueue {
       const buffers = [];
       let byteLength = 0;
       try {
-        for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; ) {
+        for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; _d2 = true) {
           _c2 = _f2.value;
           _d2 = false;
-          try {
-            const chunk = _c2;
-            buffers.push(chunk);
-            byteLength += chunk.byteLength;
-          } finally {
-            _d2 = true;
-          }
+          const chunk = _c2;
+          buffers.push(chunk);
+          byteLength += chunk.byteLength;
         }
       } catch (e_1_1) {
         e_1 = { error: e_1_1 };
@@ -36656,7 +36642,7 @@ var AsyncByteStreamSource = class {
   }
 };
 
-// node_modules/apache-arrow/io/file.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/file.mjs
 var RandomAccessFile = class extends ByteStream {
   constructor(buffer, byteLength) {
     super();
@@ -36779,7 +36765,7 @@ var AsyncRandomAccessFile = class extends AsyncByteStream {
   }
 };
 
-// node_modules/apache-arrow/util/int.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/int.mjs
 var int_exports = {};
 __export(int_exports, {
   BaseInt64: () => BaseInt64,
@@ -37095,7 +37081,7 @@ var Int128 = class {
   }
 };
 
-// node_modules/apache-arrow/visitor/vectorloader.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/vectorloader.mjs
 var VectorLoader = class extends Visitor {
   constructor(bytes, nodes, buffers, dictionaries) {
     super();
@@ -37234,7 +37220,7 @@ function binaryDataFromJSON(values2) {
   return data;
 }
 
-// node_modules/apache-arrow/builder/binary.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/binary.mjs
 var BinaryBuilder = class extends VariableWidthBuilder {
   constructor(opts) {
     super(opts);
@@ -37267,7 +37253,7 @@ var BinaryBuilder = class extends VariableWidthBuilder {
   }
 };
 
-// node_modules/apache-arrow/builder/bool.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/bool.mjs
 var BoolBuilder = class extends Builder {
   constructor(options) {
     super(options);
@@ -37278,7 +37264,7 @@ var BoolBuilder = class extends Builder {
   }
 };
 
-// node_modules/apache-arrow/builder/date.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/date.mjs
 var DateBuilder = class extends FixedWidthBuilder {
 };
 DateBuilder.prototype._setValue = setDate;
@@ -37289,12 +37275,12 @@ var DateMillisecondBuilder = class extends DateBuilder {
 };
 DateMillisecondBuilder.prototype._setValue = setDateMillisecond;
 
-// node_modules/apache-arrow/builder/decimal.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/decimal.mjs
 var DecimalBuilder = class extends FixedWidthBuilder {
 };
 DecimalBuilder.prototype._setValue = setDecimal;
 
-// node_modules/apache-arrow/builder/dictionary.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/dictionary.mjs
 var DictionaryBuilder = class extends Builder {
   constructor({ "type": type2, "nullValues": nulls, "dictionaryHashFunction": hashFn }) {
     super({ type: new Dictionary(type2.dictionary, type2.indices, type2.id, type2.isOrdered) });
@@ -37371,12 +37357,12 @@ var DictionaryBuilder = class extends Builder {
   }
 };
 
-// node_modules/apache-arrow/builder/fixedsizebinary.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/fixedsizebinary.mjs
 var FixedSizeBinaryBuilder = class extends FixedWidthBuilder {
 };
 FixedSizeBinaryBuilder.prototype._setValue = setFixedSizeBinary;
 
-// node_modules/apache-arrow/builder/fixedsizelist.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/fixedsizelist.mjs
 var FixedSizeListBuilder = class extends Builder {
   setValue(index3, value) {
     const [child] = this.children;
@@ -37395,7 +37381,7 @@ var FixedSizeListBuilder = class extends Builder {
   }
 };
 
-// node_modules/apache-arrow/builder/float.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/float.mjs
 var FloatBuilder = class extends FixedWidthBuilder {
   setValue(index3, value) {
     this._values.set(index3, value);
@@ -37411,7 +37397,7 @@ var Float32Builder = class extends FloatBuilder {
 var Float64Builder = class extends FloatBuilder {
 };
 
-// node_modules/apache-arrow/builder/interval.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/interval.mjs
 var IntervalBuilder = class extends FixedWidthBuilder {
 };
 IntervalBuilder.prototype._setValue = setIntervalValue;
@@ -37422,7 +37408,7 @@ var IntervalYearMonthBuilder = class extends IntervalBuilder {
 };
 IntervalYearMonthBuilder.prototype._setValue = setIntervalYearMonth;
 
-// node_modules/apache-arrow/builder/int.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/int.mjs
 var IntBuilder = class extends FixedWidthBuilder {
   setValue(index3, value) {
     this._values.set(index3, value);
@@ -37445,7 +37431,7 @@ var Uint32Builder = class extends IntBuilder {
 var Uint64Builder = class extends IntBuilder {
 };
 
-// node_modules/apache-arrow/builder/list.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/list.mjs
 var ListBuilder = class extends VariableWidthBuilder {
   constructor(opts) {
     super(opts);
@@ -37466,17 +37452,18 @@ var ListBuilder = class extends VariableWidthBuilder {
       if (typeof value === "undefined") {
         offsets.set(index3, 0);
       } else {
-        const n = value.length;
+        const v2 = value;
+        const n = v2.length;
         const start2 = offsets.set(index3, n).buffer[index3];
         for (let i = -1; ++i < n; ) {
-          child.set(start2 + i, value[i]);
+          child.set(start2 + i, v2[i]);
         }
       }
     }
   }
 };
 
-// node_modules/apache-arrow/builder/map.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/map.mjs
 var MapBuilder = class extends VariableWidthBuilder {
   set(index3, value) {
     return super.set(index3, value);
@@ -37515,7 +37502,7 @@ var MapBuilder = class extends VariableWidthBuilder {
   }
 };
 
-// node_modules/apache-arrow/builder/null.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/null.mjs
 var NullBuilder = class extends Builder {
   // @ts-ignore
   setValue(index3, value) {
@@ -37526,7 +37513,7 @@ var NullBuilder = class extends Builder {
   }
 };
 
-// node_modules/apache-arrow/builder/struct.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/struct.mjs
 var StructBuilder = class extends Builder {
   setValue(index3, value) {
     const { children: children2, type: type2 } = this;
@@ -37553,7 +37540,7 @@ var StructBuilder = class extends Builder {
   }
 };
 
-// node_modules/apache-arrow/builder/timestamp.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/timestamp.mjs
 var TimestampBuilder = class extends FixedWidthBuilder {
 };
 TimestampBuilder.prototype._setValue = setTimestamp;
@@ -37570,7 +37557,7 @@ var TimestampNanosecondBuilder = class extends TimestampBuilder {
 };
 TimestampNanosecondBuilder.prototype._setValue = setTimestampNanosecond;
 
-// node_modules/apache-arrow/builder/time.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/time.mjs
 var TimeBuilder = class extends FixedWidthBuilder {
 };
 TimeBuilder.prototype._setValue = setTime;
@@ -37587,7 +37574,7 @@ var TimeNanosecondBuilder = class extends TimeBuilder {
 };
 TimeNanosecondBuilder.prototype._setValue = setTimeNanosecond;
 
-// node_modules/apache-arrow/builder/union.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/union.mjs
 var UnionBuilder = class extends Builder {
   constructor(options) {
     super(options);
@@ -37646,7 +37633,7 @@ var DenseUnionBuilder = class extends UnionBuilder {
   }
 };
 
-// node_modules/apache-arrow/builder/utf8.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/utf8.mjs
 var Utf8Builder = class extends VariableWidthBuilder {
   constructor(opts) {
     super(opts);
@@ -37668,7 +37655,7 @@ var Utf8Builder = class extends VariableWidthBuilder {
 };
 Utf8Builder.prototype._flushPending = BinaryBuilder.prototype._flushPending;
 
-// node_modules/apache-arrow/visitor/builderctor.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/builderctor.mjs
 var GetBuilderCtor = class extends Visitor {
   visitNull() {
     return NullBuilder;
@@ -37802,7 +37789,7 @@ var GetBuilderCtor = class extends Visitor {
 };
 var instance6 = new GetBuilderCtor();
 
-// node_modules/apache-arrow/visitor/typecomparator.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/typecomparator.mjs
 var TypeComparator = class extends Visitor {
   compareSchemas(schema, other) {
     return schema === other || other instanceof schema.constructor && this.compareManyFields(schema.fields, other.fields);
@@ -37913,7 +37900,7 @@ function compareTypes(type2, other) {
   return instance7.visit(type2, other);
 }
 
-// node_modules/apache-arrow/factories.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/factories.mjs
 function makeBuilder(options) {
   const type2 = options.type;
   const builder = new (instance6.getVisitFn(type2)())(options);
@@ -37930,7 +37917,7 @@ function makeBuilder(options) {
   return builder;
 }
 
-// node_modules/apache-arrow/util/recordbatch.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/util/recordbatch.mjs
 function distributeVectorsIntoRecordBatches(schema, vecs) {
   return uniformlyDistributeChunksAcrossRecordBatches(schema, vecs.map((v2) => v2.data.concat()));
 }
@@ -37991,7 +37978,7 @@ function distributeChildren(fields, batchLength, children2, columns, memo) {
   return children2;
 }
 
-// node_modules/apache-arrow/table.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/table.mjs
 var _a3;
 var Table = class {
   constructor(...args) {
@@ -38007,7 +37994,7 @@ var Table = class {
     if (args[0] instanceof Schema2) {
       schema = args.shift();
     }
-    if (args[args.length - 1] instanceof Uint32Array) {
+    if (args.at(-1) instanceof Uint32Array) {
       offsets = args.pop();
     }
     const unwrap = (x4) => {
@@ -38275,7 +38262,7 @@ Table[_a3] = ((proto) => {
   return "Table";
 })(Table.prototype);
 
-// node_modules/apache-arrow/recordbatch.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/recordbatch.mjs
 var _a4;
 var RecordBatch = class {
   constructor(...args) {
@@ -38537,20 +38524,20 @@ var _InternalEmptyPlaceholderRecordBatch = class extends RecordBatch {
   }
 };
 
-// node_modules/apache-arrow/fb/body-compression-method.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/body-compression-method.mjs
 var BodyCompressionMethod;
 (function(BodyCompressionMethod2) {
   BodyCompressionMethod2[BodyCompressionMethod2["BUFFER"] = 0] = "BUFFER";
 })(BodyCompressionMethod || (BodyCompressionMethod = {}));
 
-// node_modules/apache-arrow/fb/compression-type.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/compression-type.mjs
 var CompressionType;
 (function(CompressionType2) {
   CompressionType2[CompressionType2["LZ4_FRAME"] = 0] = "LZ4_FRAME";
   CompressionType2[CompressionType2["ZSTD"] = 1] = "ZSTD";
 })(CompressionType || (CompressionType = {}));
 
-// node_modules/apache-arrow/fb/body-compression.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/body-compression.mjs
 var BodyCompression = class {
   constructor() {
     this.bb = null;
@@ -38604,7 +38591,7 @@ var BodyCompression = class {
   }
 };
 
-// node_modules/apache-arrow/fb/buffer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/buffer.mjs
 var Buffer2 = class {
   constructor() {
     this.bb = null;
@@ -38643,7 +38630,7 @@ var Buffer2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/field-node.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/field-node.mjs
 var FieldNode = class {
   constructor() {
     this.bb = null;
@@ -38680,7 +38667,7 @@ var FieldNode = class {
   }
 };
 
-// node_modules/apache-arrow/fb/record-batch.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/record-batch.mjs
 var RecordBatch2 = class {
   constructor() {
     this.bb = null;
@@ -38767,7 +38754,7 @@ var RecordBatch2 = class {
   }
 };
 
-// node_modules/apache-arrow/fb/dictionary-batch.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/dictionary-batch.mjs
 var DictionaryBatch = class {
   constructor() {
     this.bb = null;
@@ -38820,7 +38807,7 @@ var DictionaryBatch = class {
   }
 };
 
-// node_modules/apache-arrow/fb/message-header.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/message-header.mjs
 var MessageHeader2;
 (function(MessageHeader3) {
   MessageHeader3[MessageHeader3["NONE"] = 0] = "NONE";
@@ -38831,7 +38818,7 @@ var MessageHeader2;
   MessageHeader3[MessageHeader3["SparseTensor"] = 5] = "SparseTensor";
 })(MessageHeader2 || (MessageHeader2 = {}));
 
-// node_modules/apache-arrow/fb/message.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/message.mjs
 var Message = class {
   constructor() {
     this.bb = null;
@@ -38922,7 +38909,7 @@ var Message = class {
   }
 };
 
-// node_modules/apache-arrow/visitor/typeassembler.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/typeassembler.mjs
 var TypeAssembler = class extends Visitor {
   visit(node, builder) {
     return node == null || builder == null ? void 0 : super.visit(node, builder);
@@ -39030,7 +39017,7 @@ var TypeAssembler = class extends Visitor {
 };
 var instance8 = new TypeAssembler();
 
-// node_modules/apache-arrow/ipc/metadata/json.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/json.mjs
 function schemaFromJSON(_schema, dictionaries = /* @__PURE__ */ new Map()) {
   return new Schema2(schemaFieldsFromJSON(_schema, dictionaries), customMetadataFromJSON(_schema["customMetadata"]), dictionaries);
 }
@@ -39164,7 +39151,7 @@ function typeFromJSON(f, children2) {
   throw new Error(`Unrecognized type: "${typeId}"`);
 }
 
-// node_modules/apache-arrow/ipc/metadata/message.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/message.mjs
 var Builder4 = Builder2;
 var ByteBuffer3 = ByteBuffer;
 var Message2 = class {
@@ -39608,7 +39595,7 @@ var platformIsLittleEndian = (() => {
   return new Int16Array(buffer)[0] === 256;
 })();
 
-// node_modules/apache-arrow/ipc/message.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/message.mjs
 var invalidMessageType = (type2) => `Expected ${MessageHeader[type2]} Message in stream, but was null or length 0.`;
 var nullMessage = (type2) => `Header pointer of flatbuffer-encoded ${MessageHeader[type2]} Message is null or length 0.`;
 var invalidMessageMetadata = (expected, actual) => `Expected to read ${expected} metadata bytes, but only read ${actual}.`;
@@ -39863,7 +39850,7 @@ var magicLength = MAGIC.length;
 var magicAndPadding = magicLength + PADDING;
 var magicX2AndPadding = magicLength * 2 + PADDING;
 
-// node_modules/apache-arrow/ipc/reader.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/reader.mjs
 var RecordBatchReader = class extends ReadableInterop {
   constructor(impl) {
     super();
@@ -40002,15 +39989,11 @@ var AsyncRecordBatchStreamReader = class extends RecordBatchReader {
     return __awaiter(this, void 0, void 0, function* () {
       const batches = new Array();
       try {
-        for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; ) {
+        for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; _d2 = true) {
           _c2 = _f2.value;
           _d2 = false;
-          try {
-            const batch = _c2;
-            batches.push(batch);
-          } finally {
-            _d2 = true;
-          }
+          const batch = _c2;
+          batches.push(batch);
         }
       } catch (e_1_1) {
         e_1 = { error: e_1_1 };
@@ -40504,7 +40487,7 @@ function fromFileHandle(source) {
   });
 }
 
-// node_modules/apache-arrow/visitor/vectorassembler.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/visitor/vectorassembler.mjs
 var VectorAssembler = class extends Visitor {
   /** @nocollapse */
   static assemble(...args) {
@@ -40646,7 +40629,7 @@ VectorAssembler.prototype.visitInterval = assembleFlatVector;
 VectorAssembler.prototype.visitFixedSizeList = assembleListVector;
 VectorAssembler.prototype.visitMap = assembleListVector;
 
-// node_modules/apache-arrow/ipc/writer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/writer.mjs
 var RecordBatchWriter = class extends ReadableInterop {
   /** @nocollapse */
   // @ts-ignore
@@ -40899,15 +40882,11 @@ function writeAllAsync(writer, batches) {
   var _b2, e_1, _c2, _d2;
   return __awaiter(this, void 0, void 0, function* () {
     try {
-      for (_a5 = true, batches_1 = __asyncValues(batches); batches_1_1 = yield batches_1.next(), _b2 = batches_1_1.done, !_b2; ) {
+      for (_a5 = true, batches_1 = __asyncValues(batches); batches_1_1 = yield batches_1.next(), _b2 = batches_1_1.done, !_b2; _a5 = true) {
         _d2 = batches_1_1.value;
         _a5 = false;
-        try {
-          const batch = _d2;
-          writer.write(batch);
-        } finally {
-          _a5 = true;
-        }
+        const batch = _d2;
+        writer.write(batch);
       }
     } catch (e_1_1) {
       e_1 = { error: e_1_1 };
@@ -40924,7 +40903,7 @@ function writeAllAsync(writer, batches) {
   });
 }
 
-// node_modules/apache-arrow/io/whatwg/iterable.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/iterable.mjs
 function toDOMStream(source, options) {
   if (isAsyncIterable(source)) {
     return asyncIterableAsReadableDOMStream(source, options);
@@ -41007,7 +40986,7 @@ function asyncIterableAsReadableDOMStream(source, options) {
   }
 }
 
-// node_modules/apache-arrow/io/whatwg/builder.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/builder.mjs
 function builderThroughDOMStream(options) {
   return new BuilderTransform(options);
 }
@@ -41087,7 +41066,7 @@ var chunkByteLength = (chunk) => {
   return (_a5 = chunk === null || chunk === void 0 ? void 0 : chunk.byteLength) !== null && _a5 !== void 0 ? _a5 : 0;
 };
 
-// node_modules/apache-arrow/io/whatwg/reader.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/reader.mjs
 function recordBatchReaderThroughDOMStream(writableStrategy, readableStrategy) {
   const queue = new AsyncByteQueue();
   let reader = null;
@@ -41129,7 +41108,7 @@ function recordBatchReaderThroughDOMStream(writableStrategy, readableStrategy) {
   }
 }
 
-// node_modules/apache-arrow/io/whatwg/writer.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/writer.mjs
 function recordBatchWriterThroughDOMStream(writableStrategy, readableStrategy) {
   const writer = new this(writableStrategy);
   const reader = new AsyncByteStream(writer);
@@ -41167,7 +41146,7 @@ function recordBatchWriterThroughDOMStream(writableStrategy, readableStrategy) {
   }
 }
 
-// node_modules/apache-arrow/ipc/serialization.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/ipc/serialization.mjs
 function tableFromIPC(input) {
   const reader = RecordBatchReader.from(input);
   if (isPromise(reader)) {
@@ -41179,14 +41158,14 @@ function tableFromIPC(input) {
   return new Table(reader.readAll());
 }
 
-// node_modules/apache-arrow/Arrow.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/Arrow.mjs
 var util = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, bn_exports), int_exports), bit_exports), math_exports), buffer_exports), vector_exports), {
   compareSchemas,
   compareFields,
   compareTypes
 });
 
-// node_modules/apache-arrow/Arrow.dom.mjs
+// packages/pyobsplot-js/node_modules/apache-arrow/Arrow.dom.mjs
 adapters_default.toDOMStream = toDOMStream;
 Builder["throughDOM"] = builderThroughDOMStream;
 RecordBatchReader["throughDOM"] = recordBatchReaderThroughDOMStream;
