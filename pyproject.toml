@@ -28,7 +28,7 @@ python = "^3.9"
 anywidget = { extras = ["dev"], version = "^0.6.5" }
 pandas = ">=1.2.0"
 polars = ">=0.16.0"
-pyarrow = "^11.0.0"
+pyarrow = "^13.0.0"
 ipywidgets = ">=8.1.0"
 jupyterlab_widgets = ">=3.0.0"
 jupyterlab = ">=3.6.0"
