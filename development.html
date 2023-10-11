@@ -269,10 +269,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="releases">Releases</h3>
 <ul>
 <li>If necessary release the npm package with <code>npm publish</code> in <code>packages/pyobsplot-js</code></li>
-<li>Check that the min_npm_version value in .utils is correct</li>
+<li>Check that the <code>min_npm_version</code> value in <code>.utils</code> is correct</li>
+<li>Change version in <code>NEWS.md</code> and <code>pyproject.toml</code></li>
 <li>Release the Python package with <code>poetry build</code> and <code>poetry publish</code> in <code>pyobsplot</code></li>
 <li>Tag the version in git</li>
 <li>Create a release on Github</li>
+<li>Bump to dev version in <code>pyproject.toml</code> and <code>NEWS.md</code></li>
 </ul>
 </section>
 <section id="new-plot-versions" class="level3">
