@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyobsplot"
-version = "0.4.1"
+version = "0.4.2"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
 authors = ["Julien Barnier <julien@nozav.org>"]
 license = "MIT"
