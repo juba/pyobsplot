@@ -100,10 +100,12 @@ If using the `widget` renderer, debug output will be displayed in JavaScript con
 ### Releases
 
 - If necessary release the npm package with `npm publish` in `packages/pyobsplot-js`
-- Check that the min_npm_version value in .utils is correct
+- Check that the `min_npm_version` value in `.utils` is correct
+- Change version in `NEWS.md` and `pyproject.toml`
 - Release the Python package with `poetry build` and `poetry publish` in `pyobsplot`
 - Tag the version in git
 - Create a release on Github
+- Bump to dev version in `pyproject.toml` and `NEWS.md`
 
 ### New Plot versions
 
