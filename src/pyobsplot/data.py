@@ -84,7 +84,7 @@ def arrow_schema_no_big(pa_schema: Any) -> Any:
         Any: conversion result.
     """
     pa_schema_no_big = []
-    for col_name, pa_dtype in zip(pa_schema.names, pa_schema.types, strict=True):
+    for col_name, pa_dtype in zip(pa_schema.names, pa_schema.types):
         # Large strings to string
         if pa_dtype == pa.large_string():
             pa_schema_no_big.append(pa.field(col_name, pa.string()))
