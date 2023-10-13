@@ -28,17 +28,17 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Install poetry
-        run: pipx install poetry
+      - name: Install hatch
+        run: pipx install hatch
 
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: "poetry"
+          cache: "hatch"
 
       - name: Install Python dependencies
-        run: poetry install
+        run: hatch run echo
 
       - name: Bundle
         run: npm run bundle
@@ -50,4 +50,4 @@ jobs:
         run: |
           git config --global user.email "julien@nozav.org"
           git config --global user.name "Julien Barnier"
-          poetry run quarto publish gh-pages doc
+          hatch run quarto publish gh-pages doc
