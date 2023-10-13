@@ -1,6 +1,7 @@
 ## pyobsplot 0.4.2
 
-
+- Fix `jsdom` renderer file saving encoding (#22, @harrylojames)
+- Migrate build system from poetry to hatch
 
 ## pyobsplot 0.4.1
 
