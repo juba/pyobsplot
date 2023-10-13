@@ -3,14 +3,16 @@ Obsplot jsdom handling.
 """
 
 import json
+import warnings
+from typing import Any, Optional, Union
+
 import requests
-from IPython.display import HTML, SVG  # type: ignore
+from IPython.display import HTML, SVG
 
+from pyobsplot.parsing import SpecParser
+from pyobsplot.utils import DEFAULT_THEME
 
-from typing import Any, Union
-
-from .parsing import SpecParser
-from .utils import DEFAULT_THEME
+HTTP_SERVER_ERROR = 500
 
 
 class ObsplotJsdom:
@@ -28,8 +30,8 @@ class ObsplotJsdom:
         spec: Any,
         port: int,
         theme: str = DEFAULT_THEME,
-        default: dict = {},
-        debug: bool = False,
+        default: Optional[dict] = None,
+        debug: bool = False,  # noqa: FBT002, FBT001
     ) -> None:
         """
         Constructor. Parse the spec given as argument.
@@ -56,14 +58,16 @@ class ObsplotJsdom:
         url = f"http://localhost:{self.port}/plot"
         try:
             r = requests.post(
-                url, data=json.dumps({"spec": self.spec, "theme": self.theme})
+                url,
+                data=json.dumps({"spec": self.spec, "theme": self.theme}),
+                timeout=600,
             )
         except ConnectionRefusedError:
-            print(
-                f"Error: can't connect to generator server on port {self.port}. Please recreate your generator object."  # noqa: E501
-            )
+            msg = f"""Error: can't connect to generator server on port {self.port}.
+            Please recreate your generator object."""
+            warnings.warn(msg, stacklevel=1)
         # Read back result
-        if r.status_code == 500:  # type: ignore
+        if r.status_code == HTTP_SERVER_ERROR:  # type: ignore
             raise RuntimeError(r.content.decode())  # type: ignore
         out = r.content.decode()  # type: ignore
 

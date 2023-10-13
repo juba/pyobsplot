@@ -1,8 +1,9 @@
 from functools import partial
+from typing import Callable, Optional
 
-from .obsplot import ObsplotWidgetCreator, ObsplotJsdomCreator
-from .widget import ObsplotWidget
-from .utils import PLOT_METHODS
+from pyobsplot.obsplot import ObsplotJsdomCreator, ObsplotWidgetCreator
+from pyobsplot.utils import PLOT_METHODS
+from pyobsplot.widget import ObsplotWidget
 
 # Default renderer for Plot.plot() calls.
 # Not documented, only internal use for documentation generation
@@ -13,16 +14,18 @@ class Plot:
     """Plot methods class."""
 
     @staticmethod
-    def plot(*args, **kwargs) -> ObsplotWidget:
+    def plot(*args, **kwargs) -> Optional[ObsplotWidget]:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
         or an ObpsplotJsdom with args and kwargs.
         """
+        op = None
         if _plot_renderer == "widget":
             op = ObsplotWidgetCreator()
         if _plot_renderer == "jsdom":
             op = ObsplotJsdomCreator()
-        return op(*args, **kwargs)
+        if op is not None:
+            return op(*args, **kwargs)
 
 
 def method_to_spec(*args, **kwargs) -> dict:
@@ -34,7 +37,8 @@ def method_to_spec(*args, **kwargs) -> dict:
     """
     name = kwargs["name"]
     if len(kwargs) > 1:
-        raise ValueError(f"kwargs must not be passed to Plot.{name} : {kwargs}")
+        msg = f"kwargs must not be passed to Plot.{name} : {kwargs}"
+        raise ValueError(msg)
     return {
         "pyobsplot-type": "function",
         "module": "Plot",
@@ -53,14 +57,13 @@ for method in PLOT_METHODS:
 class JSModule(type):
     """metaclass to allow JavaScript module and methods handling."""
 
-    def __getattr__(cls: type, name: str) -> callable:
+    def __getattr__(cls: type, name: str) -> Callable:
         """Intercept methods calling and returns a parsed and typed dict object."""
 
         def wrapper(*args, **kwargs) -> dict:
             if kwargs:
-                raise ValueError(
-                    f"kwargs must not be passed to {cls.__name__}.{name} : {kwargs}"
-                )
+                msg = f"kwargs must not be passed to {cls.__name__}.{name} : {kwargs}"
+                raise ValueError(msg)
             return {
                 "pyobsplot-type": "function",
                 "module": cls.__name__,
@@ -71,7 +74,7 @@ class JSModule(type):
         return wrapper
 
 
-class d3(metaclass=JSModule):
+class d3(metaclass=JSModule):  # noqa: N801
     """JSModule class to allow d3 objects in specification."""
 
     pass

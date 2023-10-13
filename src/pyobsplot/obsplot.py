@@ -2,21 +2,26 @@
 Obsplot main class.
 """
 
-import shutil
-import os
-import signal
 import io
-from pathlib import Path
-from subprocess import Popen, PIPE, SubprocessError
-from IPython.display import display, SVG, HTML
-from typing import Any, Union
+import os
+import shutil
+import signal
 import warnings
-from ipywidgets.embed import embed_minimal_html, dependency_state
+from pathlib import Path
+from subprocess import PIPE, Popen, SubprocessError
+from typing import Any, Optional, Union
 
+from IPython.display import HTML, SVG, display
+from ipywidgets.embed import embed_minimal_html
 
-from .widget import ObsplotWidget
-from .jsdom import ObsplotJsdom
-from .utils import ALLOWED_DEFAULTS, MIN_NPM_VERSION, AVAILABLE_THEMES, DEFAULT_THEME
+from pyobsplot.jsdom import ObsplotJsdom
+from pyobsplot.utils import (
+    ALLOWED_DEFAULTS,
+    AVAILABLE_THEMES,
+    DEFAULT_THEME,
+    MIN_NPM_VERSION,
+)
+from pyobsplot.widget import ObsplotWidget
 
 
 class Obsplot:
@@ -31,8 +36,8 @@ class Obsplot:
         cls,
         renderer: str = "widget",
         theme: str = DEFAULT_THEME,
-        default: dict = {},
-        debug: bool = False,
+        default: Optional[dict] = None,
+        debug: bool = False,  # noqa: FBT001, FBT002
     ) -> Any:
         """
         Main Obsplot class constructor. Returns a Creator instance depending on the
@@ -51,12 +56,11 @@ class Obsplot:
 
         # Check theme value
         if theme not in AVAILABLE_THEMES:
-            raise ValueError(
-                f"""
-                Incorrect theme '{theme}'. 
+            msg = f"""
+                Incorrect theme '{theme}'.
                 Available renderers are {AVAILABLE_THEMES}
                 """
-            )
+            raise ValueError(msg)
 
         # Check renderer value
         available_renderers = ["widget", "jsdom"]
@@ -67,12 +71,11 @@ class Obsplot:
         elif renderer == "jsdom":
             return ObsplotJsdomCreator(theme=theme, default=default, debug=debug)
         else:
-            raise ValueError(
-                f"""
-                Incorrect renderer '{renderer}'. 
+            msg = f"""
+                Incorrect renderer '{renderer}'.
                 Available renderers are {available_renderers}
                 """
-            )
+            raise ValueError(msg)
 
 
 class ObsplotCreator:
@@ -81,18 +84,22 @@ class ObsplotCreator:
     """
 
     def __init__(
-        self, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
+        self,
+        theme: str = DEFAULT_THEME,
+        default: Optional[dict] = None,
+        debug: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         """Generic Creator constructor
 
         Args:
             default (dict, optional): dict of default spec values. Defaults to {}.
         """
+        if default is None:
+            default = {}
         for k in default:
             if k not in ALLOWED_DEFAULTS:
-                raise ValueError(
-                    f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
-                )
+                msg = f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
+                raise ValueError(msg)
         self._default = default
         self._debug = debug
         self._theme = theme
@@ -138,9 +145,11 @@ class ObsplotCreator:
             spec = kwargs
         # No arguments given
         elif len(args) == 0 and len(kwargs) == 0:
-            raise ValueError("Missing plot specification")
+            msg = "Missing plot specification"
+            raise ValueError(msg)
         else:
-            raise ValueError("Incorrect plot specification")
+            msg = "Incorrect plot specification"
+            raise ValueError(msg)
         return spec
 
 
@@ -150,11 +159,14 @@ class ObsplotWidgetCreator(ObsplotCreator):
     """
 
     def __init__(
-        self, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
+        self,
+        theme: str = DEFAULT_THEME,
+        default: Optional[dict] = None,
+        debug: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         super().__init__(theme, default, debug)
 
-    def __call__(self, *args, **kwargs) -> ObsplotWidget:
+    def __call__(self, *args, **kwargs) -> Optional[ObsplotWidget]:
         """
         Method called when an instance is called.
         """
@@ -183,7 +195,9 @@ class ObsplotWidgetCreator(ObsplotCreator):
         extension = Path(path).suffix.lower()
         if extension not in [".html", ".htm"]:
             warnings.warn(
-                "Output file extension should be one of 'html' or 'htm'", RuntimeWarning
+                "Output file extension should be one of 'html' or 'htm'",
+                RuntimeWarning,
+                stacklevel=1,
             )
         embed_minimal_html(path, views=[res], drop_defaults=False)
 
@@ -194,7 +208,10 @@ class ObsplotJsdomCreator(ObsplotCreator):
     """
 
     def __init__(
-        self, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
+        self,
+        theme: str = DEFAULT_THEME,
+        default: Optional[dict] = None,
+        debug: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         super().__init__(theme, default, debug)
         self._proc = None
@@ -205,9 +222,8 @@ class ObsplotJsdomCreator(ObsplotCreator):
         Method called when an instance is called.
         """
         if self._proc is not None and self._proc.poll() is not None:
-            raise RuntimeError(
-                "Server has ended, please recreate your plot generator object."
-            )
+            msg = "Server has ended, please recreate your plot generator object."
+            raise RuntimeError(msg)
         path = None
         if "path" in kwargs:
             path = kwargs["path"]
@@ -236,30 +252,33 @@ class ObsplotJsdomCreator(ObsplotCreator):
         # Check for node executable
         npx = shutil.which("npx")
         if not npx:
-            raise RuntimeError("npx executable has not been found.")
+            msg = "npx executable has not been found."
+            raise RuntimeError(msg)
         # Run node script with JSON spec as input
         try:
             p = Popen(
-                ["npx", f"pyobsplot@{MIN_NPM_VERSION}"],
+                ["npx", f"pyobsplot@{MIN_NPM_VERSION}"],  # noqa: S607
                 stdin=None,
                 stdout=PIPE,
                 stderr=PIPE,
                 encoding="Utf8",
                 # Use shell=True if we are on Windows. Otherwise PATH
                 # is not parsed and npx is not found.
-                shell=os.name == "nt",
+                shell=os.name == "nt",  # noqa: S603
                 start_new_session=True,
             )
         except SubprocessError:
             err = p.stderr.read()  # type: ignore
-            raise RuntimeError(f"Can't start server: {err}")
+            msg = f"Can't start server: {err}"
+            raise RuntimeError(msg) from SubprocessError
         # read back OS selected port from stdout
         try:
             port = p.stdout.readline()  # type: ignore
             self._port = int(port.strip())
         except ValueError:
             err = p.stderr.read()  # type: ignore
-            raise ValueError(f"Server not started: {err}")
+            msg = f"Server not started: {err}"
+            raise ValueError(msg) from ValueError
         # store Popen process
         self._proc = p
 
@@ -283,16 +302,20 @@ class ObsplotJsdomCreator(ObsplotCreator):
             RuntimeWarning: if the file extension doesn't match the Obsplot type.
         """
         if isinstance(path, io.StringIO):
-            path.write(res.data)
+            path.write(str(res.data))
             return
         extension = Path(path).suffix.lower()
         if extension not in [".html", ".svg", ".htm"]:
             warnings.warn(
-                "Output file extension should be one of 'html' or 'svg'", RuntimeWarning
+                "Output file extension should be one of 'html' or 'svg'",
+                RuntimeWarning,
+                stacklevel=1,
             )
         if isinstance(res, HTML) and extension == ".svg":
             warnings.warn(
-                f"Output is HTML but file extension is '{extension}'", RuntimeWarning
+                f"Output is HTML but file extension is '{extension}'",
+                RuntimeWarning,
+                stacklevel=1,
             )
         with open(path, "w", encoding="utf-8") as f:
-            f.write(res.data)
+            f.write(str(res.data))

@@ -1,20 +1,22 @@
-from pyobsplot import Obsplot, Plot, d3, js
-from pyobsplot.utils import DEFAULT_THEME
-import pandas as pd
-import polars as pl
-import pickle
-import os
-import sys
 import datetime
 import json
+import os
+import pickle
+import sys
+
+import pandas as pd
+import polars as pl
+
+from pyobsplot import Obsplot, Plot, js
+from pyobsplot.utils import DEFAULT_THEME
 
 # Change working directory to script directory
 os.chdir(sys.path[0])
 
 op = Obsplot(renderer="jsdom")
-specs = dict()
-themes = dict()
-defaults = dict()
+specs = {}
+themes = {}
+defaults = {}
 
 # Data ---
 
@@ -27,7 +29,7 @@ stateage = (
     .melt(id_vars="name", variable_name="age", value_name="population")
     .rename({"name": "state"})
 )
-with open("../../doc/data/us_states.json", "r") as f:
+with open("../../doc/data/us_states.json") as f:
     us_states = json.load(f)
 ca55 = pl.read_csv("../../doc/data/ca55-south.csv")
 vapor = (

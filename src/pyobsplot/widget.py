@@ -3,11 +3,13 @@ Obsplot widget handling.
 """
 
 
+from typing import Optional
+
 import anywidget
 import traitlets
 
-from .utils import bundler_output_dir, DEFAULT_THEME
-from .parsing import SpecParser
+from pyobsplot.parsing import SpecParser
+from pyobsplot.utils import DEFAULT_THEME, bundler_output_dir
 
 
 class ObsplotWidget(anywidget.AnyWidget):
@@ -33,7 +35,11 @@ class ObsplotWidget(anywidget.AnyWidget):
     spec = traitlets.Dict().tag(sync=True)
 
     def __init__(
-        self, spec, theme: str = DEFAULT_THEME, default: dict = {}, debug: bool = False
+        self,
+        spec,
+        theme: str = DEFAULT_THEME,
+        default: Optional[dict] = None,
+        debug: bool = False,  # noqa: FBT001, FBT002
     ):
         """Obsplot widget constructor."""
         self._debug = debug

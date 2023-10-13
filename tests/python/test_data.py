@@ -8,7 +8,7 @@ import pandas as pd
 import polars as pl
 import pyarrow as pa
 
-from pyobsplot.data import pd_to_arrow, pl_to_arrow, arrow_schema_no_big
+from pyobsplot.data import arrow_schema_no_big, pd_to_arrow, pl_to_arrow
 
 
 class TestSchemaNoBig:

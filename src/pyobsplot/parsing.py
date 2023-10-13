@@ -4,12 +4,12 @@ Plot specification parsing.
 
 import datetime
 import json
+from typing import Any, Optional
+
 import pandas as pd
 import polars as pl
 
-from typing import Any, Optional
-
-from .data import serialize
+from pyobsplot.data import serialize
 
 
 class SpecParser:
@@ -17,7 +17,9 @@ class SpecParser:
     Class implementing plot specification parsing.
     """
 
-    def __init__(self, renderer: str = "widget", default: dict = {}) -> None:
+    def __init__(
+        self, renderer: str = "widget", default: Optional[dict] = None
+    ) -> None:
         """
         SpecParser constructor.
 
@@ -27,7 +29,9 @@ class SpecParser:
         """
         self.renderer = renderer
         self.data = []
-        self._spec = dict()
+        self._spec = {}
+        if default is None:
+            default = {}
         self._default = default
 
     @property
@@ -153,7 +157,7 @@ class SpecParser:
         if isinstance(spec, pl.Series):
             return self.parse(pl.DataFrame(spec))
         # If date or datetime, add tupe and convert to isoformat.
-        if isinstance(spec, datetime.date) or isinstance(spec, datetime.datetime):
+        if isinstance(spec, (datetime.date, datetime.datetime)):
             return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
         # Handling of JavaScript methods as objects, such as "Math.sin"
         # Manually call the parsed result ans add a special "function-object" type

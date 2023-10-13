@@ -1,50 +1,158 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "pyobsplot"
-version = "0.4.2"
+dynamic = ["version"]
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
-authors = ["Julien Barnier <julien@nozav.org>"]
+authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
 license = "MIT"
 readme = "README.md"
-include = ["src/pyobsplot/static/*"]
-homepage = "https://github.com/juba/pyobsplot"
-documentation = "https://juba.github.io/pyobsplot"
-repository = "https://github.com/juba/pyobsplot"
+requires-python = ">=3.9"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Framework :: Jupyter :: JupyterLab",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: JavaScript",
     "Topic :: Scientific/Engineering :: Visualization",
 ]
-packages = [{ include = "pyobsplot", from = "src" }]
+dependencies = [
+    "anywidget[dev]==0.6.5",
+    "pandas>=1.2.0",
+    "polars>=0.16.0",
+    "pyarrow==13.0.0",
+    "ipywidgets>=8.1.0",
+    "jupyterlab_widgets>=3.0.0",
+    "jupyterlab>=3.6.0",
+    "requests>=2.28.2",
+]
 
-
-[tool.poetry.urls]
+[project.urls]
+homepage = "https://github.com/juba/pyobsplot"
+documentation = "https://juba.github.io/pyobsplot"
+repository = "https://github.com/juba/pyobsplot"
 changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-anywidget = { extras = ["dev"], version = "^0.6.5" }
-pandas = ">=1.2.0"
-polars = ">=0.16.0"
-pyarrow = "^13.0.0"
-ipywidgets = ">=8.1.0"
-jupyterlab_widgets = ">=3.0.0"
-jupyterlab = ">=3.6.0"
-requests = "^2.28.2"
+[tool.hatch.version]
+path = "src/pyobsplot/__about__.py"
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.0.259"
-black = "^23.1.0"
-pytest = "^7.2.2"
-requests = "^2.28.2"
-geopandas = "^0.12.2"
+[tool.hatch.envs.default]
+dependencies = ["coverage[toml]>=6.5", "pytest", "geopandas>=0.12.2"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = ["- coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
+
+[[tool.hatch.envs.tests.matrix]]
+python = ["3.10", "3.11"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = ["black>=23.9.1", "mypy>=1.0.0", "ruff>=0.0.291"]
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/pyobsplot tests}"
+style = ["ruff {args:.}", "black --check --diff {args:.}"]
+fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
+all = ["style", "typing"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.sdist]
+exclude = [".github", "doc", ".vscode", "examples"]
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pyobsplot"]
+
+[tool.black]
+target-version = ["py39"]
+line-length = 88
+skip-string-normalization = true
 
 [tool.pytest.ini_options]
 testpaths = "tests"
 pythonpath = "src"
+filterwarnings = "ignore::DeprecationWarning"
+
+
+[tool.ruff]
+exclude = ["__pycache__", "__pypackages__", ".git"]
+target-version = "py39"
+line-length = 88
+select = [
+    "A",
+    "ARG",
+    "B",
+    "C",
+    "DTZ",
+    "E",
+    "EM",
+    "F",
+    "FBT",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "Q",
+    "RUF",
+    "S",
+    "T",
+    "TID",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = [
+    # Allow non-abstract empty methods in abstract base classes
+    "B027",
+    # Allow boolean positional values in function calls, like `dict.get(... True)`
+    "FBT003",
+    # Ignore checks for possible passwords
+    "S105",
+    "S106",
+    "S107",
+    # Ignore complexity
+    "C901",
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+]
+unfixable = [
+    # Don't touch unused imports
+    "F401",
+]
+
+[tool.ruff.isort]
+known-first-party = ["pyobsplot"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+
+[tool.coverage.run]
+source_pkgs = ["pyobsplot", "tests"]
+branch = true
+parallel = true
+omit = ["src/pyobsplot/__about__.py"]
+
+[tool.coverage.paths]
+pyobsplot = ["src/pyobsplot"]
+tests = ["tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]

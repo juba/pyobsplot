@@ -1,5 +1,5 @@
 """
-Utility methods and variables 
+Utility methods and variables.
 """
 
 import pathlib
