@@ -294,5 +294,5 @@ class ObsplotJsdomCreator(ObsplotCreator):
             warnings.warn(
                 f"Output is HTML but file extension is '{extension}'", RuntimeWarning
             )
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(res.data)
