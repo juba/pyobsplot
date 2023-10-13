@@ -174,15 +174,3 @@ class TestInit:
             r.content.decode()
             == "Server error: Unexpected token h in JSON at position 1."
         )
-
-
-class TestSaveToFile:
-    def test_svg_with_negative_numbers(self, tmp_path, oj):
-        """If utf-8 isn't specified encoding a minus symbol raises 'charmap' codec can't encode character '\u2212'."""
-        oj = Obsplot(renderer="jsdom")
-        oj(
-            Plot.tickX(
-                [-1],
-            ),
-            path=tmp_path / "test.svg",
-        )

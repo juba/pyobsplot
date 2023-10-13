@@ -474,6 +474,11 @@ specs["defaults_html_default.html"] = {
 }
 defaults["defaults_html_default.html"] = default
 
+# utf-8 encoding ---
+
+specs["bug_utf8.html"] = Plot.tickX([-1])
+specs["bug_utf8.svg"] = Plot.tickX([-1])
+
 
 # Main ---
 
