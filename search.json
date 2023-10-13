@@ -18,7 +18,7 @@
     "href": "development.html#install-fom-source",
     "title": "Development",
     "section": "Install fom source",
-    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall poetry dependency management system\nClone the pyobsplot repository\nInstall Python dependencies with : poetry install\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code are in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
+    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall hatch dependency management system\nClone the pyobsplot repository\nInstall Python dependencies with : hatch shell\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code are in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
   },
   {
     "objectID": "development.html#widget-javascript-modification-and-bundling",
@@ -46,7 +46,7 @@
     "href": "development.html#maintenance-notes",
     "title": "Development",
     "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nChange version in NEWS.md and pyproject.toml\nRelease the Python package with poetry build and poetry publish in pyobsplot\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 and npm install @observablehq/plot d3 --workspaces\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nChange version in NEWS.md and src/pyobsplot/__about__.py\nRelease the Python package with hatch build and hatch publish in pyobsplot\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 and npm install @observablehq/plot d3 --workspaces\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
   },
   {
     "objectID": "gallery_interaction.html",
@@ -103,6 +103,20 @@
     "title": "Themes",
     "section": "current theme",
     "text": "current theme\n\nThe “current” theme uses a transparent background and a currentColor foreground, so it should keep the current color theme:\n\nop = Obsplot(theme=\"current\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "Fix jsdom renderer file saving encoding (#22, @harrylojames)\nMigrate build system from poetry to hatch"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.4.2",
+    "href": "changelog.html#pyobsplot-0.4.2",
+    "title": "Changelog",
+    "section": "",
+    "text": "Fix jsdom renderer file saving encoding (#22, @harrylojames)\nMigrate build system from poetry to hatch"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.4.1",

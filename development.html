@@ -220,9 +220,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If you want to build <code>pyobsplot</code> from source, you’ll have to follow these steps:</p>
 <ul>
 <li>Install <a href="https://nodejs.org/en">node.js</a></li>
-<li>Install <a href="https://python-poetry.org">poetry</a> dependency management system</li>
+<li>Install <a href="https://hatch.pypa.io/latest/">hatch</a> dependency management system</li>
 <li>Clone the <a href="https://github.com/juba/pyobsplot">pyobsplot</a> repository</li>
-<li>Install Python dependencies with : <code>poetry install</code></li>
+<li>Install Python dependencies with : <code>hatch shell</code></li>
 <li>Install <code>pyobsplot-js</code> JavaScript dependencies with : <code>npm install --workspaces</code></li>
 <li>Install <code>pyobsplot</code> dependencies with : <code>npm install</code></li>
 </ul>
@@ -270,8 +270,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>If necessary release the npm package with <code>npm publish</code> in <code>packages/pyobsplot-js</code></li>
 <li>Check that the <code>min_npm_version</code> value in <code>.utils</code> is correct</li>
-<li>Change version in <code>NEWS.md</code> and <code>pyproject.toml</code></li>
-<li>Release the Python package with <code>poetry build</code> and <code>poetry publish</code> in <code>pyobsplot</code></li>
+<li>Change version in <code>NEWS.md</code> and <code>src/pyobsplot/__about__.py</code></li>
+<li>Release the Python package with <code>hatch build</code> and <code>hatch publish</code> in <code>pyobsplot</code></li>
 <li>Tag the version in git</li>
 <li>Create a release on Github</li>
 <li>Bump to dev version in <code>pyproject.toml</code> and <code>NEWS.md</code></li>
