@@ -24,7 +24,7 @@ ALLOWED_DEFAULTS = [
 ]
 
 # Themes
-AVAILABLE_THEMES = ["light", "dark", "current"]
+AVAILABLE_THEMES = ["light", "dark", "current", "light-html"]
 DEFAULT_THEME = "light"
 
 # List of existing plot methods

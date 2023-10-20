@@ -1,4 +1,9 @@
 /* css/styles.css */
+:root {
+  --sans-serif: -apple-system, BlinkMacSystemFont, "avenir next", avenir,
+    helvetica, "helvetica neue", ubuntu, roboto, noto, "segoe ui", arial,
+    sans-serif;
+}
 .pyobsplot-plot h2 {
   line-height: 28px;
   font-size: 20px;
@@ -22,6 +27,18 @@
   color: black;
   background-color: white;
 }
+.pyobsplot-plot.light-html svg,
+.pyobsplot-plot.light-html figure {
+  color: black;
+  background-color: white;
+}
+.pyobsplot-plot.light-html h2 {
+  font-family: var(--sans-serif)
+}
+.pyobsplot-plot.light-html h3 {
+  font-family: var(--sans-serif)
+}
+
 .pyobsplot-plot.dark svg,
 .pyobsplot-plot.dark figure {
   color: white;
