@@ -111,5 +111,5 @@ If using the `widget` renderer, debug output will be displayed in JavaScript con
 
 When a new Plot version is released:
 
-- update with `npm install @observablehq/plot d3` and `npm install @observablehq/plot d3 --workspaces`
+- update with `npm install @observablehq/plot d3 --workspaces --include-workspace-root`
 - run `utils/get_plot_methods.js` and update `utils.py` in `pyobsplot`
