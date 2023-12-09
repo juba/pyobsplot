@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://juba.github.io/pyobsplot/development.html</loc>
-    <lastmod>2023-10-13T22:21:50.078Z</lastmod>
-  </url>
-  <url>
     <loc>https://juba.github.io/pyobsplot/gallery_interaction.html</loc>
-    <lastmod>2023-10-13T22:21:36.586Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_themes.html</loc>
-    <lastmod>2023-10-13T22:21:27.390Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
-    <lastmod>2023-10-13T22:21:02.249Z</lastmod>
-  </url>
-  <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
-    <lastmod>2023-10-13T22:20:40.105Z</lastmod>
+    <lastmod>2023-12-09T18:09:19.624Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/getting_started.html</loc>
-    <lastmod>2023-10-13T22:20:20.893Z</lastmod>
+    <lastmod>2023-12-09T18:09:10.260Z</lastmod>
   </url>
   <url>
-    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
-    <lastmod>2023-10-13T22:21:01.609Z</lastmod>
+    <loc>https://juba.github.io/pyobsplot/gallery_transforms.html</loc>
+    <lastmod>2023-12-09T18:08:57.424Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/gallery_marks.html</loc>
-    <lastmod>2023-10-13T22:21:20.170Z</lastmod>
+    <lastmod>2023-12-09T18:08:45.644Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_geo.html</loc>
+    <lastmod>2023-12-09T18:08:32.692Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/index.html</loc>
-    <lastmod>2023-10-13T22:21:31.966Z</lastmod>
+    <lastmod>2023-12-09T18:08:19.236Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/development.html</loc>
+    <lastmod>2023-12-09T18:08:35.204Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/changelog.html</loc>
+    <lastmod>2023-12-09T18:08:46.040Z</lastmod>
+  </url>
+  <url>
+    <loc>https://juba.github.io/pyobsplot/gallery_themes.html</loc>
+    <lastmod>2023-12-09T18:09:02.020Z</lastmod>
   </url>
   <url>
     <loc>https://juba.github.io/pyobsplot/usage.html</loc>
-    <lastmod>2023-10-13T22:21:46.398Z</lastmod>
+    <lastmod>2023-12-09T18:09:16.520Z</lastmod>
   </url>
 </urlset>
