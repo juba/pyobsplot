@@ -256,14 +256,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Fix jsdom renderer file saving encoding (#22, @harrylojames)\nMigrate build system from poetry to hatch"
+    "text": "Fix jsdom renderer file saving encoding (#22, @harrylojames)\nUpdate Observable Plot to 0.6.12\nMigrate build system from poetry to hatch"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.4.2",
     "href": "changelog.html#pyobsplot-0.4.2",
     "title": "Changelog",
     "section": "",
-    "text": "Fix jsdom renderer file saving encoding (#22, @harrylojames)\nMigrate build system from poetry to hatch"
+    "text": "Fix jsdom renderer file saving encoding (#22, @harrylojames)\nUpdate Observable Plot to 0.6.12\nMigrate build system from poetry to hatch"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.4.1",
