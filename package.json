@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "@observablehq/plot": "^0.6.12",
+        "@observablehq/plot": "^0.6.13",
         "anywidget": "^0.6.5",
         "d3": "^7.8.5"
     },

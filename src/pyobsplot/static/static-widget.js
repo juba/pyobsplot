@@ -20864,11 +20864,11 @@ var schemeObservable10 = [
   "#efb118",
   "#ff725c",
   "#6cc5b0",
-  "#a463f2",
-  "#ff8ab7",
-  "#9c6b4e",
-  "#97bbf5",
   "#3ca951",
+  "#ff8ab7",
+  "#a463f2",
+  "#97bbf5",
+  "#9c6b4e",
   "#9498a0"
 ];
 var categoricalSchemes = /* @__PURE__ */ new Map([
@@ -22648,14 +22648,14 @@ function legendRamp(color3, options) {
     (svg3) => (
       // Warning: if you edit this, change defaultClassName.
       svg3.append("style").text(
-        `.${className}-ramp {
+        `:where(.${className}-ramp) {
   display: block;
   height: auto;
   height: intrinsic;
   max-width: 100%;
   overflow: visible;
 }
-.${className}-ramp text {
+:where(.${className}-ramp text) {
   white-space: pre;
 }`
       )
@@ -24182,16 +24182,16 @@ function legendItems(scale3, options = {}, swatch) {
   );
   let extraStyle;
   if (columns != null) {
-    extraStyle = `.${className}-swatches-columns .${className}-swatch {
+    extraStyle = `:where(.${className}-swatches-columns .${className}-swatch) {
   display: flex;
   align-items: center;
   break-inside: avoid;
   padding-bottom: 1px;
 }
-.${className}-swatches-columns .${className}-swatch::before {
+:where(.${className}-swatches-columns .${className}-swatch::before) {
   flex-shrink: 0;
 }
-.${className}-swatches-columns .${className}-swatch-label {
+:where(.${className}-swatches-columns .${className}-swatch-label) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -24200,13 +24200,13 @@ function legendItems(scale3, options = {}, swatch) {
       (item) => item.append("div").attr("class", `${className}-swatch-label`).attr("title", tickFormat2).text(tickFormat2)
     );
   } else {
-    extraStyle = `.${className}-swatches-wrap {
+    extraStyle = `:where(.${className}-swatches-wrap) {
   display: flex;
   align-items: center;
   min-height: 33px;
   flex-wrap: wrap;
 }
-.${className}-swatches-wrap .${className}-swatch {
+:where(.${className}-swatches-wrap .${className}-swatch) {
   display: inline-flex;
   align-items: center;
   margin-right: 1em;
@@ -24217,12 +24217,12 @@ function legendItems(scale3, options = {}, swatch) {
   }
   return swatches.call(
     (div) => div.insert("style", "*").text(
-      `.${className}-swatches {
+      `:where(.${className}-swatches) {
   font-family: system-ui, sans-serif;
   font-size: 10px;
   margin-bottom: 0.5em;
 }
-.${className}-swatch > svg {
+:where(.${className}-swatch > svg) {
   margin-right: 0.5em;
   overflow: visible;
 }
@@ -24863,15 +24863,15 @@ function plot(options = {}) {
     (svg3) => (
       // Warning: if you edit this, change defaultClassName.
       svg3.append("style").text(
-        `.${className} {
+        `:where(.${className}) {
   --plot-background: white;
   display: block;
   height: auto;
   height: intrinsic;
   max-width: 100%;
 }
-.${className} text,
-.${className} tspan {
+:where(.${className} text),
+:where(.${className} tspan) {
   white-space: pre;
 }`
       )
@@ -30495,12 +30495,12 @@ var toFloat64ArrayAsyncIterator = (input) => toArrayBufferViewAsyncIterator(Floa
 var toUint8ClampedArrayAsyncIterator = (input) => toArrayBufferViewAsyncIterator(Uint8ClampedArray, input);
 function rebaseValueOffsets(offset2, length4, valueOffsets) {
   if (offset2 !== 0) {
-    valueOffsets = valueOffsets.slice(0, length4 + 1);
-    for (let i = -1; ++i <= length4; ) {
+    valueOffsets = valueOffsets.slice(0, length4);
+    for (let i = -1, n = valueOffsets.length; ++i < n; ) {
       valueOffsets[i] += offset2;
     }
   }
-  return valueOffsets;
+  return valueOffsets.subarray(0, length4);
 }
 function compareArrayLike(a4, b) {
   let i = 0;
@@ -30829,6 +30829,7 @@ var Type;
   Type3[Type3["FixedSizeBinary"] = 15] = "FixedSizeBinary";
   Type3[Type3["FixedSizeList"] = 16] = "FixedSizeList";
   Type3[Type3["Map"] = 17] = "Map";
+  Type3[Type3["Duration"] = 18] = "Duration";
   Type3[Type3["Dictionary"] = -1] = "Dictionary";
   Type3[Type3["Int8"] = -2] = "Int8";
   Type3[Type3["Int16"] = -3] = "Int16";
@@ -30855,6 +30856,10 @@ var Type;
   Type3[Type3["SparseUnion"] = -24] = "SparseUnion";
   Type3[Type3["IntervalDayTime"] = -25] = "IntervalDayTime";
   Type3[Type3["IntervalYearMonth"] = -26] = "IntervalYearMonth";
+  Type3[Type3["DurationSecond"] = -27] = "DurationSecond";
+  Type3[Type3["DurationMillisecond"] = -28] = "DurationMillisecond";
+  Type3[Type3["DurationMicrosecond"] = -29] = "DurationMicrosecond";
+  Type3[Type3["DurationNanosecond"] = -30] = "DurationNanosecond";
 })(Type || (Type = {}));
 var BufferType;
 (function(BufferType2) {
@@ -30873,6 +30878,10 @@ __export(vector_exports, {
 });
 
 // packages/pyobsplot-js/node_modules/apache-arrow/util/pretty.mjs
+var pretty_exports = {};
+__export(pretty_exports, {
+  valueToString: () => valueToString
+});
 var undf = void 0;
 function valueToString(x4) {
   if (x4 === null) {
@@ -31086,6 +31095,7 @@ var _r;
 var _s;
 var _t;
 var _u;
+var _v;
 var DataType = class {
   /** @nocollapse */
   static isNull(x4) {
@@ -31130,6 +31140,10 @@ var DataType = class {
   /** @nocollapse */
   static isInterval(x4) {
     return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Interval;
+  }
+  /** @nocollapse */
+  static isDuration(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Duration;
   }
   /** @nocollapse */
   static isList(x4) {
@@ -31490,6 +31504,24 @@ Interval_[_m] = ((proto) => {
   proto.ArrayType = Int32Array;
   return proto[Symbol.toStringTag] = "Interval";
 })(Interval_.prototype);
+var Duration = class extends DataType {
+  constructor(unit3) {
+    super();
+    this.unit = unit3;
+  }
+  get typeId() {
+    return Type.Duration;
+  }
+  toString() {
+    return `Duration<${TimeUnit[this.unit]}>`;
+  }
+};
+_o = Symbol.toStringTag;
+Duration[_o] = ((proto) => {
+  proto.unit = null;
+  proto.ArrayType = BigInt64Array;
+  return proto[Symbol.toStringTag] = "Duration";
+})(Duration.prototype);
 var List = class extends DataType {
   constructor(child) {
     super();
@@ -31511,8 +31543,8 @@ var List = class extends DataType {
     return this.valueType.ArrayType;
   }
 };
-_o = Symbol.toStringTag;
-List[_o] = ((proto) => {
+_p = Symbol.toStringTag;
+List[_p] = ((proto) => {
   proto.children = null;
   return proto[Symbol.toStringTag] = "List";
 })(List.prototype);
@@ -31528,8 +31560,8 @@ var Struct = class extends DataType {
     return `Struct<{${this.children.map((f) => `${f.name}:${f.type}`).join(`, `)}}>`;
   }
 };
-_p = Symbol.toStringTag;
-Struct[_p] = ((proto) => {
+_q = Symbol.toStringTag;
+Struct[_q] = ((proto) => {
   proto.children = null;
   return proto[Symbol.toStringTag] = "Struct";
 })(Struct.prototype);
@@ -31548,8 +31580,8 @@ var Union_ = class extends DataType {
     return `${this[Symbol.toStringTag]}<${this.children.map((x4) => `${x4.type}`).join(` | `)}>`;
   }
 };
-_q = Symbol.toStringTag;
-Union_[_q] = ((proto) => {
+_r = Symbol.toStringTag;
+Union_[_r] = ((proto) => {
   proto.mode = null;
   proto.typeIds = null;
   proto.children = null;
@@ -31569,8 +31601,8 @@ var FixedSizeBinary = class extends DataType {
     return `FixedSizeBinary[${this.byteWidth}]`;
   }
 };
-_r = Symbol.toStringTag;
-FixedSizeBinary[_r] = ((proto) => {
+_s = Symbol.toStringTag;
+FixedSizeBinary[_s] = ((proto) => {
   proto.byteWidth = null;
   proto.ArrayType = Uint8Array;
   return proto[Symbol.toStringTag] = "FixedSizeBinary";
@@ -31597,17 +31629,31 @@ var FixedSizeList = class extends DataType {
     return `FixedSizeList[${this.listSize}]<${this.valueType}>`;
   }
 };
-_s = Symbol.toStringTag;
-FixedSizeList[_s] = ((proto) => {
+_t = Symbol.toStringTag;
+FixedSizeList[_t] = ((proto) => {
   proto.children = null;
   proto.listSize = null;
   return proto[Symbol.toStringTag] = "FixedSizeList";
 })(FixedSizeList.prototype);
 var Map_ = class extends DataType {
-  constructor(child, keysSorted = false) {
+  constructor(entries, keysSorted = false) {
+    var _w, _x, _y;
     super();
-    this.children = [child];
+    this.children = [entries];
     this.keysSorted = keysSorted;
+    if (entries) {
+      entries["name"] = "entries";
+      if ((_w = entries === null || entries === void 0 ? void 0 : entries.type) === null || _w === void 0 ? void 0 : _w.children) {
+        const key = (_x = entries === null || entries === void 0 ? void 0 : entries.type) === null || _x === void 0 ? void 0 : _x.children[0];
+        if (key) {
+          key["name"] = "key";
+        }
+        const val = (_y = entries === null || entries === void 0 ? void 0 : entries.type) === null || _y === void 0 ? void 0 : _y.children[1];
+        if (val) {
+          val["name"] = "value";
+        }
+      }
+    }
   }
   get typeId() {
     return Type.Map;
@@ -31625,8 +31671,8 @@ var Map_ = class extends DataType {
     return `Map<{${this.children[0].type.children.map((f) => `${f.name}:${f.type}`).join(`, `)}}>`;
   }
 };
-_t = Symbol.toStringTag;
-Map_[_t] = ((proto) => {
+_u = Symbol.toStringTag;
+Map_[_u] = ((proto) => {
   proto.children = null;
   proto.keysSorted = null;
   return proto[Symbol.toStringTag] = "Map_";
@@ -31656,8 +31702,8 @@ var Dictionary = class extends DataType {
     return `Dictionary<${this.indices}, ${this.dictionary}>`;
   }
 };
-_u = Symbol.toStringTag;
-Dictionary[_u] = ((proto) => {
+_v = Symbol.toStringTag;
+Dictionary[_v] = ((proto) => {
   proto.id = null;
   proto.indices = null;
   proto.isOrdered = null;
@@ -31744,6 +31790,9 @@ var Visitor = class {
     return null;
   }
   visitInterval(_node, ..._args) {
+    return null;
+  }
+  visitDuration(_node, ..._args) {
     return null;
   }
   visitFixedSizeList(_node, ..._args) {
@@ -31894,6 +31943,21 @@ function getVisitFnByTypeId(visitor, dtype, throwIfNotFound = true) {
     case Type.IntervalYearMonth:
       fn = visitor.visitIntervalYearMonth || visitor.visitInterval;
       break;
+    case Type.Duration:
+      fn = visitor.visitDuration;
+      break;
+    case Type.DurationSecond:
+      fn = visitor.visitDurationSecond || visitor.visitDuration;
+      break;
+    case Type.DurationMillisecond:
+      fn = visitor.visitDurationMillisecond || visitor.visitDuration;
+      break;
+    case Type.DurationMicrosecond:
+      fn = visitor.visitDurationMicrosecond || visitor.visitDuration;
+      break;
+    case Type.DurationNanosecond:
+      fn = visitor.visitDurationNanosecond || visitor.visitDuration;
+      break;
     case Type.FixedSizeList:
       fn = visitor.visitFixedSizeList;
       break;
@@ -31983,6 +32047,18 @@ function inferDType(type2) {
           return Type.IntervalYearMonth;
       }
       return Type.Interval;
+    case Type.Duration:
+      switch (type2.unit) {
+        case TimeUnit.SECOND:
+          return Type.DurationSecond;
+        case TimeUnit.MILLISECOND:
+          return Type.DurationMillisecond;
+        case TimeUnit.MICROSECOND:
+          return Type.DurationMicrosecond;
+        case TimeUnit.NANOSECOND:
+          return Type.DurationNanosecond;
+      }
+      return Type.Duration;
     case Type.Map:
       return Type.Map;
     case Type.List:
@@ -32031,6 +32107,11 @@ Visitor.prototype.visitDenseUnion = null;
 Visitor.prototype.visitSparseUnion = null;
 Visitor.prototype.visitIntervalDayTime = null;
 Visitor.prototype.visitIntervalYearMonth = null;
+Visitor.prototype.visitDuration = null;
+Visitor.prototype.visitDurationSecond = null;
+Visitor.prototype.visitDurationMillisecond = null;
+Visitor.prototype.visitDurationMicrosecond = null;
+Visitor.prototype.visitDurationNanosecond = null;
 
 // packages/pyobsplot-js/node_modules/apache-arrow/util/math.mjs
 var math_exports = {};
@@ -32250,6 +32331,30 @@ var setIntervalDayTime = ({ values: values2 }, index3, value) => {
 var setIntervalYearMonth = ({ values: values2 }, index3, value) => {
   values2[index3] = value[0] * 12 + value[1] % 12;
 };
+var setDurationSecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDurationMillisecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDurationMicrosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDurationNanosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDuration = (data, index3, value) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return setDurationSecond(data, index3, value);
+    case TimeUnit.MILLISECOND:
+      return setDurationMillisecond(data, index3, value);
+    case TimeUnit.MICROSECOND:
+      return setDurationMicrosecond(data, index3, value);
+    case TimeUnit.NANOSECOND:
+      return setDurationNanosecond(data, index3, value);
+  }
+};
 var setFixedSizeList = (data, index3, value) => {
   const { stride } = data;
   const child = data.children[0];
@@ -32304,6 +32409,11 @@ SetVisitor.prototype.visitDictionary = wrapSet(setDictionary);
 SetVisitor.prototype.visitInterval = wrapSet(setIntervalValue);
 SetVisitor.prototype.visitIntervalDayTime = wrapSet(setIntervalDayTime);
 SetVisitor.prototype.visitIntervalYearMonth = wrapSet(setIntervalYearMonth);
+SetVisitor.prototype.visitDuration = wrapSet(setDuration);
+SetVisitor.prototype.visitDurationSecond = wrapSet(setDurationSecond);
+SetVisitor.prototype.visitDurationMillisecond = wrapSet(setDurationMillisecond);
+SetVisitor.prototype.visitDurationMicrosecond = wrapSet(setDurationMicrosecond);
+SetVisitor.prototype.visitDurationNanosecond = wrapSet(setDurationNanosecond);
 SetVisitor.prototype.visitFixedSizeList = wrapSet(setFixedSizeList);
 SetVisitor.prototype.visitMap = wrapSet(setMap);
 var instance = new SetVisitor();
@@ -32532,6 +32642,22 @@ var getIntervalYearMonth = ({ values: values2 }, index3) => {
   int32s[1] = Math.trunc(interval2 % 12);
   return int32s;
 };
+var getDurationSecond = ({ values: values2 }, index3) => values2[index3];
+var getDurationMillisecond = ({ values: values2 }, index3) => values2[index3];
+var getDurationMicrosecond = ({ values: values2 }, index3) => values2[index3];
+var getDurationNanosecond = ({ values: values2 }, index3) => values2[index3];
+var getDuration = (data, index3) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return getDurationSecond(data, index3);
+    case TimeUnit.MILLISECOND:
+      return getDurationMillisecond(data, index3);
+    case TimeUnit.MICROSECOND:
+      return getDurationMicrosecond(data, index3);
+    case TimeUnit.NANOSECOND:
+      return getDurationNanosecond(data, index3);
+  }
+};
 var getFixedSizeList = (data, index3) => {
   const { stride, children: children2 } = data;
   const child = children2[0];
@@ -32579,6 +32705,11 @@ GetVisitor.prototype.visitDictionary = wrapGet(getDictionary);
 GetVisitor.prototype.visitInterval = wrapGet(getInterval);
 GetVisitor.prototype.visitIntervalDayTime = wrapGet(getIntervalDayTime);
 GetVisitor.prototype.visitIntervalYearMonth = wrapGet(getIntervalYearMonth);
+GetVisitor.prototype.visitDuration = wrapGet(getDuration);
+GetVisitor.prototype.visitDurationSecond = wrapGet(getDurationSecond);
+GetVisitor.prototype.visitDurationMillisecond = wrapGet(getDurationMillisecond);
+GetVisitor.prototype.visitDurationMicrosecond = wrapGet(getDurationMicrosecond);
+GetVisitor.prototype.visitDurationNanosecond = wrapGet(getDurationNanosecond);
 GetVisitor.prototype.visitFixedSizeList = wrapGet(getFixedSizeList);
 GetVisitor.prototype.visitMap = wrapGet(getMap);
 var instance2 = new GetVisitor();
@@ -32970,6 +33101,18 @@ var Data = class {
   get buffers() {
     return [this.valueOffsets, this.values, this.nullBitmap, this.typeIds];
   }
+  get nullable() {
+    if (this._nullCount !== 0) {
+      const { type: type2 } = this;
+      if (DataType.isSparseUnion(type2)) {
+        return this.children.some((child) => child.nullable);
+      } else if (DataType.isDenseUnion(type2)) {
+        return this.children.some((child) => child.nullable);
+      }
+      return this.nullBitmap && this.nullBitmap.byteLength > 0;
+    }
+    return true;
+  }
   get byteLength() {
     let byteLength = 0;
     const { valueOffsets, values: values2, nullBitmap, typeIds } = this;
@@ -32980,6 +33123,9 @@ var Data = class {
     return this.children.reduce((byteLength2, child) => byteLength2 + child.byteLength, byteLength);
   }
   get nullCount() {
+    if (DataType.isUnion(this.type)) {
+      return this.children.reduce((nullCount2, child) => nullCount2 + child.nullCount, 0);
+    }
     let nullCount = this._nullCount;
     let nullBitmap;
     if (nullCount <= kUnknownNullCount && (nullBitmap = this.nullBitmap)) {
@@ -33010,9 +33156,15 @@ var Data = class {
         (buffer = buffers[3]) && (this.typeIds = buffer);
       }
     }
-    this.nullable = this._nullCount !== 0 && this.nullBitmap && this.nullBitmap.byteLength > 0;
   }
   getValid(index3) {
+    const { type: type2 } = this;
+    if (DataType.isUnion(type2)) {
+      const union2 = type2;
+      const child = this.children[union2.typeIdToChildIndex[this.typeIds[index3]]];
+      const indexInChild = union2.mode === UnionMode.Dense ? this.valueOffsets[index3] : index3;
+      return child.getValid(indexInChild);
+    }
     if (this.nullable && this.nullCount > 0) {
       const pos = this.offset + index3;
       const val = this.nullBitmap[pos >> 3];
@@ -33021,18 +33173,34 @@ var Data = class {
     return true;
   }
   setValid(index3, value) {
-    if (!this.nullable) {
-      return value;
+    let prev;
+    const { type: type2 } = this;
+    if (DataType.isUnion(type2)) {
+      const union2 = type2;
+      const child = this.children[union2.typeIdToChildIndex[this.typeIds[index3]]];
+      const indexInChild = union2.mode === UnionMode.Dense ? this.valueOffsets[index3] : index3;
+      prev = child.getValid(indexInChild);
+      child.setValid(indexInChild, value);
+    } else {
+      let { nullBitmap } = this;
+      const { offset: offset2, length: length4 } = this;
+      const idx = offset2 + index3;
+      const mask = 1 << idx % 8;
+      const byteOffset = idx >> 3;
+      if (!nullBitmap || nullBitmap.byteLength <= byteOffset) {
+        nullBitmap = new Uint8Array((offset2 + length4 + 63 & ~63) >> 3).fill(255);
+        if (this.nullCount > 0) {
+          nullBitmap.set(truncateBitmap(offset2, length4, this.nullBitmap), 0);
+        }
+        Object.assign(this, { nullBitmap, _nullCount: -1 });
+      }
+      const byte = nullBitmap[byteOffset];
+      prev = (byte & mask) !== 0;
+      value ? nullBitmap[byteOffset] = byte | mask : nullBitmap[byteOffset] = byte & ~mask;
     }
-    if (!this.nullBitmap || this.nullBitmap.byteLength <= index3 >> 3) {
-      const { nullBitmap: nullBitmap2 } = this._changeLengthAndBackfillNullBitmap(this.length);
-      Object.assign(this, { nullBitmap: nullBitmap2, _nullCount: 0 });
+    if (prev !== !!value) {
+      this._nullCount = this.nullCount + (value ? -1 : 1);
     }
-    const { nullBitmap, offset: offset2 } = this;
-    const pos = offset2 + index3 >> 3;
-    const bit = (offset2 + index3) % 8;
-    const val = nullBitmap[pos] >> bit & 1;
-    value ? val === 0 && (nullBitmap[pos] |= 1 << bit, this._nullCount = this.nullCount + 1) : val === 1 && (nullBitmap[pos] &= ~(1 << bit), this._nullCount = this.nullCount - 1);
     return value;
   }
   clone(type2 = this.type, offset2 = this.offset, length4 = this.length, nullCount = this._nullCount, buffers = this, children2 = this.children) {
@@ -33086,7 +33254,7 @@ var MakeDataVisitor = class extends Visitor {
   }
   visitNull(props) {
     const { ["type"]: type2, ["offset"]: offset2 = 0, ["length"]: length4 = 0 } = props;
-    return new Data(type2, offset2, length4, 0);
+    return new Data(type2, offset2, length4, length4);
   }
   visitBool(props) {
     const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
@@ -33175,14 +33343,13 @@ var MakeDataVisitor = class extends Visitor {
   }
   visitUnion(props) {
     const { ["type"]: type2, ["offset"]: offset2 = 0, ["children"]: children2 = [] } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
     const typeIds = toArrayBufferView(type2.ArrayType, props["typeIds"]);
-    const { ["length"]: length4 = typeIds.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    const { ["length"]: length4 = typeIds.length, ["nullCount"]: nullCount = -1 } = props;
     if (DataType.isSparseUnion(type2)) {
-      return new Data(type2, offset2, length4, nullCount, [void 0, void 0, nullBitmap, typeIds], children2);
+      return new Data(type2, offset2, length4, nullCount, [void 0, void 0, void 0, typeIds], children2);
     }
     const valueOffsets = toInt32Array(props["valueOffsets"]);
-    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, nullBitmap, typeIds], children2);
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, void 0, typeIds], children2);
   }
   visitDictionary(props) {
     const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
@@ -33199,6 +33366,13 @@ var MakeDataVisitor = class extends Visitor {
     const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
     return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
   }
+  visitDuration(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
   visitFixedSizeList(props) {
     const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.valueType }) } = props;
     const nullBitmap = toUint8Array(props["nullBitmap"]);
@@ -33213,8 +33387,9 @@ var MakeDataVisitor = class extends Visitor {
     return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, nullBitmap], [child]);
   }
 };
+var makeDataVisitor = new MakeDataVisitor();
 function makeData(props) {
-  return new MakeDataVisitor().visit(props);
+  return makeDataVisitor.visit(props);
 }
 
 // packages/pyobsplot-js/node_modules/apache-arrow/util/chunk.mjs
@@ -33358,7 +33533,14 @@ function indexOfValue(data, searchElement, fromIndex) {
     return -1;
   }
   if (searchElement === null) {
-    return indexOfNull(data, fromIndex);
+    switch (data.typeId) {
+      case Type.Union:
+        break;
+      case Type.Dictionary:
+        break;
+      default:
+        return indexOfNull(data, fromIndex);
+    }
   }
   const get3 = instance2.getVisitFn(data);
   const compare = createElementComparator(searchElement);
@@ -33420,6 +33602,11 @@ IndexOfVisitor.prototype.visitDictionary = indexOfValue;
 IndexOfVisitor.prototype.visitInterval = indexOfValue;
 IndexOfVisitor.prototype.visitIntervalDayTime = indexOfValue;
 IndexOfVisitor.prototype.visitIntervalYearMonth = indexOfValue;
+IndexOfVisitor.prototype.visitDuration = indexOfValue;
+IndexOfVisitor.prototype.visitDurationSecond = indexOfValue;
+IndexOfVisitor.prototype.visitDurationMillisecond = indexOfValue;
+IndexOfVisitor.prototype.visitDurationMicrosecond = indexOfValue;
+IndexOfVisitor.prototype.visitDurationNanosecond = indexOfValue;
 IndexOfVisitor.prototype.visitFixedSizeList = indexOfValue;
 IndexOfVisitor.prototype.visitMap = indexOfValue;
 var instance3 = new IndexOfVisitor();
@@ -33502,6 +33689,11 @@ IteratorVisitor.prototype.visitDictionary = vectorIterator;
 IteratorVisitor.prototype.visitInterval = vectorIterator;
 IteratorVisitor.prototype.visitIntervalDayTime = vectorIterator;
 IteratorVisitor.prototype.visitIntervalYearMonth = vectorIterator;
+IteratorVisitor.prototype.visitDuration = vectorIterator;
+IteratorVisitor.prototype.visitDurationSecond = vectorIterator;
+IteratorVisitor.prototype.visitDurationMillisecond = vectorIterator;
+IteratorVisitor.prototype.visitDurationMicrosecond = vectorIterator;
+IteratorVisitor.prototype.visitDurationNanosecond = vectorIterator;
 IteratorVisitor.prototype.visitFixedSizeList = vectorIterator;
 IteratorVisitor.prototype.visitMap = vectorIterator;
 var instance4 = new IteratorVisitor();
@@ -33535,6 +33727,9 @@ var GetByteLengthVisitor = class extends Visitor {
   }
   visitInterval(data, _) {
     return (data.type.unit + 1) * 4;
+  }
+  visitDuration(____, _) {
+    return 8;
   }
   visitStruct(data, i) {
     return data.children.reduce((total, child) => total + instance5.visit(child, i), 0);
@@ -33639,19 +33834,13 @@ var Vector2 = class {
    * The aggregate size (in bytes) of this Vector's buffers and/or child Vectors.
    */
   get byteLength() {
-    if (this._byteLength === -1) {
-      this._byteLength = this.data.reduce((byteLength, data) => byteLength + data.byteLength, 0);
-    }
-    return this._byteLength;
+    return this.data.reduce((byteLength, data) => byteLength + data.byteLength, 0);
   }
   /**
    * The number of null elements in this Vector.
    */
   get nullCount() {
-    if (this._nullCount === -1) {
-      this._nullCount = computeChunkNullCounts(this.data);
-    }
-    return this._nullCount;
+    return computeChunkNullCounts(this.data);
   }
   /**
    * The Array or TypedArray constructor used for the JS representation
@@ -33707,7 +33896,7 @@ var Vector2 = class {
     return -1;
   }
   includes(element, offset2) {
-    return this.indexOf(element, offset2) > 0;
+    return this.indexOf(element, offset2) > -1;
   }
   /**
    * Get the size in bytes of an element by index.
@@ -33856,8 +34045,6 @@ Vector2[_a2] = ((proto) => {
   proto.length = 0;
   proto.stride = 1;
   proto.numChildren = 0;
-  proto._nullCount = -1;
-  proto._byteLength = -1;
   proto._offsets = new Uint32Array([0]);
   proto[Symbol.isConcatSpreadable] = true;
   const typeIds = Object.keys(Type).map((T) => Type[T]).filter((T) => typeof T === "number" && T !== Type.NONE);
@@ -34368,26 +34555,26 @@ var Block = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/flatbuffers/mjs/constants.js
+// node_modules/flatbuffers/mjs/constants.js
 var SIZEOF_SHORT = 2;
 var SIZEOF_INT = 4;
 var FILE_IDENTIFIER_LENGTH = 4;
 var SIZE_PREFIX_LENGTH = 4;
 
-// packages/pyobsplot-js/node_modules/flatbuffers/mjs/utils.js
+// node_modules/flatbuffers/mjs/utils.js
 var int32 = new Int32Array(2);
 var float32 = new Float32Array(int32.buffer);
 var float64 = new Float64Array(int32.buffer);
 var isLittleEndian = new Uint16Array(new Uint8Array([1, 0]).buffer)[0] === 1;
 
-// packages/pyobsplot-js/node_modules/flatbuffers/mjs/encoding.js
+// node_modules/flatbuffers/mjs/encoding.js
 var Encoding;
 (function(Encoding2) {
   Encoding2[Encoding2["UTF8_BYTES"] = 1] = "UTF8_BYTES";
   Encoding2[Encoding2["UTF16_STRING"] = 2] = "UTF16_STRING";
 })(Encoding || (Encoding = {}));
 
-// packages/pyobsplot-js/node_modules/flatbuffers/mjs/byte-buffer.js
+// node_modules/flatbuffers/mjs/byte-buffer.js
 var ByteBuffer = class {
   /**
    * Create a new ByteBuffer with a given array of bytes (`Uint8Array`)
@@ -34631,7 +34818,7 @@ var ByteBuffer = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/flatbuffers/mjs/builder.js
+// node_modules/flatbuffers/mjs/builder.js
 var Builder2 = class {
   /**
    * Create a FlatBufferBuilder.
@@ -35487,6 +35674,45 @@ var TimeUnit2;
   TimeUnit3[TimeUnit3["MICROSECOND"] = 2] = "MICROSECOND";
   TimeUnit3[TimeUnit3["NANOSECOND"] = 3] = "NANOSECOND";
 })(TimeUnit2 || (TimeUnit2 = {}));
+
+// packages/pyobsplot-js/node_modules/apache-arrow/fb/duration.mjs
+var Duration2 = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  static getRootAsDuration(bb2, obj) {
+    return (obj || new Duration2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static getSizePrefixedRootAsDuration(bb2, obj) {
+    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
+    return (obj || new Duration2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  unit() {
+    const offset2 = this.bb.__offset(this.bb_pos, 4);
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit2.MILLISECOND;
+  }
+  static startDuration(builder) {
+    builder.startObject(1);
+  }
+  static addUnit(builder, unit3) {
+    builder.addFieldInt16(0, unit3, TimeUnit2.MILLISECOND);
+  }
+  static endDuration(builder) {
+    const offset2 = builder.endObject();
+    return offset2;
+  }
+  static createDuration(builder, unit3) {
+    Duration2.startDuration(builder);
+    Duration2.addUnit(builder, unit3);
+    return Duration2.endDuration(builder);
+  }
+};
 
 // packages/pyobsplot-js/node_modules/apache-arrow/fb/fixed-size-binary.mjs
 var FixedSizeBinary2 = class {
@@ -36366,13 +36592,14 @@ var Footer = class {
 
 // packages/pyobsplot-js/node_modules/apache-arrow/schema.mjs
 var Schema2 = class {
-  constructor(fields = [], metadata, dictionaries) {
+  constructor(fields = [], metadata, dictionaries, metadataVersion = MetadataVersion.V5) {
     this.fields = fields || [];
     this.metadata = metadata || /* @__PURE__ */ new Map();
     if (!dictionaries) {
       dictionaries = generateDictionaryMap(fields);
     }
     this.dictionaries = dictionaries;
+    this.metadataVersion = metadataVersion;
   }
   get [Symbol.toStringTag]() {
     return "Schema";
@@ -36487,7 +36714,7 @@ var Footer_ = class {
   static decode(buf) {
     buf = new ByteBuffer2(toUint8Array(buf));
     const footer = Footer.getRootAsFooter(buf);
-    const schema = Schema2.decode(footer.schema());
+    const schema = Schema2.decode(footer.schema(), /* @__PURE__ */ new Map(), footer.version());
     return new OffHeapFooter(schema, footer);
   }
   /** @nocollapse */
@@ -36506,7 +36733,7 @@ var Footer_ = class {
     const dictionaryBatchesOffset = b.endVector();
     Footer.startFooter(b);
     Footer.addSchema(b, schemaOffset);
-    Footer.addVersion(b, MetadataVersion.V4);
+    Footer.addVersion(b, MetadataVersion.V5);
     Footer.addRecordBatches(b, recordBatchesOffset);
     Footer.addDictionaries(b, dictionaryBatchesOffset);
     Footer.finishFooterBuffer(b, Footer.endFooter(b));
@@ -36518,7 +36745,7 @@ var Footer_ = class {
   get numDictionaries() {
     return this._dictionaryBatches.length;
   }
-  constructor(schema, version = MetadataVersion.V4, recordBatches, dictionaryBatches) {
+  constructor(schema, version = MetadataVersion.V5, recordBatches, dictionaryBatches) {
     this.schema = schema;
     this.version = version;
     recordBatches && (this._recordBatches = recordBatches);
@@ -37335,7 +37562,7 @@ var Int128 = class {
 
 // packages/pyobsplot-js/node_modules/apache-arrow/visitor/vectorloader.mjs
 var VectorLoader = class extends Visitor {
-  constructor(bytes, nodes, buffers, dictionaries) {
+  constructor(bytes, nodes, buffers, dictionaries, metadataVersion = MetadataVersion.V5) {
     super();
     this.nodesIndex = -1;
     this.buffersIndex = -1;
@@ -37343,6 +37570,7 @@ var VectorLoader = class extends Visitor {
     this.nodes = nodes;
     this.buffers = buffers;
     this.dictionaries = dictionaries;
+    this.metadataVersion = metadataVersion;
   }
   visit(node) {
     return super.visit(node instanceof Field2 ? node.type : node);
@@ -37386,19 +37614,25 @@ var VectorLoader = class extends Visitor {
   visitStruct(type2, { length: length4, nullCount } = this.nextFieldNode()) {
     return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), children: this.visitMany(type2.children) });
   }
-  visitUnion(type2) {
-    return type2.mode === UnionMode.Sparse ? this.visitSparseUnion(type2) : this.visitDenseUnion(type2);
+  visitUnion(type2, { length: length4, nullCount } = this.nextFieldNode()) {
+    if (this.metadataVersion < MetadataVersion.V5) {
+      this.readNullBitmap(type2, nullCount);
+    }
+    return type2.mode === UnionMode.Sparse ? this.visitSparseUnion(type2, { length: length4, nullCount }) : this.visitDenseUnion(type2, { length: length4, nullCount });
   }
   visitDenseUnion(type2, { length: length4, nullCount } = this.nextFieldNode()) {
-    return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), typeIds: this.readTypeIds(type2), valueOffsets: this.readOffsets(type2), children: this.visitMany(type2.children) });
+    return makeData({ type: type2, length: length4, nullCount, typeIds: this.readTypeIds(type2), valueOffsets: this.readOffsets(type2), children: this.visitMany(type2.children) });
   }
   visitSparseUnion(type2, { length: length4, nullCount } = this.nextFieldNode()) {
-    return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), typeIds: this.readTypeIds(type2), children: this.visitMany(type2.children) });
+    return makeData({ type: type2, length: length4, nullCount, typeIds: this.readTypeIds(type2), children: this.visitMany(type2.children) });
   }
   visitDictionary(type2, { length: length4, nullCount } = this.nextFieldNode()) {
     return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), data: this.readData(type2.indices), dictionary: this.readDictionary(type2) });
   }
   visitInterval(type2, { length: length4, nullCount } = this.nextFieldNode()) {
+    return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), data: this.readData(type2) });
+  }
+  visitDuration(type2, { length: length4, nullCount } = this.nextFieldNode()) {
     return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), data: this.readData(type2) });
   }
   visitFixedSizeList(type2, { length: length4, nullCount } = this.nextFieldNode()) {
@@ -37430,8 +37664,8 @@ var VectorLoader = class extends Visitor {
   }
 };
 var JSONVectorLoader = class extends VectorLoader {
-  constructor(sources, nodes, buffers, dictionaries) {
-    super(new Uint8Array(0), nodes, buffers, dictionaries);
+  constructor(sources, nodes, buffers, dictionaries, metadataVersion) {
+    super(new Uint8Array(0), nodes, buffers, dictionaries, metadataVersion);
     this.sources = sources;
   }
   readNullBitmap(_type, nullCount, { offset: offset2 } = this.nextBufferRange()) {
@@ -37447,7 +37681,7 @@ var JSONVectorLoader = class extends VectorLoader {
     const { sources } = this;
     if (DataType.isTimestamp(type2)) {
       return toArrayBufferView(Uint8Array, Int642.convertArray(sources[offset2]));
-    } else if ((DataType.isInt(type2) || DataType.isTime(type2)) && type2.bitWidth === 64) {
+    } else if ((DataType.isInt(type2) || DataType.isTime(type2)) && type2.bitWidth === 64 || DataType.isDuration(type2)) {
       return toArrayBufferView(Uint8Array, Int642.convertArray(sources[offset2]));
     } else if (DataType.isDate(type2) && type2.unit === DateUnit.MILLISECOND) {
       return toArrayBufferView(Uint8Array, Int642.convertArray(sources[offset2]));
@@ -37660,6 +37894,23 @@ var IntervalYearMonthBuilder = class extends IntervalBuilder {
 };
 IntervalYearMonthBuilder.prototype._setValue = setIntervalYearMonth;
 
+// packages/pyobsplot-js/node_modules/apache-arrow/builder/duration.mjs
+var DurationBuilder = class extends FixedWidthBuilder {
+};
+DurationBuilder.prototype._setValue = setDuration;
+var DurationSecondBuilder = class extends DurationBuilder {
+};
+DurationSecondBuilder.prototype._setValue = setDurationSecond;
+var DurationMillisecondBuilder = class extends DurationBuilder {
+};
+DurationMillisecondBuilder.prototype._setValue = setDurationMillisecond;
+var DurationMicrosecondBuilder = class extends DurationBuilder {
+};
+DurationMicrosecondBuilder.prototype._setValue = setDurationMicrosecond;
+var DurationNanosecondBuilder = class extends DurationBuilder {
+};
+DurationNanosecondBuilder.prototype._setValue = setDurationNanosecond;
+
 // packages/pyobsplot-js/node_modules/apache-arrow/builder/int.mjs
 var IntBuilder = class extends FixedWidthBuilder {
   setValue(index3, value) {
@@ -37845,9 +38096,7 @@ var UnionBuilder = class extends Builder {
     if (childTypeId === void 0) {
       childTypeId = this._valueToChildTypeId(this, value, index3);
     }
-    if (this.setValid(index3, this.isValid(value))) {
-      this.setValue(index3, value, childTypeId);
-    }
+    this.setValue(index3, value, childTypeId);
     return this;
   }
   setValue(index3, value, childTypeId) {
@@ -38032,6 +38281,21 @@ var GetBuilderCtor = class extends Visitor {
   visitIntervalYearMonth() {
     return IntervalYearMonthBuilder;
   }
+  visitDuration() {
+    return DurationBuilder;
+  }
+  visitDurationSecond() {
+    return DurationSecondBuilder;
+  }
+  visitDurationMillisecond() {
+    return DurationMillisecondBuilder;
+  }
+  visitDurationMicrosecond() {
+    return DurationMicrosecondBuilder;
+  }
+  visistDurationNanosecond() {
+    return DurationNanosecondBuilder;
+  }
   visitFixedSizeList() {
     return FixedSizeListBuilder;
   }
@@ -38092,6 +38356,9 @@ function compareDictionary(type2, other) {
 function compareInterval(type2, other) {
   return type2 === other || compareConstructor(type2, other) && type2.unit === other.unit;
 }
+function compareDuration(type2, other) {
+  return type2 === other || compareConstructor(type2, other) && type2.unit === other.unit;
+}
 function compareFixedSizeList(type2, other) {
   return type2 === other || compareConstructor(type2, other) && type2.listSize === other.listSize && type2.children.length === other.children.length && instance7.compareManyFields(type2.children, other.children);
 }
@@ -38139,6 +38406,11 @@ TypeComparator.prototype.visitDictionary = compareDictionary;
 TypeComparator.prototype.visitInterval = compareInterval;
 TypeComparator.prototype.visitIntervalDayTime = compareInterval;
 TypeComparator.prototype.visitIntervalYearMonth = compareInterval;
+TypeComparator.prototype.visitDuration = compareDuration;
+TypeComparator.prototype.visitDurationSecond = compareDuration;
+TypeComparator.prototype.visitDurationMillisecond = compareDuration;
+TypeComparator.prototype.visitDurationMicrosecond = compareDuration;
+TypeComparator.prototype.visitDurationNanosecond = compareDuration;
 TypeComparator.prototype.visitFixedSizeList = compareFixedSizeList;
 TypeComparator.prototype.visitMap = compareMap;
 var instance7 = new TypeComparator();
@@ -38749,21 +39021,24 @@ function ensureSameLengthData(schema, chunks, maxLength = chunks.reduce((max5, c
   ];
 }
 function collectDictionaries(fields, children2, dictionaries = /* @__PURE__ */ new Map()) {
-  for (let i = -1, n = fields.length; ++i < n; ) {
-    const field2 = fields[i];
-    const type2 = field2.type;
-    const data = children2[i];
-    if (DataType.isDictionary(type2)) {
-      if (!dictionaries.has(type2.id)) {
-        if (data.dictionary) {
-          dictionaries.set(type2.id, data.dictionary);
-        }
-      } else if (dictionaries.get(type2.id) !== data.dictionary) {
-        throw new Error(`Cannot create Schema containing two different dictionaries with the same Id`);
+  var _b2, _c2;
+  if (((_b2 = fields === null || fields === void 0 ? void 0 : fields.length) !== null && _b2 !== void 0 ? _b2 : 0) > 0 && (fields === null || fields === void 0 ? void 0 : fields.length) === (children2 === null || children2 === void 0 ? void 0 : children2.length)) {
+    for (let i = -1, n = fields.length; ++i < n; ) {
+      const { type: type2 } = fields[i];
+      const data = children2[i];
+      for (const next of [data, ...((_c2 = data === null || data === void 0 ? void 0 : data.dictionary) === null || _c2 === void 0 ? void 0 : _c2.data) || []]) {
+        collectDictionaries(type2.children, next === null || next === void 0 ? void 0 : next.children, dictionaries);
       }
-    }
-    if (type2.children && type2.children.length > 0) {
-      collectDictionaries(type2.children, data.children, dictionaries);
+      if (DataType.isDictionary(type2)) {
+        const { id: id2 } = type2;
+        if (!dictionaries.has(id2)) {
+          if (data === null || data === void 0 ? void 0 : data.dictionary) {
+            dictionaries.set(id2, data.dictionary);
+          }
+        } else if (dictionaries.get(id2) !== data.dictionary) {
+          throw new Error(`Cannot create Schema containing two different dictionaries with the same Id`);
+        }
+      }
     }
   }
   return dictionaries;
@@ -39225,6 +39500,11 @@ var TypeAssembler = class extends Visitor {
     Interval.addUnit(b, node.unit);
     return Interval.endInterval(b);
   }
+  visitDuration(node, b) {
+    Duration2.startDuration(b);
+    Duration2.addUnit(b, node.unit);
+    return Duration2.endDuration(b);
+  }
   visitList(_node, b) {
     List2.startList(b);
     return List2.endList(b);
@@ -39271,7 +39551,7 @@ var instance8 = new TypeAssembler();
 
 // packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/json.mjs
 function schemaFromJSON(_schema, dictionaries = /* @__PURE__ */ new Map()) {
-  return new Schema2(schemaFieldsFromJSON(_schema, dictionaries), customMetadataFromJSON(_schema["customMetadata"]), dictionaries);
+  return new Schema2(schemaFieldsFromJSON(_schema, dictionaries), customMetadataFromJSON(_schema["metadata"]), dictionaries);
 }
 function recordBatchFromJSON(b) {
   return new RecordBatch3(b["count"], fieldNodesFromJSON(b["columns"]), buffersFromJSON(b["columns"]));
@@ -39296,7 +39576,7 @@ function buffersFromJSON(xs, buffers = []) {
   for (let i = -1, n = (xs || []).length; ++i < n; ) {
     const column2 = xs[i];
     column2["VALIDITY"] && buffers.push(new BufferRegion(buffers.length, column2["VALIDITY"].length));
-    column2["TYPE"] && buffers.push(new BufferRegion(buffers.length, column2["TYPE"].length));
+    column2["TYPE_ID"] && buffers.push(new BufferRegion(buffers.length, column2["TYPE_ID"].length));
     column2["OFFSET"] && buffers.push(new BufferRegion(buffers.length, column2["OFFSET"].length));
     column2["DATA"] && buffers.push(new BufferRegion(buffers.length, column2["DATA"].length));
     buffers = buffersFromJSON(column2["children"], buffers);
@@ -39315,21 +39595,21 @@ function fieldFromJSON(_field, dictionaries) {
   let dictType;
   if (!dictionaries || !(dictMeta = _field["dictionary"])) {
     type2 = typeFromJSON(_field, fieldChildrenFromJSON(_field, dictionaries));
-    field2 = new Field2(_field["name"], type2, _field["nullable"], customMetadataFromJSON(_field["customMetadata"]));
+    field2 = new Field2(_field["name"], type2, _field["nullable"], customMetadataFromJSON(_field["metadata"]));
   } else if (!dictionaries.has(id2 = dictMeta["id"])) {
     keys = (keys = dictMeta["indexType"]) ? indexTypeFromJSON(keys) : new Int32();
     dictionaries.set(id2, type2 = typeFromJSON(_field, fieldChildrenFromJSON(_field, dictionaries)));
     dictType = new Dictionary(type2, keys, id2, dictMeta["isOrdered"]);
-    field2 = new Field2(_field["name"], dictType, _field["nullable"], customMetadataFromJSON(_field["customMetadata"]));
+    field2 = new Field2(_field["name"], dictType, _field["nullable"], customMetadataFromJSON(_field["metadata"]));
   } else {
     keys = (keys = dictMeta["indexType"]) ? indexTypeFromJSON(keys) : new Int32();
     dictType = new Dictionary(dictionaries.get(id2), keys, id2, dictMeta["isOrdered"]);
-    field2 = new Field2(_field["name"], dictType, _field["nullable"], customMetadataFromJSON(_field["customMetadata"]));
+    field2 = new Field2(_field["name"], dictType, _field["nullable"], customMetadataFromJSON(_field["metadata"]));
   }
   return field2 || null;
 }
-function customMetadataFromJSON(_metadata) {
-  return new Map(Object.entries(_metadata || {}));
+function customMetadataFromJSON(metadata = []) {
+  return new Map(metadata.map(({ key, value }) => [key, value]));
 }
 function indexTypeFromJSON(_type) {
   return new Int_(_type["isSigned"], _type["bitWidth"]);
@@ -39383,9 +39663,15 @@ function typeFromJSON(f, children2) {
       const t = f["type"];
       return new Interval_(IntervalUnit[t["unit"]]);
     }
+    case "duration": {
+      const t = f["type"];
+      return new Duration(TimeUnit[t["unit"]]);
+    }
     case "union": {
       const t = f["type"];
-      return new Union_(UnionMode[t["mode"]], t["typeIds"] || [], children2 || []);
+      const [m3, ...ms] = (t["mode"] + "").toLowerCase();
+      const mode2 = m3.toUpperCase() + ms.join("");
+      return new Union_(UnionMode[mode2], t["typeIds"] || [], children2 || []);
     }
     case "fixedsizebinary": {
       const t = f["type"];
@@ -39409,7 +39695,7 @@ var ByteBuffer3 = ByteBuffer;
 var Message2 = class {
   /** @nocollapse */
   static fromJSON(msg, headerType) {
-    const message = new Message2(0, MetadataVersion.V4, headerType);
+    const message = new Message2(0, MetadataVersion.V5, headerType);
     message._createHeader = messageHeaderFromJSON(msg, headerType);
     return message;
   }
@@ -39436,7 +39722,7 @@ var Message2 = class {
       headerOffset = DictionaryBatch2.encode(b, message.header());
     }
     Message.startMessage(b);
-    Message.addVersion(b, MetadataVersion.V4);
+    Message.addVersion(b, MetadataVersion.V5);
     Message.addHeader(b, headerOffset);
     Message.addHeaderType(b, message.headerType);
     Message.addBodyLength(b, BigInt(message.bodyLength));
@@ -39446,13 +39732,13 @@ var Message2 = class {
   /** @nocollapse */
   static from(header, bodyLength = 0) {
     if (header instanceof Schema2) {
-      return new Message2(0, MetadataVersion.V4, MessageHeader.Schema, header);
+      return new Message2(0, MetadataVersion.V5, MessageHeader.Schema, header);
     }
     if (header instanceof RecordBatch3) {
-      return new Message2(bodyLength, MetadataVersion.V4, MessageHeader.RecordBatch, header);
+      return new Message2(bodyLength, MetadataVersion.V5, MessageHeader.RecordBatch, header);
     }
     if (header instanceof DictionaryBatch2) {
-      return new Message2(bodyLength, MetadataVersion.V4, MessageHeader.DictionaryBatch, header);
+      return new Message2(bodyLength, MetadataVersion.V5, MessageHeader.DictionaryBatch, header);
     }
     throw new Error(`Unrecognized Message header: ${header}`);
   }
@@ -39558,7 +39844,7 @@ function decodeMessageHeader(message, type2) {
   return () => {
     switch (type2) {
       case MessageHeader.Schema:
-        return Schema2.decode(message.header(new Schema()));
+        return Schema2.decode(message.header(new Schema()), /* @__PURE__ */ new Map(), message.version());
       case MessageHeader.RecordBatch:
         return RecordBatch3.decode(message.header(new RecordBatch2()), message.version());
       case MessageHeader.DictionaryBatch:
@@ -39583,17 +39869,17 @@ FieldNode2["encode"] = encodeFieldNode;
 FieldNode2["decode"] = decodeFieldNode;
 BufferRegion["encode"] = encodeBufferRegion;
 BufferRegion["decode"] = decodeBufferRegion;
-function decodeSchema(_schema, dictionaries = /* @__PURE__ */ new Map()) {
+function decodeSchema(_schema, dictionaries = /* @__PURE__ */ new Map(), version = MetadataVersion.V5) {
   const fields = decodeSchemaFields(_schema, dictionaries);
-  return new Schema2(fields, decodeCustomMetadata(_schema), dictionaries);
+  return new Schema2(fields, decodeCustomMetadata(_schema), dictionaries, version);
 }
-function decodeRecordBatch(batch, version = MetadataVersion.V4) {
+function decodeRecordBatch(batch, version = MetadataVersion.V5) {
   if (batch.compression() !== null) {
     throw new Error("Record batch compression not implemented");
   }
   return new RecordBatch3(batch.length(), decodeFieldNodes(batch), decodeBuffers(batch, version));
 }
-function decodeDictionaryBatch(batch, version = MetadataVersion.V4) {
+function decodeDictionaryBatch(batch, version = MetadataVersion.V5) {
   return new DictionaryBatch2(RecordBatch3.decode(batch.data(), version), batch.id(), batch.isDelta());
 }
 function decodeBufferRegion(b) {
@@ -39723,6 +40009,10 @@ function decodeFieldType(f, children2) {
     case Type2["Interval"]: {
       const t = f.type(new Interval());
       return new Interval_(t.unit());
+    }
+    case Type2["Duration"]: {
+      const t = f.type(new Duration2());
+      return new Duration(t.unit());
     }
     case Type2["Union"]: {
       const t = f.type(new Union());
@@ -40057,7 +40347,7 @@ var JSONMessageReader = class extends MessageReader {
       return (xs || []).reduce((buffers, column2) => [
         ...buffers,
         ...column2["VALIDITY"] && [column2["VALIDITY"]] || [],
-        ...column2["TYPE"] && [column2["TYPE"]] || [],
+        ...column2["TYPE_ID"] && [column2["TYPE_ID"]] || [],
         ...column2["OFFSET"] && [column2["OFFSET"]] || [],
         ...column2["DATA"] && [column2["DATA"]] || [],
         ...flattenDataSources(column2["children"])
@@ -40330,7 +40620,7 @@ var RecordBatchReaderImpl = class {
     return dictionary.memoize();
   }
   _loadVectors(header, body, types) {
-    return new VectorLoader(body, header.nodes, header.buffers, this.dictionaries).visitMany(types);
+    return new VectorLoader(body, header.nodes, header.buffers, this.dictionaries, this.schema.metadataVersion).visitMany(types);
   }
 };
 var RecordBatchStreamReaderImpl = class extends RecordBatchReaderImpl {
@@ -40679,7 +40969,7 @@ var RecordBatchJSONReaderImpl = class extends RecordBatchStreamReaderImpl {
     super(source, dictionaries);
   }
   _loadVectors(header, body, types) {
-    return new JSONVectorLoader(body, header.nodes, header.buffers, this.dictionaries).visitMany(types);
+    return new JSONVectorLoader(body, header.nodes, header.buffers, this.dictionaries, this.schema.metadataVersion).visitMany(types);
   }
 };
 function shouldAutoDestroy(self, options) {
@@ -40762,14 +41052,19 @@ var VectorAssembler = class extends Visitor {
     }
     const { type: type2 } = data;
     if (!DataType.isDictionary(type2)) {
-      const { length: length4, nullCount } = data;
+      const { length: length4 } = data;
       if (length4 > 2147483647) {
         throw new RangeError("Cannot write arrays larger than 2^31 - 1 in length");
       }
-      if (!DataType.isNull(type2)) {
-        addBuffer.call(this, nullCount <= 0 ? new Uint8Array(0) : truncateBitmap(data.offset, length4, data.nullBitmap));
+      if (DataType.isUnion(type2)) {
+        this.nodes.push(new FieldNode2(length4, 0));
+      } else {
+        const { nullCount } = data;
+        if (!DataType.isNull(type2)) {
+          addBuffer.call(this, nullCount <= 0 ? new Uint8Array(0) : truncateBitmap(data.offset, length4, data.nullBitmap));
+        }
+        this.nodes.push(new FieldNode2(length4, nullCount));
       }
-      this.nodes.push(new FieldNode2(length4, nullCount));
     }
     return super.visit(data);
   }
@@ -40800,6 +41095,7 @@ function addBuffer(values2) {
   return this;
 }
 function assembleUnion(data) {
+  var _a5;
   const { type: type2, length: length4, typeIds, valueOffsets } = data;
   addBuffer.call(this, typeIds);
   if (type2.mode === UnionMode.Sparse) {
@@ -40809,26 +41105,26 @@ function assembleUnion(data) {
       addBuffer.call(this, valueOffsets);
       return assembleNestedVector.call(this, data);
     } else {
-      const maxChildTypeId = typeIds.reduce((x4, y4) => Math.max(x4, y4), typeIds[0]);
-      const childLengths = new Int32Array(maxChildTypeId + 1);
-      const childOffsets = new Int32Array(maxChildTypeId + 1).fill(-1);
       const shiftedOffsets = new Int32Array(length4);
-      const unshiftedOffsets = rebaseValueOffsets(-valueOffsets[0], length4, valueOffsets);
+      const childOffsets = /* @__PURE__ */ Object.create(null);
+      const childLengths = /* @__PURE__ */ Object.create(null);
       for (let typeId, shift, index3 = -1; ++index3 < length4; ) {
-        if ((shift = childOffsets[typeId = typeIds[index3]]) === -1) {
-          shift = childOffsets[typeId] = unshiftedOffsets[typeId];
+        if ((typeId = typeIds[index3]) === void 0) {
+          continue;
         }
-        shiftedOffsets[index3] = unshiftedOffsets[index3] - shift;
-        ++childLengths[typeId];
+        if ((shift = childOffsets[typeId]) === void 0) {
+          shift = childOffsets[typeId] = valueOffsets[index3];
+        }
+        shiftedOffsets[index3] = valueOffsets[index3] - shift;
+        childLengths[typeId] = ((_a5 = childLengths[typeId]) !== null && _a5 !== void 0 ? _a5 : 0) + 1;
       }
       addBuffer.call(this, shiftedOffsets);
-      for (let child, childIndex = -1, numChildren = type2.children.length; ++childIndex < numChildren; ) {
-        if (child = data.children[childIndex]) {
-          const typeId = type2.typeIds[childIndex];
-          const childLength = Math.min(length4, childLengths[typeId]);
-          this.visit(child.slice(childOffsets[typeId], childLength));
-        }
-      }
+      this.visitMany(data.children.map((child, childIndex) => {
+        const typeId = type2.typeIds[childIndex];
+        const childOffset = childOffsets[typeId];
+        const childLength = childLengths[typeId];
+        return child.slice(childOffset, Math.min(length4, childLength));
+      }));
     }
   }
   return this;
@@ -40847,17 +41143,18 @@ function assembleFlatVector(data) {
 }
 function assembleFlatListVector(data) {
   const { length: length4, values: values2, valueOffsets } = data;
-  const firstOffset = valueOffsets[0];
-  const lastOffset = valueOffsets[length4];
-  const byteLength = Math.min(lastOffset - firstOffset, values2.byteLength - firstOffset);
-  addBuffer.call(this, rebaseValueOffsets(-valueOffsets[0], length4, valueOffsets));
-  addBuffer.call(this, values2.subarray(firstOffset, firstOffset + byteLength));
+  const { [0]: begin, [length4]: end } = valueOffsets;
+  const byteLength = Math.min(end - begin, values2.byteLength - begin);
+  addBuffer.call(this, rebaseValueOffsets(-begin, length4 + 1, valueOffsets));
+  addBuffer.call(this, values2.subarray(begin, begin + byteLength));
   return this;
 }
 function assembleListVector(data) {
   const { length: length4, valueOffsets } = data;
   if (valueOffsets) {
-    addBuffer.call(this, rebaseValueOffsets(valueOffsets[0], length4, valueOffsets));
+    const { [0]: begin, [length4]: end } = valueOffsets;
+    addBuffer.call(this, rebaseValueOffsets(-begin, length4 + 1, valueOffsets));
+    return this.visit(data.children[0].slice(begin, end - begin));
   }
   return this.visit(data.children[0]);
 }
@@ -40878,6 +41175,7 @@ VectorAssembler.prototype.visitList = assembleListVector;
 VectorAssembler.prototype.visitStruct = assembleNestedVector;
 VectorAssembler.prototype.visitUnion = assembleUnion;
 VectorAssembler.prototype.visitInterval = assembleFlatVector;
+VectorAssembler.prototype.visitDuration = assembleFlatVector;
 VectorAssembler.prototype.visitFixedSizeList = assembleListVector;
 VectorAssembler.prototype.visitMap = assembleListVector;
 
@@ -41114,7 +41412,7 @@ var RecordBatchFileWriter = class extends RecordBatchWriter {
     return this._writeMagic()._writePadding(2);
   }
   _writeFooter(schema) {
-    const buffer = Footer_.encode(new Footer_(schema, MetadataVersion.V4, this._recordBatchBlocks, this._dictionaryBlocks));
+    const buffer = Footer_.encode(new Footer_(schema, MetadataVersion.V5, this._recordBatchBlocks, this._dictionaryBlocks));
     return super._writeFooter(schema)._write(buffer)._write(Int32Array.of(buffer.byteLength))._writeMagic();
   }
 };
@@ -41411,7 +41709,7 @@ function tableFromIPC(input) {
 }
 
 // packages/pyobsplot-js/node_modules/apache-arrow/Arrow.mjs
-var util = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, bn_exports), int_exports), bit_exports), math_exports), buffer_exports), vector_exports), {
+var util = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, bn_exports), int_exports), bit_exports), math_exports), buffer_exports), vector_exports), pretty_exports), {
   compareSchemas,
   compareFields,
   compareTypes
