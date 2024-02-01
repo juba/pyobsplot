@@ -46,7 +46,8 @@ cov = ["test-cov", "cov-report"]
 
 [tool.hatch.envs.docs]
 dependencies = [
-  "jupyterlab"
+  "jupyterlab",
+  "geopandas>=0.12.2"
 ]
 
 
