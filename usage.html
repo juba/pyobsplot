@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -80,7 +80,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -89,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -102,9 +108,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">pyobsplot</span>
     </a>
@@ -116,53 +122,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./getting_started.html" rel="" target="">
- <span class="menu-text">Getting started</span></a>
+    <a class="nav-link" href="./getting_started.html"> 
+<span class="menu-text">Getting started</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./usage.html" rel="" target="" aria-current="page">
- <span class="menu-text">Usage</span></a>
+    <a class="nav-link active" href="./usage.html" aria-current="page"> 
+<span class="menu-text">Usage</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gallery" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-gallery" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Gallery</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-gallery">    
         <li>
-    <a class="dropdown-item" href="./gallery_marks.html" rel="" target="">
+    <a class="dropdown-item" href="./gallery_marks.html">
  <span class="dropdown-text">Marks</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./gallery_transforms.html" rel="" target="">
+    <a class="dropdown-item" href="./gallery_transforms.html">
  <span class="dropdown-text">Transforms</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./gallery_geo.html" rel="" target="">
+    <a class="dropdown-item" href="./gallery_geo.html">
  <span class="dropdown-text">Mapping and spatial data</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./gallery_interaction.html" rel="" target="">
+    <a class="dropdown-item" href="./gallery_interaction.html">
  <span class="dropdown-text">Interaction</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./gallery_themes.html" rel="" target="">
+    <a class="dropdown-item" href="./gallery_themes.html">
  <span class="dropdown-text">Themes</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./development.html" rel="" target="">
- <span class="menu-text">Development</span></a>
+    <a class="nav-link" href="./development.html"> 
+<span class="menu-text">Development</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./changelog.html" rel="" target="">
- <span class="menu-text">Changelog</span></a>
+    <a class="nav-link" href="./changelog.html"> 
+<span class="menu-text">Changelog</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-    <a href="https://github.com/juba/pyobsplot/" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+    <a href="https://github.com/juba/pyobsplot/" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -186,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#interactivity" id="toc-interactivity" class="nav-link" data-scroll-target="#interactivity">Interactivity</a></li>
   <li><a href="#saving-plots-to-file" id="toc-saving-plots-to-file" class="nav-link" data-scroll-target="#saving-plots-to-file">Saving plots to file</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -206,12 +212,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>For a quick usage introduction, see <a href="./getting_started.html">getting started</a>.</p>
 <p>To create a plot we can either use <code>Plot.plot()</code> to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.</p>
 <p>So we start by importing the needed classes and create a plot generator object:</p>
-<div class="cell" data-execution_count="2">
+<div id="53a276da" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -233,7 +241,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Becomes:</p>
-<div class="cell" data-execution_count="3">
+<div id="3fa73dba" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: {<span class="st">"legend"</span>: <span class="va">True</span>},</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">False</span>,</span>
@@ -241,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is possible to replace JavaScript methods from the <code>Plot</code>, <code>d3</code> and <code>Math</code> modules with Python methods, but you must first import the corresponding classes.</p>
-<div class="cell" data-execution_count="4">
+<div id="cab9bf38" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot, d3</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>op({</span>
@@ -254,11 +262,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-5-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-5-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the <code>js</code> method (after importing it):</p>
-<div class="cell" data-execution_count="5">
+<div id="7ac88350" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot, d3, js</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -279,7 +291,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-6-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-6-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -287,7 +303,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="renderers">Renderers</h2>
 <p><code>pyobsplot</code> provides two renderers : <code>widget</code> and <code>jsdom</code>. The <code>widget</code> renderer outputs plots as <a href="https://ipywidgets.readthedocs.io/en/stable/">Jupyter widgets</a>. The <code>jsdom</code> renderer uses an external npm package to generate plots as either SVG or HTML.</p>
 <p>The following table lists the differences between the two renderers.</p>
-
 <style>
 .renderers-table {
     width: 100%;
@@ -406,7 +421,6 @@ Output is saved between sessions
 </td>
 </tr>
 </tbody>
-
 </table>
 <p>To use the <code>jsdom</code> renderer, you need a working <a href="https://nodejs.org/en">node.js</a> installation and you must install the npm <code>pyobsplot</code> package globally or locally:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install locally</span></span>
@@ -414,7 +428,7 @@ Output is saved between sessions
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Install globally</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> pyobsplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>After that, you can select which renderer to use when creating a plot generator object:</p>
-<div class="cell" data-execution_count="6">
+<div id="488ec6a6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to widget renderer (the default one)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>opw <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"widget"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to jsdom renderer</span></span>
@@ -424,7 +438,7 @@ Output is saved between sessions
 <section id="alternative-syntaxes" class="level2">
 <h2 class="anchored" data-anchor-id="alternative-syntaxes">Alternative syntaxes</h2>
 <p>As we’ve already seen, the most common syntax for a plot specification is to pass it as a dictionary :</p>
-<div class="cell" data-execution_count="7">
+<div id="04810a35" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span>,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: {<span class="st">"legend"</span>: <span class="va">True</span>}</span>
@@ -434,7 +448,7 @@ Output is saved between sessions
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>But it is also possible to pass top level arguments as <code>kwargs</code> to the generator object, which would give the following:</p>
-<div class="cell" data-execution_count="8">
+<div id="99b579b2" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>op(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> <span class="va">True</span>,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    color <span class="op">=</span> {<span class="st">"legend"</span>: <span class="va">True</span>},</span>
@@ -444,7 +458,7 @@ Output is saved between sessions
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, for the simplest cases, you can also pass a mark method directly. The JavaScript <code>plot()</code> method will be called automatically to display the plot:</p>
-<div class="cell" data-execution_count="9">
+<div id="ea1db7da" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>op(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    Plot.tickX(</span>
@@ -453,7 +467,11 @@ Output is saved between sessions
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-10-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-10-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -462,25 +480,29 @@ Output is saved between sessions
 <p>When creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.</p>
 <p>Only the top-level layout options can be specified as defaults. This can be useful to specify a default <code>width</code>, colors, margins or even <code>style</code>.</p>
 <p>The complete list of available default attributes is :</p>
-<div class="cell" data-execution_count="10">
+<div id="f0529574" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-stdout">
 <pre><code>['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'margin', 'width', 'height', 'aspectRatio', 'style']</code></pre>
 </div>
 </div>
 <p>So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :</p>
-<div class="cell" data-execution_count="12">
+<div id="3d10c611" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>op_colors <span class="op">=</span> Obsplot(default<span class="op">=</span>{</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"width"</span>: <span class="dv">400</span>, </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"margin"</span>: <span class="dv">50</span>,</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"style"</span>: {<span class="st">"color"</span>: <span class="st">"white"</span>, <span class="st">"background-color"</span>: <span class="st">"#004"</span>}</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="13">
+<div id="2c5bf03e" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>op_colors(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    Plot.dot(data, {<span class="st">"x"</span>: <span class="st">"x"</span>, <span class="st">"y"</span>: <span class="st">"y"</span>})</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-14-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-14-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -493,7 +515,7 @@ Output is saved between sessions
 <li><code>current</code> theme creates plots with a transparent background and a currentColor foreground</li>
 </ul>
 <p>You can specify a mode when creating the plot generator object by using the <code>theme</code> argument:</p>
-<div class="cell" data-execution_count="14">
+<div id="d342ba62" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>op_dark <span class="op">=</span> Obsplot(theme<span class="op">=</span><span class="st">"dark"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can see output examples in the <a href="./gallery_themes.html">themes gallery</a></p>
@@ -501,7 +523,7 @@ Output is saved between sessions
 <section id="dataframes-and-series" class="level2">
 <h2 class="anchored" data-anchor-id="dataframes-and-series">DataFrames and Series</h2>
 <p>Pandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.</p>
-<div class="cell" data-execution_count="15">
+<div id="7a92468a" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -516,22 +538,30 @@ Output is saved between sessions
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"marks"</span>: [Plot.lineY(df, {<span class="st">"x"</span>: <span class="st">"Date"</span>, <span class="st">"y"</span>: <span class="st">"Value"</span>, <span class="st">"stroke"</span>: <span class="st">"steelblue"</span>})]</span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-16-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-16-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If you pass a pandas or polars Series object, it will be automatically converted to a DataFrame with one column:</p>
-<div class="cell" data-execution_count="16">
+<div id="29ac268c" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> df.get_column(<span class="st">"Value"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>op(</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    Plot.tickX(value, {<span class="st">"x"</span>: <span class="st">"Value"</span>, <span class="st">"stroke"</span>: <span class="st">"darkviolet"</span>})</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-17-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-17-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><code>pyobsplot</code> implements a simple caching mechanism for some data objects (it currently works for DataFrames and for GeoJson data). Sometimes the same data object is used several times in a plot specification:</p>
-<div class="cell" data-execution_count="17">
+<div id="6e01dd6f" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>op({</span>
@@ -560,7 +590,11 @@ Output is saved between sessions
 <span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  ]</span>
 <span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-18-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-18-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>In this case, caching ensures that the <code>penguins</code> DataFrame is only serialized and transmitted once instead of twice.</p>
@@ -569,43 +603,59 @@ Output is saved between sessions
 <h2 class="anchored" data-anchor-id="datetime-objects">datetime objects</h2>
 <p><code>datetime.date</code> and <code>datetime.datetime</code> Python objects are automatically serialized and converted to JavaScript <code>Date</code> objects.</p>
 <p>That makes the following two specifications equivalent:</p>
-<div class="cell" data-execution_count="18">
+<div id="630b845a" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01')"</span>), js(<span class="st">"new Date('2022-01-01')"</span>)]}, </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-19-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-19-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-execution_count="19">
+</div>
+<div id="65168874" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [date(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>), date(<span class="dv">2022</span>,<span class="dv">1</span>,<span class="dv">1</span>)]}, </span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-20-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-20-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>As well as the two following ones, using <code>datetime</code>:</p>
-<div class="cell" data-execution_count="20">
+<div id="71430aee" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01T07:00:00')"</span>), js(<span class="st">"new Date('2021-01-01T08:00:00')"</span>)]}, </span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-21-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-21-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-execution_count="21">
+</div>
+<div id="2ac09e0d" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>), datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">0</span>,<span class="dv">0</span>)]}, </span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="usage_files/figure-html/cell-22-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="usage_files/figure-html/cell-22-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -619,7 +669,7 @@ Output is saved between sessions
 <h2 class="anchored" data-anchor-id="interactivity">Interactivity</h2>
 <p>When using the <code>widget</code> renderer, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the <code>spec</code> attribute of an existing <code>Obsplot</code> to another plot specification and it will update it.</p>
 <p>This allows to do things like the following, where a plot is updated depending on the value of a Jupyter <code>IntSlider</code> widget:</p>
-<div class="cell" data-execution_count="22">
+<div id="a09fe68f" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_plot_spec(opacity):</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">"grid"</span>: <span class="va">True</span>,</span>
@@ -647,13 +697,13 @@ Output is saved between sessions
 <section id="saving-plots-to-file" class="level2">
 <h2 class="anchored" data-anchor-id="saving-plots-to-file">Saving plots to file</h2>
 <p>Generated plots can be savec to a file. To do this, just add a <code>path</code> argument to your generator call:</p>
-<div class="cell" data-execution_count="23">
+<div id="95eec9f0" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"jsdom"</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>op(Plot.lineY([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>]), path<span class="op">=</span><span class="st">"path_to/file.svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When using the <code>jsdom</code> renderer, charts can be saved either as SVG or HTML files : Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a <code>&lt;figure&gt;</code> HTML tag. When using the <code>path</code> option, <code>pyobsplot</code> will warn you if you try to save an HTML output to a SVG file.</p>
 <p>In any case, you can also use Plot’s <code>figure</code> option to force the output to be wrapped in <code>&lt;figure&gt;</code>:</p>
-<div class="cell" data-execution_count="24">
+<div id="aef36f8d" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(renderer<span class="op">=</span><span class="st">"jsdom"</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"marks"</span>: Plot.lineY([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>]), </span>
@@ -747,10 +797,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -760,8 +809,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -774,6 +832,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -817,6 +994,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -842,6 +1020,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -905,4 +1109,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
