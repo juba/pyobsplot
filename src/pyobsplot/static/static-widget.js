@@ -41868,6 +41868,7 @@ function _onSpecValueChanged(model, el) {
   let spec = () => model.get("spec");
   plot2.appendChild(generate_plot(spec(), "widget"));
 }
+var widget_default = { render };
 export {
-  render
+  widget_default as default
 };
