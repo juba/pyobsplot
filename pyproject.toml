@@ -44,6 +44,12 @@ test-cov = "coverage run -m pytest {args:tests}"
 cov-report = ["- coverage combine", "coverage report"]
 cov = ["test-cov", "cov-report"]
 
+[tool.hatch.envs.docs]
+dependencies = [
+  "jupyterlab"
+]
+
+
 [[tool.hatch.envs.tests.matrix]]
 python = ["3.10", "3.11"]
 

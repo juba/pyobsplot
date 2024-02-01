@@ -1,53 +1,52 @@
 on:
-  workflow_dispatch:
-  push:
-    branches: [main]
+    workflow_dispatch:
+    push:
+        branches: [main]
 
 name: Documentation
 
 jobs:
-  Build-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
+    Build-deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v3
 
-      - name: Check out repository
-        uses: actions/checkout@v3
+            - name: Setup node
+              uses: actions/setup-node@v3
+              with:
+                  cache: "npm"
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          cache: "npm"
-           
-      - name: Install node dependencies
-        run: |
-          npm install 
-          npm install --workspaces
-  
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+            - name: Install node dependencies
+              run: |
+                  npm install 
+                  npm install --workspaces
 
-      - name: Install hatch
-        run: pipx install hatch
+            - name: Set up Quarto
+              uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-          cache: "pip"
+            - name: Install hatch
+              run: pipx install hatch
 
-      - name: Install Python dependencies
-        run: hatch run echo
+            - name: Install Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.10"
+                  cache: "pip"
 
-      - name: Bundle
-        run: npm run bundle
+            - name: Install Python dependencies
+              run: hatch run true
 
-      - name: Render and Publish
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.email "julien@nozav.org"
-          git config --global user.name "Julien Barnier"
-          hatch run quarto publish gh-pages doc
+            - name: Bundle
+              run: npm run bundle
+
+            - name: Render and Publish
+              shell: bash
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  git config --global user.email "julien@nozav.org"
+                  git config --global user.name "Julien Barnier"
+                  hatch -e docs run quarto publish gh-pages doc
