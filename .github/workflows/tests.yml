@@ -1,64 +1,58 @@
 on:
-  workflow_dispatch:
-  push:
-    branches: [main]
+    workflow_dispatch:
+    push:
+        branches: [main]
 
 name: Tests
 
 jobs:
-  Python-tests:
-    runs-on: ubuntu-latest
+    Python-tests:
+        runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        strategy:
+            matrix:
+                python-version: ["3.9", "3.10", "3.11", "3.12"]
 
-    steps:
+        steps:
+            - name: Check out pyobsplot repository
+              uses: actions/checkout@v3
 
-      - name: Check out pyobsplot repository
-        uses: actions/checkout@v3
+            - name: Setup node
+              uses: actions/setup-node@v3
+              with:
+                  cache: "npm"
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          cache: "npm"
-            
-      - name: Install node dependencies
-        run: |
-          npm ci 
-          npm ci --workspaces
-                 
-      - name: Install hatch
-        run: pipx install hatch
+            - name: Install node dependencies
+              run: |
+                  npm ci 
+                  npm ci --workspaces
 
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
+            - name: Install hatch
+              run: pipx install hatch
 
-      - name: Install Python dependencies
-        run: hatch run echo
+            - name: Install Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ matrix.python-version }}
+                  cache: "pip"
 
-      - name: Run pytest
-        run: hatch run test
+            - name: Run pytest
+              run: hatch run test
 
-  JS-tests:
-    runs-on: ubuntu-latest
+    JS-tests:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v3
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          cache: "npm"
+            - name: Setup node
+              uses: actions/setup-node@v3
+              with:
+                  cache: "npm"
 
-      - name: Install node dependencies
-        run: npm ci --workspaces
+            - name: Install node dependencies
+              run: npm ci --workspaces
 
-      - name: Run tests
-        run: npm run test --workspaces
-
-
+            - name: Run tests
+              run: npm run test --workspaces
