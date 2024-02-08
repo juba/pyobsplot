@@ -6,7 +6,7 @@
     },
     "scripts": {
         "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css",
-        "watch": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css --watch",
+        "dev": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css --watch",
         "build": "npm run bundle && hatch build",
         "test": "hatch run test",
         "uistart": "hatch run jupyter lab --config tests/ui/jupyter_server_config.py",
