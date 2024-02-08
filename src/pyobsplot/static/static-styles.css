@@ -34,6 +34,11 @@
   color: currentColor;
   background-color: transparent;
 }
+.pyobsplot-plot.current [aria-label=tip] {
+  fill: white;
+  color: black;
+  stroke: black;
+}
 .cell-output-ipywidget-background:has(.p-Widget):has(.pyobsplot-plot.dark) {
   background-color: black !important;
 }
