@@ -6,15 +6,15 @@
     },
     "scripts": {
         "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] src/js/widget.js src/js/styles.css",
-        "dev": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css --watch",
+        "dev": "npm run bundle -- --watch",
         "build": "npm run bundle && hatch build",
         "test": "hatch run test",
         "uistart": "hatch run jupyter lab --config tests/ui/jupyter_server_config.py",
         "uitest": "hatch run playwright test --workers=1 --config tests/ui/playwright.config.cjs",
-        "uitest:debug": "PWDEBUG=1 hatch run playwright test --config tests/ui/playwright.config.cjs",
+        "uitest:debug": "PWDEBUG=1 npm run uitest",
         "uitest:report": "http-server ./tests/ui/playwright-report -a localhost -o",
-        "uitest:update": "hatch run playwright test --workers=1 --config tests/ui/playwright.config.cjs --update-snapshots",
-        "uitest:ui": "hatch run playwright test --workers=1 --config tests/ui/playwright.config.cjs --ui"
+        "uitest:update": "npm run uitest -- --update-snapshots",
+        "uitest:ui": "npm run uitest -- --ui"
     },
     "devDependencies": {
         "@jupyterlab/galata": "^5.0.6",
