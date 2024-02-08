@@ -32,23 +32,16 @@
 
 .pyobsplot-plot.dark svg,
 .pyobsplot-plot.dark figure {
+    --plot-background: black;
     color: white;
     background-color: black;
 }
 
-.pyobsplot-plot.dark [aria-label=tip][fill=white] {
-    fill: black;
-}
-
 .pyobsplot-plot.current svg,
 .pyobsplot-plot.current figure {
+    --plot-background: transparent;
     color: currentColor;
     background-color: transparent;
-}
-
-.pyobsplot-plot.current [aria-label=tip][fill=white] {
-    fill: white;
-    color: black;
 }
 
 /* VSCode workarounds */
