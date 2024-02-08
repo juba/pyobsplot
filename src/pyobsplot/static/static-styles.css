@@ -1,4 +1,4 @@
-/* css/styles.css */
+/* src/js/styles.css */
 .pyobsplot-plot h2 {
   line-height: 28px;
   font-size: 20px;
@@ -24,20 +24,15 @@
 }
 .pyobsplot-plot.dark svg,
 .pyobsplot-plot.dark figure {
+  --plot-background: black;
   color: white;
   background-color: black;
 }
-.pyobsplot-plot.dark [aria-label=tip][fill=white] {
-  fill: black;
-}
 .pyobsplot-plot.current svg,
 .pyobsplot-plot.current figure {
+  --plot-background: transparent;
   color: currentColor;
   background-color: transparent;
-}
-.pyobsplot-plot.current [aria-label=tip][fill=white] {
-  fill: white;
-  color: black;
 }
 .cell-output-ipywidget-background:has(.p-Widget):has(.pyobsplot-plot.dark) {
   background-color: black !important;

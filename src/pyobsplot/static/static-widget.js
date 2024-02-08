@@ -1396,16 +1396,16 @@ function blurf(radius2) {
   return (T, S, start2, stop, step) => {
     if (!((stop -= step) >= start2))
       return;
-    let sum5 = radius0 * S[start2];
+    let sum4 = radius0 * S[start2];
     const s0 = step * radius0;
     const s1 = s0 + step;
     for (let i = start2, j = start2 + s0; i < j; i += step) {
-      sum5 += S[Math.min(stop, i)];
+      sum4 += S[Math.min(stop, i)];
     }
     for (let i = start2, j = stop; i <= j; i += step) {
-      sum5 += S[Math.min(stop, i + s0)];
-      T[i] = (sum5 + t * (S[Math.max(start2, i - s1)] + S[Math.min(stop, i + s1)])) / w;
-      sum5 -= S[Math.max(start2, i - s0)];
+      sum4 += S[Math.min(stop, i + s0)];
+      T[i] = (sum4 + t * (S[Math.max(start2, i - s1)] + S[Math.min(stop, i + s1)])) / w;
+      sum4 -= S[Math.max(start2, i - s0)];
     }
   };
 }
@@ -1414,15 +1414,15 @@ function bluri(radius2) {
   return (T, S, start2, stop, step) => {
     if (!((stop -= step) >= start2))
       return;
-    let sum5 = radius2 * S[start2];
+    let sum4 = radius2 * S[start2];
     const s2 = step * radius2;
     for (let i = start2, j = start2 + s2; i < j; i += step) {
-      sum5 += S[Math.min(stop, i)];
+      sum4 += S[Math.min(stop, i)];
     }
     for (let i = start2, j = stop; i <= j; i += step) {
-      sum5 += S[Math.min(stop, i + s2)];
-      T[i] = sum5 / w;
-      sum5 -= S[Math.max(start2, i - s2)];
+      sum4 += S[Math.min(stop, i + s2)];
+      T[i] = sum4 / w;
+      sum4 -= S[Math.max(start2, i - s2)];
     }
   };
 }
@@ -1482,8 +1482,8 @@ function cross(...values2) {
 
 // node_modules/d3-array/src/cumsum.js
 function cumsum(values2, valueof2) {
-  var sum5 = 0, index3 = 0;
-  return Float64Array.from(values2, valueof2 === void 0 ? (v2) => sum5 += +v2 || 0 : (v2) => sum5 += +valueof2(v2, index3++, values2) || 0);
+  var sum4 = 0, index3 = 0;
+  return Float64Array.from(values2, valueof2 === void 0 ? (v2) => sum4 += +v2 || 0 : (v2) => sum4 += +valueof2(v2, index3++, values2) || 0);
 }
 
 // node_modules/d3-array/src/variance.js
@@ -1491,13 +1491,13 @@ function variance(values2, valueof2) {
   let count3 = 0;
   let delta;
   let mean2 = 0;
-  let sum5 = 0;
+  let sum4 = 0;
   if (valueof2 === void 0) {
     for (let value of values2) {
       if (value != null && (value = +value) >= value) {
         delta = value - mean2;
         mean2 += delta / ++count3;
-        sum5 += delta * (value - mean2);
+        sum4 += delta * (value - mean2);
       }
     }
   } else {
@@ -1506,12 +1506,12 @@ function variance(values2, valueof2) {
       if ((value = valueof2(value, ++index3, values2)) != null && (value = +value) >= value) {
         delta = value - mean2;
         mean2 += delta / ++count3;
-        sum5 += delta * (value - mean2);
+        sum4 += delta * (value - mean2);
       }
     }
   }
   if (count3 > 1)
-    return sum5 / (count3 - 1);
+    return sum4 / (count3 - 1);
 }
 
 // node_modules/d3-array/src/deviation.js
@@ -2191,23 +2191,23 @@ function thresholdScott(values2, min4, max5) {
 // node_modules/d3-array/src/mean.js
 function mean(values2, valueof2) {
   let count3 = 0;
-  let sum5 = 0;
+  let sum4 = 0;
   if (valueof2 === void 0) {
     for (let value of values2) {
       if (value != null && (value = +value) >= value) {
-        ++count3, sum5 += value;
+        ++count3, sum4 += value;
       }
     }
   } else {
     let index3 = -1;
     for (let value of values2) {
       if ((value = valueof2(value, ++index3, values2)) != null && (value = +value) >= value) {
-        ++count3, sum5 += value;
+        ++count3, sum4 += value;
       }
     }
   }
   if (count3)
-    return sum5 / count3;
+    return sum4 / count3;
 }
 
 // node_modules/d3-array/src/median.js
@@ -2389,22 +2389,22 @@ function shuffler(random) {
 
 // node_modules/d3-array/src/sum.js
 function sum(values2, valueof2) {
-  let sum5 = 0;
+  let sum4 = 0;
   if (valueof2 === void 0) {
     for (let value of values2) {
       if (value = +value) {
-        sum5 += value;
+        sum4 += value;
       }
     }
   } else {
     let index3 = -1;
     for (let value of values2) {
       if (value = +valueof2(value, ++index3, values2)) {
-        sum5 += value;
+        sum4 += value;
       }
     }
   }
-  return sum5;
+  return sum4;
 }
 
 // node_modules/d3-array/src/transpose.js
@@ -10724,7 +10724,7 @@ function longitude(point6) {
 }
 function polygonContains_default(polygon, point6) {
   var lambda = longitude(point6), phi2 = point6[1], sinPhi = sin2(phi2), normal = [sin2(lambda), -cos2(lambda), 0], angle2 = 0, winding = 0;
-  var sum5 = new Adder();
+  var sum4 = new Adder();
   if (sinPhi === 1)
     phi2 = halfPi3 + epsilon7;
   else if (sinPhi === -1)
@@ -10735,7 +10735,7 @@ function polygonContains_default(polygon, point6) {
     var ring, m3, point0 = ring[m3 - 1], lambda04 = longitude(point0), phi02 = point0[1] / 2 + quarterPi, sinPhi03 = sin2(phi02), cosPhi03 = cos2(phi02);
     for (var j = 0; j < m3; ++j, lambda04 = lambda12, sinPhi03 = sinPhi1, cosPhi03 = cosPhi1, point0 = point1) {
       var point1 = ring[j], lambda12 = longitude(point1), phi12 = point1[1] / 2 + quarterPi, sinPhi1 = sin2(phi12), cosPhi1 = cos2(phi12), delta = lambda12 - lambda04, sign3 = delta >= 0 ? 1 : -1, absDelta = sign3 * delta, antimeridian = absDelta > pi4, k2 = sinPhi03 * sinPhi1;
-      sum5.add(atan2(k2 * sign3 * sin2(absDelta), cosPhi03 * cosPhi1 + k2 * cos2(absDelta)));
+      sum4.add(atan2(k2 * sign3 * sin2(absDelta), cosPhi03 * cosPhi1 + k2 * cos2(absDelta)));
       angle2 += antimeridian ? delta + sign3 * tau5 : delta;
       if (antimeridian ^ lambda04 >= lambda ^ lambda12 >= lambda) {
         var arc = cartesianCross(cartesian(point0), cartesian(point1));
@@ -10749,7 +10749,7 @@ function polygonContains_default(polygon, point6) {
       }
     }
   }
-  return (angle2 < -epsilon7 || angle2 < epsilon7 && sum5 < -epsilon22) ^ winding & 1;
+  return (angle2 < -epsilon7 || angle2 < epsilon7 && sum4 < -epsilon22) ^ winding & 1;
 }
 
 // node_modules/d3-geo/src/clip/index.js
@@ -12697,13 +12697,13 @@ function cluster_default() {
 
 // node_modules/d3-hierarchy/src/hierarchy/count.js
 function count2(node) {
-  var sum5 = 0, children2 = node.children, i = children2 && children2.length;
+  var sum4 = 0, children2 = node.children, i = children2 && children2.length;
   if (!i)
-    sum5 = 1;
+    sum4 = 1;
   else
     while (--i >= 0)
-      sum5 += children2[i].value;
-  node.value = sum5;
+      sum4 += children2[i].value;
+  node.value = sum4;
 }
 function count_default() {
   return this.eachAfter(count2);
@@ -12762,10 +12762,10 @@ function find_default2(callback, that) {
 // node_modules/d3-hierarchy/src/hierarchy/sum.js
 function sum_default(value) {
   return this.eachAfter(function(node) {
-    var sum5 = +value(node.data) || 0, children2 = node.children, i = children2 && children2.length;
+    var sum4 = +value(node.data) || 0, children2 = node.children, i = children2 && children2.length;
     while (--i >= 0)
-      sum5 += children2[i].value;
-    node.value = sum5;
+      sum4 += children2[i].value;
+    node.value = sum4;
   });
 }
 
@@ -13656,9 +13656,9 @@ function treemap_default() {
 
 // node_modules/d3-hierarchy/src/treemap/binary.js
 function binary_default(parent, x06, y06, x12, y12) {
-  var nodes = parent.children, i, n = nodes.length, sum5, sums = new Array(n + 1);
-  for (sums[0] = sum5 = i = 0; i < n; ++i) {
-    sums[i + 1] = sum5 += nodes[i].value;
+  var nodes = parent.children, i, n = nodes.length, sum4, sums = new Array(n + 1);
+  for (sums[0] = sum4 = i = 0; i < n; ++i) {
+    sums[i + 1] = sum4 += nodes[i].value;
   }
   partition(0, n, parent.value, x06, y06, x12, y12);
   function partition(i2, j, value, x07, y07, x13, y13) {
@@ -13888,9 +13888,9 @@ var irwinHall_default = function sourceRandomIrwinHall(source) {
     if ((n = +n) <= 0)
       return () => 0;
     return function() {
-      for (var sum5 = 0, i = n; i > 1; --i)
-        sum5 += source();
-      return sum5 + i * source();
+      for (var sum4 = 0, i = n; i > 1; --i)
+        sum4 += source();
+      return sum4 + i * source();
     };
   }
   randomIrwinHall.source = sourceRandomIrwinHall;
@@ -16769,10 +16769,10 @@ function identity_default5(d) {
 function pie_default() {
   var value = identity_default5, sortValues = descending_default, sort3 = null, startAngle = constant_default10(0), endAngle = constant_default10(tau6), padAngle = constant_default10(0);
   function pie(data) {
-    var i, n = (data = array_default3(data)).length, j, k2, sum5 = 0, index3 = new Array(n), arcs = new Array(n), a0 = +startAngle.apply(this, arguments), da2 = Math.min(tau6, Math.max(-tau6, endAngle.apply(this, arguments) - a0)), a1, p = Math.min(Math.abs(da2) / n, padAngle.apply(this, arguments)), pa = p * (da2 < 0 ? -1 : 1), v2;
+    var i, n = (data = array_default3(data)).length, j, k2, sum4 = 0, index3 = new Array(n), arcs = new Array(n), a0 = +startAngle.apply(this, arguments), da2 = Math.min(tau6, Math.max(-tau6, endAngle.apply(this, arguments) - a0)), a1, p = Math.min(Math.abs(da2) / n, padAngle.apply(this, arguments)), pa = p * (da2 < 0 ? -1 : 1), v2;
     for (i = 0; i < n; ++i) {
       if ((v2 = arcs[index3[i] = i] = +value(data[i], i, data)) > 0) {
-        sum5 += v2;
+        sum4 += v2;
       }
     }
     if (sortValues != null)
@@ -16783,7 +16783,7 @@ function pie_default() {
       index3.sort(function(i2, j2) {
         return sort3(data[i2], data[j2]);
       });
-    for (i = 0, k2 = sum5 ? (da2 - n * pa) / sum5 : 0; i < n; ++i, a0 = a1) {
+    for (i = 0, k2 = sum4 ? (da2 - n * pa) / sum4 : 0; i < n; ++i, a0 = a1) {
       j = index3[i], v2 = arcs[j], a1 = a0 + (v2 > 0 ? v2 * k2 : 0) + pa, arcs[j] = {
         data: data[j],
         index: i,
@@ -23301,18 +23301,18 @@ var defaultWidthMap = {
   "\u2026": 82
 };
 function defaultWidth(text2, start2 = 0, end = text2.length) {
-  let sum5 = 0;
+  let sum4 = 0;
   for (let i = start2; i < end; i = readCharacter(text2, i)) {
-    sum5 += defaultWidthMap[text2[i]] ?? (isPictographic(text2, i) ? 120 : defaultWidthMap.e);
+    sum4 += defaultWidthMap[text2[i]] ?? (isPictographic(text2, i) ? 120 : defaultWidthMap.e);
   }
-  return sum5;
+  return sum4;
 }
 function monospaceWidth(text2, start2 = 0, end = text2.length) {
-  let sum5 = 0;
+  let sum4 = 0;
   for (let i = start2; i < end; i = readCharacter(text2, i)) {
-    sum5 += isPictographic(text2, i) ? 126 : 63;
+    sum4 += isPictographic(text2, i) ? 126 : 63;
   }
-  return sum5;
+  return sum4;
 }
 function splitter2({ monospace, lineWidth, textOverflow }) {
   if (textOverflow != null || lineWidth == Infinity)
@@ -27131,9 +27131,9 @@ function mapFunction(f) {
 }
 var mapCumsum = {
   mapIndex(I, S, T) {
-    let sum5 = 0;
+    let sum4 = 0;
     for (const i of I)
-      T[i] = sum5 += S[i];
+      T[i] = sum4 += S[i];
   }
 };
 
@@ -27273,13 +27273,13 @@ function reduceSum2(k2, s2, strict) {
   return strict ? {
     mapIndex(I, S, T) {
       let nans = 0;
-      let sum5 = 0;
+      let sum4 = 0;
       for (let i = 0; i < k2 - 1; ++i) {
         const v2 = S[I[i]];
         if (v2 === null || isNaN(v2))
           ++nans;
         else
-          sum5 += +v2;
+          sum4 += +v2;
       }
       for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
         const a4 = S[I[i]];
@@ -27287,35 +27287,35 @@ function reduceSum2(k2, s2, strict) {
         if (b === null || isNaN(b))
           ++nans;
         else
-          sum5 += +b;
-        T[I[i + s2]] = nans === 0 ? sum5 : NaN;
+          sum4 += +b;
+        T[I[i + s2]] = nans === 0 ? sum4 : NaN;
         if (a4 === null || isNaN(a4))
           --nans;
         else
-          sum5 -= +a4;
+          sum4 -= +a4;
       }
     }
   } : {
     mapIndex(I, S, T) {
-      let sum5 = 0;
+      let sum4 = 0;
       const n = I.length;
       for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
-        sum5 += +S[I[i]] || 0;
+        sum4 += +S[I[i]] || 0;
       }
       for (let i = -s2, j = n - s2; i < j; ++i) {
-        sum5 += +S[I[i + k2 - 1]] || 0;
-        T[I[i + s2]] = sum5;
-        sum5 -= +S[I[i]] || 0;
+        sum4 += +S[I[i + k2 - 1]] || 0;
+        T[I[i + s2]] = sum4;
+        sum4 -= +S[I[i]] || 0;
       }
     }
   };
 }
 function reduceMean(k2, s2, strict) {
   if (strict) {
-    const sum5 = reduceSum2(k2, s2, strict);
+    const sum4 = reduceSum2(k2, s2, strict);
     return {
       mapIndex(I, S, T) {
-        sum5.mapIndex(I, S, T);
+        sum4.mapIndex(I, S, T);
         for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
           T[I[i + s2]] /= k2;
         }
@@ -27324,22 +27324,22 @@ function reduceMean(k2, s2, strict) {
   } else {
     return {
       mapIndex(I, S, T) {
-        let sum5 = 0;
+        let sum4 = 0;
         let count3 = 0;
         const n = I.length;
         for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
           let v2 = S[I[i]];
           if (v2 !== null && !isNaN(v2 = +v2))
-            sum5 += v2, ++count3;
+            sum4 += v2, ++count3;
         }
         for (let i = -s2, j = n - s2; i < j; ++i) {
           let a4 = S[I[i + k2 - 1]];
           let b = S[I[i]];
           if (a4 !== null && !isNaN(a4 = +a4))
-            sum5 += a4, ++count3;
-          T[I[i + s2]] = sum5 / count3;
+            sum4 += a4, ++count3;
+          T[I[i + s2]] = sum4 / count3;
           if (b !== null && !isNaN(b = +b))
-            sum5 -= b, --count3;
+            sum4 -= b, --count3;
         }
       }
     };
@@ -30118,7 +30118,7 @@ function selectChannel(v2, selector, options) {
   });
 }
 
-// node_modules/tslib/tslib.es6.mjs
+// node_modules/apache-arrow/node_modules/tslib/tslib.es6.mjs
 function __rest(s2, e) {
   var t = {};
   for (var p in s2)
@@ -30245,7 +30245,7 @@ function __asyncValues(o) {
   }
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/util/buffer.mjs
+// node_modules/apache-arrow/util/buffer.mjs
 var buffer_exports = {};
 __export(buffer_exports, {
   compareArrayLike: () => compareArrayLike,
@@ -30286,13 +30286,13 @@ __export(buffer_exports, {
   toUint8ClampedArrayIterator: () => toUint8ClampedArrayIterator
 });
 
-// packages/pyobsplot-js/node_modules/apache-arrow/util/utf8.mjs
+// node_modules/apache-arrow/util/utf8.mjs
 var decoder = new TextDecoder("utf-8");
 var decodeUtf8 = (buffer) => decoder.decode(buffer);
 var encoder = new TextEncoder();
 var encodeUtf8 = (value) => encoder.encode(value);
 
-// packages/pyobsplot-js/node_modules/apache-arrow/util/compat.mjs
+// node_modules/apache-arrow/util/compat.mjs
 var isNumber = (x4) => typeof x4 === "number";
 var isBoolean = (x4) => typeof x4 === "boolean";
 var isFunction = (x4) => typeof x4 === "function";
@@ -30335,7 +30335,7 @@ var isFlatbuffersByteBuffer = (x4) => {
   return isObject2(x4) && isFunction(x4["clear"]) && isFunction(x4["bytes"]) && isFunction(x4["position"]) && isFunction(x4["setPosition"]) && isFunction(x4["capacity"]) && isFunction(x4["getBufferIdentifier"]) && isFunction(x4["createLong"]);
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/util/buffer.mjs
+// node_modules/apache-arrow/util/buffer.mjs
 var SharedArrayBuf = typeof SharedArrayBuffer !== "undefined" ? SharedArrayBuffer : ArrayBuffer;
 function collapseContiguousByteRanges(chunks) {
   const result = chunks[0] ? [chunks[0]] : [];
@@ -30518,7 +30518,7 @@ function compareArrayLike(a4, b) {
   return true;
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/adapters.mjs
+// node_modules/apache-arrow/io/adapters.mjs
 var adapters_default = {
   fromIterable(source) {
     return pump2(fromIterable(source));
@@ -30556,7 +30556,7 @@ function* fromIterable(source) {
     [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
     return buffer;
   }
-  ({ cmd, size } = yield null);
+  ({ cmd, size } = (yield (() => null)()) || { cmd: "read", size: 0 });
   const it2 = toUint8ArrayIterator(source)[Symbol.iterator]();
   try {
     do {
@@ -30590,7 +30590,7 @@ function fromAsyncIterable(source) {
       [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
       return buffer;
     }
-    ({ cmd, size } = yield yield __await(null));
+    ({ cmd, size } = (yield yield __await((() => null)())) || { cmd: "read", size: 0 });
     const it2 = toUint8ArrayAsyncIterator(source)[Symbol.asyncIterator]();
     try {
       do {
@@ -30625,7 +30625,7 @@ function fromDOMStream(source) {
       [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
       return buffer;
     }
-    ({ cmd, size } = yield yield __await(null));
+    ({ cmd, size } = (yield yield __await((() => null)())) || { cmd: "read", size: 0 });
     const it2 = new AdaptiveByteReader(source);
     try {
       do {
@@ -30704,7 +30704,7 @@ function fromNodeStream(stream) {
       [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
       return buffer;
     }
-    ({ cmd, size } = yield yield __await(null));
+    ({ cmd, size } = (yield yield __await((() => null)())) || { cmd: "read", size: 0 });
     if (stream["isTTY"]) {
       yield yield __await(new Uint8Array(0));
       return yield __await(null);
@@ -30762,3798 +30762,54 @@ function fromNodeStream(stream) {
   });
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/enum.mjs
+// node_modules/apache-arrow/fb/metadata-version.mjs
 var MetadataVersion;
-(function(MetadataVersion3) {
-  MetadataVersion3[MetadataVersion3["V1"] = 0] = "V1";
-  MetadataVersion3[MetadataVersion3["V2"] = 1] = "V2";
-  MetadataVersion3[MetadataVersion3["V3"] = 2] = "V3";
-  MetadataVersion3[MetadataVersion3["V4"] = 3] = "V4";
-  MetadataVersion3[MetadataVersion3["V5"] = 4] = "V5";
+(function(MetadataVersion2) {
+  MetadataVersion2[MetadataVersion2["V1"] = 0] = "V1";
+  MetadataVersion2[MetadataVersion2["V2"] = 1] = "V2";
+  MetadataVersion2[MetadataVersion2["V3"] = 2] = "V3";
+  MetadataVersion2[MetadataVersion2["V4"] = 3] = "V4";
+  MetadataVersion2[MetadataVersion2["V5"] = 4] = "V5";
 })(MetadataVersion || (MetadataVersion = {}));
+
+// node_modules/apache-arrow/fb/union-mode.mjs
 var UnionMode;
-(function(UnionMode3) {
-  UnionMode3[UnionMode3["Sparse"] = 0] = "Sparse";
-  UnionMode3[UnionMode3["Dense"] = 1] = "Dense";
+(function(UnionMode2) {
+  UnionMode2[UnionMode2["Sparse"] = 0] = "Sparse";
+  UnionMode2[UnionMode2["Dense"] = 1] = "Dense";
 })(UnionMode || (UnionMode = {}));
+
+// node_modules/apache-arrow/fb/precision.mjs
 var Precision;
-(function(Precision3) {
-  Precision3[Precision3["HALF"] = 0] = "HALF";
-  Precision3[Precision3["SINGLE"] = 1] = "SINGLE";
-  Precision3[Precision3["DOUBLE"] = 2] = "DOUBLE";
+(function(Precision2) {
+  Precision2[Precision2["HALF"] = 0] = "HALF";
+  Precision2[Precision2["SINGLE"] = 1] = "SINGLE";
+  Precision2[Precision2["DOUBLE"] = 2] = "DOUBLE";
 })(Precision || (Precision = {}));
+
+// node_modules/apache-arrow/fb/date-unit.mjs
 var DateUnit;
-(function(DateUnit3) {
-  DateUnit3[DateUnit3["DAY"] = 0] = "DAY";
-  DateUnit3[DateUnit3["MILLISECOND"] = 1] = "MILLISECOND";
+(function(DateUnit2) {
+  DateUnit2[DateUnit2["DAY"] = 0] = "DAY";
+  DateUnit2[DateUnit2["MILLISECOND"] = 1] = "MILLISECOND";
 })(DateUnit || (DateUnit = {}));
+
+// node_modules/apache-arrow/fb/time-unit.mjs
 var TimeUnit;
-(function(TimeUnit3) {
-  TimeUnit3[TimeUnit3["SECOND"] = 0] = "SECOND";
-  TimeUnit3[TimeUnit3["MILLISECOND"] = 1] = "MILLISECOND";
-  TimeUnit3[TimeUnit3["MICROSECOND"] = 2] = "MICROSECOND";
-  TimeUnit3[TimeUnit3["NANOSECOND"] = 3] = "NANOSECOND";
+(function(TimeUnit2) {
+  TimeUnit2[TimeUnit2["SECOND"] = 0] = "SECOND";
+  TimeUnit2[TimeUnit2["MILLISECOND"] = 1] = "MILLISECOND";
+  TimeUnit2[TimeUnit2["MICROSECOND"] = 2] = "MICROSECOND";
+  TimeUnit2[TimeUnit2["NANOSECOND"] = 3] = "NANOSECOND";
 })(TimeUnit || (TimeUnit = {}));
+
+// node_modules/apache-arrow/fb/interval-unit.mjs
 var IntervalUnit;
-(function(IntervalUnit3) {
-  IntervalUnit3[IntervalUnit3["YEAR_MONTH"] = 0] = "YEAR_MONTH";
-  IntervalUnit3[IntervalUnit3["DAY_TIME"] = 1] = "DAY_TIME";
-  IntervalUnit3[IntervalUnit3["MONTH_DAY_NANO"] = 2] = "MONTH_DAY_NANO";
+(function(IntervalUnit2) {
+  IntervalUnit2[IntervalUnit2["YEAR_MONTH"] = 0] = "YEAR_MONTH";
+  IntervalUnit2[IntervalUnit2["DAY_TIME"] = 1] = "DAY_TIME";
+  IntervalUnit2[IntervalUnit2["MONTH_DAY_NANO"] = 2] = "MONTH_DAY_NANO";
 })(IntervalUnit || (IntervalUnit = {}));
-var MessageHeader;
-(function(MessageHeader3) {
-  MessageHeader3[MessageHeader3["NONE"] = 0] = "NONE";
-  MessageHeader3[MessageHeader3["Schema"] = 1] = "Schema";
-  MessageHeader3[MessageHeader3["DictionaryBatch"] = 2] = "DictionaryBatch";
-  MessageHeader3[MessageHeader3["RecordBatch"] = 3] = "RecordBatch";
-  MessageHeader3[MessageHeader3["Tensor"] = 4] = "Tensor";
-  MessageHeader3[MessageHeader3["SparseTensor"] = 5] = "SparseTensor";
-})(MessageHeader || (MessageHeader = {}));
-var Type;
-(function(Type3) {
-  Type3[Type3["NONE"] = 0] = "NONE";
-  Type3[Type3["Null"] = 1] = "Null";
-  Type3[Type3["Int"] = 2] = "Int";
-  Type3[Type3["Float"] = 3] = "Float";
-  Type3[Type3["Binary"] = 4] = "Binary";
-  Type3[Type3["Utf8"] = 5] = "Utf8";
-  Type3[Type3["Bool"] = 6] = "Bool";
-  Type3[Type3["Decimal"] = 7] = "Decimal";
-  Type3[Type3["Date"] = 8] = "Date";
-  Type3[Type3["Time"] = 9] = "Time";
-  Type3[Type3["Timestamp"] = 10] = "Timestamp";
-  Type3[Type3["Interval"] = 11] = "Interval";
-  Type3[Type3["List"] = 12] = "List";
-  Type3[Type3["Struct"] = 13] = "Struct";
-  Type3[Type3["Union"] = 14] = "Union";
-  Type3[Type3["FixedSizeBinary"] = 15] = "FixedSizeBinary";
-  Type3[Type3["FixedSizeList"] = 16] = "FixedSizeList";
-  Type3[Type3["Map"] = 17] = "Map";
-  Type3[Type3["Duration"] = 18] = "Duration";
-  Type3[Type3["Dictionary"] = -1] = "Dictionary";
-  Type3[Type3["Int8"] = -2] = "Int8";
-  Type3[Type3["Int16"] = -3] = "Int16";
-  Type3[Type3["Int32"] = -4] = "Int32";
-  Type3[Type3["Int64"] = -5] = "Int64";
-  Type3[Type3["Uint8"] = -6] = "Uint8";
-  Type3[Type3["Uint16"] = -7] = "Uint16";
-  Type3[Type3["Uint32"] = -8] = "Uint32";
-  Type3[Type3["Uint64"] = -9] = "Uint64";
-  Type3[Type3["Float16"] = -10] = "Float16";
-  Type3[Type3["Float32"] = -11] = "Float32";
-  Type3[Type3["Float64"] = -12] = "Float64";
-  Type3[Type3["DateDay"] = -13] = "DateDay";
-  Type3[Type3["DateMillisecond"] = -14] = "DateMillisecond";
-  Type3[Type3["TimestampSecond"] = -15] = "TimestampSecond";
-  Type3[Type3["TimestampMillisecond"] = -16] = "TimestampMillisecond";
-  Type3[Type3["TimestampMicrosecond"] = -17] = "TimestampMicrosecond";
-  Type3[Type3["TimestampNanosecond"] = -18] = "TimestampNanosecond";
-  Type3[Type3["TimeSecond"] = -19] = "TimeSecond";
-  Type3[Type3["TimeMillisecond"] = -20] = "TimeMillisecond";
-  Type3[Type3["TimeMicrosecond"] = -21] = "TimeMicrosecond";
-  Type3[Type3["TimeNanosecond"] = -22] = "TimeNanosecond";
-  Type3[Type3["DenseUnion"] = -23] = "DenseUnion";
-  Type3[Type3["SparseUnion"] = -24] = "SparseUnion";
-  Type3[Type3["IntervalDayTime"] = -25] = "IntervalDayTime";
-  Type3[Type3["IntervalYearMonth"] = -26] = "IntervalYearMonth";
-  Type3[Type3["DurationSecond"] = -27] = "DurationSecond";
-  Type3[Type3["DurationMillisecond"] = -28] = "DurationMillisecond";
-  Type3[Type3["DurationMicrosecond"] = -29] = "DurationMicrosecond";
-  Type3[Type3["DurationNanosecond"] = -30] = "DurationNanosecond";
-})(Type || (Type = {}));
-var BufferType;
-(function(BufferType2) {
-  BufferType2[BufferType2["OFFSET"] = 0] = "OFFSET";
-  BufferType2[BufferType2["DATA"] = 1] = "DATA";
-  BufferType2[BufferType2["VALIDITY"] = 2] = "VALIDITY";
-  BufferType2[BufferType2["TYPE"] = 3] = "TYPE";
-})(BufferType || (BufferType = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/vector.mjs
-var vector_exports = {};
-__export(vector_exports, {
-  clampIndex: () => clampIndex,
-  clampRange: () => clampRange,
-  createElementComparator: () => createElementComparator
-});
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/pretty.mjs
-var pretty_exports = {};
-__export(pretty_exports, {
-  valueToString: () => valueToString
-});
-var undf = void 0;
-function valueToString(x4) {
-  if (x4 === null) {
-    return "null";
-  }
-  if (x4 === undf) {
-    return "undefined";
-  }
-  switch (typeof x4) {
-    case "number":
-      return `${x4}`;
-    case "bigint":
-      return `${x4}`;
-    case "string":
-      return `"${x4}"`;
-  }
-  if (typeof x4[Symbol.toPrimitive] === "function") {
-    return x4[Symbol.toPrimitive]("string");
-  }
-  if (ArrayBuffer.isView(x4)) {
-    if (x4 instanceof BigInt64Array || x4 instanceof BigUint64Array) {
-      return `[${[...x4].map((x5) => valueToString(x5))}]`;
-    }
-    return `[${x4}]`;
-  }
-  return ArrayBuffer.isView(x4) ? `[${x4}]` : JSON.stringify(x4, (_, y4) => typeof y4 === "bigint" ? `${y4}` : y4);
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/bn.mjs
-var bn_exports = {};
-__export(bn_exports, {
-  BN: () => BN,
-  bigNumToBigInt: () => bigNumToBigInt,
-  bigNumToString: () => bigNumToString,
-  isArrowBigNumSymbol: () => isArrowBigNumSymbol
-});
-var isArrowBigNumSymbol = Symbol.for("isArrowBigNum");
-function BigNum(x4, ...xs) {
-  if (xs.length === 0) {
-    return Object.setPrototypeOf(toArrayBufferView(this["TypedArray"], x4), this.constructor.prototype);
-  }
-  return Object.setPrototypeOf(new this["TypedArray"](x4, ...xs), this.constructor.prototype);
-}
-BigNum.prototype[isArrowBigNumSymbol] = true;
-BigNum.prototype.toJSON = function() {
-  return `"${bigNumToString(this)}"`;
-};
-BigNum.prototype.valueOf = function() {
-  return bigNumToNumber(this);
-};
-BigNum.prototype.toString = function() {
-  return bigNumToString(this);
-};
-BigNum.prototype[Symbol.toPrimitive] = function(hint = "default") {
-  switch (hint) {
-    case "number":
-      return bigNumToNumber(this);
-    case "string":
-      return bigNumToString(this);
-    case "default":
-      return bigNumToBigInt(this);
-  }
-  return bigNumToString(this);
-};
-function SignedBigNum(...args) {
-  return BigNum.apply(this, args);
-}
-function UnsignedBigNum(...args) {
-  return BigNum.apply(this, args);
-}
-function DecimalBigNum(...args) {
-  return BigNum.apply(this, args);
-}
-Object.setPrototypeOf(SignedBigNum.prototype, Object.create(Int32Array.prototype));
-Object.setPrototypeOf(UnsignedBigNum.prototype, Object.create(Uint32Array.prototype));
-Object.setPrototypeOf(DecimalBigNum.prototype, Object.create(Uint32Array.prototype));
-Object.assign(SignedBigNum.prototype, BigNum.prototype, { "constructor": SignedBigNum, "signed": true, "TypedArray": Int32Array, "BigIntArray": BigInt64Array });
-Object.assign(UnsignedBigNum.prototype, BigNum.prototype, { "constructor": UnsignedBigNum, "signed": false, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
-Object.assign(DecimalBigNum.prototype, BigNum.prototype, { "constructor": DecimalBigNum, "signed": true, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
-function bigNumToNumber(bn) {
-  const { buffer, byteOffset, length: length4, "signed": signed } = bn;
-  const words = new BigUint64Array(buffer, byteOffset, length4);
-  const negative2 = signed && words.at(-1) & BigInt(1) << BigInt(63);
-  let number7 = negative2 ? BigInt(1) : BigInt(0);
-  let i = BigInt(0);
-  if (!negative2) {
-    for (const word of words) {
-      number7 += word * (BigInt(1) << BigInt(32) * i++);
-    }
-  } else {
-    for (const word of words) {
-      number7 += ~word * (BigInt(1) << BigInt(32) * i++);
-    }
-    number7 *= BigInt(-1);
-  }
-  return number7;
-}
-var bigNumToString = (a4) => {
-  if (a4.byteLength === 8) {
-    const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
-    return `${bigIntArray[0]}`;
-  }
-  if (!a4["signed"]) {
-    return unsignedBigNumToString(a4);
-  }
-  let array4 = new Uint16Array(a4.buffer, a4.byteOffset, a4.byteLength / 2);
-  const highOrderWord = new Int16Array([array4.at(-1)])[0];
-  if (highOrderWord >= 0) {
-    return unsignedBigNumToString(a4);
-  }
-  array4 = array4.slice();
-  let carry = 1;
-  for (let i = 0; i < array4.length; i++) {
-    const elem = array4[i];
-    const updated = ~elem + carry;
-    array4[i] = updated;
-    carry &= elem === 0 ? 1 : 0;
-  }
-  const negated = unsignedBigNumToString(array4);
-  return `-${negated}`;
-};
-var bigNumToBigInt = (a4) => {
-  if (a4.byteLength === 8) {
-    const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
-    return bigIntArray[0];
-  } else {
-    return bigNumToString(a4);
-  }
-};
-function unsignedBigNumToString(a4) {
-  let digits = "";
-  const base64 = new Uint32Array(2);
-  let base32 = new Uint16Array(a4.buffer, a4.byteOffset, a4.byteLength / 2);
-  const checks = new Uint32Array((base32 = new Uint16Array(base32).reverse()).buffer);
-  let i = -1;
-  const n = base32.length - 1;
-  do {
-    for (base64[0] = base32[i = 0]; i < n; ) {
-      base32[i++] = base64[1] = base64[0] / 10;
-      base64[0] = (base64[0] - base64[1] * 10 << 16) + base32[i];
-    }
-    base32[i] = base64[1] = base64[0] / 10;
-    base64[0] = base64[0] - base64[1] * 10;
-    digits = `${base64[0]}${digits}`;
-  } while (checks[0] || checks[1] || checks[2] || checks[3]);
-  return digits !== null && digits !== void 0 ? digits : `0`;
-}
-var BN = class {
-  /** @nocollapse */
-  static new(num, isSigned) {
-    switch (isSigned) {
-      case true:
-        return new SignedBigNum(num);
-      case false:
-        return new UnsignedBigNum(num);
-    }
-    switch (num.constructor) {
-      case Int8Array:
-      case Int16Array:
-      case Int32Array:
-      case BigInt64Array:
-        return new SignedBigNum(num);
-    }
-    if (num.byteLength === 16) {
-      return new DecimalBigNum(num);
-    }
-    return new UnsignedBigNum(num);
-  }
-  /** @nocollapse */
-  static signed(num) {
-    return new SignedBigNum(num);
-  }
-  /** @nocollapse */
-  static unsigned(num) {
-    return new UnsignedBigNum(num);
-  }
-  /** @nocollapse */
-  static decimal(num) {
-    return new DecimalBigNum(num);
-  }
-  constructor(num, isSigned) {
-    return BN.new(num, isSigned);
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/bigint.mjs
-function bigIntToNumber(number7) {
-  if (typeof number7 === "bigint" && (number7 < Number.MIN_SAFE_INTEGER || number7 > Number.MAX_SAFE_INTEGER)) {
-    throw new TypeError(`${number7} is not safe to convert to a number.`);
-  }
-  return Number(number7);
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/type.mjs
-var _a;
-var _b;
-var _c;
-var _d;
-var _e;
-var _f;
-var _g;
-var _h;
-var _j;
-var _k;
-var _l;
-var _m;
-var _o;
-var _p;
-var _q;
-var _r;
-var _s;
-var _t;
-var _u;
-var _v;
-var DataType = class {
-  /** @nocollapse */
-  static isNull(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Null;
-  }
-  /** @nocollapse */
-  static isInt(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Int;
-  }
-  /** @nocollapse */
-  static isFloat(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Float;
-  }
-  /** @nocollapse */
-  static isBinary(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Binary;
-  }
-  /** @nocollapse */
-  static isUtf8(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Utf8;
-  }
-  /** @nocollapse */
-  static isBool(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Bool;
-  }
-  /** @nocollapse */
-  static isDecimal(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Decimal;
-  }
-  /** @nocollapse */
-  static isDate(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Date;
-  }
-  /** @nocollapse */
-  static isTime(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Time;
-  }
-  /** @nocollapse */
-  static isTimestamp(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Timestamp;
-  }
-  /** @nocollapse */
-  static isInterval(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Interval;
-  }
-  /** @nocollapse */
-  static isDuration(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Duration;
-  }
-  /** @nocollapse */
-  static isList(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.List;
-  }
-  /** @nocollapse */
-  static isStruct(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Struct;
-  }
-  /** @nocollapse */
-  static isUnion(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Union;
-  }
-  /** @nocollapse */
-  static isFixedSizeBinary(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.FixedSizeBinary;
-  }
-  /** @nocollapse */
-  static isFixedSizeList(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.FixedSizeList;
-  }
-  /** @nocollapse */
-  static isMap(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Map;
-  }
-  /** @nocollapse */
-  static isDictionary(x4) {
-    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type.Dictionary;
-  }
-  /** @nocollapse */
-  static isDenseUnion(x4) {
-    return DataType.isUnion(x4) && x4.mode === UnionMode.Dense;
-  }
-  /** @nocollapse */
-  static isSparseUnion(x4) {
-    return DataType.isUnion(x4) && x4.mode === UnionMode.Sparse;
-  }
-  get typeId() {
-    return Type.NONE;
-  }
-};
-_a = Symbol.toStringTag;
-DataType[_a] = ((proto) => {
-  proto.children = null;
-  proto.ArrayType = Array;
-  return proto[Symbol.toStringTag] = "DataType";
-})(DataType.prototype);
-var Null = class extends DataType {
-  toString() {
-    return `Null`;
-  }
-  get typeId() {
-    return Type.Null;
-  }
-};
-_b = Symbol.toStringTag;
-Null[_b] = ((proto) => proto[Symbol.toStringTag] = "Null")(Null.prototype);
-var Int_ = class extends DataType {
-  constructor(isSigned, bitWidth) {
-    super();
-    this.isSigned = isSigned;
-    this.bitWidth = bitWidth;
-  }
-  get typeId() {
-    return Type.Int;
-  }
-  get ArrayType() {
-    switch (this.bitWidth) {
-      case 8:
-        return this.isSigned ? Int8Array : Uint8Array;
-      case 16:
-        return this.isSigned ? Int16Array : Uint16Array;
-      case 32:
-        return this.isSigned ? Int32Array : Uint32Array;
-      case 64:
-        return this.isSigned ? BigInt64Array : BigUint64Array;
-    }
-    throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
-  }
-  toString() {
-    return `${this.isSigned ? `I` : `Ui`}nt${this.bitWidth}`;
-  }
-};
-_c = Symbol.toStringTag;
-Int_[_c] = ((proto) => {
-  proto.isSigned = null;
-  proto.bitWidth = null;
-  return proto[Symbol.toStringTag] = "Int";
-})(Int_.prototype);
-var Int8 = class extends Int_ {
-  constructor() {
-    super(true, 8);
-  }
-  get ArrayType() {
-    return Int8Array;
-  }
-};
-var Int16 = class extends Int_ {
-  constructor() {
-    super(true, 16);
-  }
-  get ArrayType() {
-    return Int16Array;
-  }
-};
-var Int32 = class extends Int_ {
-  constructor() {
-    super(true, 32);
-  }
-  get ArrayType() {
-    return Int32Array;
-  }
-};
-var Int64 = class extends Int_ {
-  constructor() {
-    super(true, 64);
-  }
-  get ArrayType() {
-    return BigInt64Array;
-  }
-};
-var Uint8 = class extends Int_ {
-  constructor() {
-    super(false, 8);
-  }
-  get ArrayType() {
-    return Uint8Array;
-  }
-};
-var Uint16 = class extends Int_ {
-  constructor() {
-    super(false, 16);
-  }
-  get ArrayType() {
-    return Uint16Array;
-  }
-};
-var Uint32 = class extends Int_ {
-  constructor() {
-    super(false, 32);
-  }
-  get ArrayType() {
-    return Uint32Array;
-  }
-};
-var Uint64 = class extends Int_ {
-  constructor() {
-    super(false, 64);
-  }
-  get ArrayType() {
-    return BigUint64Array;
-  }
-};
-Object.defineProperty(Int8.prototype, "ArrayType", { value: Int8Array });
-Object.defineProperty(Int16.prototype, "ArrayType", { value: Int16Array });
-Object.defineProperty(Int32.prototype, "ArrayType", { value: Int32Array });
-Object.defineProperty(Int64.prototype, "ArrayType", { value: BigInt64Array });
-Object.defineProperty(Uint8.prototype, "ArrayType", { value: Uint8Array });
-Object.defineProperty(Uint16.prototype, "ArrayType", { value: Uint16Array });
-Object.defineProperty(Uint32.prototype, "ArrayType", { value: Uint32Array });
-Object.defineProperty(Uint64.prototype, "ArrayType", { value: BigUint64Array });
-var Float = class extends DataType {
-  constructor(precision) {
-    super();
-    this.precision = precision;
-  }
-  get typeId() {
-    return Type.Float;
-  }
-  get ArrayType() {
-    switch (this.precision) {
-      case Precision.HALF:
-        return Uint16Array;
-      case Precision.SINGLE:
-        return Float32Array;
-      case Precision.DOUBLE:
-        return Float64Array;
-    }
-    throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
-  }
-  toString() {
-    return `Float${this.precision << 5 || 16}`;
-  }
-};
-_d = Symbol.toStringTag;
-Float[_d] = ((proto) => {
-  proto.precision = null;
-  return proto[Symbol.toStringTag] = "Float";
-})(Float.prototype);
-var Float16 = class extends Float {
-  constructor() {
-    super(Precision.HALF);
-  }
-};
-var Float32 = class extends Float {
-  constructor() {
-    super(Precision.SINGLE);
-  }
-};
-var Float64 = class extends Float {
-  constructor() {
-    super(Precision.DOUBLE);
-  }
-};
-Object.defineProperty(Float16.prototype, "ArrayType", { value: Uint16Array });
-Object.defineProperty(Float32.prototype, "ArrayType", { value: Float32Array });
-Object.defineProperty(Float64.prototype, "ArrayType", { value: Float64Array });
-var Binary = class extends DataType {
-  constructor() {
-    super();
-  }
-  get typeId() {
-    return Type.Binary;
-  }
-  toString() {
-    return `Binary`;
-  }
-};
-_e = Symbol.toStringTag;
-Binary[_e] = ((proto) => {
-  proto.ArrayType = Uint8Array;
-  return proto[Symbol.toStringTag] = "Binary";
-})(Binary.prototype);
-var Utf8 = class extends DataType {
-  constructor() {
-    super();
-  }
-  get typeId() {
-    return Type.Utf8;
-  }
-  toString() {
-    return `Utf8`;
-  }
-};
-_f = Symbol.toStringTag;
-Utf8[_f] = ((proto) => {
-  proto.ArrayType = Uint8Array;
-  return proto[Symbol.toStringTag] = "Utf8";
-})(Utf8.prototype);
-var Bool = class extends DataType {
-  constructor() {
-    super();
-  }
-  get typeId() {
-    return Type.Bool;
-  }
-  toString() {
-    return `Bool`;
-  }
-};
-_g = Symbol.toStringTag;
-Bool[_g] = ((proto) => {
-  proto.ArrayType = Uint8Array;
-  return proto[Symbol.toStringTag] = "Bool";
-})(Bool.prototype);
-var Decimal = class extends DataType {
-  constructor(scale3, precision, bitWidth = 128) {
-    super();
-    this.scale = scale3;
-    this.precision = precision;
-    this.bitWidth = bitWidth;
-  }
-  get typeId() {
-    return Type.Decimal;
-  }
-  toString() {
-    return `Decimal[${this.precision}e${this.scale > 0 ? `+` : ``}${this.scale}]`;
-  }
-};
-_h = Symbol.toStringTag;
-Decimal[_h] = ((proto) => {
-  proto.scale = null;
-  proto.precision = null;
-  proto.ArrayType = Uint32Array;
-  return proto[Symbol.toStringTag] = "Decimal";
-})(Decimal.prototype);
-var Date_ = class extends DataType {
-  constructor(unit3) {
-    super();
-    this.unit = unit3;
-  }
-  get typeId() {
-    return Type.Date;
-  }
-  toString() {
-    return `Date${(this.unit + 1) * 32}<${DateUnit[this.unit]}>`;
-  }
-};
-_j = Symbol.toStringTag;
-Date_[_j] = ((proto) => {
-  proto.unit = null;
-  proto.ArrayType = Int32Array;
-  return proto[Symbol.toStringTag] = "Date";
-})(Date_.prototype);
-var Time_ = class extends DataType {
-  constructor(unit3, bitWidth) {
-    super();
-    this.unit = unit3;
-    this.bitWidth = bitWidth;
-  }
-  get typeId() {
-    return Type.Time;
-  }
-  toString() {
-    return `Time${this.bitWidth}<${TimeUnit[this.unit]}>`;
-  }
-  get ArrayType() {
-    switch (this.bitWidth) {
-      case 32:
-        return Int32Array;
-      case 64:
-        return BigInt64Array;
-    }
-    throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
-  }
-};
-_k = Symbol.toStringTag;
-Time_[_k] = ((proto) => {
-  proto.unit = null;
-  proto.bitWidth = null;
-  return proto[Symbol.toStringTag] = "Time";
-})(Time_.prototype);
-var Timestamp_ = class extends DataType {
-  constructor(unit3, timezone) {
-    super();
-    this.unit = unit3;
-    this.timezone = timezone;
-  }
-  get typeId() {
-    return Type.Timestamp;
-  }
-  toString() {
-    return `Timestamp<${TimeUnit[this.unit]}${this.timezone ? `, ${this.timezone}` : ``}>`;
-  }
-};
-_l = Symbol.toStringTag;
-Timestamp_[_l] = ((proto) => {
-  proto.unit = null;
-  proto.timezone = null;
-  proto.ArrayType = Int32Array;
-  return proto[Symbol.toStringTag] = "Timestamp";
-})(Timestamp_.prototype);
-var Interval_ = class extends DataType {
-  constructor(unit3) {
-    super();
-    this.unit = unit3;
-  }
-  get typeId() {
-    return Type.Interval;
-  }
-  toString() {
-    return `Interval<${IntervalUnit[this.unit]}>`;
-  }
-};
-_m = Symbol.toStringTag;
-Interval_[_m] = ((proto) => {
-  proto.unit = null;
-  proto.ArrayType = Int32Array;
-  return proto[Symbol.toStringTag] = "Interval";
-})(Interval_.prototype);
-var Duration = class extends DataType {
-  constructor(unit3) {
-    super();
-    this.unit = unit3;
-  }
-  get typeId() {
-    return Type.Duration;
-  }
-  toString() {
-    return `Duration<${TimeUnit[this.unit]}>`;
-  }
-};
-_o = Symbol.toStringTag;
-Duration[_o] = ((proto) => {
-  proto.unit = null;
-  proto.ArrayType = BigInt64Array;
-  return proto[Symbol.toStringTag] = "Duration";
-})(Duration.prototype);
-var List = class extends DataType {
-  constructor(child) {
-    super();
-    this.children = [child];
-  }
-  get typeId() {
-    return Type.List;
-  }
-  toString() {
-    return `List<${this.valueType}>`;
-  }
-  get valueType() {
-    return this.children[0].type;
-  }
-  get valueField() {
-    return this.children[0];
-  }
-  get ArrayType() {
-    return this.valueType.ArrayType;
-  }
-};
-_p = Symbol.toStringTag;
-List[_p] = ((proto) => {
-  proto.children = null;
-  return proto[Symbol.toStringTag] = "List";
-})(List.prototype);
-var Struct = class extends DataType {
-  constructor(children2) {
-    super();
-    this.children = children2;
-  }
-  get typeId() {
-    return Type.Struct;
-  }
-  toString() {
-    return `Struct<{${this.children.map((f) => `${f.name}:${f.type}`).join(`, `)}}>`;
-  }
-};
-_q = Symbol.toStringTag;
-Struct[_q] = ((proto) => {
-  proto.children = null;
-  return proto[Symbol.toStringTag] = "Struct";
-})(Struct.prototype);
-var Union_ = class extends DataType {
-  constructor(mode2, typeIds, children2) {
-    super();
-    this.mode = mode2;
-    this.children = children2;
-    this.typeIds = typeIds = Int32Array.from(typeIds);
-    this.typeIdToChildIndex = typeIds.reduce((typeIdToChildIndex, typeId, idx) => (typeIdToChildIndex[typeId] = idx) && typeIdToChildIndex || typeIdToChildIndex, /* @__PURE__ */ Object.create(null));
-  }
-  get typeId() {
-    return Type.Union;
-  }
-  toString() {
-    return `${this[Symbol.toStringTag]}<${this.children.map((x4) => `${x4.type}`).join(` | `)}>`;
-  }
-};
-_r = Symbol.toStringTag;
-Union_[_r] = ((proto) => {
-  proto.mode = null;
-  proto.typeIds = null;
-  proto.children = null;
-  proto.typeIdToChildIndex = null;
-  proto.ArrayType = Int8Array;
-  return proto[Symbol.toStringTag] = "Union";
-})(Union_.prototype);
-var FixedSizeBinary = class extends DataType {
-  constructor(byteWidth) {
-    super();
-    this.byteWidth = byteWidth;
-  }
-  get typeId() {
-    return Type.FixedSizeBinary;
-  }
-  toString() {
-    return `FixedSizeBinary[${this.byteWidth}]`;
-  }
-};
-_s = Symbol.toStringTag;
-FixedSizeBinary[_s] = ((proto) => {
-  proto.byteWidth = null;
-  proto.ArrayType = Uint8Array;
-  return proto[Symbol.toStringTag] = "FixedSizeBinary";
-})(FixedSizeBinary.prototype);
-var FixedSizeList = class extends DataType {
-  constructor(listSize, child) {
-    super();
-    this.listSize = listSize;
-    this.children = [child];
-  }
-  get typeId() {
-    return Type.FixedSizeList;
-  }
-  get valueType() {
-    return this.children[0].type;
-  }
-  get valueField() {
-    return this.children[0];
-  }
-  get ArrayType() {
-    return this.valueType.ArrayType;
-  }
-  toString() {
-    return `FixedSizeList[${this.listSize}]<${this.valueType}>`;
-  }
-};
-_t = Symbol.toStringTag;
-FixedSizeList[_t] = ((proto) => {
-  proto.children = null;
-  proto.listSize = null;
-  return proto[Symbol.toStringTag] = "FixedSizeList";
-})(FixedSizeList.prototype);
-var Map_ = class extends DataType {
-  constructor(entries, keysSorted = false) {
-    var _w, _x, _y;
-    super();
-    this.children = [entries];
-    this.keysSorted = keysSorted;
-    if (entries) {
-      entries["name"] = "entries";
-      if ((_w = entries === null || entries === void 0 ? void 0 : entries.type) === null || _w === void 0 ? void 0 : _w.children) {
-        const key = (_x = entries === null || entries === void 0 ? void 0 : entries.type) === null || _x === void 0 ? void 0 : _x.children[0];
-        if (key) {
-          key["name"] = "key";
-        }
-        const val = (_y = entries === null || entries === void 0 ? void 0 : entries.type) === null || _y === void 0 ? void 0 : _y.children[1];
-        if (val) {
-          val["name"] = "value";
-        }
-      }
-    }
-  }
-  get typeId() {
-    return Type.Map;
-  }
-  get keyType() {
-    return this.children[0].type.children[0].type;
-  }
-  get valueType() {
-    return this.children[0].type.children[1].type;
-  }
-  get childType() {
-    return this.children[0].type;
-  }
-  toString() {
-    return `Map<{${this.children[0].type.children.map((f) => `${f.name}:${f.type}`).join(`, `)}}>`;
-  }
-};
-_u = Symbol.toStringTag;
-Map_[_u] = ((proto) => {
-  proto.children = null;
-  proto.keysSorted = null;
-  return proto[Symbol.toStringTag] = "Map_";
-})(Map_.prototype);
-var getId = ((atomicDictionaryId) => () => ++atomicDictionaryId)(-1);
-var Dictionary = class extends DataType {
-  constructor(dictionary, indices, id2, isOrdered2) {
-    super();
-    this.indices = indices;
-    this.dictionary = dictionary;
-    this.isOrdered = isOrdered2 || false;
-    this.id = id2 == null ? getId() : bigIntToNumber(id2);
-  }
-  get typeId() {
-    return Type.Dictionary;
-  }
-  get children() {
-    return this.dictionary.children;
-  }
-  get valueType() {
-    return this.dictionary;
-  }
-  get ArrayType() {
-    return this.dictionary.ArrayType;
-  }
-  toString() {
-    return `Dictionary<${this.indices}, ${this.dictionary}>`;
-  }
-};
-_v = Symbol.toStringTag;
-Dictionary[_v] = ((proto) => {
-  proto.id = null;
-  proto.indices = null;
-  proto.isOrdered = null;
-  proto.dictionary = null;
-  return proto[Symbol.toStringTag] = "Dictionary";
-})(Dictionary.prototype);
-function strideForType(type2) {
-  const t = type2;
-  switch (type2.typeId) {
-    case Type.Decimal:
-      return type2.bitWidth / 32;
-    case Type.Timestamp:
-      return 2;
-    case Type.Date:
-      return 1 + t.unit;
-    case Type.Interval:
-      return 1 + t.unit;
-    case Type.FixedSizeList:
-      return t.listSize;
-    case Type.FixedSizeBinary:
-      return t.byteWidth;
-    default:
-      return 1;
-  }
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor.mjs
-var Visitor = class {
-  visitMany(nodes, ...args) {
-    return nodes.map((node, i) => this.visit(node, ...args.map((x4) => x4[i])));
-  }
-  visit(...args) {
-    return this.getVisitFn(args[0], false).apply(this, args);
-  }
-  getVisitFn(node, throwIfNotFound = true) {
-    return getVisitFn(this, node, throwIfNotFound);
-  }
-  getVisitFnByTypeId(typeId, throwIfNotFound = true) {
-    return getVisitFnByTypeId(this, typeId, throwIfNotFound);
-  }
-  visitNull(_node, ..._args) {
-    return null;
-  }
-  visitBool(_node, ..._args) {
-    return null;
-  }
-  visitInt(_node, ..._args) {
-    return null;
-  }
-  visitFloat(_node, ..._args) {
-    return null;
-  }
-  visitUtf8(_node, ..._args) {
-    return null;
-  }
-  visitBinary(_node, ..._args) {
-    return null;
-  }
-  visitFixedSizeBinary(_node, ..._args) {
-    return null;
-  }
-  visitDate(_node, ..._args) {
-    return null;
-  }
-  visitTimestamp(_node, ..._args) {
-    return null;
-  }
-  visitTime(_node, ..._args) {
-    return null;
-  }
-  visitDecimal(_node, ..._args) {
-    return null;
-  }
-  visitList(_node, ..._args) {
-    return null;
-  }
-  visitStruct(_node, ..._args) {
-    return null;
-  }
-  visitUnion(_node, ..._args) {
-    return null;
-  }
-  visitDictionary(_node, ..._args) {
-    return null;
-  }
-  visitInterval(_node, ..._args) {
-    return null;
-  }
-  visitDuration(_node, ..._args) {
-    return null;
-  }
-  visitFixedSizeList(_node, ..._args) {
-    return null;
-  }
-  visitMap(_node, ..._args) {
-    return null;
-  }
-};
-function getVisitFn(visitor, node, throwIfNotFound = true) {
-  if (typeof node === "number") {
-    return getVisitFnByTypeId(visitor, node, throwIfNotFound);
-  }
-  if (typeof node === "string" && node in Type) {
-    return getVisitFnByTypeId(visitor, Type[node], throwIfNotFound);
-  }
-  if (node && node instanceof DataType) {
-    return getVisitFnByTypeId(visitor, inferDType(node), throwIfNotFound);
-  }
-  if ((node === null || node === void 0 ? void 0 : node.type) && node.type instanceof DataType) {
-    return getVisitFnByTypeId(visitor, inferDType(node.type), throwIfNotFound);
-  }
-  return getVisitFnByTypeId(visitor, Type.NONE, throwIfNotFound);
-}
-function getVisitFnByTypeId(visitor, dtype, throwIfNotFound = true) {
-  let fn = null;
-  switch (dtype) {
-    case Type.Null:
-      fn = visitor.visitNull;
-      break;
-    case Type.Bool:
-      fn = visitor.visitBool;
-      break;
-    case Type.Int:
-      fn = visitor.visitInt;
-      break;
-    case Type.Int8:
-      fn = visitor.visitInt8 || visitor.visitInt;
-      break;
-    case Type.Int16:
-      fn = visitor.visitInt16 || visitor.visitInt;
-      break;
-    case Type.Int32:
-      fn = visitor.visitInt32 || visitor.visitInt;
-      break;
-    case Type.Int64:
-      fn = visitor.visitInt64 || visitor.visitInt;
-      break;
-    case Type.Uint8:
-      fn = visitor.visitUint8 || visitor.visitInt;
-      break;
-    case Type.Uint16:
-      fn = visitor.visitUint16 || visitor.visitInt;
-      break;
-    case Type.Uint32:
-      fn = visitor.visitUint32 || visitor.visitInt;
-      break;
-    case Type.Uint64:
-      fn = visitor.visitUint64 || visitor.visitInt;
-      break;
-    case Type.Float:
-      fn = visitor.visitFloat;
-      break;
-    case Type.Float16:
-      fn = visitor.visitFloat16 || visitor.visitFloat;
-      break;
-    case Type.Float32:
-      fn = visitor.visitFloat32 || visitor.visitFloat;
-      break;
-    case Type.Float64:
-      fn = visitor.visitFloat64 || visitor.visitFloat;
-      break;
-    case Type.Utf8:
-      fn = visitor.visitUtf8;
-      break;
-    case Type.Binary:
-      fn = visitor.visitBinary;
-      break;
-    case Type.FixedSizeBinary:
-      fn = visitor.visitFixedSizeBinary;
-      break;
-    case Type.Date:
-      fn = visitor.visitDate;
-      break;
-    case Type.DateDay:
-      fn = visitor.visitDateDay || visitor.visitDate;
-      break;
-    case Type.DateMillisecond:
-      fn = visitor.visitDateMillisecond || visitor.visitDate;
-      break;
-    case Type.Timestamp:
-      fn = visitor.visitTimestamp;
-      break;
-    case Type.TimestampSecond:
-      fn = visitor.visitTimestampSecond || visitor.visitTimestamp;
-      break;
-    case Type.TimestampMillisecond:
-      fn = visitor.visitTimestampMillisecond || visitor.visitTimestamp;
-      break;
-    case Type.TimestampMicrosecond:
-      fn = visitor.visitTimestampMicrosecond || visitor.visitTimestamp;
-      break;
-    case Type.TimestampNanosecond:
-      fn = visitor.visitTimestampNanosecond || visitor.visitTimestamp;
-      break;
-    case Type.Time:
-      fn = visitor.visitTime;
-      break;
-    case Type.TimeSecond:
-      fn = visitor.visitTimeSecond || visitor.visitTime;
-      break;
-    case Type.TimeMillisecond:
-      fn = visitor.visitTimeMillisecond || visitor.visitTime;
-      break;
-    case Type.TimeMicrosecond:
-      fn = visitor.visitTimeMicrosecond || visitor.visitTime;
-      break;
-    case Type.TimeNanosecond:
-      fn = visitor.visitTimeNanosecond || visitor.visitTime;
-      break;
-    case Type.Decimal:
-      fn = visitor.visitDecimal;
-      break;
-    case Type.List:
-      fn = visitor.visitList;
-      break;
-    case Type.Struct:
-      fn = visitor.visitStruct;
-      break;
-    case Type.Union:
-      fn = visitor.visitUnion;
-      break;
-    case Type.DenseUnion:
-      fn = visitor.visitDenseUnion || visitor.visitUnion;
-      break;
-    case Type.SparseUnion:
-      fn = visitor.visitSparseUnion || visitor.visitUnion;
-      break;
-    case Type.Dictionary:
-      fn = visitor.visitDictionary;
-      break;
-    case Type.Interval:
-      fn = visitor.visitInterval;
-      break;
-    case Type.IntervalDayTime:
-      fn = visitor.visitIntervalDayTime || visitor.visitInterval;
-      break;
-    case Type.IntervalYearMonth:
-      fn = visitor.visitIntervalYearMonth || visitor.visitInterval;
-      break;
-    case Type.Duration:
-      fn = visitor.visitDuration;
-      break;
-    case Type.DurationSecond:
-      fn = visitor.visitDurationSecond || visitor.visitDuration;
-      break;
-    case Type.DurationMillisecond:
-      fn = visitor.visitDurationMillisecond || visitor.visitDuration;
-      break;
-    case Type.DurationMicrosecond:
-      fn = visitor.visitDurationMicrosecond || visitor.visitDuration;
-      break;
-    case Type.DurationNanosecond:
-      fn = visitor.visitDurationNanosecond || visitor.visitDuration;
-      break;
-    case Type.FixedSizeList:
-      fn = visitor.visitFixedSizeList;
-      break;
-    case Type.Map:
-      fn = visitor.visitMap;
-      break;
-  }
-  if (typeof fn === "function")
-    return fn;
-  if (!throwIfNotFound)
-    return () => null;
-  throw new Error(`Unrecognized type '${Type[dtype]}'`);
-}
-function inferDType(type2) {
-  switch (type2.typeId) {
-    case Type.Null:
-      return Type.Null;
-    case Type.Int: {
-      const { bitWidth, isSigned } = type2;
-      switch (bitWidth) {
-        case 8:
-          return isSigned ? Type.Int8 : Type.Uint8;
-        case 16:
-          return isSigned ? Type.Int16 : Type.Uint16;
-        case 32:
-          return isSigned ? Type.Int32 : Type.Uint32;
-        case 64:
-          return isSigned ? Type.Int64 : Type.Uint64;
-      }
-      return Type.Int;
-    }
-    case Type.Float:
-      switch (type2.precision) {
-        case Precision.HALF:
-          return Type.Float16;
-        case Precision.SINGLE:
-          return Type.Float32;
-        case Precision.DOUBLE:
-          return Type.Float64;
-      }
-      return Type.Float;
-    case Type.Binary:
-      return Type.Binary;
-    case Type.Utf8:
-      return Type.Utf8;
-    case Type.Bool:
-      return Type.Bool;
-    case Type.Decimal:
-      return Type.Decimal;
-    case Type.Time:
-      switch (type2.unit) {
-        case TimeUnit.SECOND:
-          return Type.TimeSecond;
-        case TimeUnit.MILLISECOND:
-          return Type.TimeMillisecond;
-        case TimeUnit.MICROSECOND:
-          return Type.TimeMicrosecond;
-        case TimeUnit.NANOSECOND:
-          return Type.TimeNanosecond;
-      }
-      return Type.Time;
-    case Type.Timestamp:
-      switch (type2.unit) {
-        case TimeUnit.SECOND:
-          return Type.TimestampSecond;
-        case TimeUnit.MILLISECOND:
-          return Type.TimestampMillisecond;
-        case TimeUnit.MICROSECOND:
-          return Type.TimestampMicrosecond;
-        case TimeUnit.NANOSECOND:
-          return Type.TimestampNanosecond;
-      }
-      return Type.Timestamp;
-    case Type.Date:
-      switch (type2.unit) {
-        case DateUnit.DAY:
-          return Type.DateDay;
-        case DateUnit.MILLISECOND:
-          return Type.DateMillisecond;
-      }
-      return Type.Date;
-    case Type.Interval:
-      switch (type2.unit) {
-        case IntervalUnit.DAY_TIME:
-          return Type.IntervalDayTime;
-        case IntervalUnit.YEAR_MONTH:
-          return Type.IntervalYearMonth;
-      }
-      return Type.Interval;
-    case Type.Duration:
-      switch (type2.unit) {
-        case TimeUnit.SECOND:
-          return Type.DurationSecond;
-        case TimeUnit.MILLISECOND:
-          return Type.DurationMillisecond;
-        case TimeUnit.MICROSECOND:
-          return Type.DurationMicrosecond;
-        case TimeUnit.NANOSECOND:
-          return Type.DurationNanosecond;
-      }
-      return Type.Duration;
-    case Type.Map:
-      return Type.Map;
-    case Type.List:
-      return Type.List;
-    case Type.Struct:
-      return Type.Struct;
-    case Type.Union:
-      switch (type2.mode) {
-        case UnionMode.Dense:
-          return Type.DenseUnion;
-        case UnionMode.Sparse:
-          return Type.SparseUnion;
-      }
-      return Type.Union;
-    case Type.FixedSizeBinary:
-      return Type.FixedSizeBinary;
-    case Type.FixedSizeList:
-      return Type.FixedSizeList;
-    case Type.Dictionary:
-      return Type.Dictionary;
-  }
-  throw new Error(`Unrecognized type '${Type[type2.typeId]}'`);
-}
-Visitor.prototype.visitInt8 = null;
-Visitor.prototype.visitInt16 = null;
-Visitor.prototype.visitInt32 = null;
-Visitor.prototype.visitInt64 = null;
-Visitor.prototype.visitUint8 = null;
-Visitor.prototype.visitUint16 = null;
-Visitor.prototype.visitUint32 = null;
-Visitor.prototype.visitUint64 = null;
-Visitor.prototype.visitFloat16 = null;
-Visitor.prototype.visitFloat32 = null;
-Visitor.prototype.visitFloat64 = null;
-Visitor.prototype.visitDateDay = null;
-Visitor.prototype.visitDateMillisecond = null;
-Visitor.prototype.visitTimestampSecond = null;
-Visitor.prototype.visitTimestampMillisecond = null;
-Visitor.prototype.visitTimestampMicrosecond = null;
-Visitor.prototype.visitTimestampNanosecond = null;
-Visitor.prototype.visitTimeSecond = null;
-Visitor.prototype.visitTimeMillisecond = null;
-Visitor.prototype.visitTimeMicrosecond = null;
-Visitor.prototype.visitTimeNanosecond = null;
-Visitor.prototype.visitDenseUnion = null;
-Visitor.prototype.visitSparseUnion = null;
-Visitor.prototype.visitIntervalDayTime = null;
-Visitor.prototype.visitIntervalYearMonth = null;
-Visitor.prototype.visitDuration = null;
-Visitor.prototype.visitDurationSecond = null;
-Visitor.prototype.visitDurationMillisecond = null;
-Visitor.prototype.visitDurationMicrosecond = null;
-Visitor.prototype.visitDurationNanosecond = null;
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/math.mjs
-var math_exports = {};
-__export(math_exports, {
-  float64ToUint16: () => float64ToUint16,
-  uint16ToFloat64: () => uint16ToFloat64
-});
-var f64 = new Float64Array(1);
-var u32 = new Uint32Array(f64.buffer);
-function uint16ToFloat64(h) {
-  const expo = (h & 31744) >> 10;
-  const sigf = (h & 1023) / 1024;
-  const sign3 = Math.pow(-1, (h & 32768) >> 15);
-  switch (expo) {
-    case 31:
-      return sign3 * (sigf ? Number.NaN : 1 / 0);
-    case 0:
-      return sign3 * (sigf ? 6103515625e-14 * sigf : 0);
-  }
-  return sign3 * Math.pow(2, expo - 15) * (1 + sigf);
-}
-function float64ToUint16(d) {
-  if (d !== d) {
-    return 32256;
-  }
-  f64[0] = d;
-  const sign3 = (u32[1] & 2147483648) >> 16 & 65535;
-  let expo = u32[1] & 2146435072, sigf = 0;
-  if (expo >= 1089470464) {
-    if (u32[0] > 0) {
-      expo = 31744;
-    } else {
-      expo = (expo & 2080374784) >> 16;
-      sigf = (u32[1] & 1048575) >> 10;
-    }
-  } else if (expo <= 1056964608) {
-    sigf = 1048576 + (u32[1] & 1048575);
-    sigf = 1048576 + (sigf << (expo >> 20) - 998) >> 21;
-    expo = 0;
-  } else {
-    expo = expo - 1056964608 >> 10;
-    sigf = (u32[1] & 1048575) + 512 >> 10;
-  }
-  return sign3 | expo | sigf & 65535;
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/set.mjs
-var SetVisitor = class extends Visitor {
-};
-function wrapSet(fn) {
-  return (data, _1, _2) => {
-    if (data.setValid(_1, _2 != null)) {
-      return fn(data, _1, _2);
-    }
-  };
-}
-var setEpochMsToDays = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs / 864e5);
-};
-var setEpochMsToMillisecondsLong = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs % 4294967296);
-  data[index3 + 1] = Math.trunc(epochMs / 4294967296);
-};
-var setEpochMsToMicrosecondsLong = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs * 1e3 % 4294967296);
-  data[index3 + 1] = Math.trunc(epochMs * 1e3 / 4294967296);
-};
-var setEpochMsToNanosecondsLong = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs * 1e6 % 4294967296);
-  data[index3 + 1] = Math.trunc(epochMs * 1e6 / 4294967296);
-};
-var setVariableWidthBytes = (values2, valueOffsets, index3, value) => {
-  if (index3 + 1 < valueOffsets.length) {
-    const { [index3]: x4, [index3 + 1]: y4 } = valueOffsets;
-    values2.set(value.subarray(0, y4 - x4), x4);
-  }
-};
-var setBool = ({ offset: offset2, values: values2 }, index3, val) => {
-  const idx = offset2 + index3;
-  val ? values2[idx >> 3] |= 1 << idx % 8 : values2[idx >> 3] &= ~(1 << idx % 8);
-};
-var setInt = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setFloat = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setFloat16 = ({ values: values2 }, index3, value) => {
-  values2[index3] = float64ToUint16(value);
-};
-var setAnyFloat = (data, index3, value) => {
-  switch (data.type.precision) {
-    case Precision.HALF:
-      return setFloat16(data, index3, value);
-    case Precision.SINGLE:
-    case Precision.DOUBLE:
-      return setFloat(data, index3, value);
-  }
-};
-var setDateDay = ({ values: values2 }, index3, value) => {
-  setEpochMsToDays(values2, index3, value.valueOf());
-};
-var setDateMillisecond = ({ values: values2 }, index3, value) => {
-  setEpochMsToMillisecondsLong(values2, index3 * 2, value.valueOf());
-};
-var setFixedSizeBinary = ({ stride, values: values2 }, index3, value) => {
-  values2.set(value.subarray(0, stride), stride * index3);
-};
-var setBinary = ({ values: values2, valueOffsets }, index3, value) => setVariableWidthBytes(values2, valueOffsets, index3, value);
-var setUtf8 = ({ values: values2, valueOffsets }, index3, value) => {
-  setVariableWidthBytes(values2, valueOffsets, index3, encodeUtf8(value));
-};
-var setDate = (data, index3, value) => {
-  data.type.unit === DateUnit.DAY ? setDateDay(data, index3, value) : setDateMillisecond(data, index3, value);
-};
-var setTimestampSecond = ({ values: values2 }, index3, value) => setEpochMsToMillisecondsLong(values2, index3 * 2, value / 1e3);
-var setTimestampMillisecond = ({ values: values2 }, index3, value) => setEpochMsToMillisecondsLong(values2, index3 * 2, value);
-var setTimestampMicrosecond = ({ values: values2 }, index3, value) => setEpochMsToMicrosecondsLong(values2, index3 * 2, value);
-var setTimestampNanosecond = ({ values: values2 }, index3, value) => setEpochMsToNanosecondsLong(values2, index3 * 2, value);
-var setTimestamp = (data, index3, value) => {
-  switch (data.type.unit) {
-    case TimeUnit.SECOND:
-      return setTimestampSecond(data, index3, value);
-    case TimeUnit.MILLISECOND:
-      return setTimestampMillisecond(data, index3, value);
-    case TimeUnit.MICROSECOND:
-      return setTimestampMicrosecond(data, index3, value);
-    case TimeUnit.NANOSECOND:
-      return setTimestampNanosecond(data, index3, value);
-  }
-};
-var setTimeSecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setTimeMillisecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setTimeMicrosecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setTimeNanosecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setTime = (data, index3, value) => {
-  switch (data.type.unit) {
-    case TimeUnit.SECOND:
-      return setTimeSecond(data, index3, value);
-    case TimeUnit.MILLISECOND:
-      return setTimeMillisecond(data, index3, value);
-    case TimeUnit.MICROSECOND:
-      return setTimeMicrosecond(data, index3, value);
-    case TimeUnit.NANOSECOND:
-      return setTimeNanosecond(data, index3, value);
-  }
-};
-var setDecimal = ({ values: values2, stride }, index3, value) => {
-  values2.set(value.subarray(0, stride), stride * index3);
-};
-var setList = (data, index3, value) => {
-  const values2 = data.children[0];
-  const valueOffsets = data.valueOffsets;
-  const set4 = instance.getVisitFn(values2);
-  if (Array.isArray(value)) {
-    for (let idx = -1, itr = valueOffsets[index3], end = valueOffsets[index3 + 1]; itr < end; ) {
-      set4(values2, itr++, value[++idx]);
-    }
-  } else {
-    for (let idx = -1, itr = valueOffsets[index3], end = valueOffsets[index3 + 1]; itr < end; ) {
-      set4(values2, itr++, value.get(++idx));
-    }
-  }
-};
-var setMap = (data, index3, value) => {
-  const values2 = data.children[0];
-  const { valueOffsets } = data;
-  const set4 = instance.getVisitFn(values2);
-  let { [index3]: idx, [index3 + 1]: end } = valueOffsets;
-  const entries = value instanceof Map ? value.entries() : Object.entries(value);
-  for (const val of entries) {
-    set4(values2, idx, val);
-    if (++idx >= end)
-      break;
-  }
-};
-var _setStructArrayValue = (o, v2) => (set4, c6, _, i) => c6 && set4(c6, o, v2[i]);
-var _setStructVectorValue = (o, v2) => (set4, c6, _, i) => c6 && set4(c6, o, v2.get(i));
-var _setStructMapValue = (o, v2) => (set4, c6, f, _) => c6 && set4(c6, o, v2.get(f.name));
-var _setStructObjectValue = (o, v2) => (set4, c6, f, _) => c6 && set4(c6, o, v2[f.name]);
-var setStruct = (data, index3, value) => {
-  const childSetters = data.type.children.map((f) => instance.getVisitFn(f.type));
-  const set4 = value instanceof Map ? _setStructMapValue(index3, value) : value instanceof Vector2 ? _setStructVectorValue(index3, value) : Array.isArray(value) ? _setStructArrayValue(index3, value) : _setStructObjectValue(index3, value);
-  data.type.children.forEach((f, i) => set4(childSetters[i], data.children[i], f, i));
-};
-var setUnion = (data, index3, value) => {
-  data.type.mode === UnionMode.Dense ? setDenseUnion(data, index3, value) : setSparseUnion(data, index3, value);
-};
-var setDenseUnion = (data, index3, value) => {
-  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
-  const child = data.children[childIndex];
-  instance.visit(child, data.valueOffsets[index3], value);
-};
-var setSparseUnion = (data, index3, value) => {
-  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
-  const child = data.children[childIndex];
-  instance.visit(child, index3, value);
-};
-var setDictionary = (data, index3, value) => {
-  var _a5;
-  (_a5 = data.dictionary) === null || _a5 === void 0 ? void 0 : _a5.set(data.values[index3], value);
-};
-var setIntervalValue = (data, index3, value) => {
-  data.type.unit === IntervalUnit.DAY_TIME ? setIntervalDayTime(data, index3, value) : setIntervalYearMonth(data, index3, value);
-};
-var setIntervalDayTime = ({ values: values2 }, index3, value) => {
-  values2.set(value.subarray(0, 2), 2 * index3);
-};
-var setIntervalYearMonth = ({ values: values2 }, index3, value) => {
-  values2[index3] = value[0] * 12 + value[1] % 12;
-};
-var setDurationSecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setDurationMillisecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setDurationMicrosecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setDurationNanosecond = ({ values: values2 }, index3, value) => {
-  values2[index3] = value;
-};
-var setDuration = (data, index3, value) => {
-  switch (data.type.unit) {
-    case TimeUnit.SECOND:
-      return setDurationSecond(data, index3, value);
-    case TimeUnit.MILLISECOND:
-      return setDurationMillisecond(data, index3, value);
-    case TimeUnit.MICROSECOND:
-      return setDurationMicrosecond(data, index3, value);
-    case TimeUnit.NANOSECOND:
-      return setDurationNanosecond(data, index3, value);
-  }
-};
-var setFixedSizeList = (data, index3, value) => {
-  const { stride } = data;
-  const child = data.children[0];
-  const set4 = instance.getVisitFn(child);
-  if (Array.isArray(value)) {
-    for (let idx = -1, offset2 = index3 * stride; ++idx < stride; ) {
-      set4(child, offset2 + idx, value[idx]);
-    }
-  } else {
-    for (let idx = -1, offset2 = index3 * stride; ++idx < stride; ) {
-      set4(child, offset2 + idx, value.get(idx));
-    }
-  }
-};
-SetVisitor.prototype.visitBool = wrapSet(setBool);
-SetVisitor.prototype.visitInt = wrapSet(setInt);
-SetVisitor.prototype.visitInt8 = wrapSet(setInt);
-SetVisitor.prototype.visitInt16 = wrapSet(setInt);
-SetVisitor.prototype.visitInt32 = wrapSet(setInt);
-SetVisitor.prototype.visitInt64 = wrapSet(setInt);
-SetVisitor.prototype.visitUint8 = wrapSet(setInt);
-SetVisitor.prototype.visitUint16 = wrapSet(setInt);
-SetVisitor.prototype.visitUint32 = wrapSet(setInt);
-SetVisitor.prototype.visitUint64 = wrapSet(setInt);
-SetVisitor.prototype.visitFloat = wrapSet(setAnyFloat);
-SetVisitor.prototype.visitFloat16 = wrapSet(setFloat16);
-SetVisitor.prototype.visitFloat32 = wrapSet(setFloat);
-SetVisitor.prototype.visitFloat64 = wrapSet(setFloat);
-SetVisitor.prototype.visitUtf8 = wrapSet(setUtf8);
-SetVisitor.prototype.visitBinary = wrapSet(setBinary);
-SetVisitor.prototype.visitFixedSizeBinary = wrapSet(setFixedSizeBinary);
-SetVisitor.prototype.visitDate = wrapSet(setDate);
-SetVisitor.prototype.visitDateDay = wrapSet(setDateDay);
-SetVisitor.prototype.visitDateMillisecond = wrapSet(setDateMillisecond);
-SetVisitor.prototype.visitTimestamp = wrapSet(setTimestamp);
-SetVisitor.prototype.visitTimestampSecond = wrapSet(setTimestampSecond);
-SetVisitor.prototype.visitTimestampMillisecond = wrapSet(setTimestampMillisecond);
-SetVisitor.prototype.visitTimestampMicrosecond = wrapSet(setTimestampMicrosecond);
-SetVisitor.prototype.visitTimestampNanosecond = wrapSet(setTimestampNanosecond);
-SetVisitor.prototype.visitTime = wrapSet(setTime);
-SetVisitor.prototype.visitTimeSecond = wrapSet(setTimeSecond);
-SetVisitor.prototype.visitTimeMillisecond = wrapSet(setTimeMillisecond);
-SetVisitor.prototype.visitTimeMicrosecond = wrapSet(setTimeMicrosecond);
-SetVisitor.prototype.visitTimeNanosecond = wrapSet(setTimeNanosecond);
-SetVisitor.prototype.visitDecimal = wrapSet(setDecimal);
-SetVisitor.prototype.visitList = wrapSet(setList);
-SetVisitor.prototype.visitStruct = wrapSet(setStruct);
-SetVisitor.prototype.visitUnion = wrapSet(setUnion);
-SetVisitor.prototype.visitDenseUnion = wrapSet(setDenseUnion);
-SetVisitor.prototype.visitSparseUnion = wrapSet(setSparseUnion);
-SetVisitor.prototype.visitDictionary = wrapSet(setDictionary);
-SetVisitor.prototype.visitInterval = wrapSet(setIntervalValue);
-SetVisitor.prototype.visitIntervalDayTime = wrapSet(setIntervalDayTime);
-SetVisitor.prototype.visitIntervalYearMonth = wrapSet(setIntervalYearMonth);
-SetVisitor.prototype.visitDuration = wrapSet(setDuration);
-SetVisitor.prototype.visitDurationSecond = wrapSet(setDurationSecond);
-SetVisitor.prototype.visitDurationMillisecond = wrapSet(setDurationMillisecond);
-SetVisitor.prototype.visitDurationMicrosecond = wrapSet(setDurationMicrosecond);
-SetVisitor.prototype.visitDurationNanosecond = wrapSet(setDurationNanosecond);
-SetVisitor.prototype.visitFixedSizeList = wrapSet(setFixedSizeList);
-SetVisitor.prototype.visitMap = wrapSet(setMap);
-var instance = new SetVisitor();
-
-// packages/pyobsplot-js/node_modules/apache-arrow/row/struct.mjs
-var kParent = Symbol.for("parent");
-var kRowIndex = Symbol.for("rowIndex");
-var StructRow = class {
-  constructor(parent, rowIndex) {
-    this[kParent] = parent;
-    this[kRowIndex] = rowIndex;
-    return new Proxy(this, new StructRowProxyHandler());
-  }
-  toArray() {
-    return Object.values(this.toJSON());
-  }
-  toJSON() {
-    const i = this[kRowIndex];
-    const parent = this[kParent];
-    const keys = parent.type.children;
-    const json = {};
-    for (let j = -1, n = keys.length; ++j < n; ) {
-      json[keys[j].name] = instance2.visit(parent.children[j], i);
-    }
-    return json;
-  }
-  toString() {
-    return `{${[...this].map(([key, val]) => `${valueToString(key)}: ${valueToString(val)}`).join(", ")}}`;
-  }
-  [Symbol.for("nodejs.util.inspect.custom")]() {
-    return this.toString();
-  }
-  [Symbol.iterator]() {
-    return new StructRowIterator(this[kParent], this[kRowIndex]);
-  }
-};
-var StructRowIterator = class {
-  constructor(data, rowIndex) {
-    this.childIndex = 0;
-    this.children = data.children;
-    this.rowIndex = rowIndex;
-    this.childFields = data.type.children;
-    this.numChildren = this.childFields.length;
-  }
-  [Symbol.iterator]() {
-    return this;
-  }
-  next() {
-    const i = this.childIndex;
-    if (i < this.numChildren) {
-      this.childIndex = i + 1;
-      return {
-        done: false,
-        value: [
-          this.childFields[i].name,
-          instance2.visit(this.children[i], this.rowIndex)
-        ]
-      };
-    }
-    return { done: true, value: null };
-  }
-};
-Object.defineProperties(StructRow.prototype, {
-  [Symbol.toStringTag]: { enumerable: false, configurable: false, value: "Row" },
-  [kParent]: { writable: true, enumerable: false, configurable: false, value: null },
-  [kRowIndex]: { writable: true, enumerable: false, configurable: false, value: -1 }
-});
-var StructRowProxyHandler = class {
-  isExtensible() {
-    return false;
-  }
-  deleteProperty() {
-    return false;
-  }
-  preventExtensions() {
-    return true;
-  }
-  ownKeys(row) {
-    return row[kParent].type.children.map((f) => f.name);
-  }
-  has(row, key) {
-    return row[kParent].type.children.findIndex((f) => f.name === key) !== -1;
-  }
-  getOwnPropertyDescriptor(row, key) {
-    if (row[kParent].type.children.findIndex((f) => f.name === key) !== -1) {
-      return { writable: true, enumerable: true, configurable: true };
-    }
-    return;
-  }
-  get(row, key) {
-    if (Reflect.has(row, key)) {
-      return row[key];
-    }
-    const idx = row[kParent].type.children.findIndex((f) => f.name === key);
-    if (idx !== -1) {
-      const val = instance2.visit(row[kParent].children[idx], row[kRowIndex]);
-      Reflect.set(row, key, val);
-      return val;
-    }
-  }
-  set(row, key, val) {
-    const idx = row[kParent].type.children.findIndex((f) => f.name === key);
-    if (idx !== -1) {
-      instance.visit(row[kParent].children[idx], row[kRowIndex], val);
-      return Reflect.set(row, key, val);
-    } else if (Reflect.has(row, key) || typeof key === "symbol") {
-      return Reflect.set(row, key, val);
-    }
-    return false;
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/get.mjs
-var GetVisitor = class extends Visitor {
-};
-function wrapGet(fn) {
-  return (data, _1) => data.getValid(_1) ? fn(data, _1) : null;
-}
-var epochDaysToMs = (data, index3) => 864e5 * data[index3];
-var epochMillisecondsLongToMs = (data, index3) => 4294967296 * data[index3 + 1] + (data[index3] >>> 0);
-var epochMicrosecondsLongToMs = (data, index3) => 4294967296 * (data[index3 + 1] / 1e3) + (data[index3] >>> 0) / 1e3;
-var epochNanosecondsLongToMs = (data, index3) => 4294967296 * (data[index3 + 1] / 1e6) + (data[index3] >>> 0) / 1e6;
-var epochMillisecondsToDate = (epochMs) => new Date(epochMs);
-var epochDaysToDate = (data, index3) => epochMillisecondsToDate(epochDaysToMs(data, index3));
-var epochMillisecondsLongToDate = (data, index3) => epochMillisecondsToDate(epochMillisecondsLongToMs(data, index3));
-var getNull = (_data, _index) => null;
-var getVariableWidthBytes = (values2, valueOffsets, index3) => {
-  if (index3 + 1 >= valueOffsets.length) {
-    return null;
-  }
-  const x4 = valueOffsets[index3];
-  const y4 = valueOffsets[index3 + 1];
-  return values2.subarray(x4, y4);
-};
-var getBool = ({ offset: offset2, values: values2 }, index3) => {
-  const idx = offset2 + index3;
-  const byte = values2[idx >> 3];
-  return (byte & 1 << idx % 8) !== 0;
-};
-var getDateDay = ({ values: values2 }, index3) => epochDaysToDate(values2, index3);
-var getDateMillisecond = ({ values: values2 }, index3) => epochMillisecondsLongToDate(values2, index3 * 2);
-var getNumeric = ({ stride, values: values2 }, index3) => values2[stride * index3];
-var getFloat16 = ({ stride, values: values2 }, index3) => uint16ToFloat64(values2[stride * index3]);
-var getBigInts = ({ values: values2 }, index3) => values2[index3];
-var getFixedSizeBinary = ({ stride, values: values2 }, index3) => values2.subarray(stride * index3, stride * (index3 + 1));
-var getBinary = ({ values: values2, valueOffsets }, index3) => getVariableWidthBytes(values2, valueOffsets, index3);
-var getUtf8 = ({ values: values2, valueOffsets }, index3) => {
-  const bytes = getVariableWidthBytes(values2, valueOffsets, index3);
-  return bytes !== null ? decodeUtf8(bytes) : null;
-};
-var getInt = ({ values: values2 }, index3) => values2[index3];
-var getFloat = ({ type: type2, values: values2 }, index3) => type2.precision !== Precision.HALF ? values2[index3] : uint16ToFloat64(values2[index3]);
-var getDate = (data, index3) => data.type.unit === DateUnit.DAY ? getDateDay(data, index3) : getDateMillisecond(data, index3);
-var getTimestampSecond = ({ values: values2 }, index3) => 1e3 * epochMillisecondsLongToMs(values2, index3 * 2);
-var getTimestampMillisecond = ({ values: values2 }, index3) => epochMillisecondsLongToMs(values2, index3 * 2);
-var getTimestampMicrosecond = ({ values: values2 }, index3) => epochMicrosecondsLongToMs(values2, index3 * 2);
-var getTimestampNanosecond = ({ values: values2 }, index3) => epochNanosecondsLongToMs(values2, index3 * 2);
-var getTimestamp = (data, index3) => {
-  switch (data.type.unit) {
-    case TimeUnit.SECOND:
-      return getTimestampSecond(data, index3);
-    case TimeUnit.MILLISECOND:
-      return getTimestampMillisecond(data, index3);
-    case TimeUnit.MICROSECOND:
-      return getTimestampMicrosecond(data, index3);
-    case TimeUnit.NANOSECOND:
-      return getTimestampNanosecond(data, index3);
-  }
-};
-var getTimeSecond = ({ values: values2 }, index3) => values2[index3];
-var getTimeMillisecond = ({ values: values2 }, index3) => values2[index3];
-var getTimeMicrosecond = ({ values: values2 }, index3) => values2[index3];
-var getTimeNanosecond = ({ values: values2 }, index3) => values2[index3];
-var getTime = (data, index3) => {
-  switch (data.type.unit) {
-    case TimeUnit.SECOND:
-      return getTimeSecond(data, index3);
-    case TimeUnit.MILLISECOND:
-      return getTimeMillisecond(data, index3);
-    case TimeUnit.MICROSECOND:
-      return getTimeMicrosecond(data, index3);
-    case TimeUnit.NANOSECOND:
-      return getTimeNanosecond(data, index3);
-  }
-};
-var getDecimal = ({ values: values2, stride }, index3) => BN.decimal(values2.subarray(stride * index3, stride * (index3 + 1)));
-var getList = (data, index3) => {
-  const { valueOffsets, stride, children: children2 } = data;
-  const { [index3 * stride]: begin, [index3 * stride + 1]: end } = valueOffsets;
-  const child = children2[0];
-  const slice6 = child.slice(begin, end - begin);
-  return new Vector2([slice6]);
-};
-var getMap = (data, index3) => {
-  const { valueOffsets, children: children2 } = data;
-  const { [index3]: begin, [index3 + 1]: end } = valueOffsets;
-  const child = children2[0];
-  return new MapRow(child.slice(begin, end - begin));
-};
-var getStruct = (data, index3) => {
-  return new StructRow(data, index3);
-};
-var getUnion = (data, index3) => {
-  return data.type.mode === UnionMode.Dense ? getDenseUnion(data, index3) : getSparseUnion(data, index3);
-};
-var getDenseUnion = (data, index3) => {
-  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
-  const child = data.children[childIndex];
-  return instance2.visit(child, data.valueOffsets[index3]);
-};
-var getSparseUnion = (data, index3) => {
-  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
-  const child = data.children[childIndex];
-  return instance2.visit(child, index3);
-};
-var getDictionary = (data, index3) => {
-  var _a5;
-  return (_a5 = data.dictionary) === null || _a5 === void 0 ? void 0 : _a5.get(data.values[index3]);
-};
-var getInterval = (data, index3) => data.type.unit === IntervalUnit.DAY_TIME ? getIntervalDayTime(data, index3) : getIntervalYearMonth(data, index3);
-var getIntervalDayTime = ({ values: values2 }, index3) => values2.subarray(2 * index3, 2 * (index3 + 1));
-var getIntervalYearMonth = ({ values: values2 }, index3) => {
-  const interval2 = values2[index3];
-  const int32s = new Int32Array(2);
-  int32s[0] = Math.trunc(interval2 / 12);
-  int32s[1] = Math.trunc(interval2 % 12);
-  return int32s;
-};
-var getDurationSecond = ({ values: values2 }, index3) => values2[index3];
-var getDurationMillisecond = ({ values: values2 }, index3) => values2[index3];
-var getDurationMicrosecond = ({ values: values2 }, index3) => values2[index3];
-var getDurationNanosecond = ({ values: values2 }, index3) => values2[index3];
-var getDuration = (data, index3) => {
-  switch (data.type.unit) {
-    case TimeUnit.SECOND:
-      return getDurationSecond(data, index3);
-    case TimeUnit.MILLISECOND:
-      return getDurationMillisecond(data, index3);
-    case TimeUnit.MICROSECOND:
-      return getDurationMicrosecond(data, index3);
-    case TimeUnit.NANOSECOND:
-      return getDurationNanosecond(data, index3);
-  }
-};
-var getFixedSizeList = (data, index3) => {
-  const { stride, children: children2 } = data;
-  const child = children2[0];
-  const slice6 = child.slice(index3 * stride, stride);
-  return new Vector2([slice6]);
-};
-GetVisitor.prototype.visitNull = wrapGet(getNull);
-GetVisitor.prototype.visitBool = wrapGet(getBool);
-GetVisitor.prototype.visitInt = wrapGet(getInt);
-GetVisitor.prototype.visitInt8 = wrapGet(getNumeric);
-GetVisitor.prototype.visitInt16 = wrapGet(getNumeric);
-GetVisitor.prototype.visitInt32 = wrapGet(getNumeric);
-GetVisitor.prototype.visitInt64 = wrapGet(getBigInts);
-GetVisitor.prototype.visitUint8 = wrapGet(getNumeric);
-GetVisitor.prototype.visitUint16 = wrapGet(getNumeric);
-GetVisitor.prototype.visitUint32 = wrapGet(getNumeric);
-GetVisitor.prototype.visitUint64 = wrapGet(getBigInts);
-GetVisitor.prototype.visitFloat = wrapGet(getFloat);
-GetVisitor.prototype.visitFloat16 = wrapGet(getFloat16);
-GetVisitor.prototype.visitFloat32 = wrapGet(getNumeric);
-GetVisitor.prototype.visitFloat64 = wrapGet(getNumeric);
-GetVisitor.prototype.visitUtf8 = wrapGet(getUtf8);
-GetVisitor.prototype.visitBinary = wrapGet(getBinary);
-GetVisitor.prototype.visitFixedSizeBinary = wrapGet(getFixedSizeBinary);
-GetVisitor.prototype.visitDate = wrapGet(getDate);
-GetVisitor.prototype.visitDateDay = wrapGet(getDateDay);
-GetVisitor.prototype.visitDateMillisecond = wrapGet(getDateMillisecond);
-GetVisitor.prototype.visitTimestamp = wrapGet(getTimestamp);
-GetVisitor.prototype.visitTimestampSecond = wrapGet(getTimestampSecond);
-GetVisitor.prototype.visitTimestampMillisecond = wrapGet(getTimestampMillisecond);
-GetVisitor.prototype.visitTimestampMicrosecond = wrapGet(getTimestampMicrosecond);
-GetVisitor.prototype.visitTimestampNanosecond = wrapGet(getTimestampNanosecond);
-GetVisitor.prototype.visitTime = wrapGet(getTime);
-GetVisitor.prototype.visitTimeSecond = wrapGet(getTimeSecond);
-GetVisitor.prototype.visitTimeMillisecond = wrapGet(getTimeMillisecond);
-GetVisitor.prototype.visitTimeMicrosecond = wrapGet(getTimeMicrosecond);
-GetVisitor.prototype.visitTimeNanosecond = wrapGet(getTimeNanosecond);
-GetVisitor.prototype.visitDecimal = wrapGet(getDecimal);
-GetVisitor.prototype.visitList = wrapGet(getList);
-GetVisitor.prototype.visitStruct = wrapGet(getStruct);
-GetVisitor.prototype.visitUnion = wrapGet(getUnion);
-GetVisitor.prototype.visitDenseUnion = wrapGet(getDenseUnion);
-GetVisitor.prototype.visitSparseUnion = wrapGet(getSparseUnion);
-GetVisitor.prototype.visitDictionary = wrapGet(getDictionary);
-GetVisitor.prototype.visitInterval = wrapGet(getInterval);
-GetVisitor.prototype.visitIntervalDayTime = wrapGet(getIntervalDayTime);
-GetVisitor.prototype.visitIntervalYearMonth = wrapGet(getIntervalYearMonth);
-GetVisitor.prototype.visitDuration = wrapGet(getDuration);
-GetVisitor.prototype.visitDurationSecond = wrapGet(getDurationSecond);
-GetVisitor.prototype.visitDurationMillisecond = wrapGet(getDurationMillisecond);
-GetVisitor.prototype.visitDurationMicrosecond = wrapGet(getDurationMicrosecond);
-GetVisitor.prototype.visitDurationNanosecond = wrapGet(getDurationNanosecond);
-GetVisitor.prototype.visitFixedSizeList = wrapGet(getFixedSizeList);
-GetVisitor.prototype.visitMap = wrapGet(getMap);
-var instance2 = new GetVisitor();
-
-// packages/pyobsplot-js/node_modules/apache-arrow/row/map.mjs
-var kKeys = Symbol.for("keys");
-var kVals = Symbol.for("vals");
-var MapRow = class {
-  constructor(slice6) {
-    this[kKeys] = new Vector2([slice6.children[0]]).memoize();
-    this[kVals] = slice6.children[1];
-    return new Proxy(this, new MapRowProxyHandler());
-  }
-  [Symbol.iterator]() {
-    return new MapRowIterator(this[kKeys], this[kVals]);
-  }
-  get size() {
-    return this[kKeys].length;
-  }
-  toArray() {
-    return Object.values(this.toJSON());
-  }
-  toJSON() {
-    const keys = this[kKeys];
-    const vals = this[kVals];
-    const json = {};
-    for (let i = -1, n = keys.length; ++i < n; ) {
-      json[keys.get(i)] = instance2.visit(vals, i);
-    }
-    return json;
-  }
-  toString() {
-    return `{${[...this].map(([key, val]) => `${valueToString(key)}: ${valueToString(val)}`).join(", ")}}`;
-  }
-  [Symbol.for("nodejs.util.inspect.custom")]() {
-    return this.toString();
-  }
-};
-var MapRowIterator = class {
-  constructor(keys, vals) {
-    this.keys = keys;
-    this.vals = vals;
-    this.keyIndex = 0;
-    this.numKeys = keys.length;
-  }
-  [Symbol.iterator]() {
-    return this;
-  }
-  next() {
-    const i = this.keyIndex;
-    if (i === this.numKeys) {
-      return { done: true, value: null };
-    }
-    this.keyIndex++;
-    return {
-      done: false,
-      value: [
-        this.keys.get(i),
-        instance2.visit(this.vals, i)
-      ]
-    };
-  }
-};
-var MapRowProxyHandler = class {
-  isExtensible() {
-    return false;
-  }
-  deleteProperty() {
-    return false;
-  }
-  preventExtensions() {
-    return true;
-  }
-  ownKeys(row) {
-    return row[kKeys].toArray().map(String);
-  }
-  has(row, key) {
-    return row[kKeys].includes(key);
-  }
-  getOwnPropertyDescriptor(row, key) {
-    const idx = row[kKeys].indexOf(key);
-    if (idx !== -1) {
-      return { writable: true, enumerable: true, configurable: true };
-    }
-    return;
-  }
-  get(row, key) {
-    if (Reflect.has(row, key)) {
-      return row[key];
-    }
-    const idx = row[kKeys].indexOf(key);
-    if (idx !== -1) {
-      const val = instance2.visit(Reflect.get(row, kVals), idx);
-      Reflect.set(row, key, val);
-      return val;
-    }
-  }
-  set(row, key, val) {
-    const idx = row[kKeys].indexOf(key);
-    if (idx !== -1) {
-      instance.visit(Reflect.get(row, kVals), idx, val);
-      return Reflect.set(row, key, val);
-    } else if (Reflect.has(row, key)) {
-      return Reflect.set(row, key, val);
-    }
-    return false;
-  }
-};
-Object.defineProperties(MapRow.prototype, {
-  [Symbol.toStringTag]: { enumerable: false, configurable: false, value: "Row" },
-  [kKeys]: { writable: true, enumerable: false, configurable: false, value: null },
-  [kVals]: { writable: true, enumerable: false, configurable: false, value: null }
-});
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/vector.mjs
-function clampIndex(source, index3, then) {
-  const length4 = source.length;
-  const adjust = index3 > -1 ? index3 : length4 + index3 % length4;
-  return then ? then(source, adjust) : adjust;
-}
-var tmp;
-function clampRange(source, begin, end, then) {
-  const { length: len = 0 } = source;
-  let lhs = typeof begin !== "number" ? 0 : begin;
-  let rhs = typeof end !== "number" ? len : end;
-  lhs < 0 && (lhs = (lhs % len + len) % len);
-  rhs < 0 && (rhs = (rhs % len + len) % len);
-  rhs < lhs && (tmp = lhs, lhs = rhs, rhs = tmp);
-  rhs > len && (rhs = len);
-  return then ? then(source, lhs, rhs) : [lhs, rhs];
-}
-var isNaNFast = (value) => value !== value;
-function createElementComparator(search) {
-  const typeofSearch = typeof search;
-  if (typeofSearch !== "object" || search === null) {
-    if (isNaNFast(search)) {
-      return isNaNFast;
-    }
-    return (value) => value === search;
-  }
-  if (search instanceof Date) {
-    const valueOfSearch = search.valueOf();
-    return (value) => value instanceof Date ? value.valueOf() === valueOfSearch : false;
-  }
-  if (ArrayBuffer.isView(search)) {
-    return (value) => value ? compareArrayLike(search, value) : false;
-  }
-  if (search instanceof Map) {
-    return createMapComparator(search);
-  }
-  if (Array.isArray(search)) {
-    return createArrayLikeComparator(search);
-  }
-  if (search instanceof Vector2) {
-    return createVectorComparator(search);
-  }
-  return createObjectComparator(search, true);
-}
-function createArrayLikeComparator(lhs) {
-  const comparators = [];
-  for (let i = -1, n = lhs.length; ++i < n; ) {
-    comparators[i] = createElementComparator(lhs[i]);
-  }
-  return createSubElementsComparator(comparators);
-}
-function createMapComparator(lhs) {
-  let i = -1;
-  const comparators = [];
-  for (const v2 of lhs.values())
-    comparators[++i] = createElementComparator(v2);
-  return createSubElementsComparator(comparators);
-}
-function createVectorComparator(lhs) {
-  const comparators = [];
-  for (let i = -1, n = lhs.length; ++i < n; ) {
-    comparators[i] = createElementComparator(lhs.get(i));
-  }
-  return createSubElementsComparator(comparators);
-}
-function createObjectComparator(lhs, allowEmpty = false) {
-  const keys = Object.keys(lhs);
-  if (!allowEmpty && keys.length === 0) {
-    return () => false;
-  }
-  const comparators = [];
-  for (let i = -1, n = keys.length; ++i < n; ) {
-    comparators[i] = createElementComparator(lhs[keys[i]]);
-  }
-  return createSubElementsComparator(comparators, keys);
-}
-function createSubElementsComparator(comparators, keys) {
-  return (rhs) => {
-    if (!rhs || typeof rhs !== "object") {
-      return false;
-    }
-    switch (rhs.constructor) {
-      case Array:
-        return compareArray(comparators, rhs);
-      case Map:
-        return compareObject(comparators, rhs, rhs.keys());
-      case MapRow:
-      case StructRow:
-      case Object:
-      case void 0:
-        return compareObject(comparators, rhs, keys || Object.keys(rhs));
-    }
-    return rhs instanceof Vector2 ? compareVector(comparators, rhs) : false;
-  };
-}
-function compareArray(comparators, arr) {
-  const n = comparators.length;
-  if (arr.length !== n) {
-    return false;
-  }
-  for (let i = -1; ++i < n; ) {
-    if (!comparators[i](arr[i])) {
-      return false;
-    }
-  }
-  return true;
-}
-function compareVector(comparators, vec2) {
-  const n = comparators.length;
-  if (vec2.length !== n) {
-    return false;
-  }
-  for (let i = -1; ++i < n; ) {
-    if (!comparators[i](vec2.get(i))) {
-      return false;
-    }
-  }
-  return true;
-}
-function compareObject(comparators, obj, keys) {
-  const lKeyItr = keys[Symbol.iterator]();
-  const rKeyItr = obj instanceof Map ? obj.keys() : Object.keys(obj)[Symbol.iterator]();
-  const rValItr = obj instanceof Map ? obj.values() : Object.values(obj)[Symbol.iterator]();
-  let i = 0;
-  const n = comparators.length;
-  let rVal = rValItr.next();
-  let lKey = lKeyItr.next();
-  let rKey = rKeyItr.next();
-  for (; i < n && !lKey.done && !rKey.done && !rVal.done; ++i, lKey = lKeyItr.next(), rKey = rKeyItr.next(), rVal = rValItr.next()) {
-    if (lKey.value !== rKey.value || !comparators[i](rVal.value)) {
-      break;
-    }
-  }
-  if (i === n && lKey.done && rKey.done && rVal.done) {
-    return true;
-  }
-  lKeyItr.return && lKeyItr.return();
-  rKeyItr.return && rKeyItr.return();
-  rValItr.return && rValItr.return();
-  return false;
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/bit.mjs
-var bit_exports = {};
-__export(bit_exports, {
-  BitIterator: () => BitIterator,
-  getBit: () => getBit,
-  getBool: () => getBool2,
-  packBools: () => packBools,
-  popcnt_array: () => popcnt_array,
-  popcnt_bit_range: () => popcnt_bit_range,
-  popcnt_uint32: () => popcnt_uint32,
-  setBool: () => setBool2,
-  truncateBitmap: () => truncateBitmap
-});
-function getBool2(_data, _index, byte, bit) {
-  return (byte & 1 << bit) !== 0;
-}
-function getBit(_data, _index, byte, bit) {
-  return (byte & 1 << bit) >> bit;
-}
-function setBool2(bytes, index3, value) {
-  return value ? !!(bytes[index3 >> 3] |= 1 << index3 % 8) || true : !(bytes[index3 >> 3] &= ~(1 << index3 % 8)) && false;
-}
-function truncateBitmap(offset2, length4, bitmap) {
-  const alignedSize = bitmap.byteLength + 7 & ~7;
-  if (offset2 > 0 || bitmap.byteLength < alignedSize) {
-    const bytes = new Uint8Array(alignedSize);
-    bytes.set(offset2 % 8 === 0 ? bitmap.subarray(offset2 >> 3) : (
-      // Otherwise iterate each bit from the offset and return a new one
-      packBools(new BitIterator(bitmap, offset2, length4, null, getBool2)).subarray(0, alignedSize)
-    ));
-    return bytes;
-  }
-  return bitmap;
-}
-function packBools(values2) {
-  const xs = [];
-  let i = 0, bit = 0, byte = 0;
-  for (const value of values2) {
-    value && (byte |= 1 << bit);
-    if (++bit === 8) {
-      xs[i++] = byte;
-      byte = bit = 0;
-    }
-  }
-  if (i === 0 || bit > 0) {
-    xs[i++] = byte;
-  }
-  const b = new Uint8Array(xs.length + 7 & ~7);
-  b.set(xs);
-  return b;
-}
-var BitIterator = class {
-  constructor(bytes, begin, length4, context, get3) {
-    this.bytes = bytes;
-    this.length = length4;
-    this.context = context;
-    this.get = get3;
-    this.bit = begin % 8;
-    this.byteIndex = begin >> 3;
-    this.byte = bytes[this.byteIndex++];
-    this.index = 0;
-  }
-  next() {
-    if (this.index < this.length) {
-      if (this.bit === 8) {
-        this.bit = 0;
-        this.byte = this.bytes[this.byteIndex++];
-      }
-      return {
-        value: this.get(this.context, this.index++, this.byte, this.bit++)
-      };
-    }
-    return { done: true, value: null };
-  }
-  [Symbol.iterator]() {
-    return this;
-  }
-};
-function popcnt_bit_range(data, lhs, rhs) {
-  if (rhs - lhs <= 0) {
-    return 0;
-  }
-  if (rhs - lhs < 8) {
-    let sum5 = 0;
-    for (const bit of new BitIterator(data, lhs, rhs - lhs, data, getBit)) {
-      sum5 += bit;
-    }
-    return sum5;
-  }
-  const rhsInside = rhs >> 3 << 3;
-  const lhsInside = lhs + (lhs % 8 === 0 ? 0 : 8 - lhs % 8);
-  return (
-    // Get the popcnt of bits between the left hand side, and the next highest multiple of 8
-    popcnt_bit_range(data, lhs, lhsInside) + // Get the popcnt of bits between the right hand side, and the next lowest multiple of 8
-    popcnt_bit_range(data, rhsInside, rhs) + // Get the popcnt of all bits between the left and right hand sides' multiples of 8
-    popcnt_array(data, lhsInside >> 3, rhsInside - lhsInside >> 3)
-  );
-}
-function popcnt_array(arr, byteOffset, byteLength) {
-  let cnt = 0, pos = Math.trunc(byteOffset);
-  const view = new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
-  const len = byteLength === void 0 ? arr.byteLength : pos + byteLength;
-  while (len - pos >= 4) {
-    cnt += popcnt_uint32(view.getUint32(pos));
-    pos += 4;
-  }
-  while (len - pos >= 2) {
-    cnt += popcnt_uint32(view.getUint16(pos));
-    pos += 2;
-  }
-  while (len - pos >= 1) {
-    cnt += popcnt_uint32(view.getUint8(pos));
-    pos += 1;
-  }
-  return cnt;
-}
-function popcnt_uint32(uint32) {
-  let i = Math.trunc(uint32);
-  i = i - (i >>> 1 & 1431655765);
-  i = (i & 858993459) + (i >>> 2 & 858993459);
-  return (i + (i >>> 4) & 252645135) * 16843009 >>> 24;
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/data.mjs
-var kUnknownNullCount = -1;
-var Data = class {
-  get typeId() {
-    return this.type.typeId;
-  }
-  get ArrayType() {
-    return this.type.ArrayType;
-  }
-  get buffers() {
-    return [this.valueOffsets, this.values, this.nullBitmap, this.typeIds];
-  }
-  get nullable() {
-    if (this._nullCount !== 0) {
-      const { type: type2 } = this;
-      if (DataType.isSparseUnion(type2)) {
-        return this.children.some((child) => child.nullable);
-      } else if (DataType.isDenseUnion(type2)) {
-        return this.children.some((child) => child.nullable);
-      }
-      return this.nullBitmap && this.nullBitmap.byteLength > 0;
-    }
-    return true;
-  }
-  get byteLength() {
-    let byteLength = 0;
-    const { valueOffsets, values: values2, nullBitmap, typeIds } = this;
-    valueOffsets && (byteLength += valueOffsets.byteLength);
-    values2 && (byteLength += values2.byteLength);
-    nullBitmap && (byteLength += nullBitmap.byteLength);
-    typeIds && (byteLength += typeIds.byteLength);
-    return this.children.reduce((byteLength2, child) => byteLength2 + child.byteLength, byteLength);
-  }
-  get nullCount() {
-    if (DataType.isUnion(this.type)) {
-      return this.children.reduce((nullCount2, child) => nullCount2 + child.nullCount, 0);
-    }
-    let nullCount = this._nullCount;
-    let nullBitmap;
-    if (nullCount <= kUnknownNullCount && (nullBitmap = this.nullBitmap)) {
-      this._nullCount = nullCount = this.length - popcnt_bit_range(nullBitmap, this.offset, this.offset + this.length);
-    }
-    return nullCount;
-  }
-  constructor(type2, offset2, length4, nullCount, buffers, children2 = [], dictionary) {
-    this.type = type2;
-    this.children = children2;
-    this.dictionary = dictionary;
-    this.offset = Math.floor(Math.max(offset2 || 0, 0));
-    this.length = Math.floor(Math.max(length4 || 0, 0));
-    this._nullCount = Math.floor(Math.max(nullCount || 0, -1));
-    let buffer;
-    if (buffers instanceof Data) {
-      this.stride = buffers.stride;
-      this.values = buffers.values;
-      this.typeIds = buffers.typeIds;
-      this.nullBitmap = buffers.nullBitmap;
-      this.valueOffsets = buffers.valueOffsets;
-    } else {
-      this.stride = strideForType(type2);
-      if (buffers) {
-        (buffer = buffers[0]) && (this.valueOffsets = buffer);
-        (buffer = buffers[1]) && (this.values = buffer);
-        (buffer = buffers[2]) && (this.nullBitmap = buffer);
-        (buffer = buffers[3]) && (this.typeIds = buffer);
-      }
-    }
-  }
-  getValid(index3) {
-    const { type: type2 } = this;
-    if (DataType.isUnion(type2)) {
-      const union2 = type2;
-      const child = this.children[union2.typeIdToChildIndex[this.typeIds[index3]]];
-      const indexInChild = union2.mode === UnionMode.Dense ? this.valueOffsets[index3] : index3;
-      return child.getValid(indexInChild);
-    }
-    if (this.nullable && this.nullCount > 0) {
-      const pos = this.offset + index3;
-      const val = this.nullBitmap[pos >> 3];
-      return (val & 1 << pos % 8) !== 0;
-    }
-    return true;
-  }
-  setValid(index3, value) {
-    let prev;
-    const { type: type2 } = this;
-    if (DataType.isUnion(type2)) {
-      const union2 = type2;
-      const child = this.children[union2.typeIdToChildIndex[this.typeIds[index3]]];
-      const indexInChild = union2.mode === UnionMode.Dense ? this.valueOffsets[index3] : index3;
-      prev = child.getValid(indexInChild);
-      child.setValid(indexInChild, value);
-    } else {
-      let { nullBitmap } = this;
-      const { offset: offset2, length: length4 } = this;
-      const idx = offset2 + index3;
-      const mask = 1 << idx % 8;
-      const byteOffset = idx >> 3;
-      if (!nullBitmap || nullBitmap.byteLength <= byteOffset) {
-        nullBitmap = new Uint8Array((offset2 + length4 + 63 & ~63) >> 3).fill(255);
-        if (this.nullCount > 0) {
-          nullBitmap.set(truncateBitmap(offset2, length4, this.nullBitmap), 0);
-        }
-        Object.assign(this, { nullBitmap, _nullCount: -1 });
-      }
-      const byte = nullBitmap[byteOffset];
-      prev = (byte & mask) !== 0;
-      value ? nullBitmap[byteOffset] = byte | mask : nullBitmap[byteOffset] = byte & ~mask;
-    }
-    if (prev !== !!value) {
-      this._nullCount = this.nullCount + (value ? -1 : 1);
-    }
-    return value;
-  }
-  clone(type2 = this.type, offset2 = this.offset, length4 = this.length, nullCount = this._nullCount, buffers = this, children2 = this.children) {
-    return new Data(type2, offset2, length4, nullCount, buffers, children2, this.dictionary);
-  }
-  slice(offset2, length4) {
-    const { stride, typeId, children: children2 } = this;
-    const nullCount = +(this._nullCount === 0) - 1;
-    const childStride = typeId === 16 ? stride : 1;
-    const buffers = this._sliceBuffers(offset2, length4, stride, typeId);
-    return this.clone(
-      this.type,
-      this.offset + offset2,
-      length4,
-      nullCount,
-      buffers,
-      // Don't slice children if we have value offsets (the variable-width types)
-      children2.length === 0 || this.valueOffsets ? children2 : this._sliceChildren(children2, childStride * offset2, childStride * length4)
-    );
-  }
-  _changeLengthAndBackfillNullBitmap(newLength) {
-    if (this.typeId === Type.Null) {
-      return this.clone(this.type, 0, newLength, 0);
-    }
-    const { length: length4, nullCount } = this;
-    const bitmap = new Uint8Array((newLength + 63 & ~63) >> 3).fill(255, 0, length4 >> 3);
-    bitmap[length4 >> 3] = (1 << length4 - (length4 & ~7)) - 1;
-    if (nullCount > 0) {
-      bitmap.set(truncateBitmap(this.offset, length4, this.nullBitmap), 0);
-    }
-    const buffers = this.buffers;
-    buffers[BufferType.VALIDITY] = bitmap;
-    return this.clone(this.type, 0, newLength, nullCount + (newLength - length4), buffers);
-  }
-  _sliceBuffers(offset2, length4, stride, typeId) {
-    let arr;
-    const { buffers } = this;
-    (arr = buffers[BufferType.TYPE]) && (buffers[BufferType.TYPE] = arr.subarray(offset2, offset2 + length4));
-    (arr = buffers[BufferType.OFFSET]) && (buffers[BufferType.OFFSET] = arr.subarray(offset2, offset2 + length4 + 1)) || // Otherwise if no offsets, slice the data buffer. Don't slice the data vector for Booleans, since the offset goes by bits not bytes
-    (arr = buffers[BufferType.DATA]) && (buffers[BufferType.DATA] = typeId === 6 ? arr : arr.subarray(stride * offset2, stride * (offset2 + length4)));
-    return buffers;
-  }
-  _sliceChildren(children2, offset2, length4) {
-    return children2.map((child) => child.slice(offset2, length4));
-  }
-};
-Data.prototype.children = Object.freeze([]);
-var MakeDataVisitor = class extends Visitor {
-  visit(props) {
-    return this.getVisitFn(props["type"]).call(this, props);
-  }
-  visitNull(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["length"]: length4 = 0 } = props;
-    return new Data(type2, offset2, length4, length4);
-  }
-  visitBool(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length >> 3, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitInt(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitFloat(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitUtf8(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const data = toUint8Array(props["data"]);
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const valueOffsets = toInt32Array(props["valueOffsets"]);
-    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [valueOffsets, data, nullBitmap]);
-  }
-  visitBinary(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const data = toUint8Array(props["data"]);
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const valueOffsets = toInt32Array(props["valueOffsets"]);
-    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [valueOffsets, data, nullBitmap]);
-  }
-  visitFixedSizeBinary(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitDate(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitTimestamp(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitTime(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitDecimal(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitList(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const valueOffsets = toInt32Array(props["valueOffsets"]);
-    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, nullBitmap], [child]);
-  }
-  visitStruct(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["children"]: children2 = [] } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const { length: length4 = children2.reduce((len, { length: length5 }) => Math.max(len, length5), 0), nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, void 0, nullBitmap], children2);
-  }
-  visitUnion(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["children"]: children2 = [] } = props;
-    const typeIds = toArrayBufferView(type2.ArrayType, props["typeIds"]);
-    const { ["length"]: length4 = typeIds.length, ["nullCount"]: nullCount = -1 } = props;
-    if (DataType.isSparseUnion(type2)) {
-      return new Data(type2, offset2, length4, nullCount, [void 0, void 0, void 0, typeIds], children2);
-    }
-    const valueOffsets = toInt32Array(props["valueOffsets"]);
-    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, void 0, typeIds], children2);
-  }
-  visitDictionary(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.indices.ArrayType, props["data"]);
-    const { ["dictionary"]: dictionary = new Vector2([new MakeDataVisitor().visit({ type: type2.dictionary })]) } = props;
-    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap], [], dictionary);
-  }
-  visitInterval(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitDuration(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const data = toArrayBufferView(type2.ArrayType, props["data"]);
-    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
-  }
-  visitFixedSizeList(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.valueType }) } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const { ["length"]: length4 = child.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [void 0, void 0, nullBitmap], [child]);
-  }
-  visitMap(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.childType }) } = props;
-    const nullBitmap = toUint8Array(props["nullBitmap"]);
-    const valueOffsets = toInt32Array(props["valueOffsets"]);
-    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
-    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, nullBitmap], [child]);
-  }
-};
-var makeDataVisitor = new MakeDataVisitor();
-function makeData(props) {
-  return makeDataVisitor.visit(props);
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/util/chunk.mjs
-var ChunkedIterator = class {
-  constructor(numChunks = 0, getChunkIterator) {
-    this.numChunks = numChunks;
-    this.getChunkIterator = getChunkIterator;
-    this.chunkIndex = 0;
-    this.chunkIterator = this.getChunkIterator(0);
-  }
-  next() {
-    while (this.chunkIndex < this.numChunks) {
-      const next = this.chunkIterator.next();
-      if (!next.done) {
-        return next;
-      }
-      if (++this.chunkIndex < this.numChunks) {
-        this.chunkIterator = this.getChunkIterator(this.chunkIndex);
-      }
-    }
-    return { done: true, value: null };
-  }
-  [Symbol.iterator]() {
-    return this;
-  }
-};
-function computeChunkNullCounts(chunks) {
-  return chunks.reduce((nullCount, chunk) => nullCount + chunk.nullCount, 0);
-}
-function computeChunkOffsets(chunks) {
-  return chunks.reduce((offsets, chunk, index3) => {
-    offsets[index3 + 1] = offsets[index3] + chunk.length;
-    return offsets;
-  }, new Uint32Array(chunks.length + 1));
-}
-function sliceChunks(chunks, offsets, begin, end) {
-  const slices = [];
-  for (let i = -1, n = chunks.length; ++i < n; ) {
-    const chunk = chunks[i];
-    const offset2 = offsets[i];
-    const { length: length4 } = chunk;
-    if (offset2 >= end) {
-      break;
-    }
-    if (begin >= offset2 + length4) {
-      continue;
-    }
-    if (offset2 >= begin && offset2 + length4 <= end) {
-      slices.push(chunk);
-      continue;
-    }
-    const from = Math.max(0, begin - offset2);
-    const to = Math.min(end - offset2, length4);
-    slices.push(chunk.slice(from, to - from));
-  }
-  if (slices.length === 0) {
-    slices.push(chunks[0].slice(0, 0));
-  }
-  return slices;
-}
-function binarySearch(chunks, offsets, idx, fn) {
-  let lhs = 0, mid2 = 0, rhs = offsets.length - 1;
-  do {
-    if (lhs >= rhs - 1) {
-      return idx < offsets[rhs] ? fn(chunks, lhs, idx - offsets[lhs]) : null;
-    }
-    mid2 = lhs + Math.trunc((rhs - lhs) * 0.5);
-    idx < offsets[mid2] ? rhs = mid2 : lhs = mid2;
-  } while (lhs < rhs);
-}
-function isChunkedValid(data, index3) {
-  return data.getValid(index3);
-}
-function wrapChunkedCall1(fn) {
-  function chunkedFn(chunks, i, j) {
-    return fn(chunks[i], j);
-  }
-  return function(index3) {
-    const data = this.data;
-    return binarySearch(data, this._offsets, index3, chunkedFn);
-  };
-}
-function wrapChunkedCall2(fn) {
-  let _2;
-  function chunkedFn(chunks, i, j) {
-    return fn(chunks[i], j, _2);
-  }
-  return function(index3, value) {
-    const data = this.data;
-    _2 = value;
-    const result = binarySearch(data, this._offsets, index3, chunkedFn);
-    _2 = void 0;
-    return result;
-  };
-}
-function wrapChunkedIndexOf(indexOf2) {
-  let _1;
-  function chunkedIndexOf(data, chunkIndex, fromIndex) {
-    let begin = fromIndex, index3 = 0, total = 0;
-    for (let i = chunkIndex - 1, n = data.length; ++i < n; ) {
-      const chunk = data[i];
-      if (~(index3 = indexOf2(chunk, _1, begin))) {
-        return total + index3;
-      }
-      begin = 0;
-      total += chunk.length;
-    }
-    return -1;
-  }
-  return function(element, offset2) {
-    _1 = element;
-    const data = this.data;
-    const result = typeof offset2 !== "number" ? chunkedIndexOf(data, 0, 0) : binarySearch(data, this._offsets, offset2, chunkedIndexOf);
-    _1 = void 0;
-    return result;
-  };
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/indexof.mjs
-var IndexOfVisitor = class extends Visitor {
-};
-function nullIndexOf(data, searchElement) {
-  return searchElement === null && data.length > 0 ? 0 : -1;
-}
-function indexOfNull(data, fromIndex) {
-  const { nullBitmap } = data;
-  if (!nullBitmap || data.nullCount <= 0) {
-    return -1;
-  }
-  let i = 0;
-  for (const isValid of new BitIterator(nullBitmap, data.offset + (fromIndex || 0), data.length, nullBitmap, getBool2)) {
-    if (!isValid) {
-      return i;
-    }
-    ++i;
-  }
-  return -1;
-}
-function indexOfValue(data, searchElement, fromIndex) {
-  if (searchElement === void 0) {
-    return -1;
-  }
-  if (searchElement === null) {
-    switch (data.typeId) {
-      case Type.Union:
-        break;
-      case Type.Dictionary:
-        break;
-      default:
-        return indexOfNull(data, fromIndex);
-    }
-  }
-  const get3 = instance2.getVisitFn(data);
-  const compare = createElementComparator(searchElement);
-  for (let i = (fromIndex || 0) - 1, n = data.length; ++i < n; ) {
-    if (compare(get3(data, i))) {
-      return i;
-    }
-  }
-  return -1;
-}
-function indexOfUnion(data, searchElement, fromIndex) {
-  const get3 = instance2.getVisitFn(data);
-  const compare = createElementComparator(searchElement);
-  for (let i = (fromIndex || 0) - 1, n = data.length; ++i < n; ) {
-    if (compare(get3(data, i))) {
-      return i;
-    }
-  }
-  return -1;
-}
-IndexOfVisitor.prototype.visitNull = nullIndexOf;
-IndexOfVisitor.prototype.visitBool = indexOfValue;
-IndexOfVisitor.prototype.visitInt = indexOfValue;
-IndexOfVisitor.prototype.visitInt8 = indexOfValue;
-IndexOfVisitor.prototype.visitInt16 = indexOfValue;
-IndexOfVisitor.prototype.visitInt32 = indexOfValue;
-IndexOfVisitor.prototype.visitInt64 = indexOfValue;
-IndexOfVisitor.prototype.visitUint8 = indexOfValue;
-IndexOfVisitor.prototype.visitUint16 = indexOfValue;
-IndexOfVisitor.prototype.visitUint32 = indexOfValue;
-IndexOfVisitor.prototype.visitUint64 = indexOfValue;
-IndexOfVisitor.prototype.visitFloat = indexOfValue;
-IndexOfVisitor.prototype.visitFloat16 = indexOfValue;
-IndexOfVisitor.prototype.visitFloat32 = indexOfValue;
-IndexOfVisitor.prototype.visitFloat64 = indexOfValue;
-IndexOfVisitor.prototype.visitUtf8 = indexOfValue;
-IndexOfVisitor.prototype.visitBinary = indexOfValue;
-IndexOfVisitor.prototype.visitFixedSizeBinary = indexOfValue;
-IndexOfVisitor.prototype.visitDate = indexOfValue;
-IndexOfVisitor.prototype.visitDateDay = indexOfValue;
-IndexOfVisitor.prototype.visitDateMillisecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimestamp = indexOfValue;
-IndexOfVisitor.prototype.visitTimestampSecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimestampMillisecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimestampMicrosecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimestampNanosecond = indexOfValue;
-IndexOfVisitor.prototype.visitTime = indexOfValue;
-IndexOfVisitor.prototype.visitTimeSecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimeMillisecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimeMicrosecond = indexOfValue;
-IndexOfVisitor.prototype.visitTimeNanosecond = indexOfValue;
-IndexOfVisitor.prototype.visitDecimal = indexOfValue;
-IndexOfVisitor.prototype.visitList = indexOfValue;
-IndexOfVisitor.prototype.visitStruct = indexOfValue;
-IndexOfVisitor.prototype.visitUnion = indexOfValue;
-IndexOfVisitor.prototype.visitDenseUnion = indexOfUnion;
-IndexOfVisitor.prototype.visitSparseUnion = indexOfUnion;
-IndexOfVisitor.prototype.visitDictionary = indexOfValue;
-IndexOfVisitor.prototype.visitInterval = indexOfValue;
-IndexOfVisitor.prototype.visitIntervalDayTime = indexOfValue;
-IndexOfVisitor.prototype.visitIntervalYearMonth = indexOfValue;
-IndexOfVisitor.prototype.visitDuration = indexOfValue;
-IndexOfVisitor.prototype.visitDurationSecond = indexOfValue;
-IndexOfVisitor.prototype.visitDurationMillisecond = indexOfValue;
-IndexOfVisitor.prototype.visitDurationMicrosecond = indexOfValue;
-IndexOfVisitor.prototype.visitDurationNanosecond = indexOfValue;
-IndexOfVisitor.prototype.visitFixedSizeList = indexOfValue;
-IndexOfVisitor.prototype.visitMap = indexOfValue;
-var instance3 = new IndexOfVisitor();
-
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/iterator.mjs
-var IteratorVisitor = class extends Visitor {
-};
-function vectorIterator(vector2) {
-  const { type: type2 } = vector2;
-  if (vector2.nullCount === 0 && vector2.stride === 1 && (type2.typeId === Type.Timestamp || type2 instanceof Int_ && type2.bitWidth !== 64 || type2 instanceof Time_ && type2.bitWidth !== 64 || type2 instanceof Float && type2.precision !== Precision.HALF)) {
-    return new ChunkedIterator(vector2.data.length, (chunkIndex) => {
-      const data = vector2.data[chunkIndex];
-      return data.values.subarray(0, data.length)[Symbol.iterator]();
-    });
-  }
-  let offset2 = 0;
-  return new ChunkedIterator(vector2.data.length, (chunkIndex) => {
-    const data = vector2.data[chunkIndex];
-    const length4 = data.length;
-    const inner = vector2.slice(offset2, offset2 + length4);
-    offset2 += length4;
-    return new VectorIterator(inner);
-  });
-}
-var VectorIterator = class {
-  constructor(vector2) {
-    this.vector = vector2;
-    this.index = 0;
-  }
-  next() {
-    if (this.index < this.vector.length) {
-      return {
-        value: this.vector.get(this.index++)
-      };
-    }
-    return { done: true, value: null };
-  }
-  [Symbol.iterator]() {
-    return this;
-  }
-};
-IteratorVisitor.prototype.visitNull = vectorIterator;
-IteratorVisitor.prototype.visitBool = vectorIterator;
-IteratorVisitor.prototype.visitInt = vectorIterator;
-IteratorVisitor.prototype.visitInt8 = vectorIterator;
-IteratorVisitor.prototype.visitInt16 = vectorIterator;
-IteratorVisitor.prototype.visitInt32 = vectorIterator;
-IteratorVisitor.prototype.visitInt64 = vectorIterator;
-IteratorVisitor.prototype.visitUint8 = vectorIterator;
-IteratorVisitor.prototype.visitUint16 = vectorIterator;
-IteratorVisitor.prototype.visitUint32 = vectorIterator;
-IteratorVisitor.prototype.visitUint64 = vectorIterator;
-IteratorVisitor.prototype.visitFloat = vectorIterator;
-IteratorVisitor.prototype.visitFloat16 = vectorIterator;
-IteratorVisitor.prototype.visitFloat32 = vectorIterator;
-IteratorVisitor.prototype.visitFloat64 = vectorIterator;
-IteratorVisitor.prototype.visitUtf8 = vectorIterator;
-IteratorVisitor.prototype.visitBinary = vectorIterator;
-IteratorVisitor.prototype.visitFixedSizeBinary = vectorIterator;
-IteratorVisitor.prototype.visitDate = vectorIterator;
-IteratorVisitor.prototype.visitDateDay = vectorIterator;
-IteratorVisitor.prototype.visitDateMillisecond = vectorIterator;
-IteratorVisitor.prototype.visitTimestamp = vectorIterator;
-IteratorVisitor.prototype.visitTimestampSecond = vectorIterator;
-IteratorVisitor.prototype.visitTimestampMillisecond = vectorIterator;
-IteratorVisitor.prototype.visitTimestampMicrosecond = vectorIterator;
-IteratorVisitor.prototype.visitTimestampNanosecond = vectorIterator;
-IteratorVisitor.prototype.visitTime = vectorIterator;
-IteratorVisitor.prototype.visitTimeSecond = vectorIterator;
-IteratorVisitor.prototype.visitTimeMillisecond = vectorIterator;
-IteratorVisitor.prototype.visitTimeMicrosecond = vectorIterator;
-IteratorVisitor.prototype.visitTimeNanosecond = vectorIterator;
-IteratorVisitor.prototype.visitDecimal = vectorIterator;
-IteratorVisitor.prototype.visitList = vectorIterator;
-IteratorVisitor.prototype.visitStruct = vectorIterator;
-IteratorVisitor.prototype.visitUnion = vectorIterator;
-IteratorVisitor.prototype.visitDenseUnion = vectorIterator;
-IteratorVisitor.prototype.visitSparseUnion = vectorIterator;
-IteratorVisitor.prototype.visitDictionary = vectorIterator;
-IteratorVisitor.prototype.visitInterval = vectorIterator;
-IteratorVisitor.prototype.visitIntervalDayTime = vectorIterator;
-IteratorVisitor.prototype.visitIntervalYearMonth = vectorIterator;
-IteratorVisitor.prototype.visitDuration = vectorIterator;
-IteratorVisitor.prototype.visitDurationSecond = vectorIterator;
-IteratorVisitor.prototype.visitDurationMillisecond = vectorIterator;
-IteratorVisitor.prototype.visitDurationMicrosecond = vectorIterator;
-IteratorVisitor.prototype.visitDurationNanosecond = vectorIterator;
-IteratorVisitor.prototype.visitFixedSizeList = vectorIterator;
-IteratorVisitor.prototype.visitMap = vectorIterator;
-var instance4 = new IteratorVisitor();
-
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/bytelength.mjs
-var sum4 = (x4, y4) => x4 + y4;
-var GetByteLengthVisitor = class extends Visitor {
-  visitNull(____, _) {
-    return 0;
-  }
-  visitInt(data, _) {
-    return data.type.bitWidth / 8;
-  }
-  visitFloat(data, _) {
-    return data.type.ArrayType.BYTES_PER_ELEMENT;
-  }
-  visitBool(____, _) {
-    return 1 / 8;
-  }
-  visitDecimal(data, _) {
-    return data.type.bitWidth / 8;
-  }
-  visitDate(data, _) {
-    return (data.type.unit + 1) * 4;
-  }
-  visitTime(data, _) {
-    return data.type.bitWidth / 8;
-  }
-  visitTimestamp(data, _) {
-    return data.type.unit === TimeUnit.SECOND ? 4 : 8;
-  }
-  visitInterval(data, _) {
-    return (data.type.unit + 1) * 4;
-  }
-  visitDuration(____, _) {
-    return 8;
-  }
-  visitStruct(data, i) {
-    return data.children.reduce((total, child) => total + instance5.visit(child, i), 0);
-  }
-  visitFixedSizeBinary(data, _) {
-    return data.type.byteWidth;
-  }
-  visitMap(data, i) {
-    return 8 + data.children.reduce((total, child) => total + instance5.visit(child, i), 0);
-  }
-  visitDictionary(data, i) {
-    var _a5;
-    return data.type.indices.bitWidth / 8 + (((_a5 = data.dictionary) === null || _a5 === void 0 ? void 0 : _a5.getByteLength(data.values[i])) || 0);
-  }
-};
-var getUtf8ByteLength = ({ valueOffsets }, index3) => {
-  return 8 + (valueOffsets[index3 + 1] - valueOffsets[index3]);
-};
-var getBinaryByteLength = ({ valueOffsets }, index3) => {
-  return 8 + (valueOffsets[index3 + 1] - valueOffsets[index3]);
-};
-var getListByteLength = ({ valueOffsets, stride, children: children2 }, index3) => {
-  const child = children2[0];
-  const { [index3 * stride]: start2 } = valueOffsets;
-  const { [index3 * stride + 1]: end } = valueOffsets;
-  const visit = instance5.getVisitFn(child.type);
-  const slice6 = child.slice(start2, end - start2);
-  let size = 8;
-  for (let idx = -1, len = end - start2; ++idx < len; ) {
-    size += visit(slice6, idx);
-  }
-  return size;
-};
-var getFixedSizeListByteLength = ({ stride, children: children2 }, index3) => {
-  const child = children2[0];
-  const slice6 = child.slice(index3 * stride, stride);
-  const visit = instance5.getVisitFn(child.type);
-  let size = 0;
-  for (let idx = -1, len = slice6.length; ++idx < len; ) {
-    size += visit(slice6, idx);
-  }
-  return size;
-};
-var getUnionByteLength = (data, index3) => {
-  return data.type.mode === UnionMode.Dense ? getDenseUnionByteLength(data, index3) : getSparseUnionByteLength(data, index3);
-};
-var getDenseUnionByteLength = ({ type: type2, children: children2, typeIds, valueOffsets }, index3) => {
-  const childIndex = type2.typeIdToChildIndex[typeIds[index3]];
-  return 8 + instance5.visit(children2[childIndex], valueOffsets[index3]);
-};
-var getSparseUnionByteLength = ({ children: children2 }, index3) => {
-  return 4 + instance5.visitMany(children2, children2.map(() => index3)).reduce(sum4, 0);
-};
-GetByteLengthVisitor.prototype.visitUtf8 = getUtf8ByteLength;
-GetByteLengthVisitor.prototype.visitBinary = getBinaryByteLength;
-GetByteLengthVisitor.prototype.visitList = getListByteLength;
-GetByteLengthVisitor.prototype.visitFixedSizeList = getFixedSizeListByteLength;
-GetByteLengthVisitor.prototype.visitUnion = getUnionByteLength;
-GetByteLengthVisitor.prototype.visitDenseUnion = getDenseUnionByteLength;
-GetByteLengthVisitor.prototype.visitSparseUnion = getSparseUnionByteLength;
-var instance5 = new GetByteLengthVisitor();
-
-// packages/pyobsplot-js/node_modules/apache-arrow/vector.mjs
-var _a2;
-var visitorsByTypeId = {};
-var vectorPrototypesByTypeId = {};
-var Vector2 = class {
-  constructor(input) {
-    var _b2, _c2, _d2;
-    const data = input[0] instanceof Vector2 ? input.flatMap((x4) => x4.data) : input;
-    if (data.length === 0 || data.some((x4) => !(x4 instanceof Data))) {
-      throw new TypeError("Vector constructor expects an Array of Data instances.");
-    }
-    const type2 = (_b2 = data[0]) === null || _b2 === void 0 ? void 0 : _b2.type;
-    switch (data.length) {
-      case 0:
-        this._offsets = [0];
-        break;
-      case 1: {
-        const { get: get3, set: set4, indexOf: indexOf2, byteLength } = visitorsByTypeId[type2.typeId];
-        const unchunkedData = data[0];
-        this.isValid = (index3) => isChunkedValid(unchunkedData, index3);
-        this.get = (index3) => get3(unchunkedData, index3);
-        this.set = (index3, value) => set4(unchunkedData, index3, value);
-        this.indexOf = (index3) => indexOf2(unchunkedData, index3);
-        this.getByteLength = (index3) => byteLength(unchunkedData, index3);
-        this._offsets = [0, unchunkedData.length];
-        break;
-      }
-      default:
-        Object.setPrototypeOf(this, vectorPrototypesByTypeId[type2.typeId]);
-        this._offsets = computeChunkOffsets(data);
-        break;
-    }
-    this.data = data;
-    this.type = type2;
-    this.stride = strideForType(type2);
-    this.numChildren = (_d2 = (_c2 = type2.children) === null || _c2 === void 0 ? void 0 : _c2.length) !== null && _d2 !== void 0 ? _d2 : 0;
-    this.length = this._offsets.at(-1);
-  }
-  /**
-   * The aggregate size (in bytes) of this Vector's buffers and/or child Vectors.
-   */
-  get byteLength() {
-    return this.data.reduce((byteLength, data) => byteLength + data.byteLength, 0);
-  }
-  /**
-   * The number of null elements in this Vector.
-   */
-  get nullCount() {
-    return computeChunkNullCounts(this.data);
-  }
-  /**
-   * The Array or TypedArray constructor used for the JS representation
-   *  of the element's values in {@link Vector.prototype.toArray `toArray()`}.
-   */
-  get ArrayType() {
-    return this.type.ArrayType;
-  }
-  /**
-   * The name that should be printed when the Vector is logged in a message.
-   */
-  get [Symbol.toStringTag]() {
-    return `${this.VectorName}<${this.type[Symbol.toStringTag]}>`;
-  }
-  /**
-   * The name of this Vector.
-   */
-  get VectorName() {
-    return `${Type[this.type.typeId]}Vector`;
-  }
-  /**
-   * Check whether an element is null.
-   * @param index The index at which to read the validity bitmap.
-   */
-  // @ts-ignore
-  isValid(index3) {
-    return false;
-  }
-  /**
-   * Get an element value by position.
-   * @param index The index of the element to read.
-   */
-  // @ts-ignore
-  get(index3) {
-    return null;
-  }
-  /**
-   * Set an element value by position.
-   * @param index The index of the element to write.
-   * @param value The value to set.
-   */
-  // @ts-ignore
-  set(index3, value) {
-    return;
-  }
-  /**
-   * Retrieve the index of the first occurrence of a value in an Vector.
-   * @param element The value to locate in the Vector.
-   * @param offset The index at which to begin the search. If offset is omitted, the search starts at index 0.
-   */
-  // @ts-ignore
-  indexOf(element, offset2) {
-    return -1;
-  }
-  includes(element, offset2) {
-    return this.indexOf(element, offset2) > -1;
-  }
-  /**
-   * Get the size in bytes of an element by index.
-   * @param index The index at which to get the byteLength.
-   */
-  // @ts-ignore
-  getByteLength(index3) {
-    return 0;
-  }
-  /**
-   * Iterator for the Vector's elements.
-   */
-  [Symbol.iterator]() {
-    return instance4.visit(this);
-  }
-  /**
-   * Combines two or more Vectors of the same type.
-   * @param others Additional Vectors to add to the end of this Vector.
-   */
-  concat(...others) {
-    return new Vector2(this.data.concat(others.flatMap((x4) => x4.data).flat(Number.POSITIVE_INFINITY)));
-  }
-  /**
-   * Return a zero-copy sub-section of this Vector.
-   * @param start The beginning of the specified portion of the Vector.
-   * @param end The end of the specified portion of the Vector. This is exclusive of the element at the index 'end'.
-   */
-  slice(begin, end) {
-    return new Vector2(clampRange(this, begin, end, ({ data, _offsets }, begin2, end2) => sliceChunks(data, _offsets, begin2, end2)));
-  }
-  toJSON() {
-    return [...this];
-  }
-  /**
-   * Return a JavaScript Array or TypedArray of the Vector's elements.
-   *
-   * @note If this Vector contains a single Data chunk and the Vector's type is a
-   *  primitive numeric type corresponding to one of the JavaScript TypedArrays, this
-   *  method returns a zero-copy slice of the underlying TypedArray values. If there's
-   *  more than one chunk, the resulting TypedArray will be a copy of the data from each
-   *  chunk's underlying TypedArray values.
-   *
-   * @returns An Array or TypedArray of the Vector's elements, based on the Vector's DataType.
-   */
-  toArray() {
-    const { type: type2, data, length: length4, stride, ArrayType } = this;
-    switch (type2.typeId) {
-      case Type.Int:
-      case Type.Float:
-      case Type.Decimal:
-      case Type.Time:
-      case Type.Timestamp:
-        switch (data.length) {
-          case 0:
-            return new ArrayType();
-          case 1:
-            return data[0].values.subarray(0, length4 * stride);
-          default:
-            return data.reduce((memo2, { values: values2, length: chunk_length }) => {
-              memo2.array.set(values2.subarray(0, chunk_length * stride), memo2.offset);
-              memo2.offset += chunk_length * stride;
-              return memo2;
-            }, { array: new ArrayType(length4 * stride), offset: 0 }).array;
-        }
-    }
-    return [...this];
-  }
-  /**
-   * Returns a string representation of the Vector.
-   *
-   * @returns A string representation of the Vector.
-   */
-  toString() {
-    return `[${[...this].join(",")}]`;
-  }
-  /**
-   * Returns a child Vector by name, or null if this Vector has no child with the given name.
-   * @param name The name of the child to retrieve.
-   */
-  getChild(name) {
-    var _b2;
-    return this.getChildAt((_b2 = this.type.children) === null || _b2 === void 0 ? void 0 : _b2.findIndex((f) => f.name === name));
-  }
-  /**
-   * Returns a child Vector by index, or null if this Vector has no child at the supplied index.
-   * @param index The index of the child to retrieve.
-   */
-  getChildAt(index3) {
-    if (index3 > -1 && index3 < this.numChildren) {
-      return new Vector2(this.data.map(({ children: children2 }) => children2[index3]));
-    }
-    return null;
-  }
-  get isMemoized() {
-    if (DataType.isDictionary(this.type)) {
-      return this.data[0].dictionary.isMemoized;
-    }
-    return false;
-  }
-  /**
-   * Adds memoization to the Vector's {@link get} method. For dictionary
-   * vectors, this method return a vector that memoizes only the dictionary
-   * values.
-   *
-   * Memoization is very useful when decoding a value is expensive such as
-   * Uft8. The memoization creates a cache of the size of the Vector and
-   * therfore increases memory usage.
-   *
-   * @returns A new vector that memoizes calls to {@link get}.
-   */
-  memoize() {
-    if (DataType.isDictionary(this.type)) {
-      const dictionary = new MemoizedVector(this.data[0].dictionary);
-      const newData = this.data.map((data) => {
-        const cloned = data.clone();
-        cloned.dictionary = dictionary;
-        return cloned;
-      });
-      return new Vector2(newData);
-    }
-    return new MemoizedVector(this);
-  }
-  /**
-   * Returns a vector without memoization of the {@link get} method. If this
-   * vector is not memoized, this method returns this vector.
-   *
-   * @returns A a vector without memoization.
-   */
-  unmemoize() {
-    if (DataType.isDictionary(this.type) && this.isMemoized) {
-      const dictionary = this.data[0].dictionary.unmemoize();
-      const newData = this.data.map((data) => {
-        const newData2 = data.clone();
-        newData2.dictionary = dictionary;
-        return newData2;
-      });
-      return new Vector2(newData);
-    }
-    return this;
-  }
-};
-_a2 = Symbol.toStringTag;
-Vector2[_a2] = ((proto) => {
-  proto.type = DataType.prototype;
-  proto.data = [];
-  proto.length = 0;
-  proto.stride = 1;
-  proto.numChildren = 0;
-  proto._offsets = new Uint32Array([0]);
-  proto[Symbol.isConcatSpreadable] = true;
-  const typeIds = Object.keys(Type).map((T) => Type[T]).filter((T) => typeof T === "number" && T !== Type.NONE);
-  for (const typeId of typeIds) {
-    const get3 = instance2.getVisitFnByTypeId(typeId);
-    const set4 = instance.getVisitFnByTypeId(typeId);
-    const indexOf2 = instance3.getVisitFnByTypeId(typeId);
-    const byteLength = instance5.getVisitFnByTypeId(typeId);
-    visitorsByTypeId[typeId] = { get: get3, set: set4, indexOf: indexOf2, byteLength };
-    vectorPrototypesByTypeId[typeId] = Object.create(proto, {
-      ["isValid"]: { value: wrapChunkedCall1(isChunkedValid) },
-      ["get"]: { value: wrapChunkedCall1(instance2.getVisitFnByTypeId(typeId)) },
-      ["set"]: { value: wrapChunkedCall2(instance.getVisitFnByTypeId(typeId)) },
-      ["indexOf"]: { value: wrapChunkedIndexOf(instance3.getVisitFnByTypeId(typeId)) },
-      ["getByteLength"]: { value: wrapChunkedCall1(instance5.getVisitFnByTypeId(typeId)) }
-    });
-  }
-  return "Vector";
-})(Vector2.prototype);
-var MemoizedVector = class extends Vector2 {
-  constructor(vector2) {
-    super(vector2.data);
-    const get3 = this.get;
-    const set4 = this.set;
-    const slice6 = this.slice;
-    const cache = new Array(this.length);
-    Object.defineProperty(this, "get", {
-      value(index3) {
-        const cachedValue = cache[index3];
-        if (cachedValue !== void 0) {
-          return cachedValue;
-        }
-        const value = get3.call(this, index3);
-        cache[index3] = value;
-        return value;
-      }
-    });
-    Object.defineProperty(this, "set", {
-      value(index3, value) {
-        set4.call(this, index3, value);
-        cache[index3] = value;
-      }
-    });
-    Object.defineProperty(this, "slice", {
-      value: (begin, end) => new MemoizedVector(slice6.call(this, begin, end))
-    });
-    Object.defineProperty(this, "isMemoized", { value: true });
-    Object.defineProperty(this, "unmemoize", {
-      value: () => new Vector2(this.data)
-    });
-    Object.defineProperty(this, "memoize", {
-      value: () => this
-    });
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/valid.mjs
-function createIsValidFunction(nullValues) {
-  if (!nullValues || nullValues.length <= 0) {
-    return function isValid(value) {
-      return true;
-    };
-  }
-  let fnBody = "";
-  const noNaNs = nullValues.filter((x4) => x4 === x4);
-  if (noNaNs.length > 0) {
-    fnBody = `
-    switch (x) {${noNaNs.map((x4) => `
-        case ${valueToCase(x4)}:`).join("")}
-            return false;
-    }`;
-  }
-  if (nullValues.length !== noNaNs.length) {
-    fnBody = `if (x !== x) return false;
-${fnBody}`;
-  }
-  return new Function(`x`, `${fnBody}
-return true;`);
-}
-function valueToCase(x4) {
-  if (typeof x4 !== "bigint") {
-    return valueToString(x4);
-  }
-  return `${valueToString(x4)}n`;
-}
-
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/buffer.mjs
-var roundLengthUpToNearest64Bytes = (len, BPE) => (Math.ceil(len) * BPE + 63 & ~63 || 64) / BPE;
-var sliceOrExtendArray = (arr, len = 0) => arr.length >= len ? arr.subarray(0, len) : memcpy(new arr.constructor(len), arr, 0);
-var BufferBuilder = class {
-  constructor(buffer, stride = 1) {
-    this.buffer = buffer;
-    this.stride = stride;
-    this.BYTES_PER_ELEMENT = buffer.BYTES_PER_ELEMENT;
-    this.ArrayType = buffer.constructor;
-    this._resize(this.length = Math.ceil(buffer.length / stride));
-  }
-  get byteLength() {
-    return Math.ceil(this.length * this.stride) * this.BYTES_PER_ELEMENT;
-  }
-  get reservedLength() {
-    return this.buffer.length / this.stride;
-  }
-  get reservedByteLength() {
-    return this.buffer.byteLength;
-  }
-  // @ts-ignore
-  set(index3, value) {
-    return this;
-  }
-  append(value) {
-    return this.set(this.length, value);
-  }
-  reserve(extra) {
-    if (extra > 0) {
-      this.length += extra;
-      const stride = this.stride;
-      const length4 = this.length * stride;
-      const reserved = this.buffer.length;
-      if (length4 >= reserved) {
-        this._resize(reserved === 0 ? roundLengthUpToNearest64Bytes(length4 * 1, this.BYTES_PER_ELEMENT) : roundLengthUpToNearest64Bytes(length4 * 2, this.BYTES_PER_ELEMENT));
-      }
-    }
-    return this;
-  }
-  flush(length4 = this.length) {
-    length4 = roundLengthUpToNearest64Bytes(length4 * this.stride, this.BYTES_PER_ELEMENT);
-    const array4 = sliceOrExtendArray(this.buffer, length4);
-    this.clear();
-    return array4;
-  }
-  clear() {
-    this.length = 0;
-    this._resize(0);
-    return this;
-  }
-  _resize(newLength) {
-    return this.buffer = memcpy(new this.ArrayType(newLength), this.buffer);
-  }
-};
-BufferBuilder.prototype.offset = 0;
-var DataBufferBuilder = class extends BufferBuilder {
-  last() {
-    return this.get(this.length - 1);
-  }
-  get(index3) {
-    return this.buffer[index3];
-  }
-  set(index3, value) {
-    this.reserve(index3 - this.length + 1);
-    this.buffer[index3 * this.stride] = value;
-    return this;
-  }
-};
-var BitmapBufferBuilder = class extends DataBufferBuilder {
-  constructor(data = new Uint8Array(0)) {
-    super(data, 1 / 8);
-    this.numValid = 0;
-  }
-  get numInvalid() {
-    return this.length - this.numValid;
-  }
-  get(idx) {
-    return this.buffer[idx >> 3] >> idx % 8 & 1;
-  }
-  set(idx, val) {
-    const { buffer } = this.reserve(idx - this.length + 1);
-    const byte = idx >> 3, bit = idx % 8, cur = buffer[byte] >> bit & 1;
-    val ? cur === 0 && (buffer[byte] |= 1 << bit, ++this.numValid) : cur === 1 && (buffer[byte] &= ~(1 << bit), --this.numValid);
-    return this;
-  }
-  clear() {
-    this.numValid = 0;
-    return super.clear();
-  }
-};
-var OffsetsBufferBuilder = class extends DataBufferBuilder {
-  constructor(data = new Int32Array(1)) {
-    super(data, 1);
-  }
-  append(value) {
-    return this.set(this.length - 1, value);
-  }
-  set(index3, value) {
-    const offset2 = this.length - 1;
-    const buffer = this.reserve(index3 - offset2 + 1).buffer;
-    if (offset2 < index3++) {
-      buffer.fill(buffer[offset2], offset2, index3);
-    }
-    buffer[index3] = buffer[index3 - 1] + value;
-    return this;
-  }
-  flush(length4 = this.length - 1) {
-    if (length4 > this.length) {
-      this.set(length4 - 1, 0);
-    }
-    return super.flush(length4 + 1);
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/builder.mjs
-var Builder = class {
-  /** @nocollapse */
-  // @ts-ignore
-  static throughNode(options) {
-    throw new Error(`"throughNode" not available in this environment`);
-  }
-  /** @nocollapse */
-  // @ts-ignore
-  static throughDOM(options) {
-    throw new Error(`"throughDOM" not available in this environment`);
-  }
-  /**
-   * Construct a builder with the given Arrow DataType with optional null values,
-   * which will be interpreted as "null" when set or appended to the `Builder`.
-   * @param {{ type: T, nullValues?: any[] }} options A `BuilderOptions` object used to create this `Builder`.
-   */
-  constructor({ "type": type2, "nullValues": nulls }) {
-    this.length = 0;
-    this.finished = false;
-    this.type = type2;
-    this.children = [];
-    this.nullValues = nulls;
-    this.stride = strideForType(type2);
-    this._nulls = new BitmapBufferBuilder();
-    if (nulls && nulls.length > 0) {
-      this._isValid = createIsValidFunction(nulls);
-    }
-  }
-  /**
-   * Flush the `Builder` and return a `Vector<T>`.
-   * @returns {Vector<T>} A `Vector<T>` of the flushed values.
-   */
-  toVector() {
-    return new Vector2([this.flush()]);
-  }
-  get ArrayType() {
-    return this.type.ArrayType;
-  }
-  get nullCount() {
-    return this._nulls.numInvalid;
-  }
-  get numChildren() {
-    return this.children.length;
-  }
-  /**
-   * @returns The aggregate length (in bytes) of the values that have been written.
-   */
-  get byteLength() {
-    let size = 0;
-    const { _offsets, _values, _nulls, _typeIds, children: children2 } = this;
-    _offsets && (size += _offsets.byteLength);
-    _values && (size += _values.byteLength);
-    _nulls && (size += _nulls.byteLength);
-    _typeIds && (size += _typeIds.byteLength);
-    return children2.reduce((size2, child) => size2 + child.byteLength, size);
-  }
-  /**
-   * @returns The aggregate number of rows that have been reserved to write new values.
-   */
-  get reservedLength() {
-    return this._nulls.reservedLength;
-  }
-  /**
-   * @returns The aggregate length (in bytes) that has been reserved to write new values.
-   */
-  get reservedByteLength() {
-    let size = 0;
-    this._offsets && (size += this._offsets.reservedByteLength);
-    this._values && (size += this._values.reservedByteLength);
-    this._nulls && (size += this._nulls.reservedByteLength);
-    this._typeIds && (size += this._typeIds.reservedByteLength);
-    return this.children.reduce((size2, child) => size2 + child.reservedByteLength, size);
-  }
-  get valueOffsets() {
-    return this._offsets ? this._offsets.buffer : null;
-  }
-  get values() {
-    return this._values ? this._values.buffer : null;
-  }
-  get nullBitmap() {
-    return this._nulls ? this._nulls.buffer : null;
-  }
-  get typeIds() {
-    return this._typeIds ? this._typeIds.buffer : null;
-  }
-  /**
-   * Appends a value (or null) to this `Builder`.
-   * This is equivalent to `builder.set(builder.length, value)`.
-   * @param {T['TValue'] | TNull } value The value to append.
-   */
-  append(value) {
-    return this.set(this.length, value);
-  }
-  /**
-   * Validates whether a value is valid (true), or null (false)
-   * @param {T['TValue'] | TNull } value The value to compare against null the value representations
-   */
-  isValid(value) {
-    return this._isValid(value);
-  }
-  /**
-   * Write a value (or null-value sentinel) at the supplied index.
-   * If the value matches one of the null-value representations, a 1-bit is
-   * written to the null `BitmapBufferBuilder`. Otherwise, a 0 is written to
-   * the null `BitmapBufferBuilder`, and the value is passed to
-   * `Builder.prototype.setValue()`.
-   * @param {number} index The index of the value to write.
-   * @param {T['TValue'] | TNull } value The value to write at the supplied index.
-   * @returns {this} The updated `Builder` instance.
-   */
-  set(index3, value) {
-    if (this.setValid(index3, this.isValid(value))) {
-      this.setValue(index3, value);
-    }
-    return this;
-  }
-  /**
-   * Write a value to the underlying buffers at the supplied index, bypassing
-   * the null-value check. This is a low-level method that
-   * @param {number} index
-   * @param {T['TValue'] | TNull } value
-   */
-  setValue(index3, value) {
-    this._setValue(this, index3, value);
-  }
-  setValid(index3, valid2) {
-    this.length = this._nulls.set(index3, +valid2).length;
-    return valid2;
-  }
-  // @ts-ignore
-  addChild(child, name = `${this.numChildren}`) {
-    throw new Error(`Cannot append children to non-nested type "${this.type}"`);
-  }
-  /**
-   * Retrieve the child `Builder` at the supplied `index`, or null if no child
-   * exists at that index.
-   * @param {number} index The index of the child `Builder` to retrieve.
-   * @returns {Builder | null} The child Builder at the supplied index or null.
-   */
-  getChildAt(index3) {
-    return this.children[index3] || null;
-  }
-  /**
-   * Commit all the values that have been written to their underlying
-   * ArrayBuffers, including any child Builders if applicable, and reset
-   * the internal `Builder` state.
-   * @returns A `Data<T>` of the buffers and children representing the values written.
-   */
-  flush() {
-    let data;
-    let typeIds;
-    let nullBitmap;
-    let valueOffsets;
-    const { type: type2, length: length4, nullCount, _typeIds, _offsets, _values, _nulls } = this;
-    if (typeIds = _typeIds === null || _typeIds === void 0 ? void 0 : _typeIds.flush(length4)) {
-      valueOffsets = _offsets === null || _offsets === void 0 ? void 0 : _offsets.flush(length4);
-    } else if (valueOffsets = _offsets === null || _offsets === void 0 ? void 0 : _offsets.flush(length4)) {
-      data = _values === null || _values === void 0 ? void 0 : _values.flush(_offsets.last());
-    } else {
-      data = _values === null || _values === void 0 ? void 0 : _values.flush(length4);
-    }
-    if (nullCount > 0) {
-      nullBitmap = _nulls === null || _nulls === void 0 ? void 0 : _nulls.flush(length4);
-    }
-    const children2 = this.children.map((child) => child.flush());
-    this.clear();
-    return makeData({
-      type: type2,
-      length: length4,
-      nullCount,
-      children: children2,
-      "child": children2[0],
-      data,
-      typeIds,
-      nullBitmap,
-      valueOffsets
-    });
-  }
-  /**
-   * Finalize this `Builder`, and child builders if applicable.
-   * @returns {this} The finalized `Builder` instance.
-   */
-  finish() {
-    this.finished = true;
-    for (const child of this.children)
-      child.finish();
-    return this;
-  }
-  /**
-   * Clear this Builder's internal state, including child Builders if applicable, and reset the length to 0.
-   * @returns {this} The cleared `Builder` instance.
-   */
-  clear() {
-    var _a5, _b2, _c2, _d2;
-    this.length = 0;
-    (_a5 = this._nulls) === null || _a5 === void 0 ? void 0 : _a5.clear();
-    (_b2 = this._values) === null || _b2 === void 0 ? void 0 : _b2.clear();
-    (_c2 = this._offsets) === null || _c2 === void 0 ? void 0 : _c2.clear();
-    (_d2 = this._typeIds) === null || _d2 === void 0 ? void 0 : _d2.clear();
-    for (const child of this.children)
-      child.clear();
-    return this;
-  }
-};
-Builder.prototype.length = 1;
-Builder.prototype.stride = 1;
-Builder.prototype.children = null;
-Builder.prototype.finished = false;
-Builder.prototype.nullValues = null;
-Builder.prototype._isValid = () => true;
-var FixedWidthBuilder = class extends Builder {
-  constructor(opts) {
-    super(opts);
-    this._values = new DataBufferBuilder(new this.ArrayType(0), this.stride);
-  }
-  setValue(index3, value) {
-    const values2 = this._values;
-    values2.reserve(index3 - values2.length + 1);
-    return super.setValue(index3, value);
-  }
-};
-var VariableWidthBuilder = class extends Builder {
-  constructor(opts) {
-    super(opts);
-    this._pendingLength = 0;
-    this._offsets = new OffsetsBufferBuilder();
-  }
-  setValue(index3, value) {
-    const pending = this._pending || (this._pending = /* @__PURE__ */ new Map());
-    const current = pending.get(index3);
-    current && (this._pendingLength -= current.length);
-    this._pendingLength += value instanceof MapRow ? value[kKeys].length : value.length;
-    pending.set(index3, value);
-  }
-  setValid(index3, isValid) {
-    if (!super.setValid(index3, isValid)) {
-      (this._pending || (this._pending = /* @__PURE__ */ new Map())).set(index3, void 0);
-      return false;
-    }
-    return true;
-  }
-  clear() {
-    this._pendingLength = 0;
-    this._pending = void 0;
-    return super.clear();
-  }
-  flush() {
-    this._flush();
-    return super.flush();
-  }
-  finish() {
-    this._flush();
-    return super.finish();
-  }
-  _flush() {
-    const pending = this._pending;
-    const pendingLength = this._pendingLength;
-    this._pendingLength = 0;
-    this._pending = void 0;
-    if (pending && pending.size > 0) {
-      this._flushPending(pending, pendingLength);
-    }
-    return this;
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/block.mjs
-var Block = class {
-  constructor() {
-    this.bb = null;
-    this.bb_pos = 0;
-  }
-  __init(i, bb2) {
-    this.bb_pos = i;
-    this.bb = bb2;
-    return this;
-  }
-  /**
-   * Index to the start of the RecordBlock (note this is past the Message header)
-   */
-  offset() {
-    return this.bb.readInt64(this.bb_pos);
-  }
-  /**
-   * Length of the metadata
-   */
-  metaDataLength() {
-    return this.bb.readInt32(this.bb_pos + 8);
-  }
-  /**
-   * Length of the data (this is aligned so there can be a gap between this and
-   * the metadata).
-   */
-  bodyLength() {
-    return this.bb.readInt64(this.bb_pos + 16);
-  }
-  static sizeOf() {
-    return 24;
-  }
-  static createBlock(builder, offset2, metaDataLength, bodyLength) {
-    builder.prep(8, 24);
-    builder.writeInt64(BigInt(bodyLength !== null && bodyLength !== void 0 ? bodyLength : 0));
-    builder.pad(4);
-    builder.writeInt32(metaDataLength);
-    builder.writeInt64(BigInt(offset2 !== null && offset2 !== void 0 ? offset2 : 0));
-    return builder.offset();
-  }
-};
 
 // node_modules/flatbuffers/mjs/constants.js
 var SIZEOF_SHORT = 2;
@@ -34819,7 +31075,7 @@ var ByteBuffer = class {
 };
 
 // node_modules/flatbuffers/mjs/builder.js
-var Builder2 = class {
+var Builder = class {
   /**
    * Create a FlatBufferBuilder.
    */
@@ -34897,7 +31153,7 @@ var Builder2 = class {
     const align_size = ~(this.bb.capacity() - this.space + additional_bytes) + 1 & size - 1;
     while (this.space < align_size + size + additional_bytes) {
       const old_buf_size = this.bb.capacity();
-      this.bb = Builder2.growByteBuffer(this.bb);
+      this.bb = Builder.growByteBuffer(this.bb);
       this.space += this.bb.capacity() - old_buf_size;
     }
     this.pad(align_size);
@@ -35303,8 +31559,21 @@ var Builder2 = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/key-value.mjs
-var KeyValue = class {
+// node_modules/apache-arrow/fb/body-compression-method.mjs
+var BodyCompressionMethod;
+(function(BodyCompressionMethod2) {
+  BodyCompressionMethod2[BodyCompressionMethod2["BUFFER"] = 0] = "BUFFER";
+})(BodyCompressionMethod || (BodyCompressionMethod = {}));
+
+// node_modules/apache-arrow/fb/compression-type.mjs
+var CompressionType;
+(function(CompressionType2) {
+  CompressionType2[CompressionType2["LZ4_FRAME"] = 0] = "LZ4_FRAME";
+  CompressionType2[CompressionType2["ZSTD"] = 1] = "ZSTD";
+})(CompressionType || (CompressionType = {}));
+
+// node_modules/apache-arrow/fb/body-compression.mjs
+var BodyCompression = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35314,66 +31583,279 @@ var KeyValue = class {
     this.bb = bb2;
     return this;
   }
-  static getRootAsKeyValue(bb2, obj) {
-    return (obj || new KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  static getRootAsBodyCompression(bb2, obj) {
+    return (obj || new BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
-  static getSizePrefixedRootAsKeyValue(bb2, obj) {
+  static getSizePrefixedRootAsBodyCompression(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
-  key(optionalEncoding) {
+  /**
+   * Compressor library.
+   * For LZ4_FRAME, each compressed buffer must consist of a single frame.
+   */
+  codec() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.__string(this.bb_pos + offset2, optionalEncoding) : null;
+    return offset2 ? this.bb.readInt8(this.bb_pos + offset2) : CompressionType.LZ4_FRAME;
   }
-  value(optionalEncoding) {
+  /**
+   * Indicates the way the record batch body was compressed
+   */
+  method() {
     const offset2 = this.bb.__offset(this.bb_pos, 6);
-    return offset2 ? this.bb.__string(this.bb_pos + offset2, optionalEncoding) : null;
+    return offset2 ? this.bb.readInt8(this.bb_pos + offset2) : BodyCompressionMethod.BUFFER;
   }
-  static startKeyValue(builder) {
+  static startBodyCompression(builder) {
     builder.startObject(2);
   }
-  static addKey(builder, keyOffset) {
-    builder.addFieldOffset(0, keyOffset, 0);
+  static addCodec(builder, codec) {
+    builder.addFieldInt8(0, codec, CompressionType.LZ4_FRAME);
   }
-  static addValue(builder, valueOffset) {
-    builder.addFieldOffset(1, valueOffset, 0);
+  static addMethod(builder, method) {
+    builder.addFieldInt8(1, method, BodyCompressionMethod.BUFFER);
   }
-  static endKeyValue(builder) {
+  static endBodyCompression(builder) {
     const offset2 = builder.endObject();
     return offset2;
   }
-  static createKeyValue(builder, keyOffset, valueOffset) {
-    KeyValue.startKeyValue(builder);
-    KeyValue.addKey(builder, keyOffset);
-    KeyValue.addValue(builder, valueOffset);
-    return KeyValue.endKeyValue(builder);
+  static createBodyCompression(builder, codec, method) {
+    BodyCompression.startBodyCompression(builder);
+    BodyCompression.addCodec(builder, codec);
+    BodyCompression.addMethod(builder, method);
+    return BodyCompression.endBodyCompression(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/metadata-version.mjs
-var MetadataVersion2;
-(function(MetadataVersion3) {
-  MetadataVersion3[MetadataVersion3["V1"] = 0] = "V1";
-  MetadataVersion3[MetadataVersion3["V2"] = 1] = "V2";
-  MetadataVersion3[MetadataVersion3["V3"] = 2] = "V3";
-  MetadataVersion3[MetadataVersion3["V4"] = 3] = "V4";
-  MetadataVersion3[MetadataVersion3["V5"] = 4] = "V5";
-})(MetadataVersion2 || (MetadataVersion2 = {}));
+// node_modules/apache-arrow/fb/buffer.mjs
+var Buffer2 = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  /**
+   * The relative offset into the shared memory page where the bytes for this
+   * buffer starts
+   */
+  offset() {
+    return this.bb.readInt64(this.bb_pos);
+  }
+  /**
+   * The absolute length (in bytes) of the memory buffer. The memory is found
+   * from offset (inclusive) to offset + length (non-inclusive). When building
+   * messages using the encapsulated IPC message, padding bytes may be written
+   * after a buffer, but such padding bytes do not need to be accounted for in
+   * the size here.
+   */
+  length() {
+    return this.bb.readInt64(this.bb_pos + 8);
+  }
+  static sizeOf() {
+    return 16;
+  }
+  static createBuffer(builder, offset2, length4) {
+    builder.prep(8, 16);
+    builder.writeInt64(BigInt(length4 !== null && length4 !== void 0 ? length4 : 0));
+    builder.writeInt64(BigInt(offset2 !== null && offset2 !== void 0 ? offset2 : 0));
+    return builder.offset();
+  }
+};
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/endianness.mjs
+// node_modules/apache-arrow/fb/field-node.mjs
+var FieldNode = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  /**
+   * The number of value slots in the Arrow array at this level of a nested
+   * tree
+   */
+  length() {
+    return this.bb.readInt64(this.bb_pos);
+  }
+  /**
+   * The number of observed nulls. Fields with null_count == 0 may choose not
+   * to write their physical validity bitmap out as a materialized buffer,
+   * instead setting the length of the bitmap buffer to 0.
+   */
+  nullCount() {
+    return this.bb.readInt64(this.bb_pos + 8);
+  }
+  static sizeOf() {
+    return 16;
+  }
+  static createFieldNode(builder, length4, null_count) {
+    builder.prep(8, 16);
+    builder.writeInt64(BigInt(null_count !== null && null_count !== void 0 ? null_count : 0));
+    builder.writeInt64(BigInt(length4 !== null && length4 !== void 0 ? length4 : 0));
+    return builder.offset();
+  }
+};
+
+// node_modules/apache-arrow/fb/record-batch.mjs
+var RecordBatch = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  static getRootAsRecordBatch(bb2, obj) {
+    return (obj || new RecordBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static getSizePrefixedRootAsRecordBatch(bb2, obj) {
+    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
+    return (obj || new RecordBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  /**
+   * number of records / rows. The arrays in the batch should all have this
+   * length
+   */
+  length() {
+    const offset2 = this.bb.__offset(this.bb_pos, 4);
+    return offset2 ? this.bb.readInt64(this.bb_pos + offset2) : BigInt("0");
+  }
+  /**
+   * Nodes correspond to the pre-ordered flattened logical schema
+   */
+  nodes(index3, obj) {
+    const offset2 = this.bb.__offset(this.bb_pos, 6);
+    return offset2 ? (obj || new FieldNode()).__init(this.bb.__vector(this.bb_pos + offset2) + index3 * 16, this.bb) : null;
+  }
+  nodesLength() {
+    const offset2 = this.bb.__offset(this.bb_pos, 6);
+    return offset2 ? this.bb.__vector_len(this.bb_pos + offset2) : 0;
+  }
+  /**
+   * Buffers correspond to the pre-ordered flattened buffer tree
+   *
+   * The number of buffers appended to this list depends on the schema. For
+   * example, most primitive arrays will have 2 buffers, 1 for the validity
+   * bitmap and 1 for the values. For struct arrays, there will only be a
+   * single buffer for the validity (nulls) bitmap
+   */
+  buffers(index3, obj) {
+    const offset2 = this.bb.__offset(this.bb_pos, 8);
+    return offset2 ? (obj || new Buffer2()).__init(this.bb.__vector(this.bb_pos + offset2) + index3 * 16, this.bb) : null;
+  }
+  buffersLength() {
+    const offset2 = this.bb.__offset(this.bb_pos, 8);
+    return offset2 ? this.bb.__vector_len(this.bb_pos + offset2) : 0;
+  }
+  /**
+   * Optional compression of the message body
+   */
+  compression(obj) {
+    const offset2 = this.bb.__offset(this.bb_pos, 10);
+    return offset2 ? (obj || new BodyCompression()).__init(this.bb.__indirect(this.bb_pos + offset2), this.bb) : null;
+  }
+  static startRecordBatch(builder) {
+    builder.startObject(4);
+  }
+  static addLength(builder, length4) {
+    builder.addFieldInt64(0, length4, BigInt("0"));
+  }
+  static addNodes(builder, nodesOffset) {
+    builder.addFieldOffset(1, nodesOffset, 0);
+  }
+  static startNodesVector(builder, numElems) {
+    builder.startVector(16, numElems, 8);
+  }
+  static addBuffers(builder, buffersOffset) {
+    builder.addFieldOffset(2, buffersOffset, 0);
+  }
+  static startBuffersVector(builder, numElems) {
+    builder.startVector(16, numElems, 8);
+  }
+  static addCompression(builder, compressionOffset) {
+    builder.addFieldOffset(3, compressionOffset, 0);
+  }
+  static endRecordBatch(builder) {
+    const offset2 = builder.endObject();
+    return offset2;
+  }
+};
+
+// node_modules/apache-arrow/fb/dictionary-batch.mjs
+var DictionaryBatch = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  static getRootAsDictionaryBatch(bb2, obj) {
+    return (obj || new DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static getSizePrefixedRootAsDictionaryBatch(bb2, obj) {
+    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
+    return (obj || new DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  id() {
+    const offset2 = this.bb.__offset(this.bb_pos, 4);
+    return offset2 ? this.bb.readInt64(this.bb_pos + offset2) : BigInt("0");
+  }
+  data(obj) {
+    const offset2 = this.bb.__offset(this.bb_pos, 6);
+    return offset2 ? (obj || new RecordBatch()).__init(this.bb.__indirect(this.bb_pos + offset2), this.bb) : null;
+  }
+  /**
+   * If isDelta is true the values in the dictionary are to be appended to a
+   * dictionary with the indicated id. If isDelta is false this dictionary
+   * should replace the existing dictionary.
+   */
+  isDelta() {
+    const offset2 = this.bb.__offset(this.bb_pos, 8);
+    return offset2 ? !!this.bb.readInt8(this.bb_pos + offset2) : false;
+  }
+  static startDictionaryBatch(builder) {
+    builder.startObject(3);
+  }
+  static addId(builder, id2) {
+    builder.addFieldInt64(0, id2, BigInt("0"));
+  }
+  static addData(builder, dataOffset) {
+    builder.addFieldOffset(1, dataOffset, 0);
+  }
+  static addIsDelta(builder, isDelta) {
+    builder.addFieldInt8(2, +isDelta, 0);
+  }
+  static endDictionaryBatch(builder) {
+    const offset2 = builder.endObject();
+    return offset2;
+  }
+};
+
+// node_modules/apache-arrow/fb/endianness.mjs
 var Endianness;
 (function(Endianness2) {
   Endianness2[Endianness2["Little"] = 0] = "Little";
   Endianness2[Endianness2["Big"] = 1] = "Big";
 })(Endianness || (Endianness = {}));
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/dictionary-kind.mjs
+// node_modules/apache-arrow/fb/dictionary-kind.mjs
 var DictionaryKind;
 (function(DictionaryKind2) {
   DictionaryKind2[DictionaryKind2["DenseArray"] = 0] = "DenseArray";
 })(DictionaryKind || (DictionaryKind = {}));
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/int.mjs
+// node_modules/apache-arrow/fb/int.mjs
 var Int = class {
   constructor() {
     this.bb = null;
@@ -35420,7 +31902,7 @@ var Int = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/dictionary-encoding.mjs
+// node_modules/apache-arrow/fb/dictionary-encoding.mjs
 var DictionaryEncoding = class {
   constructor() {
     this.bb = null;
@@ -35493,8 +31975,55 @@ var DictionaryEncoding = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/binary.mjs
-var Binary2 = class {
+// node_modules/apache-arrow/fb/key-value.mjs
+var KeyValue = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  static getRootAsKeyValue(bb2, obj) {
+    return (obj || new KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static getSizePrefixedRootAsKeyValue(bb2, obj) {
+    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
+    return (obj || new KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  key(optionalEncoding) {
+    const offset2 = this.bb.__offset(this.bb_pos, 4);
+    return offset2 ? this.bb.__string(this.bb_pos + offset2, optionalEncoding) : null;
+  }
+  value(optionalEncoding) {
+    const offset2 = this.bb.__offset(this.bb_pos, 6);
+    return offset2 ? this.bb.__string(this.bb_pos + offset2, optionalEncoding) : null;
+  }
+  static startKeyValue(builder) {
+    builder.startObject(2);
+  }
+  static addKey(builder, keyOffset) {
+    builder.addFieldOffset(0, keyOffset, 0);
+  }
+  static addValue(builder, valueOffset) {
+    builder.addFieldOffset(1, valueOffset, 0);
+  }
+  static endKeyValue(builder) {
+    const offset2 = builder.endObject();
+    return offset2;
+  }
+  static createKeyValue(builder, keyOffset, valueOffset) {
+    KeyValue.startKeyValue(builder);
+    KeyValue.addKey(builder, keyOffset);
+    KeyValue.addValue(builder, valueOffset);
+    return KeyValue.endKeyValue(builder);
+  }
+};
+
+// node_modules/apache-arrow/fb/binary.mjs
+var Binary = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35505,11 +32034,11 @@ var Binary2 = class {
     return this;
   }
   static getRootAsBinary(bb2, obj) {
-    return (obj || new Binary2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Binary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsBinary(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Binary2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Binary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startBinary(builder) {
     builder.startObject(0);
@@ -35519,13 +32048,13 @@ var Binary2 = class {
     return offset2;
   }
   static createBinary(builder) {
-    Binary2.startBinary(builder);
-    return Binary2.endBinary(builder);
+    Binary.startBinary(builder);
+    return Binary.endBinary(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/bool.mjs
-var Bool2 = class {
+// node_modules/apache-arrow/fb/bool.mjs
+var Bool = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35536,11 +32065,11 @@ var Bool2 = class {
     return this;
   }
   static getRootAsBool(bb2, obj) {
-    return (obj || new Bool2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Bool()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsBool(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Bool2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Bool()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startBool(builder) {
     builder.startObject(0);
@@ -35550,19 +32079,12 @@ var Bool2 = class {
     return offset2;
   }
   static createBool(builder) {
-    Bool2.startBool(builder);
-    return Bool2.endBool(builder);
+    Bool.startBool(builder);
+    return Bool.endBool(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/date-unit.mjs
-var DateUnit2;
-(function(DateUnit3) {
-  DateUnit3[DateUnit3["DAY"] = 0] = "DAY";
-  DateUnit3[DateUnit3["MILLISECOND"] = 1] = "MILLISECOND";
-})(DateUnit2 || (DateUnit2 = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/date.mjs
+// node_modules/apache-arrow/fb/date.mjs
 var Date2 = class {
   constructor() {
     this.bb = null;
@@ -35582,13 +32104,13 @@ var Date2 = class {
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : DateUnit2.MILLISECOND;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : DateUnit.MILLISECOND;
   }
   static startDate(builder) {
     builder.startObject(1);
   }
   static addUnit(builder, unit3) {
-    builder.addFieldInt16(0, unit3, DateUnit2.MILLISECOND);
+    builder.addFieldInt16(0, unit3, DateUnit.MILLISECOND);
   }
   static endDate(builder) {
     const offset2 = builder.endObject();
@@ -35601,8 +32123,8 @@ var Date2 = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/decimal.mjs
-var Decimal2 = class {
+// node_modules/apache-arrow/fb/decimal.mjs
+var Decimal = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35613,11 +32135,11 @@ var Decimal2 = class {
     return this;
   }
   static getRootAsDecimal(bb2, obj) {
-    return (obj || new Decimal2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Decimal()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDecimal(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Decimal2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Decimal()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Total number of decimal digits
@@ -35658,25 +32180,16 @@ var Decimal2 = class {
     return offset2;
   }
   static createDecimal(builder, precision, scale3, bitWidth) {
-    Decimal2.startDecimal(builder);
-    Decimal2.addPrecision(builder, precision);
-    Decimal2.addScale(builder, scale3);
-    Decimal2.addBitWidth(builder, bitWidth);
-    return Decimal2.endDecimal(builder);
+    Decimal.startDecimal(builder);
+    Decimal.addPrecision(builder, precision);
+    Decimal.addScale(builder, scale3);
+    Decimal.addBitWidth(builder, bitWidth);
+    return Decimal.endDecimal(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/time-unit.mjs
-var TimeUnit2;
-(function(TimeUnit3) {
-  TimeUnit3[TimeUnit3["SECOND"] = 0] = "SECOND";
-  TimeUnit3[TimeUnit3["MILLISECOND"] = 1] = "MILLISECOND";
-  TimeUnit3[TimeUnit3["MICROSECOND"] = 2] = "MICROSECOND";
-  TimeUnit3[TimeUnit3["NANOSECOND"] = 3] = "NANOSECOND";
-})(TimeUnit2 || (TimeUnit2 = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/duration.mjs
-var Duration2 = class {
+// node_modules/apache-arrow/fb/duration.mjs
+var Duration = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35687,35 +32200,35 @@ var Duration2 = class {
     return this;
   }
   static getRootAsDuration(bb2, obj) {
-    return (obj || new Duration2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Duration()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDuration(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Duration2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Duration()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit2.MILLISECOND;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit.MILLISECOND;
   }
   static startDuration(builder) {
     builder.startObject(1);
   }
   static addUnit(builder, unit3) {
-    builder.addFieldInt16(0, unit3, TimeUnit2.MILLISECOND);
+    builder.addFieldInt16(0, unit3, TimeUnit.MILLISECOND);
   }
   static endDuration(builder) {
     const offset2 = builder.endObject();
     return offset2;
   }
   static createDuration(builder, unit3) {
-    Duration2.startDuration(builder);
-    Duration2.addUnit(builder, unit3);
-    return Duration2.endDuration(builder);
+    Duration.startDuration(builder);
+    Duration.addUnit(builder, unit3);
+    return Duration.endDuration(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/fixed-size-binary.mjs
-var FixedSizeBinary2 = class {
+// node_modules/apache-arrow/fb/fixed-size-binary.mjs
+var FixedSizeBinary = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35726,11 +32239,11 @@ var FixedSizeBinary2 = class {
     return this;
   }
   static getRootAsFixedSizeBinary(bb2, obj) {
-    return (obj || new FixedSizeBinary2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new FixedSizeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsFixedSizeBinary(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new FixedSizeBinary2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new FixedSizeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Number of bytes per value
@@ -35750,14 +32263,14 @@ var FixedSizeBinary2 = class {
     return offset2;
   }
   static createFixedSizeBinary(builder, byteWidth) {
-    FixedSizeBinary2.startFixedSizeBinary(builder);
-    FixedSizeBinary2.addByteWidth(builder, byteWidth);
-    return FixedSizeBinary2.endFixedSizeBinary(builder);
+    FixedSizeBinary.startFixedSizeBinary(builder);
+    FixedSizeBinary.addByteWidth(builder, byteWidth);
+    return FixedSizeBinary.endFixedSizeBinary(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/fixed-size-list.mjs
-var FixedSizeList2 = class {
+// node_modules/apache-arrow/fb/fixed-size-list.mjs
+var FixedSizeList = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35768,11 +32281,11 @@ var FixedSizeList2 = class {
     return this;
   }
   static getRootAsFixedSizeList(bb2, obj) {
-    return (obj || new FixedSizeList2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new FixedSizeList()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsFixedSizeList(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new FixedSizeList2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new FixedSizeList()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Number of list items per value
@@ -35792,21 +32305,13 @@ var FixedSizeList2 = class {
     return offset2;
   }
   static createFixedSizeList(builder, listSize) {
-    FixedSizeList2.startFixedSizeList(builder);
-    FixedSizeList2.addListSize(builder, listSize);
-    return FixedSizeList2.endFixedSizeList(builder);
+    FixedSizeList.startFixedSizeList(builder);
+    FixedSizeList.addListSize(builder, listSize);
+    return FixedSizeList.endFixedSizeList(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/precision.mjs
-var Precision2;
-(function(Precision3) {
-  Precision3[Precision3["HALF"] = 0] = "HALF";
-  Precision3[Precision3["SINGLE"] = 1] = "SINGLE";
-  Precision3[Precision3["DOUBLE"] = 2] = "DOUBLE";
-})(Precision2 || (Precision2 = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/floating-point.mjs
+// node_modules/apache-arrow/fb/floating-point.mjs
 var FloatingPoint = class {
   constructor() {
     this.bb = null;
@@ -35826,13 +32331,13 @@ var FloatingPoint = class {
   }
   precision() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : Precision2.HALF;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : Precision.HALF;
   }
   static startFloatingPoint(builder) {
     builder.startObject(1);
   }
   static addPrecision(builder, precision) {
-    builder.addFieldInt16(0, precision, Precision2.HALF);
+    builder.addFieldInt16(0, precision, Precision.HALF);
   }
   static endFloatingPoint(builder) {
     const offset2 = builder.endObject();
@@ -35845,15 +32350,7 @@ var FloatingPoint = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/interval-unit.mjs
-var IntervalUnit2;
-(function(IntervalUnit3) {
-  IntervalUnit3[IntervalUnit3["YEAR_MONTH"] = 0] = "YEAR_MONTH";
-  IntervalUnit3[IntervalUnit3["DAY_TIME"] = 1] = "DAY_TIME";
-  IntervalUnit3[IntervalUnit3["MONTH_DAY_NANO"] = 2] = "MONTH_DAY_NANO";
-})(IntervalUnit2 || (IntervalUnit2 = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/interval.mjs
+// node_modules/apache-arrow/fb/interval.mjs
 var Interval = class {
   constructor() {
     this.bb = null;
@@ -35873,13 +32370,13 @@ var Interval = class {
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : IntervalUnit2.YEAR_MONTH;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : IntervalUnit.YEAR_MONTH;
   }
   static startInterval(builder) {
     builder.startObject(1);
   }
   static addUnit(builder, unit3) {
-    builder.addFieldInt16(0, unit3, IntervalUnit2.YEAR_MONTH);
+    builder.addFieldInt16(0, unit3, IntervalUnit.YEAR_MONTH);
   }
   static endInterval(builder) {
     const offset2 = builder.endObject();
@@ -35892,8 +32389,70 @@ var Interval = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/list.mjs
-var List2 = class {
+// node_modules/apache-arrow/fb/large-binary.mjs
+var LargeBinary = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  static getRootAsLargeBinary(bb2, obj) {
+    return (obj || new LargeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static getSizePrefixedRootAsLargeBinary(bb2, obj) {
+    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
+    return (obj || new LargeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static startLargeBinary(builder) {
+    builder.startObject(0);
+  }
+  static endLargeBinary(builder) {
+    const offset2 = builder.endObject();
+    return offset2;
+  }
+  static createLargeBinary(builder) {
+    LargeBinary.startLargeBinary(builder);
+    return LargeBinary.endLargeBinary(builder);
+  }
+};
+
+// node_modules/apache-arrow/fb/large-utf8.mjs
+var LargeUtf8 = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  static getRootAsLargeUtf8(bb2, obj) {
+    return (obj || new LargeUtf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static getSizePrefixedRootAsLargeUtf8(bb2, obj) {
+    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
+    return (obj || new LargeUtf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+  }
+  static startLargeUtf8(builder) {
+    builder.startObject(0);
+  }
+  static endLargeUtf8(builder) {
+    const offset2 = builder.endObject();
+    return offset2;
+  }
+  static createLargeUtf8(builder) {
+    LargeUtf8.startLargeUtf8(builder);
+    return LargeUtf8.endLargeUtf8(builder);
+  }
+};
+
+// node_modules/apache-arrow/fb/list.mjs
+var List = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35904,11 +32463,11 @@ var List2 = class {
     return this;
   }
   static getRootAsList(bb2, obj) {
-    return (obj || new List2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new List()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsList(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new List2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new List()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startList(builder) {
     builder.startObject(0);
@@ -35918,12 +32477,12 @@ var List2 = class {
     return offset2;
   }
   static createList(builder) {
-    List2.startList(builder);
-    return List2.endList(builder);
+    List.startList(builder);
+    return List.endList(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/map.mjs
+// node_modules/apache-arrow/fb/map.mjs
 var Map2 = class {
   constructor() {
     this.bb = null;
@@ -35965,8 +32524,8 @@ var Map2 = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/null.mjs
-var Null2 = class {
+// node_modules/apache-arrow/fb/null.mjs
+var Null = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -35977,11 +32536,11 @@ var Null2 = class {
     return this;
   }
   static getRootAsNull(bb2, obj) {
-    return (obj || new Null2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Null()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsNull(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Null2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Null()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startNull(builder) {
     builder.startObject(0);
@@ -35991,12 +32550,12 @@ var Null2 = class {
     return offset2;
   }
   static createNull(builder) {
-    Null2.startNull(builder);
-    return Null2.endNull(builder);
+    Null.startNull(builder);
+    return Null.endNull(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/struct-.mjs
+// node_modules/apache-arrow/fb/struct-.mjs
 var Struct_ = class {
   constructor() {
     this.bb = null;
@@ -36027,7 +32586,7 @@ var Struct_ = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/time.mjs
+// node_modules/apache-arrow/fb/time.mjs
 var Time = class {
   constructor() {
     this.bb = null;
@@ -36047,7 +32606,7 @@ var Time = class {
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit2.MILLISECOND;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit.MILLISECOND;
   }
   bitWidth() {
     const offset2 = this.bb.__offset(this.bb_pos, 6);
@@ -36057,7 +32616,7 @@ var Time = class {
     builder.startObject(2);
   }
   static addUnit(builder, unit3) {
-    builder.addFieldInt16(0, unit3, TimeUnit2.MILLISECOND);
+    builder.addFieldInt16(0, unit3, TimeUnit.MILLISECOND);
   }
   static addBitWidth(builder, bitWidth) {
     builder.addFieldInt32(1, bitWidth, 32);
@@ -36074,7 +32633,7 @@ var Time = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/timestamp.mjs
+// node_modules/apache-arrow/fb/timestamp.mjs
 var Timestamp = class {
   constructor() {
     this.bb = null;
@@ -36094,7 +32653,7 @@ var Timestamp = class {
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit2.SECOND;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : TimeUnit.SECOND;
   }
   timezone(optionalEncoding) {
     const offset2 = this.bb.__offset(this.bb_pos, 6);
@@ -36104,7 +32663,7 @@ var Timestamp = class {
     builder.startObject(2);
   }
   static addUnit(builder, unit3) {
-    builder.addFieldInt16(0, unit3, TimeUnit2.SECOND);
+    builder.addFieldInt16(0, unit3, TimeUnit.SECOND);
   }
   static addTimezone(builder, timezoneOffset) {
     builder.addFieldOffset(1, timezoneOffset, 0);
@@ -36121,14 +32680,7 @@ var Timestamp = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/union-mode.mjs
-var UnionMode2;
-(function(UnionMode3) {
-  UnionMode3[UnionMode3["Sparse"] = 0] = "Sparse";
-  UnionMode3[UnionMode3["Dense"] = 1] = "Dense";
-})(UnionMode2 || (UnionMode2 = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/union.mjs
+// node_modules/apache-arrow/fb/union.mjs
 var Union = class {
   constructor() {
     this.bb = null;
@@ -36148,7 +32700,7 @@ var Union = class {
   }
   mode() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : UnionMode2.Sparse;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : UnionMode.Sparse;
   }
   typeIds(index3) {
     const offset2 = this.bb.__offset(this.bb_pos, 6);
@@ -36166,7 +32718,7 @@ var Union = class {
     builder.startObject(2);
   }
   static addMode(builder, mode2) {
-    builder.addFieldInt16(0, mode2, UnionMode2.Sparse);
+    builder.addFieldInt16(0, mode2, UnionMode.Sparse);
   }
   static addTypeIds(builder, typeIdsOffset) {
     builder.addFieldOffset(1, typeIdsOffset, 0);
@@ -36193,8 +32745,8 @@ var Union = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/utf8.mjs
-var Utf82 = class {
+// node_modules/apache-arrow/fb/utf8.mjs
+var Utf8 = class {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -36205,11 +32757,11 @@ var Utf82 = class {
     return this;
   }
   static getRootAsUtf8(bb2, obj) {
-    return (obj || new Utf82()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Utf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsUtf8(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Utf82()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new Utf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startUtf8(builder) {
     builder.startObject(0);
@@ -36219,13 +32771,13 @@ var Utf82 = class {
     return offset2;
   }
   static createUtf8(builder) {
-    Utf82.startUtf8(builder);
-    return Utf82.endUtf8(builder);
+    Utf8.startUtf8(builder);
+    return Utf8.endUtf8(builder);
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/type.mjs
-var Type2;
+// node_modules/apache-arrow/fb/type.mjs
+var Type;
 (function(Type3) {
   Type3[Type3["NONE"] = 0] = "NONE";
   Type3[Type3["Null"] = 1] = "Null";
@@ -36250,9 +32802,9 @@ var Type2;
   Type3[Type3["LargeUtf8"] = 20] = "LargeUtf8";
   Type3[Type3["LargeList"] = 21] = "LargeList";
   Type3[Type3["RunEndEncoded"] = 22] = "RunEndEncoded";
-})(Type2 || (Type2 = {}));
+})(Type || (Type = {}));
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/field.mjs
+// node_modules/apache-arrow/fb/field.mjs
 var Field = class {
   constructor() {
     this.bb = null;
@@ -36283,7 +32835,7 @@ var Field = class {
   }
   typeType() {
     const offset2 = this.bb.__offset(this.bb_pos, 8);
-    return offset2 ? this.bb.readUint8(this.bb_pos + offset2) : Type2.NONE;
+    return offset2 ? this.bb.readUint8(this.bb_pos + offset2) : Type.NONE;
   }
   /**
    * This is the type of the decoded value if the field is dictionary encoded.
@@ -36332,7 +32884,7 @@ var Field = class {
     builder.addFieldInt8(1, +nullable, 0);
   }
   static addTypeType(builder, typeType) {
-    builder.addFieldInt8(2, typeType, Type2.NONE);
+    builder.addFieldInt8(2, typeType, Type.NONE);
   }
   static addType(builder, typeOffset) {
     builder.addFieldOffset(3, typeOffset, 0);
@@ -36372,7 +32924,7 @@ var Field = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/schema.mjs
+// node_modules/apache-arrow/fb/schema.mjs
 var Schema = class {
   constructor() {
     this.bb = null;
@@ -36491,7 +33043,3699 @@ var Schema = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/footer.mjs
+// node_modules/apache-arrow/fb/message-header.mjs
+var MessageHeader;
+(function(MessageHeader2) {
+  MessageHeader2[MessageHeader2["NONE"] = 0] = "NONE";
+  MessageHeader2[MessageHeader2["Schema"] = 1] = "Schema";
+  MessageHeader2[MessageHeader2["DictionaryBatch"] = 2] = "DictionaryBatch";
+  MessageHeader2[MessageHeader2["RecordBatch"] = 3] = "RecordBatch";
+  MessageHeader2[MessageHeader2["Tensor"] = 4] = "Tensor";
+  MessageHeader2[MessageHeader2["SparseTensor"] = 5] = "SparseTensor";
+})(MessageHeader || (MessageHeader = {}));
+
+// node_modules/apache-arrow/enum.mjs
+var Type2;
+(function(Type3) {
+  Type3[Type3["NONE"] = 0] = "NONE";
+  Type3[Type3["Null"] = 1] = "Null";
+  Type3[Type3["Int"] = 2] = "Int";
+  Type3[Type3["Float"] = 3] = "Float";
+  Type3[Type3["Binary"] = 4] = "Binary";
+  Type3[Type3["Utf8"] = 5] = "Utf8";
+  Type3[Type3["Bool"] = 6] = "Bool";
+  Type3[Type3["Decimal"] = 7] = "Decimal";
+  Type3[Type3["Date"] = 8] = "Date";
+  Type3[Type3["Time"] = 9] = "Time";
+  Type3[Type3["Timestamp"] = 10] = "Timestamp";
+  Type3[Type3["Interval"] = 11] = "Interval";
+  Type3[Type3["List"] = 12] = "List";
+  Type3[Type3["Struct"] = 13] = "Struct";
+  Type3[Type3["Union"] = 14] = "Union";
+  Type3[Type3["FixedSizeBinary"] = 15] = "FixedSizeBinary";
+  Type3[Type3["FixedSizeList"] = 16] = "FixedSizeList";
+  Type3[Type3["Map"] = 17] = "Map";
+  Type3[Type3["Duration"] = 18] = "Duration";
+  Type3[Type3["LargeBinary"] = 19] = "LargeBinary";
+  Type3[Type3["LargeUtf8"] = 20] = "LargeUtf8";
+  Type3[Type3["Dictionary"] = -1] = "Dictionary";
+  Type3[Type3["Int8"] = -2] = "Int8";
+  Type3[Type3["Int16"] = -3] = "Int16";
+  Type3[Type3["Int32"] = -4] = "Int32";
+  Type3[Type3["Int64"] = -5] = "Int64";
+  Type3[Type3["Uint8"] = -6] = "Uint8";
+  Type3[Type3["Uint16"] = -7] = "Uint16";
+  Type3[Type3["Uint32"] = -8] = "Uint32";
+  Type3[Type3["Uint64"] = -9] = "Uint64";
+  Type3[Type3["Float16"] = -10] = "Float16";
+  Type3[Type3["Float32"] = -11] = "Float32";
+  Type3[Type3["Float64"] = -12] = "Float64";
+  Type3[Type3["DateDay"] = -13] = "DateDay";
+  Type3[Type3["DateMillisecond"] = -14] = "DateMillisecond";
+  Type3[Type3["TimestampSecond"] = -15] = "TimestampSecond";
+  Type3[Type3["TimestampMillisecond"] = -16] = "TimestampMillisecond";
+  Type3[Type3["TimestampMicrosecond"] = -17] = "TimestampMicrosecond";
+  Type3[Type3["TimestampNanosecond"] = -18] = "TimestampNanosecond";
+  Type3[Type3["TimeSecond"] = -19] = "TimeSecond";
+  Type3[Type3["TimeMillisecond"] = -20] = "TimeMillisecond";
+  Type3[Type3["TimeMicrosecond"] = -21] = "TimeMicrosecond";
+  Type3[Type3["TimeNanosecond"] = -22] = "TimeNanosecond";
+  Type3[Type3["DenseUnion"] = -23] = "DenseUnion";
+  Type3[Type3["SparseUnion"] = -24] = "SparseUnion";
+  Type3[Type3["IntervalDayTime"] = -25] = "IntervalDayTime";
+  Type3[Type3["IntervalYearMonth"] = -26] = "IntervalYearMonth";
+  Type3[Type3["DurationSecond"] = -27] = "DurationSecond";
+  Type3[Type3["DurationMillisecond"] = -28] = "DurationMillisecond";
+  Type3[Type3["DurationMicrosecond"] = -29] = "DurationMicrosecond";
+  Type3[Type3["DurationNanosecond"] = -30] = "DurationNanosecond";
+})(Type2 || (Type2 = {}));
+var BufferType;
+(function(BufferType2) {
+  BufferType2[BufferType2["OFFSET"] = 0] = "OFFSET";
+  BufferType2[BufferType2["DATA"] = 1] = "DATA";
+  BufferType2[BufferType2["VALIDITY"] = 2] = "VALIDITY";
+  BufferType2[BufferType2["TYPE"] = 3] = "TYPE";
+})(BufferType || (BufferType = {}));
+
+// node_modules/apache-arrow/util/vector.mjs
+var vector_exports = {};
+__export(vector_exports, {
+  clampIndex: () => clampIndex,
+  clampRange: () => clampRange,
+  createElementComparator: () => createElementComparator
+});
+
+// node_modules/apache-arrow/util/pretty.mjs
+var pretty_exports = {};
+__export(pretty_exports, {
+  valueToString: () => valueToString
+});
+var undf = void 0;
+function valueToString(x4) {
+  if (x4 === null) {
+    return "null";
+  }
+  if (x4 === undf) {
+    return "undefined";
+  }
+  switch (typeof x4) {
+    case "number":
+      return `${x4}`;
+    case "bigint":
+      return `${x4}`;
+    case "string":
+      return `"${x4}"`;
+  }
+  if (typeof x4[Symbol.toPrimitive] === "function") {
+    return x4[Symbol.toPrimitive]("string");
+  }
+  if (ArrayBuffer.isView(x4)) {
+    if (x4 instanceof BigInt64Array || x4 instanceof BigUint64Array) {
+      return `[${[...x4].map((x5) => valueToString(x5))}]`;
+    }
+    return `[${x4}]`;
+  }
+  return ArrayBuffer.isView(x4) ? `[${x4}]` : JSON.stringify(x4, (_, y4) => typeof y4 === "bigint" ? `${y4}` : y4);
+}
+
+// node_modules/apache-arrow/util/bn.mjs
+var bn_exports = {};
+__export(bn_exports, {
+  BN: () => BN,
+  bigNumToBigInt: () => bigNumToBigInt,
+  bigNumToString: () => bigNumToString,
+  isArrowBigNumSymbol: () => isArrowBigNumSymbol
+});
+var isArrowBigNumSymbol = Symbol.for("isArrowBigNum");
+function BigNum(x4, ...xs) {
+  if (xs.length === 0) {
+    return Object.setPrototypeOf(toArrayBufferView(this["TypedArray"], x4), this.constructor.prototype);
+  }
+  return Object.setPrototypeOf(new this["TypedArray"](x4, ...xs), this.constructor.prototype);
+}
+BigNum.prototype[isArrowBigNumSymbol] = true;
+BigNum.prototype.toJSON = function() {
+  return `"${bigNumToString(this)}"`;
+};
+BigNum.prototype.valueOf = function() {
+  return bigNumToNumber(this);
+};
+BigNum.prototype.toString = function() {
+  return bigNumToString(this);
+};
+BigNum.prototype[Symbol.toPrimitive] = function(hint = "default") {
+  switch (hint) {
+    case "number":
+      return bigNumToNumber(this);
+    case "string":
+      return bigNumToString(this);
+    case "default":
+      return bigNumToBigInt(this);
+  }
+  return bigNumToString(this);
+};
+function SignedBigNum(...args) {
+  return BigNum.apply(this, args);
+}
+function UnsignedBigNum(...args) {
+  return BigNum.apply(this, args);
+}
+function DecimalBigNum(...args) {
+  return BigNum.apply(this, args);
+}
+Object.setPrototypeOf(SignedBigNum.prototype, Object.create(Int32Array.prototype));
+Object.setPrototypeOf(UnsignedBigNum.prototype, Object.create(Uint32Array.prototype));
+Object.setPrototypeOf(DecimalBigNum.prototype, Object.create(Uint32Array.prototype));
+Object.assign(SignedBigNum.prototype, BigNum.prototype, { "constructor": SignedBigNum, "signed": true, "TypedArray": Int32Array, "BigIntArray": BigInt64Array });
+Object.assign(UnsignedBigNum.prototype, BigNum.prototype, { "constructor": UnsignedBigNum, "signed": false, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
+Object.assign(DecimalBigNum.prototype, BigNum.prototype, { "constructor": DecimalBigNum, "signed": true, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
+function bigNumToNumber(bn) {
+  const { buffer, byteOffset, length: length4, "signed": signed } = bn;
+  const words = new BigUint64Array(buffer, byteOffset, length4);
+  const negative2 = signed && words.at(-1) & BigInt(1) << BigInt(63);
+  let number7 = negative2 ? BigInt(1) : BigInt(0);
+  let i = BigInt(0);
+  if (!negative2) {
+    for (const word of words) {
+      number7 += word * (BigInt(1) << BigInt(32) * i++);
+    }
+  } else {
+    for (const word of words) {
+      number7 += ~word * (BigInt(1) << BigInt(32) * i++);
+    }
+    number7 *= BigInt(-1);
+  }
+  return number7;
+}
+var bigNumToString = (a4) => {
+  if (a4.byteLength === 8) {
+    const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
+    return `${bigIntArray[0]}`;
+  }
+  if (!a4["signed"]) {
+    return unsignedBigNumToString(a4);
+  }
+  let array4 = new Uint16Array(a4.buffer, a4.byteOffset, a4.byteLength / 2);
+  const highOrderWord = new Int16Array([array4.at(-1)])[0];
+  if (highOrderWord >= 0) {
+    return unsignedBigNumToString(a4);
+  }
+  array4 = array4.slice();
+  let carry = 1;
+  for (let i = 0; i < array4.length; i++) {
+    const elem = array4[i];
+    const updated = ~elem + carry;
+    array4[i] = updated;
+    carry &= elem === 0 ? 1 : 0;
+  }
+  const negated = unsignedBigNumToString(array4);
+  return `-${negated}`;
+};
+var bigNumToBigInt = (a4) => {
+  if (a4.byteLength === 8) {
+    const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
+    return bigIntArray[0];
+  } else {
+    return bigNumToString(a4);
+  }
+};
+function unsignedBigNumToString(a4) {
+  let digits = "";
+  const base64 = new Uint32Array(2);
+  let base32 = new Uint16Array(a4.buffer, a4.byteOffset, a4.byteLength / 2);
+  const checks = new Uint32Array((base32 = new Uint16Array(base32).reverse()).buffer);
+  let i = -1;
+  const n = base32.length - 1;
+  do {
+    for (base64[0] = base32[i = 0]; i < n; ) {
+      base32[i++] = base64[1] = base64[0] / 10;
+      base64[0] = (base64[0] - base64[1] * 10 << 16) + base32[i];
+    }
+    base32[i] = base64[1] = base64[0] / 10;
+    base64[0] = base64[0] - base64[1] * 10;
+    digits = `${base64[0]}${digits}`;
+  } while (checks[0] || checks[1] || checks[2] || checks[3]);
+  return digits !== null && digits !== void 0 ? digits : `0`;
+}
+var BN = class {
+  /** @nocollapse */
+  static new(num, isSigned) {
+    switch (isSigned) {
+      case true:
+        return new SignedBigNum(num);
+      case false:
+        return new UnsignedBigNum(num);
+    }
+    switch (num.constructor) {
+      case Int8Array:
+      case Int16Array:
+      case Int32Array:
+      case BigInt64Array:
+        return new SignedBigNum(num);
+    }
+    if (num.byteLength === 16) {
+      return new DecimalBigNum(num);
+    }
+    return new UnsignedBigNum(num);
+  }
+  /** @nocollapse */
+  static signed(num) {
+    return new SignedBigNum(num);
+  }
+  /** @nocollapse */
+  static unsigned(num) {
+    return new UnsignedBigNum(num);
+  }
+  /** @nocollapse */
+  static decimal(num) {
+    return new DecimalBigNum(num);
+  }
+  constructor(num, isSigned) {
+    return BN.new(num, isSigned);
+  }
+};
+
+// node_modules/apache-arrow/util/bigint.mjs
+function bigIntToNumber(number7) {
+  if (typeof number7 === "bigint" && (number7 < Number.MIN_SAFE_INTEGER || number7 > Number.MAX_SAFE_INTEGER)) {
+    throw new TypeError(`${number7} is not safe to convert to a number.`);
+  }
+  return Number(number7);
+}
+
+// node_modules/apache-arrow/type.mjs
+var _a;
+var _b;
+var _c;
+var _d;
+var _e;
+var _f;
+var _g;
+var _h;
+var _j;
+var _k;
+var _l;
+var _m;
+var _o;
+var _p;
+var _q;
+var _r;
+var _s;
+var _t;
+var _u;
+var _v;
+var _w;
+var _x;
+var DataType = class {
+  /** @nocollapse */
+  static isNull(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Null;
+  }
+  /** @nocollapse */
+  static isInt(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Int;
+  }
+  /** @nocollapse */
+  static isFloat(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Float;
+  }
+  /** @nocollapse */
+  static isBinary(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Binary;
+  }
+  /** @nocollapse */
+  static isLargeBinary(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.LargeBinary;
+  }
+  /** @nocollapse */
+  static isUtf8(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Utf8;
+  }
+  /** @nocollapse */
+  static isLargeUtf8(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.LargeUtf8;
+  }
+  /** @nocollapse */
+  static isBool(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Bool;
+  }
+  /** @nocollapse */
+  static isDecimal(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Decimal;
+  }
+  /** @nocollapse */
+  static isDate(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Date;
+  }
+  /** @nocollapse */
+  static isTime(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Time;
+  }
+  /** @nocollapse */
+  static isTimestamp(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Timestamp;
+  }
+  /** @nocollapse */
+  static isInterval(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Interval;
+  }
+  /** @nocollapse */
+  static isDuration(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Duration;
+  }
+  /** @nocollapse */
+  static isList(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.List;
+  }
+  /** @nocollapse */
+  static isStruct(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Struct;
+  }
+  /** @nocollapse */
+  static isUnion(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Union;
+  }
+  /** @nocollapse */
+  static isFixedSizeBinary(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.FixedSizeBinary;
+  }
+  /** @nocollapse */
+  static isFixedSizeList(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.FixedSizeList;
+  }
+  /** @nocollapse */
+  static isMap(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Map;
+  }
+  /** @nocollapse */
+  static isDictionary(x4) {
+    return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Dictionary;
+  }
+  /** @nocollapse */
+  static isDenseUnion(x4) {
+    return DataType.isUnion(x4) && x4.mode === UnionMode.Dense;
+  }
+  /** @nocollapse */
+  static isSparseUnion(x4) {
+    return DataType.isUnion(x4) && x4.mode === UnionMode.Sparse;
+  }
+  constructor(typeId) {
+    this.typeId = typeId;
+  }
+};
+_a = Symbol.toStringTag;
+DataType[_a] = ((proto) => {
+  proto.children = null;
+  proto.ArrayType = Array;
+  proto.OffsetArrayType = Int32Array;
+  return proto[Symbol.toStringTag] = "DataType";
+})(DataType.prototype);
+var Null2 = class extends DataType {
+  constructor() {
+    super(Type2.Null);
+  }
+  toString() {
+    return `Null`;
+  }
+};
+_b = Symbol.toStringTag;
+Null2[_b] = ((proto) => proto[Symbol.toStringTag] = "Null")(Null2.prototype);
+var Int_ = class extends DataType {
+  constructor(isSigned, bitWidth) {
+    super(Type2.Int);
+    this.isSigned = isSigned;
+    this.bitWidth = bitWidth;
+  }
+  get ArrayType() {
+    switch (this.bitWidth) {
+      case 8:
+        return this.isSigned ? Int8Array : Uint8Array;
+      case 16:
+        return this.isSigned ? Int16Array : Uint16Array;
+      case 32:
+        return this.isSigned ? Int32Array : Uint32Array;
+      case 64:
+        return this.isSigned ? BigInt64Array : BigUint64Array;
+    }
+    throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
+  }
+  toString() {
+    return `${this.isSigned ? `I` : `Ui`}nt${this.bitWidth}`;
+  }
+};
+_c = Symbol.toStringTag;
+Int_[_c] = ((proto) => {
+  proto.isSigned = null;
+  proto.bitWidth = null;
+  return proto[Symbol.toStringTag] = "Int";
+})(Int_.prototype);
+var Int8 = class extends Int_ {
+  constructor() {
+    super(true, 8);
+  }
+  get ArrayType() {
+    return Int8Array;
+  }
+};
+var Int16 = class extends Int_ {
+  constructor() {
+    super(true, 16);
+  }
+  get ArrayType() {
+    return Int16Array;
+  }
+};
+var Int32 = class extends Int_ {
+  constructor() {
+    super(true, 32);
+  }
+  get ArrayType() {
+    return Int32Array;
+  }
+};
+var Int64 = class extends Int_ {
+  constructor() {
+    super(true, 64);
+  }
+  get ArrayType() {
+    return BigInt64Array;
+  }
+};
+var Uint8 = class extends Int_ {
+  constructor() {
+    super(false, 8);
+  }
+  get ArrayType() {
+    return Uint8Array;
+  }
+};
+var Uint16 = class extends Int_ {
+  constructor() {
+    super(false, 16);
+  }
+  get ArrayType() {
+    return Uint16Array;
+  }
+};
+var Uint32 = class extends Int_ {
+  constructor() {
+    super(false, 32);
+  }
+  get ArrayType() {
+    return Uint32Array;
+  }
+};
+var Uint64 = class extends Int_ {
+  constructor() {
+    super(false, 64);
+  }
+  get ArrayType() {
+    return BigUint64Array;
+  }
+};
+Object.defineProperty(Int8.prototype, "ArrayType", { value: Int8Array });
+Object.defineProperty(Int16.prototype, "ArrayType", { value: Int16Array });
+Object.defineProperty(Int32.prototype, "ArrayType", { value: Int32Array });
+Object.defineProperty(Int64.prototype, "ArrayType", { value: BigInt64Array });
+Object.defineProperty(Uint8.prototype, "ArrayType", { value: Uint8Array });
+Object.defineProperty(Uint16.prototype, "ArrayType", { value: Uint16Array });
+Object.defineProperty(Uint32.prototype, "ArrayType", { value: Uint32Array });
+Object.defineProperty(Uint64.prototype, "ArrayType", { value: BigUint64Array });
+var Float = class extends DataType {
+  constructor(precision) {
+    super(Type2.Float);
+    this.precision = precision;
+  }
+  get ArrayType() {
+    switch (this.precision) {
+      case Precision.HALF:
+        return Uint16Array;
+      case Precision.SINGLE:
+        return Float32Array;
+      case Precision.DOUBLE:
+        return Float64Array;
+    }
+    throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
+  }
+  toString() {
+    return `Float${this.precision << 5 || 16}`;
+  }
+};
+_d = Symbol.toStringTag;
+Float[_d] = ((proto) => {
+  proto.precision = null;
+  return proto[Symbol.toStringTag] = "Float";
+})(Float.prototype);
+var Float16 = class extends Float {
+  constructor() {
+    super(Precision.HALF);
+  }
+};
+var Float32 = class extends Float {
+  constructor() {
+    super(Precision.SINGLE);
+  }
+};
+var Float64 = class extends Float {
+  constructor() {
+    super(Precision.DOUBLE);
+  }
+};
+Object.defineProperty(Float16.prototype, "ArrayType", { value: Uint16Array });
+Object.defineProperty(Float32.prototype, "ArrayType", { value: Float32Array });
+Object.defineProperty(Float64.prototype, "ArrayType", { value: Float64Array });
+var Binary2 = class extends DataType {
+  constructor() {
+    super(Type2.Binary);
+  }
+  toString() {
+    return `Binary`;
+  }
+};
+_e = Symbol.toStringTag;
+Binary2[_e] = ((proto) => {
+  proto.ArrayType = Uint8Array;
+  return proto[Symbol.toStringTag] = "Binary";
+})(Binary2.prototype);
+var LargeBinary2 = class extends DataType {
+  constructor() {
+    super(Type2.LargeBinary);
+  }
+  toString() {
+    return `LargeBinary`;
+  }
+};
+_f = Symbol.toStringTag;
+LargeBinary2[_f] = ((proto) => {
+  proto.ArrayType = Uint8Array;
+  proto.OffsetArrayType = BigInt64Array;
+  return proto[Symbol.toStringTag] = "LargeBinary";
+})(LargeBinary2.prototype);
+var Utf82 = class extends DataType {
+  constructor() {
+    super(Type2.Utf8);
+  }
+  toString() {
+    return `Utf8`;
+  }
+};
+_g = Symbol.toStringTag;
+Utf82[_g] = ((proto) => {
+  proto.ArrayType = Uint8Array;
+  return proto[Symbol.toStringTag] = "Utf8";
+})(Utf82.prototype);
+var LargeUtf82 = class extends DataType {
+  constructor() {
+    super(Type2.LargeUtf8);
+  }
+  toString() {
+    return `LargeUtf8`;
+  }
+};
+_h = Symbol.toStringTag;
+LargeUtf82[_h] = ((proto) => {
+  proto.ArrayType = Uint8Array;
+  proto.OffsetArrayType = BigInt64Array;
+  return proto[Symbol.toStringTag] = "LargeUtf8";
+})(LargeUtf82.prototype);
+var Bool2 = class extends DataType {
+  constructor() {
+    super(Type2.Bool);
+  }
+  toString() {
+    return `Bool`;
+  }
+};
+_j = Symbol.toStringTag;
+Bool2[_j] = ((proto) => {
+  proto.ArrayType = Uint8Array;
+  return proto[Symbol.toStringTag] = "Bool";
+})(Bool2.prototype);
+var Decimal2 = class extends DataType {
+  constructor(scale3, precision, bitWidth = 128) {
+    super(Type2.Decimal);
+    this.scale = scale3;
+    this.precision = precision;
+    this.bitWidth = bitWidth;
+  }
+  toString() {
+    return `Decimal[${this.precision}e${this.scale > 0 ? `+` : ``}${this.scale}]`;
+  }
+};
+_k = Symbol.toStringTag;
+Decimal2[_k] = ((proto) => {
+  proto.scale = null;
+  proto.precision = null;
+  proto.ArrayType = Uint32Array;
+  return proto[Symbol.toStringTag] = "Decimal";
+})(Decimal2.prototype);
+var Date_ = class extends DataType {
+  constructor(unit3) {
+    super(Type2.Date);
+    this.unit = unit3;
+  }
+  toString() {
+    return `Date${(this.unit + 1) * 32}<${DateUnit[this.unit]}>`;
+  }
+};
+_l = Symbol.toStringTag;
+Date_[_l] = ((proto) => {
+  proto.unit = null;
+  proto.ArrayType = Int32Array;
+  return proto[Symbol.toStringTag] = "Date";
+})(Date_.prototype);
+var Time_ = class extends DataType {
+  constructor(unit3, bitWidth) {
+    super(Type2.Time);
+    this.unit = unit3;
+    this.bitWidth = bitWidth;
+  }
+  toString() {
+    return `Time${this.bitWidth}<${TimeUnit[this.unit]}>`;
+  }
+  get ArrayType() {
+    switch (this.bitWidth) {
+      case 32:
+        return Int32Array;
+      case 64:
+        return BigInt64Array;
+    }
+    throw new Error(`Unrecognized ${this[Symbol.toStringTag]} type`);
+  }
+};
+_m = Symbol.toStringTag;
+Time_[_m] = ((proto) => {
+  proto.unit = null;
+  proto.bitWidth = null;
+  return proto[Symbol.toStringTag] = "Time";
+})(Time_.prototype);
+var Timestamp_ = class extends DataType {
+  constructor(unit3, timezone) {
+    super(Type2.Timestamp);
+    this.unit = unit3;
+    this.timezone = timezone;
+  }
+  toString() {
+    return `Timestamp<${TimeUnit[this.unit]}${this.timezone ? `, ${this.timezone}` : ``}>`;
+  }
+};
+_o = Symbol.toStringTag;
+Timestamp_[_o] = ((proto) => {
+  proto.unit = null;
+  proto.timezone = null;
+  proto.ArrayType = Int32Array;
+  return proto[Symbol.toStringTag] = "Timestamp";
+})(Timestamp_.prototype);
+var Interval_ = class extends DataType {
+  constructor(unit3) {
+    super(Type2.Interval);
+    this.unit = unit3;
+  }
+  toString() {
+    return `Interval<${IntervalUnit[this.unit]}>`;
+  }
+};
+_p = Symbol.toStringTag;
+Interval_[_p] = ((proto) => {
+  proto.unit = null;
+  proto.ArrayType = Int32Array;
+  return proto[Symbol.toStringTag] = "Interval";
+})(Interval_.prototype);
+var Duration2 = class extends DataType {
+  constructor(unit3) {
+    super(Type2.Duration);
+    this.unit = unit3;
+  }
+  toString() {
+    return `Duration<${TimeUnit[this.unit]}>`;
+  }
+};
+_q = Symbol.toStringTag;
+Duration2[_q] = ((proto) => {
+  proto.unit = null;
+  proto.ArrayType = BigInt64Array;
+  return proto[Symbol.toStringTag] = "Duration";
+})(Duration2.prototype);
+var List2 = class extends DataType {
+  constructor(child) {
+    super(Type2.List);
+    this.children = [child];
+  }
+  toString() {
+    return `List<${this.valueType}>`;
+  }
+  get valueType() {
+    return this.children[0].type;
+  }
+  get valueField() {
+    return this.children[0];
+  }
+  get ArrayType() {
+    return this.valueType.ArrayType;
+  }
+};
+_r = Symbol.toStringTag;
+List2[_r] = ((proto) => {
+  proto.children = null;
+  return proto[Symbol.toStringTag] = "List";
+})(List2.prototype);
+var Struct = class extends DataType {
+  constructor(children2) {
+    super(Type2.Struct);
+    this.children = children2;
+  }
+  toString() {
+    return `Struct<{${this.children.map((f) => `${f.name}:${f.type}`).join(`, `)}}>`;
+  }
+};
+_s = Symbol.toStringTag;
+Struct[_s] = ((proto) => {
+  proto.children = null;
+  return proto[Symbol.toStringTag] = "Struct";
+})(Struct.prototype);
+var Union_ = class extends DataType {
+  constructor(mode2, typeIds, children2) {
+    super(Type2.Union);
+    this.mode = mode2;
+    this.children = children2;
+    this.typeIds = typeIds = Int32Array.from(typeIds);
+    this.typeIdToChildIndex = typeIds.reduce((typeIdToChildIndex, typeId, idx) => (typeIdToChildIndex[typeId] = idx) && typeIdToChildIndex || typeIdToChildIndex, /* @__PURE__ */ Object.create(null));
+  }
+  toString() {
+    return `${this[Symbol.toStringTag]}<${this.children.map((x4) => `${x4.type}`).join(` | `)}>`;
+  }
+};
+_t = Symbol.toStringTag;
+Union_[_t] = ((proto) => {
+  proto.mode = null;
+  proto.typeIds = null;
+  proto.children = null;
+  proto.typeIdToChildIndex = null;
+  proto.ArrayType = Int8Array;
+  return proto[Symbol.toStringTag] = "Union";
+})(Union_.prototype);
+var FixedSizeBinary2 = class extends DataType {
+  constructor(byteWidth) {
+    super(Type2.FixedSizeBinary);
+    this.byteWidth = byteWidth;
+  }
+  toString() {
+    return `FixedSizeBinary[${this.byteWidth}]`;
+  }
+};
+_u = Symbol.toStringTag;
+FixedSizeBinary2[_u] = ((proto) => {
+  proto.byteWidth = null;
+  proto.ArrayType = Uint8Array;
+  return proto[Symbol.toStringTag] = "FixedSizeBinary";
+})(FixedSizeBinary2.prototype);
+var FixedSizeList2 = class extends DataType {
+  constructor(listSize, child) {
+    super(Type2.FixedSizeList);
+    this.listSize = listSize;
+    this.children = [child];
+  }
+  get valueType() {
+    return this.children[0].type;
+  }
+  get valueField() {
+    return this.children[0];
+  }
+  get ArrayType() {
+    return this.valueType.ArrayType;
+  }
+  toString() {
+    return `FixedSizeList[${this.listSize}]<${this.valueType}>`;
+  }
+};
+_v = Symbol.toStringTag;
+FixedSizeList2[_v] = ((proto) => {
+  proto.children = null;
+  proto.listSize = null;
+  return proto[Symbol.toStringTag] = "FixedSizeList";
+})(FixedSizeList2.prototype);
+var Map_ = class extends DataType {
+  constructor(entries, keysSorted = false) {
+    var _y, _z, _0;
+    super(Type2.Map);
+    this.children = [entries];
+    this.keysSorted = keysSorted;
+    if (entries) {
+      entries["name"] = "entries";
+      if ((_y = entries === null || entries === void 0 ? void 0 : entries.type) === null || _y === void 0 ? void 0 : _y.children) {
+        const key = (_z = entries === null || entries === void 0 ? void 0 : entries.type) === null || _z === void 0 ? void 0 : _z.children[0];
+        if (key) {
+          key["name"] = "key";
+        }
+        const val = (_0 = entries === null || entries === void 0 ? void 0 : entries.type) === null || _0 === void 0 ? void 0 : _0.children[1];
+        if (val) {
+          val["name"] = "value";
+        }
+      }
+    }
+  }
+  get keyType() {
+    return this.children[0].type.children[0].type;
+  }
+  get valueType() {
+    return this.children[0].type.children[1].type;
+  }
+  get childType() {
+    return this.children[0].type;
+  }
+  toString() {
+    return `Map<{${this.children[0].type.children.map((f) => `${f.name}:${f.type}`).join(`, `)}}>`;
+  }
+};
+_w = Symbol.toStringTag;
+Map_[_w] = ((proto) => {
+  proto.children = null;
+  proto.keysSorted = null;
+  return proto[Symbol.toStringTag] = "Map_";
+})(Map_.prototype);
+var getId = ((atomicDictionaryId) => () => ++atomicDictionaryId)(-1);
+var Dictionary = class extends DataType {
+  constructor(dictionary, indices, id2, isOrdered2) {
+    super(Type2.Dictionary);
+    this.indices = indices;
+    this.dictionary = dictionary;
+    this.isOrdered = isOrdered2 || false;
+    this.id = id2 == null ? getId() : bigIntToNumber(id2);
+  }
+  get children() {
+    return this.dictionary.children;
+  }
+  get valueType() {
+    return this.dictionary;
+  }
+  get ArrayType() {
+    return this.dictionary.ArrayType;
+  }
+  toString() {
+    return `Dictionary<${this.indices}, ${this.dictionary}>`;
+  }
+};
+_x = Symbol.toStringTag;
+Dictionary[_x] = ((proto) => {
+  proto.id = null;
+  proto.indices = null;
+  proto.isOrdered = null;
+  proto.dictionary = null;
+  return proto[Symbol.toStringTag] = "Dictionary";
+})(Dictionary.prototype);
+function strideForType(type2) {
+  const t = type2;
+  switch (type2.typeId) {
+    case Type2.Decimal:
+      return type2.bitWidth / 32;
+    case Type2.Timestamp:
+      return 2;
+    case Type2.Date:
+      return 1 + t.unit;
+    case Type2.Interval:
+      return 1 + t.unit;
+    case Type2.FixedSizeList:
+      return t.listSize;
+    case Type2.FixedSizeBinary:
+      return t.byteWidth;
+    default:
+      return 1;
+  }
+}
+
+// node_modules/apache-arrow/visitor.mjs
+var Visitor = class {
+  visitMany(nodes, ...args) {
+    return nodes.map((node, i) => this.visit(node, ...args.map((x4) => x4[i])));
+  }
+  visit(...args) {
+    return this.getVisitFn(args[0], false).apply(this, args);
+  }
+  getVisitFn(node, throwIfNotFound = true) {
+    return getVisitFn(this, node, throwIfNotFound);
+  }
+  getVisitFnByTypeId(typeId, throwIfNotFound = true) {
+    return getVisitFnByTypeId(this, typeId, throwIfNotFound);
+  }
+  visitNull(_node, ..._args) {
+    return null;
+  }
+  visitBool(_node, ..._args) {
+    return null;
+  }
+  visitInt(_node, ..._args) {
+    return null;
+  }
+  visitFloat(_node, ..._args) {
+    return null;
+  }
+  visitUtf8(_node, ..._args) {
+    return null;
+  }
+  visitLargeUtf8(_node, ..._args) {
+    return null;
+  }
+  visitBinary(_node, ..._args) {
+    return null;
+  }
+  visitLargeBinary(_node, ..._args) {
+    return null;
+  }
+  visitFixedSizeBinary(_node, ..._args) {
+    return null;
+  }
+  visitDate(_node, ..._args) {
+    return null;
+  }
+  visitTimestamp(_node, ..._args) {
+    return null;
+  }
+  visitTime(_node, ..._args) {
+    return null;
+  }
+  visitDecimal(_node, ..._args) {
+    return null;
+  }
+  visitList(_node, ..._args) {
+    return null;
+  }
+  visitStruct(_node, ..._args) {
+    return null;
+  }
+  visitUnion(_node, ..._args) {
+    return null;
+  }
+  visitDictionary(_node, ..._args) {
+    return null;
+  }
+  visitInterval(_node, ..._args) {
+    return null;
+  }
+  visitDuration(_node, ..._args) {
+    return null;
+  }
+  visitFixedSizeList(_node, ..._args) {
+    return null;
+  }
+  visitMap(_node, ..._args) {
+    return null;
+  }
+};
+function getVisitFn(visitor, node, throwIfNotFound = true) {
+  if (typeof node === "number") {
+    return getVisitFnByTypeId(visitor, node, throwIfNotFound);
+  }
+  if (typeof node === "string" && node in Type2) {
+    return getVisitFnByTypeId(visitor, Type2[node], throwIfNotFound);
+  }
+  if (node && node instanceof DataType) {
+    return getVisitFnByTypeId(visitor, inferDType(node), throwIfNotFound);
+  }
+  if ((node === null || node === void 0 ? void 0 : node.type) && node.type instanceof DataType) {
+    return getVisitFnByTypeId(visitor, inferDType(node.type), throwIfNotFound);
+  }
+  return getVisitFnByTypeId(visitor, Type2.NONE, throwIfNotFound);
+}
+function getVisitFnByTypeId(visitor, dtype, throwIfNotFound = true) {
+  let fn = null;
+  switch (dtype) {
+    case Type2.Null:
+      fn = visitor.visitNull;
+      break;
+    case Type2.Bool:
+      fn = visitor.visitBool;
+      break;
+    case Type2.Int:
+      fn = visitor.visitInt;
+      break;
+    case Type2.Int8:
+      fn = visitor.visitInt8 || visitor.visitInt;
+      break;
+    case Type2.Int16:
+      fn = visitor.visitInt16 || visitor.visitInt;
+      break;
+    case Type2.Int32:
+      fn = visitor.visitInt32 || visitor.visitInt;
+      break;
+    case Type2.Int64:
+      fn = visitor.visitInt64 || visitor.visitInt;
+      break;
+    case Type2.Uint8:
+      fn = visitor.visitUint8 || visitor.visitInt;
+      break;
+    case Type2.Uint16:
+      fn = visitor.visitUint16 || visitor.visitInt;
+      break;
+    case Type2.Uint32:
+      fn = visitor.visitUint32 || visitor.visitInt;
+      break;
+    case Type2.Uint64:
+      fn = visitor.visitUint64 || visitor.visitInt;
+      break;
+    case Type2.Float:
+      fn = visitor.visitFloat;
+      break;
+    case Type2.Float16:
+      fn = visitor.visitFloat16 || visitor.visitFloat;
+      break;
+    case Type2.Float32:
+      fn = visitor.visitFloat32 || visitor.visitFloat;
+      break;
+    case Type2.Float64:
+      fn = visitor.visitFloat64 || visitor.visitFloat;
+      break;
+    case Type2.Utf8:
+      fn = visitor.visitUtf8;
+      break;
+    case Type2.LargeUtf8:
+      fn = visitor.visitLargeUtf8;
+      break;
+    case Type2.Binary:
+      fn = visitor.visitBinary;
+      break;
+    case Type2.LargeBinary:
+      fn = visitor.visitLargeBinary;
+      break;
+    case Type2.FixedSizeBinary:
+      fn = visitor.visitFixedSizeBinary;
+      break;
+    case Type2.Date:
+      fn = visitor.visitDate;
+      break;
+    case Type2.DateDay:
+      fn = visitor.visitDateDay || visitor.visitDate;
+      break;
+    case Type2.DateMillisecond:
+      fn = visitor.visitDateMillisecond || visitor.visitDate;
+      break;
+    case Type2.Timestamp:
+      fn = visitor.visitTimestamp;
+      break;
+    case Type2.TimestampSecond:
+      fn = visitor.visitTimestampSecond || visitor.visitTimestamp;
+      break;
+    case Type2.TimestampMillisecond:
+      fn = visitor.visitTimestampMillisecond || visitor.visitTimestamp;
+      break;
+    case Type2.TimestampMicrosecond:
+      fn = visitor.visitTimestampMicrosecond || visitor.visitTimestamp;
+      break;
+    case Type2.TimestampNanosecond:
+      fn = visitor.visitTimestampNanosecond || visitor.visitTimestamp;
+      break;
+    case Type2.Time:
+      fn = visitor.visitTime;
+      break;
+    case Type2.TimeSecond:
+      fn = visitor.visitTimeSecond || visitor.visitTime;
+      break;
+    case Type2.TimeMillisecond:
+      fn = visitor.visitTimeMillisecond || visitor.visitTime;
+      break;
+    case Type2.TimeMicrosecond:
+      fn = visitor.visitTimeMicrosecond || visitor.visitTime;
+      break;
+    case Type2.TimeNanosecond:
+      fn = visitor.visitTimeNanosecond || visitor.visitTime;
+      break;
+    case Type2.Decimal:
+      fn = visitor.visitDecimal;
+      break;
+    case Type2.List:
+      fn = visitor.visitList;
+      break;
+    case Type2.Struct:
+      fn = visitor.visitStruct;
+      break;
+    case Type2.Union:
+      fn = visitor.visitUnion;
+      break;
+    case Type2.DenseUnion:
+      fn = visitor.visitDenseUnion || visitor.visitUnion;
+      break;
+    case Type2.SparseUnion:
+      fn = visitor.visitSparseUnion || visitor.visitUnion;
+      break;
+    case Type2.Dictionary:
+      fn = visitor.visitDictionary;
+      break;
+    case Type2.Interval:
+      fn = visitor.visitInterval;
+      break;
+    case Type2.IntervalDayTime:
+      fn = visitor.visitIntervalDayTime || visitor.visitInterval;
+      break;
+    case Type2.IntervalYearMonth:
+      fn = visitor.visitIntervalYearMonth || visitor.visitInterval;
+      break;
+    case Type2.Duration:
+      fn = visitor.visitDuration;
+      break;
+    case Type2.DurationSecond:
+      fn = visitor.visitDurationSecond || visitor.visitDuration;
+      break;
+    case Type2.DurationMillisecond:
+      fn = visitor.visitDurationMillisecond || visitor.visitDuration;
+      break;
+    case Type2.DurationMicrosecond:
+      fn = visitor.visitDurationMicrosecond || visitor.visitDuration;
+      break;
+    case Type2.DurationNanosecond:
+      fn = visitor.visitDurationNanosecond || visitor.visitDuration;
+      break;
+    case Type2.FixedSizeList:
+      fn = visitor.visitFixedSizeList;
+      break;
+    case Type2.Map:
+      fn = visitor.visitMap;
+      break;
+  }
+  if (typeof fn === "function")
+    return fn;
+  if (!throwIfNotFound)
+    return () => null;
+  throw new Error(`Unrecognized type '${Type2[dtype]}'`);
+}
+function inferDType(type2) {
+  switch (type2.typeId) {
+    case Type2.Null:
+      return Type2.Null;
+    case Type2.Int: {
+      const { bitWidth, isSigned } = type2;
+      switch (bitWidth) {
+        case 8:
+          return isSigned ? Type2.Int8 : Type2.Uint8;
+        case 16:
+          return isSigned ? Type2.Int16 : Type2.Uint16;
+        case 32:
+          return isSigned ? Type2.Int32 : Type2.Uint32;
+        case 64:
+          return isSigned ? Type2.Int64 : Type2.Uint64;
+      }
+      return Type2.Int;
+    }
+    case Type2.Float:
+      switch (type2.precision) {
+        case Precision.HALF:
+          return Type2.Float16;
+        case Precision.SINGLE:
+          return Type2.Float32;
+        case Precision.DOUBLE:
+          return Type2.Float64;
+      }
+      return Type2.Float;
+    case Type2.Binary:
+      return Type2.Binary;
+    case Type2.LargeBinary:
+      return Type2.LargeBinary;
+    case Type2.Utf8:
+      return Type2.Utf8;
+    case Type2.LargeUtf8:
+      return Type2.LargeUtf8;
+    case Type2.Bool:
+      return Type2.Bool;
+    case Type2.Decimal:
+      return Type2.Decimal;
+    case Type2.Time:
+      switch (type2.unit) {
+        case TimeUnit.SECOND:
+          return Type2.TimeSecond;
+        case TimeUnit.MILLISECOND:
+          return Type2.TimeMillisecond;
+        case TimeUnit.MICROSECOND:
+          return Type2.TimeMicrosecond;
+        case TimeUnit.NANOSECOND:
+          return Type2.TimeNanosecond;
+      }
+      return Type2.Time;
+    case Type2.Timestamp:
+      switch (type2.unit) {
+        case TimeUnit.SECOND:
+          return Type2.TimestampSecond;
+        case TimeUnit.MILLISECOND:
+          return Type2.TimestampMillisecond;
+        case TimeUnit.MICROSECOND:
+          return Type2.TimestampMicrosecond;
+        case TimeUnit.NANOSECOND:
+          return Type2.TimestampNanosecond;
+      }
+      return Type2.Timestamp;
+    case Type2.Date:
+      switch (type2.unit) {
+        case DateUnit.DAY:
+          return Type2.DateDay;
+        case DateUnit.MILLISECOND:
+          return Type2.DateMillisecond;
+      }
+      return Type2.Date;
+    case Type2.Interval:
+      switch (type2.unit) {
+        case IntervalUnit.DAY_TIME:
+          return Type2.IntervalDayTime;
+        case IntervalUnit.YEAR_MONTH:
+          return Type2.IntervalYearMonth;
+      }
+      return Type2.Interval;
+    case Type2.Duration:
+      switch (type2.unit) {
+        case TimeUnit.SECOND:
+          return Type2.DurationSecond;
+        case TimeUnit.MILLISECOND:
+          return Type2.DurationMillisecond;
+        case TimeUnit.MICROSECOND:
+          return Type2.DurationMicrosecond;
+        case TimeUnit.NANOSECOND:
+          return Type2.DurationNanosecond;
+      }
+      return Type2.Duration;
+    case Type2.Map:
+      return Type2.Map;
+    case Type2.List:
+      return Type2.List;
+    case Type2.Struct:
+      return Type2.Struct;
+    case Type2.Union:
+      switch (type2.mode) {
+        case UnionMode.Dense:
+          return Type2.DenseUnion;
+        case UnionMode.Sparse:
+          return Type2.SparseUnion;
+      }
+      return Type2.Union;
+    case Type2.FixedSizeBinary:
+      return Type2.FixedSizeBinary;
+    case Type2.FixedSizeList:
+      return Type2.FixedSizeList;
+    case Type2.Dictionary:
+      return Type2.Dictionary;
+  }
+  throw new Error(`Unrecognized type '${Type2[type2.typeId]}'`);
+}
+Visitor.prototype.visitInt8 = null;
+Visitor.prototype.visitInt16 = null;
+Visitor.prototype.visitInt32 = null;
+Visitor.prototype.visitInt64 = null;
+Visitor.prototype.visitUint8 = null;
+Visitor.prototype.visitUint16 = null;
+Visitor.prototype.visitUint32 = null;
+Visitor.prototype.visitUint64 = null;
+Visitor.prototype.visitFloat16 = null;
+Visitor.prototype.visitFloat32 = null;
+Visitor.prototype.visitFloat64 = null;
+Visitor.prototype.visitDateDay = null;
+Visitor.prototype.visitDateMillisecond = null;
+Visitor.prototype.visitTimestampSecond = null;
+Visitor.prototype.visitTimestampMillisecond = null;
+Visitor.prototype.visitTimestampMicrosecond = null;
+Visitor.prototype.visitTimestampNanosecond = null;
+Visitor.prototype.visitTimeSecond = null;
+Visitor.prototype.visitTimeMillisecond = null;
+Visitor.prototype.visitTimeMicrosecond = null;
+Visitor.prototype.visitTimeNanosecond = null;
+Visitor.prototype.visitDenseUnion = null;
+Visitor.prototype.visitSparseUnion = null;
+Visitor.prototype.visitIntervalDayTime = null;
+Visitor.prototype.visitIntervalYearMonth = null;
+Visitor.prototype.visitDuration = null;
+Visitor.prototype.visitDurationSecond = null;
+Visitor.prototype.visitDurationMillisecond = null;
+Visitor.prototype.visitDurationMicrosecond = null;
+Visitor.prototype.visitDurationNanosecond = null;
+
+// node_modules/apache-arrow/util/math.mjs
+var math_exports = {};
+__export(math_exports, {
+  float64ToUint16: () => float64ToUint16,
+  uint16ToFloat64: () => uint16ToFloat64
+});
+var f64 = new Float64Array(1);
+var u32 = new Uint32Array(f64.buffer);
+function uint16ToFloat64(h) {
+  const expo = (h & 31744) >> 10;
+  const sigf = (h & 1023) / 1024;
+  const sign3 = Math.pow(-1, (h & 32768) >> 15);
+  switch (expo) {
+    case 31:
+      return sign3 * (sigf ? Number.NaN : 1 / 0);
+    case 0:
+      return sign3 * (sigf ? 6103515625e-14 * sigf : 0);
+  }
+  return sign3 * Math.pow(2, expo - 15) * (1 + sigf);
+}
+function float64ToUint16(d) {
+  if (d !== d) {
+    return 32256;
+  }
+  f64[0] = d;
+  const sign3 = (u32[1] & 2147483648) >> 16 & 65535;
+  let expo = u32[1] & 2146435072, sigf = 0;
+  if (expo >= 1089470464) {
+    if (u32[0] > 0) {
+      expo = 31744;
+    } else {
+      expo = (expo & 2080374784) >> 16;
+      sigf = (u32[1] & 1048575) >> 10;
+    }
+  } else if (expo <= 1056964608) {
+    sigf = 1048576 + (u32[1] & 1048575);
+    sigf = 1048576 + (sigf << (expo >> 20) - 998) >> 21;
+    expo = 0;
+  } else {
+    expo = expo - 1056964608 >> 10;
+    sigf = (u32[1] & 1048575) + 512 >> 10;
+  }
+  return sign3 | expo | sigf & 65535;
+}
+
+// node_modules/apache-arrow/visitor/set.mjs
+var SetVisitor = class extends Visitor {
+};
+function wrapSet(fn) {
+  return (data, _1, _2) => {
+    if (data.setValid(_1, _2 != null)) {
+      return fn(data, _1, _2);
+    }
+  };
+}
+var setEpochMsToDays = (data, index3, epochMs) => {
+  data[index3] = Math.trunc(epochMs / 864e5);
+};
+var setEpochMsToMillisecondsLong = (data, index3, epochMs) => {
+  data[index3] = Math.trunc(epochMs % 4294967296);
+  data[index3 + 1] = Math.trunc(epochMs / 4294967296);
+};
+var setEpochMsToMicrosecondsLong = (data, index3, epochMs) => {
+  data[index3] = Math.trunc(epochMs * 1e3 % 4294967296);
+  data[index3 + 1] = Math.trunc(epochMs * 1e3 / 4294967296);
+};
+var setEpochMsToNanosecondsLong = (data, index3, epochMs) => {
+  data[index3] = Math.trunc(epochMs * 1e6 % 4294967296);
+  data[index3 + 1] = Math.trunc(epochMs * 1e6 / 4294967296);
+};
+var setVariableWidthBytes = (values2, valueOffsets, index3, value) => {
+  if (index3 + 1 < valueOffsets.length) {
+    const x4 = bigIntToNumber(valueOffsets[index3]);
+    const y4 = bigIntToNumber(valueOffsets[index3 + 1]);
+    values2.set(value.subarray(0, y4 - x4), x4);
+  }
+};
+var setBool = ({ offset: offset2, values: values2 }, index3, val) => {
+  const idx = offset2 + index3;
+  val ? values2[idx >> 3] |= 1 << idx % 8 : values2[idx >> 3] &= ~(1 << idx % 8);
+};
+var setInt = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setFloat = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setFloat16 = ({ values: values2 }, index3, value) => {
+  values2[index3] = float64ToUint16(value);
+};
+var setAnyFloat = (data, index3, value) => {
+  switch (data.type.precision) {
+    case Precision.HALF:
+      return setFloat16(data, index3, value);
+    case Precision.SINGLE:
+    case Precision.DOUBLE:
+      return setFloat(data, index3, value);
+  }
+};
+var setDateDay = ({ values: values2 }, index3, value) => {
+  setEpochMsToDays(values2, index3, value.valueOf());
+};
+var setDateMillisecond = ({ values: values2 }, index3, value) => {
+  setEpochMsToMillisecondsLong(values2, index3 * 2, value.valueOf());
+};
+var setFixedSizeBinary = ({ stride, values: values2 }, index3, value) => {
+  values2.set(value.subarray(0, stride), stride * index3);
+};
+var setBinary = ({ values: values2, valueOffsets }, index3, value) => setVariableWidthBytes(values2, valueOffsets, index3, value);
+var setUtf8 = ({ values: values2, valueOffsets }, index3, value) => setVariableWidthBytes(values2, valueOffsets, index3, encodeUtf8(value));
+var setDate = (data, index3, value) => {
+  data.type.unit === DateUnit.DAY ? setDateDay(data, index3, value) : setDateMillisecond(data, index3, value);
+};
+var setTimestampSecond = ({ values: values2 }, index3, value) => setEpochMsToMillisecondsLong(values2, index3 * 2, value / 1e3);
+var setTimestampMillisecond = ({ values: values2 }, index3, value) => setEpochMsToMillisecondsLong(values2, index3 * 2, value);
+var setTimestampMicrosecond = ({ values: values2 }, index3, value) => setEpochMsToMicrosecondsLong(values2, index3 * 2, value);
+var setTimestampNanosecond = ({ values: values2 }, index3, value) => setEpochMsToNanosecondsLong(values2, index3 * 2, value);
+var setTimestamp = (data, index3, value) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return setTimestampSecond(data, index3, value);
+    case TimeUnit.MILLISECOND:
+      return setTimestampMillisecond(data, index3, value);
+    case TimeUnit.MICROSECOND:
+      return setTimestampMicrosecond(data, index3, value);
+    case TimeUnit.NANOSECOND:
+      return setTimestampNanosecond(data, index3, value);
+  }
+};
+var setTimeSecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setTimeMillisecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setTimeMicrosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setTimeNanosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setTime = (data, index3, value) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return setTimeSecond(data, index3, value);
+    case TimeUnit.MILLISECOND:
+      return setTimeMillisecond(data, index3, value);
+    case TimeUnit.MICROSECOND:
+      return setTimeMicrosecond(data, index3, value);
+    case TimeUnit.NANOSECOND:
+      return setTimeNanosecond(data, index3, value);
+  }
+};
+var setDecimal = ({ values: values2, stride }, index3, value) => {
+  values2.set(value.subarray(0, stride), stride * index3);
+};
+var setList = (data, index3, value) => {
+  const values2 = data.children[0];
+  const valueOffsets = data.valueOffsets;
+  const set4 = instance.getVisitFn(values2);
+  if (Array.isArray(value)) {
+    for (let idx = -1, itr = valueOffsets[index3], end = valueOffsets[index3 + 1]; itr < end; ) {
+      set4(values2, itr++, value[++idx]);
+    }
+  } else {
+    for (let idx = -1, itr = valueOffsets[index3], end = valueOffsets[index3 + 1]; itr < end; ) {
+      set4(values2, itr++, value.get(++idx));
+    }
+  }
+};
+var setMap = (data, index3, value) => {
+  const values2 = data.children[0];
+  const { valueOffsets } = data;
+  const set4 = instance.getVisitFn(values2);
+  let { [index3]: idx, [index3 + 1]: end } = valueOffsets;
+  const entries = value instanceof Map ? value.entries() : Object.entries(value);
+  for (const val of entries) {
+    set4(values2, idx, val);
+    if (++idx >= end)
+      break;
+  }
+};
+var _setStructArrayValue = (o, v2) => (set4, c6, _, i) => c6 && set4(c6, o, v2[i]);
+var _setStructVectorValue = (o, v2) => (set4, c6, _, i) => c6 && set4(c6, o, v2.get(i));
+var _setStructMapValue = (o, v2) => (set4, c6, f, _) => c6 && set4(c6, o, v2.get(f.name));
+var _setStructObjectValue = (o, v2) => (set4, c6, f, _) => c6 && set4(c6, o, v2[f.name]);
+var setStruct = (data, index3, value) => {
+  const childSetters = data.type.children.map((f) => instance.getVisitFn(f.type));
+  const set4 = value instanceof Map ? _setStructMapValue(index3, value) : value instanceof Vector2 ? _setStructVectorValue(index3, value) : Array.isArray(value) ? _setStructArrayValue(index3, value) : _setStructObjectValue(index3, value);
+  data.type.children.forEach((f, i) => set4(childSetters[i], data.children[i], f, i));
+};
+var setUnion = (data, index3, value) => {
+  data.type.mode === UnionMode.Dense ? setDenseUnion(data, index3, value) : setSparseUnion(data, index3, value);
+};
+var setDenseUnion = (data, index3, value) => {
+  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
+  const child = data.children[childIndex];
+  instance.visit(child, data.valueOffsets[index3], value);
+};
+var setSparseUnion = (data, index3, value) => {
+  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
+  const child = data.children[childIndex];
+  instance.visit(child, index3, value);
+};
+var setDictionary = (data, index3, value) => {
+  var _a5;
+  (_a5 = data.dictionary) === null || _a5 === void 0 ? void 0 : _a5.set(data.values[index3], value);
+};
+var setIntervalValue = (data, index3, value) => {
+  data.type.unit === IntervalUnit.DAY_TIME ? setIntervalDayTime(data, index3, value) : setIntervalYearMonth(data, index3, value);
+};
+var setIntervalDayTime = ({ values: values2 }, index3, value) => {
+  values2.set(value.subarray(0, 2), 2 * index3);
+};
+var setIntervalYearMonth = ({ values: values2 }, index3, value) => {
+  values2[index3] = value[0] * 12 + value[1] % 12;
+};
+var setDurationSecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDurationMillisecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDurationMicrosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDurationNanosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = value;
+};
+var setDuration = (data, index3, value) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return setDurationSecond(data, index3, value);
+    case TimeUnit.MILLISECOND:
+      return setDurationMillisecond(data, index3, value);
+    case TimeUnit.MICROSECOND:
+      return setDurationMicrosecond(data, index3, value);
+    case TimeUnit.NANOSECOND:
+      return setDurationNanosecond(data, index3, value);
+  }
+};
+var setFixedSizeList = (data, index3, value) => {
+  const { stride } = data;
+  const child = data.children[0];
+  const set4 = instance.getVisitFn(child);
+  if (Array.isArray(value)) {
+    for (let idx = -1, offset2 = index3 * stride; ++idx < stride; ) {
+      set4(child, offset2 + idx, value[idx]);
+    }
+  } else {
+    for (let idx = -1, offset2 = index3 * stride; ++idx < stride; ) {
+      set4(child, offset2 + idx, value.get(idx));
+    }
+  }
+};
+SetVisitor.prototype.visitBool = wrapSet(setBool);
+SetVisitor.prototype.visitInt = wrapSet(setInt);
+SetVisitor.prototype.visitInt8 = wrapSet(setInt);
+SetVisitor.prototype.visitInt16 = wrapSet(setInt);
+SetVisitor.prototype.visitInt32 = wrapSet(setInt);
+SetVisitor.prototype.visitInt64 = wrapSet(setInt);
+SetVisitor.prototype.visitUint8 = wrapSet(setInt);
+SetVisitor.prototype.visitUint16 = wrapSet(setInt);
+SetVisitor.prototype.visitUint32 = wrapSet(setInt);
+SetVisitor.prototype.visitUint64 = wrapSet(setInt);
+SetVisitor.prototype.visitFloat = wrapSet(setAnyFloat);
+SetVisitor.prototype.visitFloat16 = wrapSet(setFloat16);
+SetVisitor.prototype.visitFloat32 = wrapSet(setFloat);
+SetVisitor.prototype.visitFloat64 = wrapSet(setFloat);
+SetVisitor.prototype.visitUtf8 = wrapSet(setUtf8);
+SetVisitor.prototype.visitLargeUtf8 = wrapSet(setUtf8);
+SetVisitor.prototype.visitBinary = wrapSet(setBinary);
+SetVisitor.prototype.visitLargeBinary = wrapSet(setBinary);
+SetVisitor.prototype.visitFixedSizeBinary = wrapSet(setFixedSizeBinary);
+SetVisitor.prototype.visitDate = wrapSet(setDate);
+SetVisitor.prototype.visitDateDay = wrapSet(setDateDay);
+SetVisitor.prototype.visitDateMillisecond = wrapSet(setDateMillisecond);
+SetVisitor.prototype.visitTimestamp = wrapSet(setTimestamp);
+SetVisitor.prototype.visitTimestampSecond = wrapSet(setTimestampSecond);
+SetVisitor.prototype.visitTimestampMillisecond = wrapSet(setTimestampMillisecond);
+SetVisitor.prototype.visitTimestampMicrosecond = wrapSet(setTimestampMicrosecond);
+SetVisitor.prototype.visitTimestampNanosecond = wrapSet(setTimestampNanosecond);
+SetVisitor.prototype.visitTime = wrapSet(setTime);
+SetVisitor.prototype.visitTimeSecond = wrapSet(setTimeSecond);
+SetVisitor.prototype.visitTimeMillisecond = wrapSet(setTimeMillisecond);
+SetVisitor.prototype.visitTimeMicrosecond = wrapSet(setTimeMicrosecond);
+SetVisitor.prototype.visitTimeNanosecond = wrapSet(setTimeNanosecond);
+SetVisitor.prototype.visitDecimal = wrapSet(setDecimal);
+SetVisitor.prototype.visitList = wrapSet(setList);
+SetVisitor.prototype.visitStruct = wrapSet(setStruct);
+SetVisitor.prototype.visitUnion = wrapSet(setUnion);
+SetVisitor.prototype.visitDenseUnion = wrapSet(setDenseUnion);
+SetVisitor.prototype.visitSparseUnion = wrapSet(setSparseUnion);
+SetVisitor.prototype.visitDictionary = wrapSet(setDictionary);
+SetVisitor.prototype.visitInterval = wrapSet(setIntervalValue);
+SetVisitor.prototype.visitIntervalDayTime = wrapSet(setIntervalDayTime);
+SetVisitor.prototype.visitIntervalYearMonth = wrapSet(setIntervalYearMonth);
+SetVisitor.prototype.visitDuration = wrapSet(setDuration);
+SetVisitor.prototype.visitDurationSecond = wrapSet(setDurationSecond);
+SetVisitor.prototype.visitDurationMillisecond = wrapSet(setDurationMillisecond);
+SetVisitor.prototype.visitDurationMicrosecond = wrapSet(setDurationMicrosecond);
+SetVisitor.prototype.visitDurationNanosecond = wrapSet(setDurationNanosecond);
+SetVisitor.prototype.visitFixedSizeList = wrapSet(setFixedSizeList);
+SetVisitor.prototype.visitMap = wrapSet(setMap);
+var instance = new SetVisitor();
+
+// node_modules/apache-arrow/row/struct.mjs
+var kParent = Symbol.for("parent");
+var kRowIndex = Symbol.for("rowIndex");
+var StructRow = class {
+  constructor(parent, rowIndex) {
+    this[kParent] = parent;
+    this[kRowIndex] = rowIndex;
+    return new Proxy(this, new StructRowProxyHandler());
+  }
+  toArray() {
+    return Object.values(this.toJSON());
+  }
+  toJSON() {
+    const i = this[kRowIndex];
+    const parent = this[kParent];
+    const keys = parent.type.children;
+    const json = {};
+    for (let j = -1, n = keys.length; ++j < n; ) {
+      json[keys[j].name] = instance2.visit(parent.children[j], i);
+    }
+    return json;
+  }
+  toString() {
+    return `{${[...this].map(([key, val]) => `${valueToString(key)}: ${valueToString(val)}`).join(", ")}}`;
+  }
+  [Symbol.for("nodejs.util.inspect.custom")]() {
+    return this.toString();
+  }
+  [Symbol.iterator]() {
+    return new StructRowIterator(this[kParent], this[kRowIndex]);
+  }
+};
+var StructRowIterator = class {
+  constructor(data, rowIndex) {
+    this.childIndex = 0;
+    this.children = data.children;
+    this.rowIndex = rowIndex;
+    this.childFields = data.type.children;
+    this.numChildren = this.childFields.length;
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+  next() {
+    const i = this.childIndex;
+    if (i < this.numChildren) {
+      this.childIndex = i + 1;
+      return {
+        done: false,
+        value: [
+          this.childFields[i].name,
+          instance2.visit(this.children[i], this.rowIndex)
+        ]
+      };
+    }
+    return { done: true, value: null };
+  }
+};
+Object.defineProperties(StructRow.prototype, {
+  [Symbol.toStringTag]: { enumerable: false, configurable: false, value: "Row" },
+  [kParent]: { writable: true, enumerable: false, configurable: false, value: null },
+  [kRowIndex]: { writable: true, enumerable: false, configurable: false, value: -1 }
+});
+var StructRowProxyHandler = class {
+  isExtensible() {
+    return false;
+  }
+  deleteProperty() {
+    return false;
+  }
+  preventExtensions() {
+    return true;
+  }
+  ownKeys(row) {
+    return row[kParent].type.children.map((f) => f.name);
+  }
+  has(row, key) {
+    return row[kParent].type.children.findIndex((f) => f.name === key) !== -1;
+  }
+  getOwnPropertyDescriptor(row, key) {
+    if (row[kParent].type.children.findIndex((f) => f.name === key) !== -1) {
+      return { writable: true, enumerable: true, configurable: true };
+    }
+    return;
+  }
+  get(row, key) {
+    if (Reflect.has(row, key)) {
+      return row[key];
+    }
+    const idx = row[kParent].type.children.findIndex((f) => f.name === key);
+    if (idx !== -1) {
+      const val = instance2.visit(row[kParent].children[idx], row[kRowIndex]);
+      Reflect.set(row, key, val);
+      return val;
+    }
+  }
+  set(row, key, val) {
+    const idx = row[kParent].type.children.findIndex((f) => f.name === key);
+    if (idx !== -1) {
+      instance.visit(row[kParent].children[idx], row[kRowIndex], val);
+      return Reflect.set(row, key, val);
+    } else if (Reflect.has(row, key) || typeof key === "symbol") {
+      return Reflect.set(row, key, val);
+    }
+    return false;
+  }
+};
+
+// node_modules/apache-arrow/visitor/get.mjs
+var GetVisitor = class extends Visitor {
+};
+function wrapGet(fn) {
+  return (data, _1) => data.getValid(_1) ? fn(data, _1) : null;
+}
+var epochDaysToMs = (data, index3) => 864e5 * data[index3];
+var epochMillisecondsLongToMs = (data, index3) => 4294967296 * data[index3 + 1] + (data[index3] >>> 0);
+var epochMicrosecondsLongToMs = (data, index3) => 4294967296 * (data[index3 + 1] / 1e3) + (data[index3] >>> 0) / 1e3;
+var epochNanosecondsLongToMs = (data, index3) => 4294967296 * (data[index3 + 1] / 1e6) + (data[index3] >>> 0) / 1e6;
+var epochMillisecondsToDate = (epochMs) => new Date(epochMs);
+var epochDaysToDate = (data, index3) => epochMillisecondsToDate(epochDaysToMs(data, index3));
+var epochMillisecondsLongToDate = (data, index3) => epochMillisecondsToDate(epochMillisecondsLongToMs(data, index3));
+var getNull = (_data, _index) => null;
+var getVariableWidthBytes = (values2, valueOffsets, index3) => {
+  if (index3 + 1 >= valueOffsets.length) {
+    return null;
+  }
+  const x4 = bigIntToNumber(valueOffsets[index3]);
+  const y4 = bigIntToNumber(valueOffsets[index3 + 1]);
+  return values2.subarray(x4, y4);
+};
+var getBool = ({ offset: offset2, values: values2 }, index3) => {
+  const idx = offset2 + index3;
+  const byte = values2[idx >> 3];
+  return (byte & 1 << idx % 8) !== 0;
+};
+var getDateDay = ({ values: values2 }, index3) => epochDaysToDate(values2, index3);
+var getDateMillisecond = ({ values: values2 }, index3) => epochMillisecondsLongToDate(values2, index3 * 2);
+var getNumeric = ({ stride, values: values2 }, index3) => values2[stride * index3];
+var getFloat16 = ({ stride, values: values2 }, index3) => uint16ToFloat64(values2[stride * index3]);
+var getBigInts = ({ values: values2 }, index3) => values2[index3];
+var getFixedSizeBinary = ({ stride, values: values2 }, index3) => values2.subarray(stride * index3, stride * (index3 + 1));
+var getBinary = ({ values: values2, valueOffsets }, index3) => getVariableWidthBytes(values2, valueOffsets, index3);
+var getUtf8 = ({ values: values2, valueOffsets }, index3) => {
+  const bytes = getVariableWidthBytes(values2, valueOffsets, index3);
+  return bytes !== null ? decodeUtf8(bytes) : null;
+};
+var getInt = ({ values: values2 }, index3) => values2[index3];
+var getFloat = ({ type: type2, values: values2 }, index3) => type2.precision !== Precision.HALF ? values2[index3] : uint16ToFloat64(values2[index3]);
+var getDate = (data, index3) => data.type.unit === DateUnit.DAY ? getDateDay(data, index3) : getDateMillisecond(data, index3);
+var getTimestampSecond = ({ values: values2 }, index3) => 1e3 * epochMillisecondsLongToMs(values2, index3 * 2);
+var getTimestampMillisecond = ({ values: values2 }, index3) => epochMillisecondsLongToMs(values2, index3 * 2);
+var getTimestampMicrosecond = ({ values: values2 }, index3) => epochMicrosecondsLongToMs(values2, index3 * 2);
+var getTimestampNanosecond = ({ values: values2 }, index3) => epochNanosecondsLongToMs(values2, index3 * 2);
+var getTimestamp = (data, index3) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return getTimestampSecond(data, index3);
+    case TimeUnit.MILLISECOND:
+      return getTimestampMillisecond(data, index3);
+    case TimeUnit.MICROSECOND:
+      return getTimestampMicrosecond(data, index3);
+    case TimeUnit.NANOSECOND:
+      return getTimestampNanosecond(data, index3);
+  }
+};
+var getTimeSecond = ({ values: values2 }, index3) => values2[index3];
+var getTimeMillisecond = ({ values: values2 }, index3) => values2[index3];
+var getTimeMicrosecond = ({ values: values2 }, index3) => values2[index3];
+var getTimeNanosecond = ({ values: values2 }, index3) => values2[index3];
+var getTime = (data, index3) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return getTimeSecond(data, index3);
+    case TimeUnit.MILLISECOND:
+      return getTimeMillisecond(data, index3);
+    case TimeUnit.MICROSECOND:
+      return getTimeMicrosecond(data, index3);
+    case TimeUnit.NANOSECOND:
+      return getTimeNanosecond(data, index3);
+  }
+};
+var getDecimal = ({ values: values2, stride }, index3) => BN.decimal(values2.subarray(stride * index3, stride * (index3 + 1)));
+var getList = (data, index3) => {
+  const { valueOffsets, stride, children: children2 } = data;
+  const { [index3 * stride]: begin, [index3 * stride + 1]: end } = valueOffsets;
+  const child = children2[0];
+  const slice6 = child.slice(begin, end - begin);
+  return new Vector2([slice6]);
+};
+var getMap = (data, index3) => {
+  const { valueOffsets, children: children2 } = data;
+  const { [index3]: begin, [index3 + 1]: end } = valueOffsets;
+  const child = children2[0];
+  return new MapRow(child.slice(begin, end - begin));
+};
+var getStruct = (data, index3) => {
+  return new StructRow(data, index3);
+};
+var getUnion = (data, index3) => {
+  return data.type.mode === UnionMode.Dense ? getDenseUnion(data, index3) : getSparseUnion(data, index3);
+};
+var getDenseUnion = (data, index3) => {
+  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
+  const child = data.children[childIndex];
+  return instance2.visit(child, data.valueOffsets[index3]);
+};
+var getSparseUnion = (data, index3) => {
+  const childIndex = data.type.typeIdToChildIndex[data.typeIds[index3]];
+  const child = data.children[childIndex];
+  return instance2.visit(child, index3);
+};
+var getDictionary = (data, index3) => {
+  var _a5;
+  return (_a5 = data.dictionary) === null || _a5 === void 0 ? void 0 : _a5.get(data.values[index3]);
+};
+var getInterval = (data, index3) => data.type.unit === IntervalUnit.DAY_TIME ? getIntervalDayTime(data, index3) : getIntervalYearMonth(data, index3);
+var getIntervalDayTime = ({ values: values2 }, index3) => values2.subarray(2 * index3, 2 * (index3 + 1));
+var getIntervalYearMonth = ({ values: values2 }, index3) => {
+  const interval2 = values2[index3];
+  const int32s = new Int32Array(2);
+  int32s[0] = Math.trunc(interval2 / 12);
+  int32s[1] = Math.trunc(interval2 % 12);
+  return int32s;
+};
+var getDurationSecond = ({ values: values2 }, index3) => values2[index3];
+var getDurationMillisecond = ({ values: values2 }, index3) => values2[index3];
+var getDurationMicrosecond = ({ values: values2 }, index3) => values2[index3];
+var getDurationNanosecond = ({ values: values2 }, index3) => values2[index3];
+var getDuration = (data, index3) => {
+  switch (data.type.unit) {
+    case TimeUnit.SECOND:
+      return getDurationSecond(data, index3);
+    case TimeUnit.MILLISECOND:
+      return getDurationMillisecond(data, index3);
+    case TimeUnit.MICROSECOND:
+      return getDurationMicrosecond(data, index3);
+    case TimeUnit.NANOSECOND:
+      return getDurationNanosecond(data, index3);
+  }
+};
+var getFixedSizeList = (data, index3) => {
+  const { stride, children: children2 } = data;
+  const child = children2[0];
+  const slice6 = child.slice(index3 * stride, stride);
+  return new Vector2([slice6]);
+};
+GetVisitor.prototype.visitNull = wrapGet(getNull);
+GetVisitor.prototype.visitBool = wrapGet(getBool);
+GetVisitor.prototype.visitInt = wrapGet(getInt);
+GetVisitor.prototype.visitInt8 = wrapGet(getNumeric);
+GetVisitor.prototype.visitInt16 = wrapGet(getNumeric);
+GetVisitor.prototype.visitInt32 = wrapGet(getNumeric);
+GetVisitor.prototype.visitInt64 = wrapGet(getBigInts);
+GetVisitor.prototype.visitUint8 = wrapGet(getNumeric);
+GetVisitor.prototype.visitUint16 = wrapGet(getNumeric);
+GetVisitor.prototype.visitUint32 = wrapGet(getNumeric);
+GetVisitor.prototype.visitUint64 = wrapGet(getBigInts);
+GetVisitor.prototype.visitFloat = wrapGet(getFloat);
+GetVisitor.prototype.visitFloat16 = wrapGet(getFloat16);
+GetVisitor.prototype.visitFloat32 = wrapGet(getNumeric);
+GetVisitor.prototype.visitFloat64 = wrapGet(getNumeric);
+GetVisitor.prototype.visitUtf8 = wrapGet(getUtf8);
+GetVisitor.prototype.visitLargeUtf8 = wrapGet(getUtf8);
+GetVisitor.prototype.visitBinary = wrapGet(getBinary);
+GetVisitor.prototype.visitLargeBinary = wrapGet(getBinary);
+GetVisitor.prototype.visitFixedSizeBinary = wrapGet(getFixedSizeBinary);
+GetVisitor.prototype.visitDate = wrapGet(getDate);
+GetVisitor.prototype.visitDateDay = wrapGet(getDateDay);
+GetVisitor.prototype.visitDateMillisecond = wrapGet(getDateMillisecond);
+GetVisitor.prototype.visitTimestamp = wrapGet(getTimestamp);
+GetVisitor.prototype.visitTimestampSecond = wrapGet(getTimestampSecond);
+GetVisitor.prototype.visitTimestampMillisecond = wrapGet(getTimestampMillisecond);
+GetVisitor.prototype.visitTimestampMicrosecond = wrapGet(getTimestampMicrosecond);
+GetVisitor.prototype.visitTimestampNanosecond = wrapGet(getTimestampNanosecond);
+GetVisitor.prototype.visitTime = wrapGet(getTime);
+GetVisitor.prototype.visitTimeSecond = wrapGet(getTimeSecond);
+GetVisitor.prototype.visitTimeMillisecond = wrapGet(getTimeMillisecond);
+GetVisitor.prototype.visitTimeMicrosecond = wrapGet(getTimeMicrosecond);
+GetVisitor.prototype.visitTimeNanosecond = wrapGet(getTimeNanosecond);
+GetVisitor.prototype.visitDecimal = wrapGet(getDecimal);
+GetVisitor.prototype.visitList = wrapGet(getList);
+GetVisitor.prototype.visitStruct = wrapGet(getStruct);
+GetVisitor.prototype.visitUnion = wrapGet(getUnion);
+GetVisitor.prototype.visitDenseUnion = wrapGet(getDenseUnion);
+GetVisitor.prototype.visitSparseUnion = wrapGet(getSparseUnion);
+GetVisitor.prototype.visitDictionary = wrapGet(getDictionary);
+GetVisitor.prototype.visitInterval = wrapGet(getInterval);
+GetVisitor.prototype.visitIntervalDayTime = wrapGet(getIntervalDayTime);
+GetVisitor.prototype.visitIntervalYearMonth = wrapGet(getIntervalYearMonth);
+GetVisitor.prototype.visitDuration = wrapGet(getDuration);
+GetVisitor.prototype.visitDurationSecond = wrapGet(getDurationSecond);
+GetVisitor.prototype.visitDurationMillisecond = wrapGet(getDurationMillisecond);
+GetVisitor.prototype.visitDurationMicrosecond = wrapGet(getDurationMicrosecond);
+GetVisitor.prototype.visitDurationNanosecond = wrapGet(getDurationNanosecond);
+GetVisitor.prototype.visitFixedSizeList = wrapGet(getFixedSizeList);
+GetVisitor.prototype.visitMap = wrapGet(getMap);
+var instance2 = new GetVisitor();
+
+// node_modules/apache-arrow/row/map.mjs
+var kKeys = Symbol.for("keys");
+var kVals = Symbol.for("vals");
+var MapRow = class {
+  constructor(slice6) {
+    this[kKeys] = new Vector2([slice6.children[0]]).memoize();
+    this[kVals] = slice6.children[1];
+    return new Proxy(this, new MapRowProxyHandler());
+  }
+  [Symbol.iterator]() {
+    return new MapRowIterator(this[kKeys], this[kVals]);
+  }
+  get size() {
+    return this[kKeys].length;
+  }
+  toArray() {
+    return Object.values(this.toJSON());
+  }
+  toJSON() {
+    const keys = this[kKeys];
+    const vals = this[kVals];
+    const json = {};
+    for (let i = -1, n = keys.length; ++i < n; ) {
+      json[keys.get(i)] = instance2.visit(vals, i);
+    }
+    return json;
+  }
+  toString() {
+    return `{${[...this].map(([key, val]) => `${valueToString(key)}: ${valueToString(val)}`).join(", ")}}`;
+  }
+  [Symbol.for("nodejs.util.inspect.custom")]() {
+    return this.toString();
+  }
+};
+var MapRowIterator = class {
+  constructor(keys, vals) {
+    this.keys = keys;
+    this.vals = vals;
+    this.keyIndex = 0;
+    this.numKeys = keys.length;
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+  next() {
+    const i = this.keyIndex;
+    if (i === this.numKeys) {
+      return { done: true, value: null };
+    }
+    this.keyIndex++;
+    return {
+      done: false,
+      value: [
+        this.keys.get(i),
+        instance2.visit(this.vals, i)
+      ]
+    };
+  }
+};
+var MapRowProxyHandler = class {
+  isExtensible() {
+    return false;
+  }
+  deleteProperty() {
+    return false;
+  }
+  preventExtensions() {
+    return true;
+  }
+  ownKeys(row) {
+    return row[kKeys].toArray().map(String);
+  }
+  has(row, key) {
+    return row[kKeys].includes(key);
+  }
+  getOwnPropertyDescriptor(row, key) {
+    const idx = row[kKeys].indexOf(key);
+    if (idx !== -1) {
+      return { writable: true, enumerable: true, configurable: true };
+    }
+    return;
+  }
+  get(row, key) {
+    if (Reflect.has(row, key)) {
+      return row[key];
+    }
+    const idx = row[kKeys].indexOf(key);
+    if (idx !== -1) {
+      const val = instance2.visit(Reflect.get(row, kVals), idx);
+      Reflect.set(row, key, val);
+      return val;
+    }
+  }
+  set(row, key, val) {
+    const idx = row[kKeys].indexOf(key);
+    if (idx !== -1) {
+      instance.visit(Reflect.get(row, kVals), idx, val);
+      return Reflect.set(row, key, val);
+    } else if (Reflect.has(row, key)) {
+      return Reflect.set(row, key, val);
+    }
+    return false;
+  }
+};
+Object.defineProperties(MapRow.prototype, {
+  [Symbol.toStringTag]: { enumerable: false, configurable: false, value: "Row" },
+  [kKeys]: { writable: true, enumerable: false, configurable: false, value: null },
+  [kVals]: { writable: true, enumerable: false, configurable: false, value: null }
+});
+
+// node_modules/apache-arrow/util/vector.mjs
+function clampIndex(source, index3, then) {
+  const length4 = source.length;
+  const adjust = index3 > -1 ? index3 : length4 + index3 % length4;
+  return then ? then(source, adjust) : adjust;
+}
+var tmp;
+function clampRange(source, begin, end, then) {
+  const { length: len = 0 } = source;
+  let lhs = typeof begin !== "number" ? 0 : begin;
+  let rhs = typeof end !== "number" ? len : end;
+  lhs < 0 && (lhs = (lhs % len + len) % len);
+  rhs < 0 && (rhs = (rhs % len + len) % len);
+  rhs < lhs && (tmp = lhs, lhs = rhs, rhs = tmp);
+  rhs > len && (rhs = len);
+  return then ? then(source, lhs, rhs) : [lhs, rhs];
+}
+var isNaNFast = (value) => value !== value;
+function createElementComparator(search) {
+  const typeofSearch = typeof search;
+  if (typeofSearch !== "object" || search === null) {
+    if (isNaNFast(search)) {
+      return isNaNFast;
+    }
+    return (value) => value === search;
+  }
+  if (search instanceof Date) {
+    const valueOfSearch = search.valueOf();
+    return (value) => value instanceof Date ? value.valueOf() === valueOfSearch : false;
+  }
+  if (ArrayBuffer.isView(search)) {
+    return (value) => value ? compareArrayLike(search, value) : false;
+  }
+  if (search instanceof Map) {
+    return createMapComparator(search);
+  }
+  if (Array.isArray(search)) {
+    return createArrayLikeComparator(search);
+  }
+  if (search instanceof Vector2) {
+    return createVectorComparator(search);
+  }
+  return createObjectComparator(search, true);
+}
+function createArrayLikeComparator(lhs) {
+  const comparators = [];
+  for (let i = -1, n = lhs.length; ++i < n; ) {
+    comparators[i] = createElementComparator(lhs[i]);
+  }
+  return createSubElementsComparator(comparators);
+}
+function createMapComparator(lhs) {
+  let i = -1;
+  const comparators = [];
+  for (const v2 of lhs.values())
+    comparators[++i] = createElementComparator(v2);
+  return createSubElementsComparator(comparators);
+}
+function createVectorComparator(lhs) {
+  const comparators = [];
+  for (let i = -1, n = lhs.length; ++i < n; ) {
+    comparators[i] = createElementComparator(lhs.get(i));
+  }
+  return createSubElementsComparator(comparators);
+}
+function createObjectComparator(lhs, allowEmpty = false) {
+  const keys = Object.keys(lhs);
+  if (!allowEmpty && keys.length === 0) {
+    return () => false;
+  }
+  const comparators = [];
+  for (let i = -1, n = keys.length; ++i < n; ) {
+    comparators[i] = createElementComparator(lhs[keys[i]]);
+  }
+  return createSubElementsComparator(comparators, keys);
+}
+function createSubElementsComparator(comparators, keys) {
+  return (rhs) => {
+    if (!rhs || typeof rhs !== "object") {
+      return false;
+    }
+    switch (rhs.constructor) {
+      case Array:
+        return compareArray(comparators, rhs);
+      case Map:
+        return compareObject(comparators, rhs, rhs.keys());
+      case MapRow:
+      case StructRow:
+      case Object:
+      case void 0:
+        return compareObject(comparators, rhs, keys || Object.keys(rhs));
+    }
+    return rhs instanceof Vector2 ? compareVector(comparators, rhs) : false;
+  };
+}
+function compareArray(comparators, arr) {
+  const n = comparators.length;
+  if (arr.length !== n) {
+    return false;
+  }
+  for (let i = -1; ++i < n; ) {
+    if (!comparators[i](arr[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+function compareVector(comparators, vec2) {
+  const n = comparators.length;
+  if (vec2.length !== n) {
+    return false;
+  }
+  for (let i = -1; ++i < n; ) {
+    if (!comparators[i](vec2.get(i))) {
+      return false;
+    }
+  }
+  return true;
+}
+function compareObject(comparators, obj, keys) {
+  const lKeyItr = keys[Symbol.iterator]();
+  const rKeyItr = obj instanceof Map ? obj.keys() : Object.keys(obj)[Symbol.iterator]();
+  const rValItr = obj instanceof Map ? obj.values() : Object.values(obj)[Symbol.iterator]();
+  let i = 0;
+  const n = comparators.length;
+  let rVal = rValItr.next();
+  let lKey = lKeyItr.next();
+  let rKey = rKeyItr.next();
+  for (; i < n && !lKey.done && !rKey.done && !rVal.done; ++i, lKey = lKeyItr.next(), rKey = rKeyItr.next(), rVal = rValItr.next()) {
+    if (lKey.value !== rKey.value || !comparators[i](rVal.value)) {
+      break;
+    }
+  }
+  if (i === n && lKey.done && rKey.done && rVal.done) {
+    return true;
+  }
+  lKeyItr.return && lKeyItr.return();
+  rKeyItr.return && rKeyItr.return();
+  rValItr.return && rValItr.return();
+  return false;
+}
+
+// node_modules/apache-arrow/util/bit.mjs
+var bit_exports = {};
+__export(bit_exports, {
+  BitIterator: () => BitIterator,
+  getBit: () => getBit,
+  getBool: () => getBool2,
+  packBools: () => packBools,
+  popcnt_array: () => popcnt_array,
+  popcnt_bit_range: () => popcnt_bit_range,
+  popcnt_uint32: () => popcnt_uint32,
+  setBool: () => setBool2,
+  truncateBitmap: () => truncateBitmap
+});
+function getBool2(_data, _index, byte, bit) {
+  return (byte & 1 << bit) !== 0;
+}
+function getBit(_data, _index, byte, bit) {
+  return (byte & 1 << bit) >> bit;
+}
+function setBool2(bytes, index3, value) {
+  return value ? !!(bytes[index3 >> 3] |= 1 << index3 % 8) || true : !(bytes[index3 >> 3] &= ~(1 << index3 % 8)) && false;
+}
+function truncateBitmap(offset2, length4, bitmap) {
+  const alignedSize = bitmap.byteLength + 7 & ~7;
+  if (offset2 > 0 || bitmap.byteLength < alignedSize) {
+    const bytes = new Uint8Array(alignedSize);
+    bytes.set(offset2 % 8 === 0 ? bitmap.subarray(offset2 >> 3) : (
+      // Otherwise iterate each bit from the offset and return a new one
+      packBools(new BitIterator(bitmap, offset2, length4, null, getBool2)).subarray(0, alignedSize)
+    ));
+    return bytes;
+  }
+  return bitmap;
+}
+function packBools(values2) {
+  const xs = [];
+  let i = 0, bit = 0, byte = 0;
+  for (const value of values2) {
+    value && (byte |= 1 << bit);
+    if (++bit === 8) {
+      xs[i++] = byte;
+      byte = bit = 0;
+    }
+  }
+  if (i === 0 || bit > 0) {
+    xs[i++] = byte;
+  }
+  const b = new Uint8Array(xs.length + 7 & ~7);
+  b.set(xs);
+  return b;
+}
+var BitIterator = class {
+  constructor(bytes, begin, length4, context, get3) {
+    this.bytes = bytes;
+    this.length = length4;
+    this.context = context;
+    this.get = get3;
+    this.bit = begin % 8;
+    this.byteIndex = begin >> 3;
+    this.byte = bytes[this.byteIndex++];
+    this.index = 0;
+  }
+  next() {
+    if (this.index < this.length) {
+      if (this.bit === 8) {
+        this.bit = 0;
+        this.byte = this.bytes[this.byteIndex++];
+      }
+      return {
+        value: this.get(this.context, this.index++, this.byte, this.bit++)
+      };
+    }
+    return { done: true, value: null };
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+};
+function popcnt_bit_range(data, lhs, rhs) {
+  if (rhs - lhs <= 0) {
+    return 0;
+  }
+  if (rhs - lhs < 8) {
+    let sum4 = 0;
+    for (const bit of new BitIterator(data, lhs, rhs - lhs, data, getBit)) {
+      sum4 += bit;
+    }
+    return sum4;
+  }
+  const rhsInside = rhs >> 3 << 3;
+  const lhsInside = lhs + (lhs % 8 === 0 ? 0 : 8 - lhs % 8);
+  return (
+    // Get the popcnt of bits between the left hand side, and the next highest multiple of 8
+    popcnt_bit_range(data, lhs, lhsInside) + // Get the popcnt of bits between the right hand side, and the next lowest multiple of 8
+    popcnt_bit_range(data, rhsInside, rhs) + // Get the popcnt of all bits between the left and right hand sides' multiples of 8
+    popcnt_array(data, lhsInside >> 3, rhsInside - lhsInside >> 3)
+  );
+}
+function popcnt_array(arr, byteOffset, byteLength) {
+  let cnt = 0, pos = Math.trunc(byteOffset);
+  const view = new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
+  const len = byteLength === void 0 ? arr.byteLength : pos + byteLength;
+  while (len - pos >= 4) {
+    cnt += popcnt_uint32(view.getUint32(pos));
+    pos += 4;
+  }
+  while (len - pos >= 2) {
+    cnt += popcnt_uint32(view.getUint16(pos));
+    pos += 2;
+  }
+  while (len - pos >= 1) {
+    cnt += popcnt_uint32(view.getUint8(pos));
+    pos += 1;
+  }
+  return cnt;
+}
+function popcnt_uint32(uint32) {
+  let i = Math.trunc(uint32);
+  i = i - (i >>> 1 & 1431655765);
+  i = (i & 858993459) + (i >>> 2 & 858993459);
+  return (i + (i >>> 4) & 252645135) * 16843009 >>> 24;
+}
+
+// node_modules/apache-arrow/data.mjs
+var kUnknownNullCount = -1;
+var Data = class {
+  get typeId() {
+    return this.type.typeId;
+  }
+  get ArrayType() {
+    return this.type.ArrayType;
+  }
+  get buffers() {
+    return [this.valueOffsets, this.values, this.nullBitmap, this.typeIds];
+  }
+  get nullable() {
+    if (this._nullCount !== 0) {
+      const { type: type2 } = this;
+      if (DataType.isSparseUnion(type2)) {
+        return this.children.some((child) => child.nullable);
+      } else if (DataType.isDenseUnion(type2)) {
+        return this.children.some((child) => child.nullable);
+      }
+      return this.nullBitmap && this.nullBitmap.byteLength > 0;
+    }
+    return true;
+  }
+  get byteLength() {
+    let byteLength = 0;
+    const { valueOffsets, values: values2, nullBitmap, typeIds } = this;
+    valueOffsets && (byteLength += valueOffsets.byteLength);
+    values2 && (byteLength += values2.byteLength);
+    nullBitmap && (byteLength += nullBitmap.byteLength);
+    typeIds && (byteLength += typeIds.byteLength);
+    return this.children.reduce((byteLength2, child) => byteLength2 + child.byteLength, byteLength);
+  }
+  get nullCount() {
+    if (DataType.isUnion(this.type)) {
+      return this.children.reduce((nullCount2, child) => nullCount2 + child.nullCount, 0);
+    }
+    let nullCount = this._nullCount;
+    let nullBitmap;
+    if (nullCount <= kUnknownNullCount && (nullBitmap = this.nullBitmap)) {
+      this._nullCount = nullCount = this.length - popcnt_bit_range(nullBitmap, this.offset, this.offset + this.length);
+    }
+    return nullCount;
+  }
+  constructor(type2, offset2, length4, nullCount, buffers, children2 = [], dictionary) {
+    this.type = type2;
+    this.children = children2;
+    this.dictionary = dictionary;
+    this.offset = Math.floor(Math.max(offset2 || 0, 0));
+    this.length = Math.floor(Math.max(length4 || 0, 0));
+    this._nullCount = Math.floor(Math.max(nullCount || 0, -1));
+    let buffer;
+    if (buffers instanceof Data) {
+      this.stride = buffers.stride;
+      this.values = buffers.values;
+      this.typeIds = buffers.typeIds;
+      this.nullBitmap = buffers.nullBitmap;
+      this.valueOffsets = buffers.valueOffsets;
+    } else {
+      this.stride = strideForType(type2);
+      if (buffers) {
+        (buffer = buffers[0]) && (this.valueOffsets = buffer);
+        (buffer = buffers[1]) && (this.values = buffer);
+        (buffer = buffers[2]) && (this.nullBitmap = buffer);
+        (buffer = buffers[3]) && (this.typeIds = buffer);
+      }
+    }
+  }
+  getValid(index3) {
+    const { type: type2 } = this;
+    if (DataType.isUnion(type2)) {
+      const union2 = type2;
+      const child = this.children[union2.typeIdToChildIndex[this.typeIds[index3]]];
+      const indexInChild = union2.mode === UnionMode.Dense ? this.valueOffsets[index3] : index3;
+      return child.getValid(indexInChild);
+    }
+    if (this.nullable && this.nullCount > 0) {
+      const pos = this.offset + index3;
+      const val = this.nullBitmap[pos >> 3];
+      return (val & 1 << pos % 8) !== 0;
+    }
+    return true;
+  }
+  setValid(index3, value) {
+    let prev;
+    const { type: type2 } = this;
+    if (DataType.isUnion(type2)) {
+      const union2 = type2;
+      const child = this.children[union2.typeIdToChildIndex[this.typeIds[index3]]];
+      const indexInChild = union2.mode === UnionMode.Dense ? this.valueOffsets[index3] : index3;
+      prev = child.getValid(indexInChild);
+      child.setValid(indexInChild, value);
+    } else {
+      let { nullBitmap } = this;
+      const { offset: offset2, length: length4 } = this;
+      const idx = offset2 + index3;
+      const mask = 1 << idx % 8;
+      const byteOffset = idx >> 3;
+      if (!nullBitmap || nullBitmap.byteLength <= byteOffset) {
+        nullBitmap = new Uint8Array((offset2 + length4 + 63 & ~63) >> 3).fill(255);
+        if (this.nullCount > 0) {
+          nullBitmap.set(truncateBitmap(offset2, length4, this.nullBitmap), 0);
+        }
+        Object.assign(this, { nullBitmap, _nullCount: -1 });
+      }
+      const byte = nullBitmap[byteOffset];
+      prev = (byte & mask) !== 0;
+      value ? nullBitmap[byteOffset] = byte | mask : nullBitmap[byteOffset] = byte & ~mask;
+    }
+    if (prev !== !!value) {
+      this._nullCount = this.nullCount + (value ? -1 : 1);
+    }
+    return value;
+  }
+  clone(type2 = this.type, offset2 = this.offset, length4 = this.length, nullCount = this._nullCount, buffers = this, children2 = this.children) {
+    return new Data(type2, offset2, length4, nullCount, buffers, children2, this.dictionary);
+  }
+  slice(offset2, length4) {
+    const { stride, typeId, children: children2 } = this;
+    const nullCount = +(this._nullCount === 0) - 1;
+    const childStride = typeId === 16 ? stride : 1;
+    const buffers = this._sliceBuffers(offset2, length4, stride, typeId);
+    return this.clone(
+      this.type,
+      this.offset + offset2,
+      length4,
+      nullCount,
+      buffers,
+      // Don't slice children if we have value offsets (the variable-width types)
+      children2.length === 0 || this.valueOffsets ? children2 : this._sliceChildren(children2, childStride * offset2, childStride * length4)
+    );
+  }
+  _changeLengthAndBackfillNullBitmap(newLength) {
+    if (this.typeId === Type2.Null) {
+      return this.clone(this.type, 0, newLength, 0);
+    }
+    const { length: length4, nullCount } = this;
+    const bitmap = new Uint8Array((newLength + 63 & ~63) >> 3).fill(255, 0, length4 >> 3);
+    bitmap[length4 >> 3] = (1 << length4 - (length4 & ~7)) - 1;
+    if (nullCount > 0) {
+      bitmap.set(truncateBitmap(this.offset, length4, this.nullBitmap), 0);
+    }
+    const buffers = this.buffers;
+    buffers[BufferType.VALIDITY] = bitmap;
+    return this.clone(this.type, 0, newLength, nullCount + (newLength - length4), buffers);
+  }
+  _sliceBuffers(offset2, length4, stride, typeId) {
+    let arr;
+    const { buffers } = this;
+    (arr = buffers[BufferType.TYPE]) && (buffers[BufferType.TYPE] = arr.subarray(offset2, offset2 + length4));
+    (arr = buffers[BufferType.OFFSET]) && (buffers[BufferType.OFFSET] = arr.subarray(offset2, offset2 + length4 + 1)) || // Otherwise if no offsets, slice the data buffer. Don't slice the data vector for Booleans, since the offset goes by bits not bytes
+    (arr = buffers[BufferType.DATA]) && (buffers[BufferType.DATA] = typeId === 6 ? arr : arr.subarray(stride * offset2, stride * (offset2 + length4)));
+    return buffers;
+  }
+  _sliceChildren(children2, offset2, length4) {
+    return children2.map((child) => child.slice(offset2, length4));
+  }
+};
+Data.prototype.children = Object.freeze([]);
+var MakeDataVisitor = class extends Visitor {
+  visit(props) {
+    return this.getVisitFn(props["type"]).call(this, props);
+  }
+  visitNull(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["length"]: length4 = 0 } = props;
+    return new Data(type2, offset2, length4, length4);
+  }
+  visitBool(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length >> 3, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitInt(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitFloat(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitUtf8(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const data = toUint8Array(props["data"]);
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const valueOffsets = toInt32Array(props["valueOffsets"]);
+    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, data, nullBitmap]);
+  }
+  visitLargeUtf8(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const data = toUint8Array(props["data"]);
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const valueOffsets = toBigInt64Array(props["valueOffsets"]);
+    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, data, nullBitmap]);
+  }
+  visitBinary(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const data = toUint8Array(props["data"]);
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const valueOffsets = toInt32Array(props["valueOffsets"]);
+    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, data, nullBitmap]);
+  }
+  visitLargeBinary(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const data = toUint8Array(props["data"]);
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const valueOffsets = toBigInt64Array(props["valueOffsets"]);
+    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, data, nullBitmap]);
+  }
+  visitFixedSizeBinary(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitDate(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitTimestamp(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitTime(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitDecimal(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitList(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const valueOffsets = toInt32Array(props["valueOffsets"]);
+    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, nullBitmap], [child]);
+  }
+  visitStruct(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["children"]: children2 = [] } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const { length: length4 = children2.reduce((len, { length: length5 }) => Math.max(len, length5), 0), nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, void 0, nullBitmap], children2);
+  }
+  visitUnion(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["children"]: children2 = [] } = props;
+    const typeIds = toArrayBufferView(type2.ArrayType, props["typeIds"]);
+    const { ["length"]: length4 = typeIds.length, ["nullCount"]: nullCount = -1 } = props;
+    if (DataType.isSparseUnion(type2)) {
+      return new Data(type2, offset2, length4, nullCount, [void 0, void 0, void 0, typeIds], children2);
+    }
+    const valueOffsets = toInt32Array(props["valueOffsets"]);
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, void 0, typeIds], children2);
+  }
+  visitDictionary(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.indices.ArrayType, props["data"]);
+    const { ["dictionary"]: dictionary = new Vector2([new MakeDataVisitor().visit({ type: type2.dictionary })]) } = props;
+    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap], [], dictionary);
+  }
+  visitInterval(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitDuration(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const data = toArrayBufferView(type2.ArrayType, props["data"]);
+    const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
+  }
+  visitFixedSizeList(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.valueType }) } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const { ["length"]: length4 = child.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [void 0, void 0, nullBitmap], [child]);
+  }
+  visitMap(props) {
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.childType }) } = props;
+    const nullBitmap = toUint8Array(props["nullBitmap"]);
+    const valueOffsets = toInt32Array(props["valueOffsets"]);
+    const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
+    return new Data(type2, offset2, length4, nullCount, [valueOffsets, void 0, nullBitmap], [child]);
+  }
+};
+var makeDataVisitor = new MakeDataVisitor();
+function makeData(props) {
+  return makeDataVisitor.visit(props);
+}
+
+// node_modules/apache-arrow/util/chunk.mjs
+var ChunkedIterator = class {
+  constructor(numChunks = 0, getChunkIterator) {
+    this.numChunks = numChunks;
+    this.getChunkIterator = getChunkIterator;
+    this.chunkIndex = 0;
+    this.chunkIterator = this.getChunkIterator(0);
+  }
+  next() {
+    while (this.chunkIndex < this.numChunks) {
+      const next = this.chunkIterator.next();
+      if (!next.done) {
+        return next;
+      }
+      if (++this.chunkIndex < this.numChunks) {
+        this.chunkIterator = this.getChunkIterator(this.chunkIndex);
+      }
+    }
+    return { done: true, value: null };
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+};
+function computeChunkNullable(chunks) {
+  return chunks.some((chunk) => chunk.nullable);
+}
+function computeChunkNullCounts(chunks) {
+  return chunks.reduce((nullCount, chunk) => nullCount + chunk.nullCount, 0);
+}
+function computeChunkOffsets(chunks) {
+  return chunks.reduce((offsets, chunk, index3) => {
+    offsets[index3 + 1] = offsets[index3] + chunk.length;
+    return offsets;
+  }, new Uint32Array(chunks.length + 1));
+}
+function sliceChunks(chunks, offsets, begin, end) {
+  const slices = [];
+  for (let i = -1, n = chunks.length; ++i < n; ) {
+    const chunk = chunks[i];
+    const offset2 = offsets[i];
+    const { length: length4 } = chunk;
+    if (offset2 >= end) {
+      break;
+    }
+    if (begin >= offset2 + length4) {
+      continue;
+    }
+    if (offset2 >= begin && offset2 + length4 <= end) {
+      slices.push(chunk);
+      continue;
+    }
+    const from = Math.max(0, begin - offset2);
+    const to = Math.min(end - offset2, length4);
+    slices.push(chunk.slice(from, to - from));
+  }
+  if (slices.length === 0) {
+    slices.push(chunks[0].slice(0, 0));
+  }
+  return slices;
+}
+function binarySearch(chunks, offsets, idx, fn) {
+  let lhs = 0, mid2 = 0, rhs = offsets.length - 1;
+  do {
+    if (lhs >= rhs - 1) {
+      return idx < offsets[rhs] ? fn(chunks, lhs, idx - offsets[lhs]) : null;
+    }
+    mid2 = lhs + Math.trunc((rhs - lhs) * 0.5);
+    idx < offsets[mid2] ? rhs = mid2 : lhs = mid2;
+  } while (lhs < rhs);
+}
+function isChunkedValid(data, index3) {
+  return data.getValid(index3);
+}
+function wrapChunkedCall1(fn) {
+  function chunkedFn(chunks, i, j) {
+    return fn(chunks[i], j);
+  }
+  return function(index3) {
+    const data = this.data;
+    return binarySearch(data, this._offsets, index3, chunkedFn);
+  };
+}
+function wrapChunkedCall2(fn) {
+  let _2;
+  function chunkedFn(chunks, i, j) {
+    return fn(chunks[i], j, _2);
+  }
+  return function(index3, value) {
+    const data = this.data;
+    _2 = value;
+    const result = binarySearch(data, this._offsets, index3, chunkedFn);
+    _2 = void 0;
+    return result;
+  };
+}
+function wrapChunkedIndexOf(indexOf2) {
+  let _1;
+  function chunkedIndexOf(data, chunkIndex, fromIndex) {
+    let begin = fromIndex, index3 = 0, total = 0;
+    for (let i = chunkIndex - 1, n = data.length; ++i < n; ) {
+      const chunk = data[i];
+      if (~(index3 = indexOf2(chunk, _1, begin))) {
+        return total + index3;
+      }
+      begin = 0;
+      total += chunk.length;
+    }
+    return -1;
+  }
+  return function(element, offset2) {
+    _1 = element;
+    const data = this.data;
+    const result = typeof offset2 !== "number" ? chunkedIndexOf(data, 0, 0) : binarySearch(data, this._offsets, offset2, chunkedIndexOf);
+    _1 = void 0;
+    return result;
+  };
+}
+
+// node_modules/apache-arrow/visitor/indexof.mjs
+var IndexOfVisitor = class extends Visitor {
+};
+function nullIndexOf(data, searchElement) {
+  return searchElement === null && data.length > 0 ? 0 : -1;
+}
+function indexOfNull(data, fromIndex) {
+  const { nullBitmap } = data;
+  if (!nullBitmap || data.nullCount <= 0) {
+    return -1;
+  }
+  let i = 0;
+  for (const isValid of new BitIterator(nullBitmap, data.offset + (fromIndex || 0), data.length, nullBitmap, getBool2)) {
+    if (!isValid) {
+      return i;
+    }
+    ++i;
+  }
+  return -1;
+}
+function indexOfValue(data, searchElement, fromIndex) {
+  if (searchElement === void 0) {
+    return -1;
+  }
+  if (searchElement === null) {
+    switch (data.typeId) {
+      case Type2.Union:
+        break;
+      case Type2.Dictionary:
+        break;
+      default:
+        return indexOfNull(data, fromIndex);
+    }
+  }
+  const get3 = instance2.getVisitFn(data);
+  const compare = createElementComparator(searchElement);
+  for (let i = (fromIndex || 0) - 1, n = data.length; ++i < n; ) {
+    if (compare(get3(data, i))) {
+      return i;
+    }
+  }
+  return -1;
+}
+function indexOfUnion(data, searchElement, fromIndex) {
+  const get3 = instance2.getVisitFn(data);
+  const compare = createElementComparator(searchElement);
+  for (let i = (fromIndex || 0) - 1, n = data.length; ++i < n; ) {
+    if (compare(get3(data, i))) {
+      return i;
+    }
+  }
+  return -1;
+}
+IndexOfVisitor.prototype.visitNull = nullIndexOf;
+IndexOfVisitor.prototype.visitBool = indexOfValue;
+IndexOfVisitor.prototype.visitInt = indexOfValue;
+IndexOfVisitor.prototype.visitInt8 = indexOfValue;
+IndexOfVisitor.prototype.visitInt16 = indexOfValue;
+IndexOfVisitor.prototype.visitInt32 = indexOfValue;
+IndexOfVisitor.prototype.visitInt64 = indexOfValue;
+IndexOfVisitor.prototype.visitUint8 = indexOfValue;
+IndexOfVisitor.prototype.visitUint16 = indexOfValue;
+IndexOfVisitor.prototype.visitUint32 = indexOfValue;
+IndexOfVisitor.prototype.visitUint64 = indexOfValue;
+IndexOfVisitor.prototype.visitFloat = indexOfValue;
+IndexOfVisitor.prototype.visitFloat16 = indexOfValue;
+IndexOfVisitor.prototype.visitFloat32 = indexOfValue;
+IndexOfVisitor.prototype.visitFloat64 = indexOfValue;
+IndexOfVisitor.prototype.visitUtf8 = indexOfValue;
+IndexOfVisitor.prototype.visitLargeUtf8 = indexOfValue;
+IndexOfVisitor.prototype.visitBinary = indexOfValue;
+IndexOfVisitor.prototype.visitLargeBinary = indexOfValue;
+IndexOfVisitor.prototype.visitFixedSizeBinary = indexOfValue;
+IndexOfVisitor.prototype.visitDate = indexOfValue;
+IndexOfVisitor.prototype.visitDateDay = indexOfValue;
+IndexOfVisitor.prototype.visitDateMillisecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimestamp = indexOfValue;
+IndexOfVisitor.prototype.visitTimestampSecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimestampMillisecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimestampMicrosecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimestampNanosecond = indexOfValue;
+IndexOfVisitor.prototype.visitTime = indexOfValue;
+IndexOfVisitor.prototype.visitTimeSecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimeMillisecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimeMicrosecond = indexOfValue;
+IndexOfVisitor.prototype.visitTimeNanosecond = indexOfValue;
+IndexOfVisitor.prototype.visitDecimal = indexOfValue;
+IndexOfVisitor.prototype.visitList = indexOfValue;
+IndexOfVisitor.prototype.visitStruct = indexOfValue;
+IndexOfVisitor.prototype.visitUnion = indexOfValue;
+IndexOfVisitor.prototype.visitDenseUnion = indexOfUnion;
+IndexOfVisitor.prototype.visitSparseUnion = indexOfUnion;
+IndexOfVisitor.prototype.visitDictionary = indexOfValue;
+IndexOfVisitor.prototype.visitInterval = indexOfValue;
+IndexOfVisitor.prototype.visitIntervalDayTime = indexOfValue;
+IndexOfVisitor.prototype.visitIntervalYearMonth = indexOfValue;
+IndexOfVisitor.prototype.visitDuration = indexOfValue;
+IndexOfVisitor.prototype.visitDurationSecond = indexOfValue;
+IndexOfVisitor.prototype.visitDurationMillisecond = indexOfValue;
+IndexOfVisitor.prototype.visitDurationMicrosecond = indexOfValue;
+IndexOfVisitor.prototype.visitDurationNanosecond = indexOfValue;
+IndexOfVisitor.prototype.visitFixedSizeList = indexOfValue;
+IndexOfVisitor.prototype.visitMap = indexOfValue;
+var instance3 = new IndexOfVisitor();
+
+// node_modules/apache-arrow/visitor/iterator.mjs
+var IteratorVisitor = class extends Visitor {
+};
+function vectorIterator(vector2) {
+  const { type: type2 } = vector2;
+  if (vector2.nullCount === 0 && vector2.stride === 1 && (type2.typeId === Type2.Timestamp || type2 instanceof Int_ && type2.bitWidth !== 64 || type2 instanceof Time_ && type2.bitWidth !== 64 || type2 instanceof Float && type2.precision !== Precision.HALF)) {
+    return new ChunkedIterator(vector2.data.length, (chunkIndex) => {
+      const data = vector2.data[chunkIndex];
+      return data.values.subarray(0, data.length)[Symbol.iterator]();
+    });
+  }
+  let offset2 = 0;
+  return new ChunkedIterator(vector2.data.length, (chunkIndex) => {
+    const data = vector2.data[chunkIndex];
+    const length4 = data.length;
+    const inner = vector2.slice(offset2, offset2 + length4);
+    offset2 += length4;
+    return new VectorIterator(inner);
+  });
+}
+var VectorIterator = class {
+  constructor(vector2) {
+    this.vector = vector2;
+    this.index = 0;
+  }
+  next() {
+    if (this.index < this.vector.length) {
+      return {
+        value: this.vector.get(this.index++)
+      };
+    }
+    return { done: true, value: null };
+  }
+  [Symbol.iterator]() {
+    return this;
+  }
+};
+IteratorVisitor.prototype.visitNull = vectorIterator;
+IteratorVisitor.prototype.visitBool = vectorIterator;
+IteratorVisitor.prototype.visitInt = vectorIterator;
+IteratorVisitor.prototype.visitInt8 = vectorIterator;
+IteratorVisitor.prototype.visitInt16 = vectorIterator;
+IteratorVisitor.prototype.visitInt32 = vectorIterator;
+IteratorVisitor.prototype.visitInt64 = vectorIterator;
+IteratorVisitor.prototype.visitUint8 = vectorIterator;
+IteratorVisitor.prototype.visitUint16 = vectorIterator;
+IteratorVisitor.prototype.visitUint32 = vectorIterator;
+IteratorVisitor.prototype.visitUint64 = vectorIterator;
+IteratorVisitor.prototype.visitFloat = vectorIterator;
+IteratorVisitor.prototype.visitFloat16 = vectorIterator;
+IteratorVisitor.prototype.visitFloat32 = vectorIterator;
+IteratorVisitor.prototype.visitFloat64 = vectorIterator;
+IteratorVisitor.prototype.visitUtf8 = vectorIterator;
+IteratorVisitor.prototype.visitLargeUtf8 = vectorIterator;
+IteratorVisitor.prototype.visitBinary = vectorIterator;
+IteratorVisitor.prototype.visitLargeBinary = vectorIterator;
+IteratorVisitor.prototype.visitFixedSizeBinary = vectorIterator;
+IteratorVisitor.prototype.visitDate = vectorIterator;
+IteratorVisitor.prototype.visitDateDay = vectorIterator;
+IteratorVisitor.prototype.visitDateMillisecond = vectorIterator;
+IteratorVisitor.prototype.visitTimestamp = vectorIterator;
+IteratorVisitor.prototype.visitTimestampSecond = vectorIterator;
+IteratorVisitor.prototype.visitTimestampMillisecond = vectorIterator;
+IteratorVisitor.prototype.visitTimestampMicrosecond = vectorIterator;
+IteratorVisitor.prototype.visitTimestampNanosecond = vectorIterator;
+IteratorVisitor.prototype.visitTime = vectorIterator;
+IteratorVisitor.prototype.visitTimeSecond = vectorIterator;
+IteratorVisitor.prototype.visitTimeMillisecond = vectorIterator;
+IteratorVisitor.prototype.visitTimeMicrosecond = vectorIterator;
+IteratorVisitor.prototype.visitTimeNanosecond = vectorIterator;
+IteratorVisitor.prototype.visitDecimal = vectorIterator;
+IteratorVisitor.prototype.visitList = vectorIterator;
+IteratorVisitor.prototype.visitStruct = vectorIterator;
+IteratorVisitor.prototype.visitUnion = vectorIterator;
+IteratorVisitor.prototype.visitDenseUnion = vectorIterator;
+IteratorVisitor.prototype.visitSparseUnion = vectorIterator;
+IteratorVisitor.prototype.visitDictionary = vectorIterator;
+IteratorVisitor.prototype.visitInterval = vectorIterator;
+IteratorVisitor.prototype.visitIntervalDayTime = vectorIterator;
+IteratorVisitor.prototype.visitIntervalYearMonth = vectorIterator;
+IteratorVisitor.prototype.visitDuration = vectorIterator;
+IteratorVisitor.prototype.visitDurationSecond = vectorIterator;
+IteratorVisitor.prototype.visitDurationMillisecond = vectorIterator;
+IteratorVisitor.prototype.visitDurationMicrosecond = vectorIterator;
+IteratorVisitor.prototype.visitDurationNanosecond = vectorIterator;
+IteratorVisitor.prototype.visitFixedSizeList = vectorIterator;
+IteratorVisitor.prototype.visitMap = vectorIterator;
+var instance4 = new IteratorVisitor();
+
+// node_modules/apache-arrow/vector.mjs
+var _a2;
+var visitorsByTypeId = {};
+var vectorPrototypesByTypeId = {};
+var Vector2 = class {
+  constructor(input) {
+    var _b2, _c2, _d2;
+    const data = input[0] instanceof Vector2 ? input.flatMap((x4) => x4.data) : input;
+    if (data.length === 0 || data.some((x4) => !(x4 instanceof Data))) {
+      throw new TypeError("Vector constructor expects an Array of Data instances.");
+    }
+    const type2 = (_b2 = data[0]) === null || _b2 === void 0 ? void 0 : _b2.type;
+    switch (data.length) {
+      case 0:
+        this._offsets = [0];
+        break;
+      case 1: {
+        const { get: get3, set: set4, indexOf: indexOf2 } = visitorsByTypeId[type2.typeId];
+        const unchunkedData = data[0];
+        this.isValid = (index3) => isChunkedValid(unchunkedData, index3);
+        this.get = (index3) => get3(unchunkedData, index3);
+        this.set = (index3, value) => set4(unchunkedData, index3, value);
+        this.indexOf = (index3) => indexOf2(unchunkedData, index3);
+        this._offsets = [0, unchunkedData.length];
+        break;
+      }
+      default:
+        Object.setPrototypeOf(this, vectorPrototypesByTypeId[type2.typeId]);
+        this._offsets = computeChunkOffsets(data);
+        break;
+    }
+    this.data = data;
+    this.type = type2;
+    this.stride = strideForType(type2);
+    this.numChildren = (_d2 = (_c2 = type2.children) === null || _c2 === void 0 ? void 0 : _c2.length) !== null && _d2 !== void 0 ? _d2 : 0;
+    this.length = this._offsets.at(-1);
+  }
+  /**
+   * The aggregate size (in bytes) of this Vector's buffers and/or child Vectors.
+   */
+  get byteLength() {
+    return this.data.reduce((byteLength, data) => byteLength + data.byteLength, 0);
+  }
+  /**
+   * Whether this Vector's elements can contain null values.
+   */
+  get nullable() {
+    return computeChunkNullable(this.data);
+  }
+  /**
+   * The number of null elements in this Vector.
+   */
+  get nullCount() {
+    return computeChunkNullCounts(this.data);
+  }
+  /**
+   * The Array or TypedArray constructor used for the JS representation
+   *  of the element's values in {@link Vector.prototype.toArray `toArray()`}.
+   */
+  get ArrayType() {
+    return this.type.ArrayType;
+  }
+  /**
+   * The name that should be printed when the Vector is logged in a message.
+   */
+  get [Symbol.toStringTag]() {
+    return `${this.VectorName}<${this.type[Symbol.toStringTag]}>`;
+  }
+  /**
+   * The name of this Vector.
+   */
+  get VectorName() {
+    return `${Type2[this.type.typeId]}Vector`;
+  }
+  /**
+   * Check whether an element is null.
+   * @param index The index at which to read the validity bitmap.
+   */
+  // @ts-ignore
+  isValid(index3) {
+    return false;
+  }
+  /**
+   * Get an element value by position.
+   * @param index The index of the element to read.
+   */
+  // @ts-ignore
+  get(index3) {
+    return null;
+  }
+  /**
+   * Set an element value by position.
+   * @param index The index of the element to write.
+   * @param value The value to set.
+   */
+  // @ts-ignore
+  set(index3, value) {
+    return;
+  }
+  /**
+   * Retrieve the index of the first occurrence of a value in an Vector.
+   * @param element The value to locate in the Vector.
+   * @param offset The index at which to begin the search. If offset is omitted, the search starts at index 0.
+   */
+  // @ts-ignore
+  indexOf(element, offset2) {
+    return -1;
+  }
+  includes(element, offset2) {
+    return this.indexOf(element, offset2) > -1;
+  }
+  /**
+   * Iterator for the Vector's elements.
+   */
+  [Symbol.iterator]() {
+    return instance4.visit(this);
+  }
+  /**
+   * Combines two or more Vectors of the same type.
+   * @param others Additional Vectors to add to the end of this Vector.
+   */
+  concat(...others) {
+    return new Vector2(this.data.concat(others.flatMap((x4) => x4.data).flat(Number.POSITIVE_INFINITY)));
+  }
+  /**
+   * Return a zero-copy sub-section of this Vector.
+   * @param start The beginning of the specified portion of the Vector.
+   * @param end The end of the specified portion of the Vector. This is exclusive of the element at the index 'end'.
+   */
+  slice(begin, end) {
+    return new Vector2(clampRange(this, begin, end, ({ data, _offsets }, begin2, end2) => sliceChunks(data, _offsets, begin2, end2)));
+  }
+  toJSON() {
+    return [...this];
+  }
+  /**
+   * Return a JavaScript Array or TypedArray of the Vector's elements.
+   *
+   * @note If this Vector contains a single Data chunk and the Vector's type is a
+   *  primitive numeric type corresponding to one of the JavaScript TypedArrays, this
+   *  method returns a zero-copy slice of the underlying TypedArray values. If there's
+   *  more than one chunk, the resulting TypedArray will be a copy of the data from each
+   *  chunk's underlying TypedArray values.
+   *
+   * @returns An Array or TypedArray of the Vector's elements, based on the Vector's DataType.
+   */
+  toArray() {
+    const { type: type2, data, length: length4, stride, ArrayType } = this;
+    switch (type2.typeId) {
+      case Type2.Int:
+      case Type2.Float:
+      case Type2.Decimal:
+      case Type2.Time:
+      case Type2.Timestamp:
+        switch (data.length) {
+          case 0:
+            return new ArrayType();
+          case 1:
+            return data[0].values.subarray(0, length4 * stride);
+          default:
+            return data.reduce((memo2, { values: values2, length: chunk_length }) => {
+              memo2.array.set(values2.subarray(0, chunk_length * stride), memo2.offset);
+              memo2.offset += chunk_length * stride;
+              return memo2;
+            }, { array: new ArrayType(length4 * stride), offset: 0 }).array;
+        }
+    }
+    return [...this];
+  }
+  /**
+   * Returns a string representation of the Vector.
+   *
+   * @returns A string representation of the Vector.
+   */
+  toString() {
+    return `[${[...this].join(",")}]`;
+  }
+  /**
+   * Returns a child Vector by name, or null if this Vector has no child with the given name.
+   * @param name The name of the child to retrieve.
+   */
+  getChild(name) {
+    var _b2;
+    return this.getChildAt((_b2 = this.type.children) === null || _b2 === void 0 ? void 0 : _b2.findIndex((f) => f.name === name));
+  }
+  /**
+   * Returns a child Vector by index, or null if this Vector has no child at the supplied index.
+   * @param index The index of the child to retrieve.
+   */
+  getChildAt(index3) {
+    if (index3 > -1 && index3 < this.numChildren) {
+      return new Vector2(this.data.map(({ children: children2 }) => children2[index3]));
+    }
+    return null;
+  }
+  get isMemoized() {
+    if (DataType.isDictionary(this.type)) {
+      return this.data[0].dictionary.isMemoized;
+    }
+    return false;
+  }
+  /**
+   * Adds memoization to the Vector's {@link get} method. For dictionary
+   * vectors, this method return a vector that memoizes only the dictionary
+   * values.
+   *
+   * Memoization is very useful when decoding a value is expensive such as
+   * Utf8. The memoization creates a cache of the size of the Vector and
+   * therefore increases memory usage.
+   *
+   * @returns A new vector that memoizes calls to {@link get}.
+   */
+  memoize() {
+    if (DataType.isDictionary(this.type)) {
+      const dictionary = new MemoizedVector(this.data[0].dictionary);
+      const newData = this.data.map((data) => {
+        const cloned = data.clone();
+        cloned.dictionary = dictionary;
+        return cloned;
+      });
+      return new Vector2(newData);
+    }
+    return new MemoizedVector(this);
+  }
+  /**
+   * Returns a vector without memoization of the {@link get} method. If this
+   * vector is not memoized, this method returns this vector.
+   *
+   * @returns A new vector without memoization.
+   */
+  unmemoize() {
+    if (DataType.isDictionary(this.type) && this.isMemoized) {
+      const dictionary = this.data[0].dictionary.unmemoize();
+      const newData = this.data.map((data) => {
+        const newData2 = data.clone();
+        newData2.dictionary = dictionary;
+        return newData2;
+      });
+      return new Vector2(newData);
+    }
+    return this;
+  }
+};
+_a2 = Symbol.toStringTag;
+Vector2[_a2] = ((proto) => {
+  proto.type = DataType.prototype;
+  proto.data = [];
+  proto.length = 0;
+  proto.stride = 1;
+  proto.numChildren = 0;
+  proto._offsets = new Uint32Array([0]);
+  proto[Symbol.isConcatSpreadable] = true;
+  const typeIds = Object.keys(Type2).map((T) => Type2[T]).filter((T) => typeof T === "number" && T !== Type2.NONE);
+  for (const typeId of typeIds) {
+    const get3 = instance2.getVisitFnByTypeId(typeId);
+    const set4 = instance.getVisitFnByTypeId(typeId);
+    const indexOf2 = instance3.getVisitFnByTypeId(typeId);
+    visitorsByTypeId[typeId] = { get: get3, set: set4, indexOf: indexOf2 };
+    vectorPrototypesByTypeId[typeId] = Object.create(proto, {
+      ["isValid"]: { value: wrapChunkedCall1(isChunkedValid) },
+      ["get"]: { value: wrapChunkedCall1(instance2.getVisitFnByTypeId(typeId)) },
+      ["set"]: { value: wrapChunkedCall2(instance.getVisitFnByTypeId(typeId)) },
+      ["indexOf"]: { value: wrapChunkedIndexOf(instance3.getVisitFnByTypeId(typeId)) }
+    });
+  }
+  return "Vector";
+})(Vector2.prototype);
+var MemoizedVector = class extends Vector2 {
+  constructor(vector2) {
+    super(vector2.data);
+    const get3 = this.get;
+    const set4 = this.set;
+    const slice6 = this.slice;
+    const cache = new Array(this.length);
+    Object.defineProperty(this, "get", {
+      value(index3) {
+        const cachedValue = cache[index3];
+        if (cachedValue !== void 0) {
+          return cachedValue;
+        }
+        const value = get3.call(this, index3);
+        cache[index3] = value;
+        return value;
+      }
+    });
+    Object.defineProperty(this, "set", {
+      value(index3, value) {
+        set4.call(this, index3, value);
+        cache[index3] = value;
+      }
+    });
+    Object.defineProperty(this, "slice", {
+      value: (begin, end) => new MemoizedVector(slice6.call(this, begin, end))
+    });
+    Object.defineProperty(this, "isMemoized", { value: true });
+    Object.defineProperty(this, "unmemoize", {
+      value: () => new Vector2(this.data)
+    });
+    Object.defineProperty(this, "memoize", {
+      value: () => this
+    });
+  }
+};
+
+// node_modules/apache-arrow/builder/valid.mjs
+function createIsValidFunction(nullValues) {
+  if (!nullValues || nullValues.length <= 0) {
+    return function isValid(value) {
+      return true;
+    };
+  }
+  let fnBody = "";
+  const noNaNs = nullValues.filter((x4) => x4 === x4);
+  if (noNaNs.length > 0) {
+    fnBody = `
+    switch (x) {${noNaNs.map((x4) => `
+        case ${valueToCase(x4)}:`).join("")}
+            return false;
+    }`;
+  }
+  if (nullValues.length !== noNaNs.length) {
+    fnBody = `if (x !== x) return false;
+${fnBody}`;
+  }
+  return new Function(`x`, `${fnBody}
+return true;`);
+}
+function valueToCase(x4) {
+  if (typeof x4 !== "bigint") {
+    return valueToString(x4);
+  }
+  return `${valueToString(x4)}n`;
+}
+
+// node_modules/apache-arrow/builder/buffer.mjs
+function roundLengthUpToNearest64Bytes(len, BPE) {
+  const bytesMinus1 = Math.ceil(len) * BPE - 1;
+  return (bytesMinus1 - bytesMinus1 % 64 + 64 || 64) / BPE;
+}
+function resizeArray(arr, len = 0) {
+  return arr.length >= len ? arr.subarray(0, len) : memcpy(new arr.constructor(len), arr, 0);
+}
+var BufferBuilder = class {
+  constructor(bufferType, initialSize = 0, stride = 1) {
+    this.length = Math.ceil(initialSize / stride);
+    this.buffer = new bufferType(this.length);
+    this.stride = stride;
+    this.BYTES_PER_ELEMENT = bufferType.BYTES_PER_ELEMENT;
+    this.ArrayType = bufferType;
+  }
+  get byteLength() {
+    return Math.ceil(this.length * this.stride) * this.BYTES_PER_ELEMENT;
+  }
+  get reservedLength() {
+    return this.buffer.length / this.stride;
+  }
+  get reservedByteLength() {
+    return this.buffer.byteLength;
+  }
+  // @ts-ignore
+  set(index3, value) {
+    return this;
+  }
+  append(value) {
+    return this.set(this.length, value);
+  }
+  reserve(extra) {
+    if (extra > 0) {
+      this.length += extra;
+      const stride = this.stride;
+      const length4 = this.length * stride;
+      const reserved = this.buffer.length;
+      if (length4 >= reserved) {
+        this._resize(reserved === 0 ? roundLengthUpToNearest64Bytes(length4 * 1, this.BYTES_PER_ELEMENT) : roundLengthUpToNearest64Bytes(length4 * 2, this.BYTES_PER_ELEMENT));
+      }
+    }
+    return this;
+  }
+  flush(length4 = this.length) {
+    length4 = roundLengthUpToNearest64Bytes(length4 * this.stride, this.BYTES_PER_ELEMENT);
+    const array4 = resizeArray(this.buffer, length4);
+    this.clear();
+    return array4;
+  }
+  clear() {
+    this.length = 0;
+    this.buffer = new this.ArrayType();
+    return this;
+  }
+  _resize(newLength) {
+    return this.buffer = resizeArray(this.buffer, newLength);
+  }
+};
+var DataBufferBuilder = class extends BufferBuilder {
+  last() {
+    return this.get(this.length - 1);
+  }
+  get(index3) {
+    return this.buffer[index3];
+  }
+  set(index3, value) {
+    this.reserve(index3 - this.length + 1);
+    this.buffer[index3 * this.stride] = value;
+    return this;
+  }
+};
+var BitmapBufferBuilder = class extends DataBufferBuilder {
+  constructor() {
+    super(Uint8Array, 0, 1 / 8);
+    this.numValid = 0;
+  }
+  get numInvalid() {
+    return this.length - this.numValid;
+  }
+  get(idx) {
+    return this.buffer[idx >> 3] >> idx % 8 & 1;
+  }
+  set(idx, val) {
+    const { buffer } = this.reserve(idx - this.length + 1);
+    const byte = idx >> 3, bit = idx % 8, cur = buffer[byte] >> bit & 1;
+    val ? cur === 0 && (buffer[byte] |= 1 << bit, ++this.numValid) : cur === 1 && (buffer[byte] &= ~(1 << bit), --this.numValid);
+    return this;
+  }
+  clear() {
+    this.numValid = 0;
+    return super.clear();
+  }
+};
+var OffsetsBufferBuilder = class extends DataBufferBuilder {
+  constructor(type2) {
+    super(type2.OffsetArrayType, 1, 1);
+  }
+  append(value) {
+    return this.set(this.length - 1, value);
+  }
+  set(index3, value) {
+    const offset2 = this.length - 1;
+    const buffer = this.reserve(index3 - offset2 + 1).buffer;
+    if (offset2 < index3++ && offset2 >= 0) {
+      buffer.fill(buffer[offset2], offset2, index3);
+    }
+    buffer[index3] = buffer[index3 - 1] + value;
+    return this;
+  }
+  flush(length4 = this.length - 1) {
+    if (length4 > this.length) {
+      this.set(length4 - 1, this.BYTES_PER_ELEMENT > 4 ? BigInt(0) : 0);
+    }
+    return super.flush(length4 + 1);
+  }
+};
+
+// node_modules/apache-arrow/builder.mjs
+var Builder2 = class {
+  /** @nocollapse */
+  // @ts-ignore
+  static throughNode(options) {
+    throw new Error(`"throughNode" not available in this environment`);
+  }
+  /** @nocollapse */
+  // @ts-ignore
+  static throughDOM(options) {
+    throw new Error(`"throughDOM" not available in this environment`);
+  }
+  /**
+   * Construct a builder with the given Arrow DataType with optional null values,
+   * which will be interpreted as "null" when set or appended to the `Builder`.
+   * @param {{ type: T, nullValues?: any[] }} options A `BuilderOptions` object used to create this `Builder`.
+   */
+  constructor({ "type": type2, "nullValues": nulls }) {
+    this.length = 0;
+    this.finished = false;
+    this.type = type2;
+    this.children = [];
+    this.nullValues = nulls;
+    this.stride = strideForType(type2);
+    this._nulls = new BitmapBufferBuilder();
+    if (nulls && nulls.length > 0) {
+      this._isValid = createIsValidFunction(nulls);
+    }
+  }
+  /**
+   * Flush the `Builder` and return a `Vector<T>`.
+   * @returns {Vector<T>} A `Vector<T>` of the flushed values.
+   */
+  toVector() {
+    return new Vector2([this.flush()]);
+  }
+  get ArrayType() {
+    return this.type.ArrayType;
+  }
+  get nullCount() {
+    return this._nulls.numInvalid;
+  }
+  get numChildren() {
+    return this.children.length;
+  }
+  /**
+   * @returns The aggregate length (in bytes) of the values that have been written.
+   */
+  get byteLength() {
+    let size = 0;
+    const { _offsets, _values, _nulls, _typeIds, children: children2 } = this;
+    _offsets && (size += _offsets.byteLength);
+    _values && (size += _values.byteLength);
+    _nulls && (size += _nulls.byteLength);
+    _typeIds && (size += _typeIds.byteLength);
+    return children2.reduce((size2, child) => size2 + child.byteLength, size);
+  }
+  /**
+   * @returns The aggregate number of rows that have been reserved to write new values.
+   */
+  get reservedLength() {
+    return this._nulls.reservedLength;
+  }
+  /**
+   * @returns The aggregate length (in bytes) that has been reserved to write new values.
+   */
+  get reservedByteLength() {
+    let size = 0;
+    this._offsets && (size += this._offsets.reservedByteLength);
+    this._values && (size += this._values.reservedByteLength);
+    this._nulls && (size += this._nulls.reservedByteLength);
+    this._typeIds && (size += this._typeIds.reservedByteLength);
+    return this.children.reduce((size2, child) => size2 + child.reservedByteLength, size);
+  }
+  get valueOffsets() {
+    return this._offsets ? this._offsets.buffer : null;
+  }
+  get values() {
+    return this._values ? this._values.buffer : null;
+  }
+  get nullBitmap() {
+    return this._nulls ? this._nulls.buffer : null;
+  }
+  get typeIds() {
+    return this._typeIds ? this._typeIds.buffer : null;
+  }
+  /**
+   * Appends a value (or null) to this `Builder`.
+   * This is equivalent to `builder.set(builder.length, value)`.
+   * @param {T['TValue'] | TNull } value The value to append.
+   */
+  append(value) {
+    return this.set(this.length, value);
+  }
+  /**
+   * Validates whether a value is valid (true), or null (false)
+   * @param {T['TValue'] | TNull } value The value to compare against null the value representations
+   */
+  isValid(value) {
+    return this._isValid(value);
+  }
+  /**
+   * Write a value (or null-value sentinel) at the supplied index.
+   * If the value matches one of the null-value representations, a 1-bit is
+   * written to the null `BitmapBufferBuilder`. Otherwise, a 0 is written to
+   * the null `BitmapBufferBuilder`, and the value is passed to
+   * `Builder.prototype.setValue()`.
+   * @param {number} index The index of the value to write.
+   * @param {T['TValue'] | TNull } value The value to write at the supplied index.
+   * @returns {this} The updated `Builder` instance.
+   */
+  set(index3, value) {
+    if (this.setValid(index3, this.isValid(value))) {
+      this.setValue(index3, value);
+    }
+    return this;
+  }
+  /**
+   * Write a value to the underlying buffers at the supplied index, bypassing
+   * the null-value check. This is a low-level method that
+   * @param {number} index
+   * @param {T['TValue'] | TNull } value
+   */
+  setValue(index3, value) {
+    this._setValue(this, index3, value);
+  }
+  setValid(index3, valid2) {
+    this.length = this._nulls.set(index3, +valid2).length;
+    return valid2;
+  }
+  // @ts-ignore
+  addChild(child, name = `${this.numChildren}`) {
+    throw new Error(`Cannot append children to non-nested type "${this.type}"`);
+  }
+  /**
+   * Retrieve the child `Builder` at the supplied `index`, or null if no child
+   * exists at that index.
+   * @param {number} index The index of the child `Builder` to retrieve.
+   * @returns {Builder | null} The child Builder at the supplied index or null.
+   */
+  getChildAt(index3) {
+    return this.children[index3] || null;
+  }
+  /**
+   * Commit all the values that have been written to their underlying
+   * ArrayBuffers, including any child Builders if applicable, and reset
+   * the internal `Builder` state.
+   * @returns A `Data<T>` of the buffers and children representing the values written.
+   */
+  flush() {
+    let data;
+    let typeIds;
+    let nullBitmap;
+    let valueOffsets;
+    const { type: type2, length: length4, nullCount, _typeIds, _offsets, _values, _nulls } = this;
+    if (typeIds = _typeIds === null || _typeIds === void 0 ? void 0 : _typeIds.flush(length4)) {
+      valueOffsets = _offsets === null || _offsets === void 0 ? void 0 : _offsets.flush(length4);
+    } else if (valueOffsets = _offsets === null || _offsets === void 0 ? void 0 : _offsets.flush(length4)) {
+      data = _values === null || _values === void 0 ? void 0 : _values.flush(_offsets.last());
+    } else {
+      data = _values === null || _values === void 0 ? void 0 : _values.flush(length4);
+    }
+    if (nullCount > 0) {
+      nullBitmap = _nulls === null || _nulls === void 0 ? void 0 : _nulls.flush(length4);
+    }
+    const children2 = this.children.map((child) => child.flush());
+    this.clear();
+    return makeData({
+      type: type2,
+      length: length4,
+      nullCount,
+      children: children2,
+      "child": children2[0],
+      data,
+      typeIds,
+      nullBitmap,
+      valueOffsets
+    });
+  }
+  /**
+   * Finalize this `Builder`, and child builders if applicable.
+   * @returns {this} The finalized `Builder` instance.
+   */
+  finish() {
+    this.finished = true;
+    for (const child of this.children)
+      child.finish();
+    return this;
+  }
+  /**
+   * Clear this Builder's internal state, including child Builders if applicable, and reset the length to 0.
+   * @returns {this} The cleared `Builder` instance.
+   */
+  clear() {
+    var _a5, _b2, _c2, _d2;
+    this.length = 0;
+    (_a5 = this._nulls) === null || _a5 === void 0 ? void 0 : _a5.clear();
+    (_b2 = this._values) === null || _b2 === void 0 ? void 0 : _b2.clear();
+    (_c2 = this._offsets) === null || _c2 === void 0 ? void 0 : _c2.clear();
+    (_d2 = this._typeIds) === null || _d2 === void 0 ? void 0 : _d2.clear();
+    for (const child of this.children)
+      child.clear();
+    return this;
+  }
+};
+Builder2.prototype.length = 1;
+Builder2.prototype.stride = 1;
+Builder2.prototype.children = null;
+Builder2.prototype.finished = false;
+Builder2.prototype.nullValues = null;
+Builder2.prototype._isValid = () => true;
+var FixedWidthBuilder = class extends Builder2 {
+  constructor(opts) {
+    super(opts);
+    this._values = new DataBufferBuilder(this.ArrayType, 0, this.stride);
+  }
+  setValue(index3, value) {
+    const values2 = this._values;
+    values2.reserve(index3 - values2.length + 1);
+    return super.setValue(index3, value);
+  }
+};
+var VariableWidthBuilder = class extends Builder2 {
+  constructor(opts) {
+    super(opts);
+    this._pendingLength = 0;
+    this._offsets = new OffsetsBufferBuilder(opts.type);
+  }
+  setValue(index3, value) {
+    const pending = this._pending || (this._pending = /* @__PURE__ */ new Map());
+    const current = pending.get(index3);
+    current && (this._pendingLength -= current.length);
+    this._pendingLength += value instanceof MapRow ? value[kKeys].length : value.length;
+    pending.set(index3, value);
+  }
+  setValid(index3, isValid) {
+    if (!super.setValid(index3, isValid)) {
+      (this._pending || (this._pending = /* @__PURE__ */ new Map())).set(index3, void 0);
+      return false;
+    }
+    return true;
+  }
+  clear() {
+    this._pendingLength = 0;
+    this._pending = void 0;
+    return super.clear();
+  }
+  flush() {
+    this._flush();
+    return super.flush();
+  }
+  finish() {
+    this._flush();
+    return super.finish();
+  }
+  _flush() {
+    const pending = this._pending;
+    const pendingLength = this._pendingLength;
+    this._pendingLength = 0;
+    this._pending = void 0;
+    if (pending && pending.size > 0) {
+      this._flushPending(pending, pendingLength);
+    }
+    return this;
+  }
+};
+
+// node_modules/apache-arrow/fb/block.mjs
+var Block = class {
+  constructor() {
+    this.bb = null;
+    this.bb_pos = 0;
+  }
+  __init(i, bb2) {
+    this.bb_pos = i;
+    this.bb = bb2;
+    return this;
+  }
+  /**
+   * Index to the start of the RecordBlock (note this is past the Message header)
+   */
+  offset() {
+    return this.bb.readInt64(this.bb_pos);
+  }
+  /**
+   * Length of the metadata
+   */
+  metaDataLength() {
+    return this.bb.readInt32(this.bb_pos + 8);
+  }
+  /**
+   * Length of the data (this is aligned so there can be a gap between this and
+   * the metadata).
+   */
+  bodyLength() {
+    return this.bb.readInt64(this.bb_pos + 16);
+  }
+  static sizeOf() {
+    return 24;
+  }
+  static createBlock(builder, offset2, metaDataLength, bodyLength) {
+    builder.prep(8, 24);
+    builder.writeInt64(BigInt(bodyLength !== null && bodyLength !== void 0 ? bodyLength : 0));
+    builder.pad(4);
+    builder.writeInt32(metaDataLength);
+    builder.writeInt64(BigInt(offset2 !== null && offset2 !== void 0 ? offset2 : 0));
+    return builder.offset();
+  }
+};
+
+// node_modules/apache-arrow/fb/footer.mjs
 var Footer = class {
   constructor() {
     this.bb = null;
@@ -36511,7 +36755,7 @@ var Footer = class {
   }
   version() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : MetadataVersion2.V1;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : MetadataVersion.V1;
   }
   schema(obj) {
     const offset2 = this.bb.__offset(this.bb_pos, 6);
@@ -36548,7 +36792,7 @@ var Footer = class {
     builder.startObject(5);
   }
   static addVersion(builder, version) {
-    builder.addFieldInt16(0, version, MetadataVersion2.V1);
+    builder.addFieldInt16(0, version, MetadataVersion.V1);
   }
   static addSchema(builder, schemaOffset) {
     builder.addFieldOffset(1, schemaOffset, 0);
@@ -36590,7 +36834,7 @@ var Footer = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/schema.mjs
+// node_modules/apache-arrow/schema.mjs
 var Schema2 = class {
   constructor(fields = [], metadata, dictionaries, metadataVersion = MetadataVersion.V5) {
     this.fields = fields || [];
@@ -36706,8 +36950,8 @@ function generateDictionaryMap(fields, dictionaries = /* @__PURE__ */ new Map())
   return dictionaries;
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/file.mjs
-var Builder3 = Builder2;
+// node_modules/apache-arrow/ipc/metadata/file.mjs
+var Builder3 = Builder;
 var ByteBuffer2 = ByteBuffer;
 var Footer_ = class {
   /** @nocollapse */
@@ -36821,7 +37065,7 @@ var FileBlock = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/interfaces.mjs
+// node_modules/apache-arrow/io/interfaces.mjs
 var ITERATOR_DONE = Object.freeze({ done: true, value: void 0 });
 var ArrowJSON = class {
   constructor(_json) {
@@ -36944,7 +37188,7 @@ var AsyncQueue = class extends ReadableInterop {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/stream.mjs
+// node_modules/apache-arrow/io/stream.mjs
 var AsyncByteQueue = class extends AsyncQueue {
   write(value) {
     if ((value = toUint8Array(value)).byteLength > 0) {
@@ -37121,7 +37365,7 @@ var AsyncByteStreamSource = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/file.mjs
+// node_modules/apache-arrow/io/file.mjs
 var RandomAccessFile = class extends ByteStream {
   constructor(buffer, byteLength) {
     super();
@@ -37244,7 +37488,7 @@ var AsyncRandomAccessFile = class extends AsyncByteStream {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/util/int.mjs
+// node_modules/apache-arrow/util/int.mjs
 var int_exports = {};
 __export(int_exports, {
   BaseInt64: () => BaseInt64,
@@ -37296,25 +37540,25 @@ var BaseInt64 = class {
     ]);
     let product = L[3] * R[3];
     this.buffer[0] = product & 65535;
-    let sum5 = product >>> 16;
+    let sum4 = product >>> 16;
     product = L[2] * R[3];
-    sum5 += product;
+    sum4 += product;
     product = L[3] * R[2] >>> 0;
-    sum5 += product;
-    this.buffer[0] += sum5 << 16;
-    this.buffer[1] = sum5 >>> 0 < product ? carryBit16 : 0;
-    this.buffer[1] += sum5 >>> 16;
+    sum4 += product;
+    this.buffer[0] += sum4 << 16;
+    this.buffer[1] = sum4 >>> 0 < product ? carryBit16 : 0;
+    this.buffer[1] += sum4 >>> 16;
     this.buffer[1] += L[1] * R[3] + L[2] * R[2] + L[3] * R[1];
     this.buffer[1] += L[0] * R[3] + L[1] * R[2] + L[2] * R[1] + L[3] * R[0] << 16;
     return this;
   }
   _plus(other) {
-    const sum5 = this.buffer[0] + other.buffer[0] >>> 0;
+    const sum4 = this.buffer[0] + other.buffer[0] >>> 0;
     this.buffer[1] += other.buffer[1];
-    if (sum5 < this.buffer[0] >>> 0) {
+    if (sum4 < this.buffer[0] >>> 0) {
       ++this.buffer[1];
     }
-    this.buffer[0] = sum5;
+    this.buffer[0] = sum4;
   }
   lessThan(other) {
     return this.buffer[1] < other.buffer[1] || this.buffer[1] === other.buffer[1] && this.buffer[0] < other.buffer[0];
@@ -37480,14 +37724,14 @@ var Int128 = class {
     const R3 = new Uint642(new Uint32Array([other.buffer[0], 0]));
     let product = Uint642.multiply(L3, R3);
     this.buffer[0] = product.low();
-    const sum5 = new Uint642(new Uint32Array([product.high(), 0]));
+    const sum4 = new Uint642(new Uint32Array([product.high(), 0]));
     product = Uint642.multiply(L2, R3);
-    sum5.plus(product);
+    sum4.plus(product);
     product = Uint642.multiply(L3, R2);
-    sum5.plus(product);
-    this.buffer[1] = sum5.low();
-    this.buffer[3] = sum5.lessThan(product) ? 1 : 0;
-    this.buffer[2] = sum5.high();
+    sum4.plus(product);
+    this.buffer[1] = sum4.low();
+    this.buffer[3] = sum4.lessThan(product) ? 1 : 0;
+    this.buffer[2] = sum4.high();
     const high = new Uint642(new Uint32Array(this.buffer.buffer, this.buffer.byteOffset + 8, 2));
     high.plus(Uint642.multiply(L1, R3)).plus(Uint642.multiply(L2, R2)).plus(Uint642.multiply(L3, R1));
     this.buffer[3] += Uint642.multiply(L0, R3).plus(Uint642.multiply(L1, R2)).plus(Uint642.multiply(L2, R1)).plus(Uint642.multiply(L3, R0)).low();
@@ -37560,7 +37804,7 @@ var Int128 = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/vectorloader.mjs
+// node_modules/apache-arrow/visitor/vectorloader.mjs
 var VectorLoader = class extends Visitor {
   constructor(bytes, nodes, buffers, dictionaries, metadataVersion = MetadataVersion.V5) {
     super();
@@ -37590,7 +37834,13 @@ var VectorLoader = class extends Visitor {
   visitUtf8(type2, { length: length4, nullCount } = this.nextFieldNode()) {
     return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), valueOffsets: this.readOffsets(type2), data: this.readData(type2) });
   }
+  visitLargeUtf8(type2, { length: length4, nullCount } = this.nextFieldNode()) {
+    return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), valueOffsets: this.readOffsets(type2), data: this.readData(type2) });
+  }
   visitBinary(type2, { length: length4, nullCount } = this.nextFieldNode()) {
+    return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), valueOffsets: this.readOffsets(type2), data: this.readData(type2) });
+  }
+  visitLargeBinary(type2, { length: length4, nullCount } = this.nextFieldNode()) {
     return makeData({ type: type2, length: length4, nullCount, nullBitmap: this.readNullBitmap(type2, nullCount), valueOffsets: this.readOffsets(type2), data: this.readData(type2) });
   }
   visitFixedSizeBinary(type2, { length: length4, nullCount } = this.nextFieldNode()) {
@@ -37672,7 +37922,7 @@ var JSONVectorLoader = class extends VectorLoader {
     return nullCount <= 0 ? new Uint8Array(0) : packBools(this.sources[offset2]);
   }
   readOffsets(_type, { offset: offset2 } = this.nextBufferRange()) {
-    return toArrayBufferView(Uint8Array, toArrayBufferView(Int32Array, this.sources[offset2]));
+    return toArrayBufferView(Uint8Array, toArrayBufferView(_type.OffsetArrayType, this.sources[offset2]));
   }
   readTypeIds(type2, { offset: offset2 } = this.nextBufferRange()) {
     return toArrayBufferView(Uint8Array, toArrayBufferView(type2.ArrayType, this.sources[offset2]));
@@ -37687,11 +37937,11 @@ var JSONVectorLoader = class extends VectorLoader {
       return toArrayBufferView(Uint8Array, Int642.convertArray(sources[offset2]));
     } else if (DataType.isDecimal(type2)) {
       return toArrayBufferView(Uint8Array, Int128.convertArray(sources[offset2]));
-    } else if (DataType.isBinary(type2) || DataType.isFixedSizeBinary(type2)) {
+    } else if (DataType.isBinary(type2) || DataType.isLargeBinary(type2) || DataType.isFixedSizeBinary(type2)) {
       return binaryDataFromJSON(sources[offset2]);
     } else if (DataType.isBool(type2)) {
       return packBools(sources[offset2]);
-    } else if (DataType.isUtf8(type2)) {
+    } else if (DataType.isUtf8(type2) || DataType.isLargeUtf8(type2)) {
       return encodeUtf8(sources[offset2].join(""));
     }
     return toArrayBufferView(Uint8Array, toArrayBufferView(type2.ArrayType, sources[offset2].map((x4) => +x4)));
@@ -37706,11 +37956,11 @@ function binaryDataFromJSON(values2) {
   return data;
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/binary.mjs
+// node_modules/apache-arrow/builder/binary.mjs
 var BinaryBuilder = class extends VariableWidthBuilder {
   constructor(opts) {
     super(opts);
-    this._values = new BufferBuilder(new Uint8Array(0));
+    this._values = new BufferBuilder(Uint8Array);
   }
   get byteLength() {
     let size = this._pendingLength + this.length * 4;
@@ -37739,8 +37989,41 @@ var BinaryBuilder = class extends VariableWidthBuilder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/bool.mjs
-var BoolBuilder = class extends Builder {
+// node_modules/apache-arrow/builder/largebinary.mjs
+var LargeBinaryBuilder = class extends VariableWidthBuilder {
+  constructor(opts) {
+    super(opts);
+    this._values = new BufferBuilder(Uint8Array);
+  }
+  get byteLength() {
+    let size = this._pendingLength + this.length * 4;
+    this._offsets && (size += this._offsets.byteLength);
+    this._values && (size += this._values.byteLength);
+    this._nulls && (size += this._nulls.byteLength);
+    return size;
+  }
+  setValue(index3, value) {
+    return super.setValue(index3, toUint8Array(value));
+  }
+  _flushPending(pending, pendingLength) {
+    const offsets = this._offsets;
+    const data = this._values.reserve(pendingLength).buffer;
+    let offset2 = 0;
+    for (const [index3, value] of pending) {
+      if (value === void 0) {
+        offsets.set(index3, BigInt(0));
+      } else {
+        const length4 = value.length;
+        data.set(value, offset2);
+        offsets.set(index3, BigInt(length4));
+        offset2 += length4;
+      }
+    }
+  }
+};
+
+// node_modules/apache-arrow/builder/bool.mjs
+var BoolBuilder = class extends Builder2 {
   constructor(options) {
     super(options);
     this._values = new BitmapBufferBuilder();
@@ -37750,7 +38033,7 @@ var BoolBuilder = class extends Builder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/date.mjs
+// node_modules/apache-arrow/builder/date.mjs
 var DateBuilder = class extends FixedWidthBuilder {
 };
 DateBuilder.prototype._setValue = setDate;
@@ -37761,13 +38044,13 @@ var DateMillisecondBuilder = class extends DateBuilder {
 };
 DateMillisecondBuilder.prototype._setValue = setDateMillisecond;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/decimal.mjs
+// node_modules/apache-arrow/builder/decimal.mjs
 var DecimalBuilder = class extends FixedWidthBuilder {
 };
 DecimalBuilder.prototype._setValue = setDecimal;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/dictionary.mjs
-var DictionaryBuilder = class extends Builder {
+// node_modules/apache-arrow/builder/dictionary.mjs
+var DictionaryBuilder = class extends Builder2 {
   constructor({ "type": type2, "nullValues": nulls, "dictionaryHashFunction": hashFn }) {
     super({ type: new Dictionary(type2.dictionary, type2.indices, type2.id, type2.isOrdered) });
     this._nulls = null;
@@ -37843,13 +38126,13 @@ var DictionaryBuilder = class extends Builder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/fixedsizebinary.mjs
+// node_modules/apache-arrow/builder/fixedsizebinary.mjs
 var FixedSizeBinaryBuilder = class extends FixedWidthBuilder {
 };
 FixedSizeBinaryBuilder.prototype._setValue = setFixedSizeBinary;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/fixedsizelist.mjs
-var FixedSizeListBuilder = class extends Builder {
+// node_modules/apache-arrow/builder/fixedsizelist.mjs
+var FixedSizeListBuilder = class extends Builder2 {
   setValue(index3, value) {
     const [child] = this.children;
     const start2 = index3 * this.stride;
@@ -37862,12 +38145,12 @@ var FixedSizeListBuilder = class extends Builder {
       throw new Error("FixedSizeListBuilder can only have one child.");
     }
     const childIndex = this.children.push(child);
-    this.type = new FixedSizeList(this.type.listSize, new Field2(name, child.type, true));
+    this.type = new FixedSizeList2(this.type.listSize, new Field2(name, child.type, true));
     return childIndex;
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/float.mjs
+// node_modules/apache-arrow/builder/float.mjs
 var FloatBuilder = class extends FixedWidthBuilder {
   setValue(index3, value) {
     this._values.set(index3, value);
@@ -37883,7 +38166,7 @@ var Float32Builder = class extends FloatBuilder {
 var Float64Builder = class extends FloatBuilder {
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/interval.mjs
+// node_modules/apache-arrow/builder/interval.mjs
 var IntervalBuilder = class extends FixedWidthBuilder {
 };
 IntervalBuilder.prototype._setValue = setIntervalValue;
@@ -37894,7 +38177,7 @@ var IntervalYearMonthBuilder = class extends IntervalBuilder {
 };
 IntervalYearMonthBuilder.prototype._setValue = setIntervalYearMonth;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/duration.mjs
+// node_modules/apache-arrow/builder/duration.mjs
 var DurationBuilder = class extends FixedWidthBuilder {
 };
 DurationBuilder.prototype._setValue = setDuration;
@@ -37911,7 +38194,7 @@ var DurationNanosecondBuilder = class extends DurationBuilder {
 };
 DurationNanosecondBuilder.prototype._setValue = setDurationNanosecond;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/int.mjs
+// node_modules/apache-arrow/builder/int.mjs
 var IntBuilder = class extends FixedWidthBuilder {
   setValue(index3, value) {
     this._values.set(index3, value);
@@ -37934,18 +38217,18 @@ var Uint32Builder = class extends IntBuilder {
 var Uint64Builder = class extends IntBuilder {
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/list.mjs
+// node_modules/apache-arrow/builder/list.mjs
 var ListBuilder = class extends VariableWidthBuilder {
   constructor(opts) {
     super(opts);
-    this._offsets = new OffsetsBufferBuilder();
+    this._offsets = new OffsetsBufferBuilder(opts.type);
   }
   addChild(child, name = "0") {
     if (this.numChildren > 0) {
       throw new Error("ListBuilder can only have one child.");
     }
     this.children[this.numChildren] = child;
-    this.type = new List(new Field2(name, child.type, true));
+    this.type = new List2(new Field2(name, child.type, true));
     return this.numChildren - 1;
   }
   _flushPending(pending) {
@@ -37966,7 +38249,7 @@ var ListBuilder = class extends VariableWidthBuilder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/map.mjs
+// node_modules/apache-arrow/builder/map.mjs
 var MapBuilder = class extends VariableWidthBuilder {
   set(index3, value) {
     return super.set(index3, value);
@@ -38005,8 +38288,8 @@ var MapBuilder = class extends VariableWidthBuilder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/null.mjs
-var NullBuilder = class extends Builder {
+// node_modules/apache-arrow/builder/null.mjs
+var NullBuilder = class extends Builder2 {
   // @ts-ignore
   setValue(index3, value) {
   }
@@ -38016,8 +38299,8 @@ var NullBuilder = class extends Builder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/struct.mjs
-var StructBuilder = class extends Builder {
+// node_modules/apache-arrow/builder/struct.mjs
+var StructBuilder = class extends Builder2 {
   setValue(index3, value) {
     const { children: children2, type: type2 } = this;
     switch (Array.isArray(value) || value.constructor) {
@@ -38043,7 +38326,7 @@ var StructBuilder = class extends Builder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/timestamp.mjs
+// node_modules/apache-arrow/builder/timestamp.mjs
 var TimestampBuilder = class extends FixedWidthBuilder {
 };
 TimestampBuilder.prototype._setValue = setTimestamp;
@@ -38060,7 +38343,7 @@ var TimestampNanosecondBuilder = class extends TimestampBuilder {
 };
 TimestampNanosecondBuilder.prototype._setValue = setTimestampNanosecond;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/time.mjs
+// node_modules/apache-arrow/builder/time.mjs
 var TimeBuilder = class extends FixedWidthBuilder {
 };
 TimeBuilder.prototype._setValue = setTime;
@@ -38077,11 +38360,11 @@ var TimeNanosecondBuilder = class extends TimeBuilder {
 };
 TimeNanosecondBuilder.prototype._setValue = setTimeNanosecond;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/union.mjs
-var UnionBuilder = class extends Builder {
+// node_modules/apache-arrow/builder/union.mjs
+var UnionBuilder = class extends Builder2 {
   constructor(options) {
     super(options);
-    this._typeIds = new DataBufferBuilder(new Int8Array(0), 1);
+    this._typeIds = new DataBufferBuilder(Int8Array, 0, 1);
     if (typeof options["valueToChildTypeId"] === "function") {
       this._valueToChildTypeId = options["valueToChildTypeId"];
     }
@@ -38123,7 +38406,7 @@ var SparseUnionBuilder = class extends UnionBuilder {
 var DenseUnionBuilder = class extends UnionBuilder {
   constructor(options) {
     super(options);
-    this._offsets = new DataBufferBuilder(new Int32Array(0));
+    this._offsets = new DataBufferBuilder(Int32Array);
   }
   /** @ignore */
   setValue(index3, value, childTypeId) {
@@ -38134,11 +38417,11 @@ var DenseUnionBuilder = class extends UnionBuilder {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/builder/utf8.mjs
+// node_modules/apache-arrow/builder/utf8.mjs
 var Utf8Builder = class extends VariableWidthBuilder {
   constructor(opts) {
     super(opts);
-    this._values = new BufferBuilder(new Uint8Array(0));
+    this._values = new BufferBuilder(Uint8Array);
   }
   get byteLength() {
     let size = this._pendingLength + this.length * 4;
@@ -38156,7 +38439,29 @@ var Utf8Builder = class extends VariableWidthBuilder {
 };
 Utf8Builder.prototype._flushPending = BinaryBuilder.prototype._flushPending;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/builderctor.mjs
+// node_modules/apache-arrow/builder/largeutf8.mjs
+var LargeUtf8Builder = class extends VariableWidthBuilder {
+  constructor(opts) {
+    super(opts);
+    this._values = new BufferBuilder(Uint8Array);
+  }
+  get byteLength() {
+    let size = this._pendingLength + this.length * 4;
+    this._offsets && (size += this._offsets.byteLength);
+    this._values && (size += this._values.byteLength);
+    this._nulls && (size += this._nulls.byteLength);
+    return size;
+  }
+  setValue(index3, value) {
+    return super.setValue(index3, encodeUtf8(value));
+  }
+  // @ts-ignore
+  _flushPending(pending, pendingLength) {
+  }
+};
+LargeUtf8Builder.prototype._flushPending = LargeBinaryBuilder.prototype._flushPending;
+
+// node_modules/apache-arrow/visitor/builderctor.mjs
 var GetBuilderCtor = class extends Visitor {
   visitNull() {
     return NullBuilder;
@@ -38206,8 +38511,14 @@ var GetBuilderCtor = class extends Visitor {
   visitUtf8() {
     return Utf8Builder;
   }
+  visitLargeUtf8() {
+    return LargeUtf8Builder;
+  }
   visitBinary() {
     return BinaryBuilder;
+  }
+  visitLargeBinary() {
+    return LargeBinaryBuilder;
   }
   visitFixedSizeBinary() {
     return FixedSizeBinaryBuilder;
@@ -38293,7 +38604,7 @@ var GetBuilderCtor = class extends Visitor {
   visitDurationMicrosecond() {
     return DurationMicrosecondBuilder;
   }
-  visistDurationNanosecond() {
+  visitDurationNanosecond() {
     return DurationNanosecondBuilder;
   }
   visitFixedSizeList() {
@@ -38303,9 +38614,9 @@ var GetBuilderCtor = class extends Visitor {
     return MapBuilder;
   }
 };
-var instance6 = new GetBuilderCtor();
+var instance5 = new GetBuilderCtor();
 
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/typecomparator.mjs
+// node_modules/apache-arrow/visitor/typecomparator.mjs
 var TypeComparator = class extends Visitor {
   compareSchemas(schema, other) {
     return schema === other || other instanceof schema.constructor && this.compareManyFields(schema.fields, other.fields);
@@ -38342,16 +38653,16 @@ function compareTime(type2, other) {
   return type2 === other || compareConstructor(type2, other) && type2.unit === other.unit && type2.bitWidth === other.bitWidth;
 }
 function compareList(type2, other) {
-  return type2 === other || compareConstructor(type2, other) && type2.children.length === other.children.length && instance7.compareManyFields(type2.children, other.children);
+  return type2 === other || compareConstructor(type2, other) && type2.children.length === other.children.length && instance6.compareManyFields(type2.children, other.children);
 }
 function compareStruct(type2, other) {
-  return type2 === other || compareConstructor(type2, other) && type2.children.length === other.children.length && instance7.compareManyFields(type2.children, other.children);
+  return type2 === other || compareConstructor(type2, other) && type2.children.length === other.children.length && instance6.compareManyFields(type2.children, other.children);
 }
 function compareUnion(type2, other) {
-  return type2 === other || compareConstructor(type2, other) && type2.mode === other.mode && type2.typeIds.every((x4, i) => x4 === other.typeIds[i]) && instance7.compareManyFields(type2.children, other.children);
+  return type2 === other || compareConstructor(type2, other) && type2.mode === other.mode && type2.typeIds.every((x4, i) => x4 === other.typeIds[i]) && instance6.compareManyFields(type2.children, other.children);
 }
 function compareDictionary(type2, other) {
-  return type2 === other || compareConstructor(type2, other) && type2.id === other.id && type2.isOrdered === other.isOrdered && instance7.visit(type2.indices, other.indices) && instance7.visit(type2.dictionary, other.dictionary);
+  return type2 === other || compareConstructor(type2, other) && type2.id === other.id && type2.isOrdered === other.isOrdered && instance6.visit(type2.indices, other.indices) && instance6.visit(type2.dictionary, other.dictionary);
 }
 function compareInterval(type2, other) {
   return type2 === other || compareConstructor(type2, other) && type2.unit === other.unit;
@@ -38360,10 +38671,10 @@ function compareDuration(type2, other) {
   return type2 === other || compareConstructor(type2, other) && type2.unit === other.unit;
 }
 function compareFixedSizeList(type2, other) {
-  return type2 === other || compareConstructor(type2, other) && type2.listSize === other.listSize && type2.children.length === other.children.length && instance7.compareManyFields(type2.children, other.children);
+  return type2 === other || compareConstructor(type2, other) && type2.listSize === other.listSize && type2.children.length === other.children.length && instance6.compareManyFields(type2.children, other.children);
 }
 function compareMap(type2, other) {
-  return type2 === other || compareConstructor(type2, other) && type2.keysSorted === other.keysSorted && type2.children.length === other.children.length && instance7.compareManyFields(type2.children, other.children);
+  return type2 === other || compareConstructor(type2, other) && type2.keysSorted === other.keysSorted && type2.children.length === other.children.length && instance6.compareManyFields(type2.children, other.children);
 }
 TypeComparator.prototype.visitNull = compareAny;
 TypeComparator.prototype.visitBool = compareAny;
@@ -38381,7 +38692,9 @@ TypeComparator.prototype.visitFloat16 = compareFloat;
 TypeComparator.prototype.visitFloat32 = compareFloat;
 TypeComparator.prototype.visitFloat64 = compareFloat;
 TypeComparator.prototype.visitUtf8 = compareAny;
+TypeComparator.prototype.visitLargeUtf8 = compareAny;
 TypeComparator.prototype.visitBinary = compareAny;
+TypeComparator.prototype.visitLargeBinary = compareAny;
 TypeComparator.prototype.visitFixedSizeBinary = compareFixedSizeBinary;
 TypeComparator.prototype.visitDate = compareDate;
 TypeComparator.prototype.visitDateDay = compareDate;
@@ -38413,21 +38726,21 @@ TypeComparator.prototype.visitDurationMicrosecond = compareDuration;
 TypeComparator.prototype.visitDurationNanosecond = compareDuration;
 TypeComparator.prototype.visitFixedSizeList = compareFixedSizeList;
 TypeComparator.prototype.visitMap = compareMap;
-var instance7 = new TypeComparator();
+var instance6 = new TypeComparator();
 function compareSchemas(schema, other) {
-  return instance7.compareSchemas(schema, other);
+  return instance6.compareSchemas(schema, other);
 }
 function compareFields(field2, other) {
-  return instance7.compareFields(field2, other);
+  return instance6.compareFields(field2, other);
 }
 function compareTypes(type2, other) {
-  return instance7.visit(type2, other);
+  return instance6.visit(type2, other);
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/factories.mjs
+// node_modules/apache-arrow/factories.mjs
 function makeBuilder(options) {
   const type2 = options.type;
-  const builder = new (instance6.getVisitFn(type2)())(options);
+  const builder = new (instance5.getVisitFn(type2)())(options);
   if (type2.children && type2.children.length > 0) {
     const children2 = options["children"] || [];
     const defaultOptions = { "nullValues": options["nullValues"] };
@@ -38441,7 +38754,7 @@ function makeBuilder(options) {
   return builder;
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/util/recordbatch.mjs
+// node_modules/apache-arrow/util/recordbatch.mjs
 function distributeVectorsIntoRecordBatches(schema, vecs) {
   return uniformlyDistributeChunksAcrossRecordBatches(schema, vecs.map((v2) => v2.data.concat()));
 }
@@ -38472,7 +38785,7 @@ function uniformlyDistributeChunksAcrossRecordBatches(schema, cols) {
   }
   return [
     schema = schema.assign(fields),
-    batches.map((data) => new RecordBatch(schema, data))
+    batches.map((data) => new RecordBatch2(schema, data))
   ];
 }
 function distributeChildren(fields, batchLength, children2, columns, memo2) {
@@ -38502,7 +38815,7 @@ function distributeChildren(fields, batchLength, children2, columns, memo2) {
   return children2;
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/table.mjs
+// node_modules/apache-arrow/table.mjs
 var _a3;
 var Table = class {
   constructor(...args) {
@@ -38523,13 +38836,13 @@ var Table = class {
     }
     const unwrap = (x4) => {
       if (x4) {
-        if (x4 instanceof RecordBatch) {
+        if (x4 instanceof RecordBatch2) {
           return [x4];
         } else if (x4 instanceof Table) {
           return x4.batches;
         } else if (x4 instanceof Data) {
           if (x4.type instanceof Struct) {
-            return [new RecordBatch(new Schema2(x4.type.children), x4)];
+            return [new RecordBatch2(new Schema2(x4.type.children), x4)];
           }
         } else if (Array.isArray(x4)) {
           return x4.flatMap((v2) => unwrap(v2));
@@ -38538,9 +38851,9 @@ var Table = class {
         } else if (typeof x4 === "object") {
           const keys = Object.keys(x4);
           const vecs = keys.map((k2) => new Vector2([x4[k2]]));
-          const schema2 = new Schema2(keys.map((k2, i) => new Field2(String(k2), vecs[i].type)));
-          const [, batches2] = distributeVectorsIntoRecordBatches(schema2, vecs);
-          return batches2.length === 0 ? [new RecordBatch(x4)] : batches2;
+          const batchSchema = schema !== null && schema !== void 0 ? schema : new Schema2(keys.map((k2, i) => new Field2(String(k2), vecs[i].type, vecs[i].nullable)));
+          const [, batches2] = distributeVectorsIntoRecordBatches(batchSchema, vecs);
+          return batches2.length === 0 ? [new RecordBatch2(x4)] : batches2;
         }
       }
       return [];
@@ -38551,7 +38864,7 @@ var Table = class {
       throw new TypeError("Table constructor expects a [Schema, RecordBatch[]] pair.");
     }
     for (const batch of batches) {
-      if (!(batch instanceof RecordBatch)) {
+      if (!(batch instanceof RecordBatch2)) {
         throw new TypeError("Table constructor expects a [Schema, RecordBatch[]] pair.");
       }
       if (!compareSchemas(schema, batch.schema)) {
@@ -38628,14 +38941,6 @@ var Table = class {
     return -1;
   }
   /**
-   * Get the size in bytes of an element by index.
-   * @param index The index at which to get the byteLength.
-   */
-  // @ts-ignore
-  getByteLength(index3) {
-    return 0;
-  }
-  /**
    * Iterator for rows in this Table.
    */
   [Symbol.iterator]() {
@@ -38670,7 +38975,7 @@ var Table = class {
   concat(...others) {
     const schema = this.schema;
     const data = this.data.concat(others.flatMap(({ data: data2 }) => data2));
-    return new Table(schema, data.map((data2) => new RecordBatch(schema, data2)));
+    return new Table(schema, data.map((data2) => new RecordBatch2(schema, data2)));
   }
   /**
    * Return a zero-copy sub-section of this Table.
@@ -38682,7 +38987,7 @@ var Table = class {
     const schema = this.schema;
     [begin, end] = clampRange({ length: this.numRows }, begin, end);
     const data = sliceChunks(this.data, this._offsets, begin, end);
-    return new Table(schema, data.map((chunk) => new RecordBatch(schema, chunk)));
+    return new Table(schema, data.map((chunk) => new RecordBatch2(schema, chunk)));
   }
   /**
    * Returns a child Vector by name, or null if this Vector has no child with the given name.
@@ -38724,7 +39029,7 @@ var Table = class {
     let batches = [...this.batches];
     if (index3 > -1 && index3 < this.numCols) {
       if (!child) {
-        child = new Vector2([makeData({ type: new Null(), length: this.numRows })]);
+        child = new Vector2([makeData({ type: new Null2(), length: this.numRows })]);
       }
       const fields = schema.fields.slice();
       const field2 = fields[index3].clone({ type: child.type });
@@ -38779,16 +39084,15 @@ Table[_a3] = ((proto) => {
   proto._nullCount = -1;
   proto[Symbol.isConcatSpreadable] = true;
   proto["isValid"] = wrapChunkedCall1(isChunkedValid);
-  proto["get"] = wrapChunkedCall1(instance2.getVisitFn(Type.Struct));
-  proto["set"] = wrapChunkedCall2(instance.getVisitFn(Type.Struct));
-  proto["indexOf"] = wrapChunkedIndexOf(instance3.getVisitFn(Type.Struct));
-  proto["getByteLength"] = wrapChunkedCall1(instance5.getVisitFn(Type.Struct));
+  proto["get"] = wrapChunkedCall1(instance2.getVisitFn(Type2.Struct));
+  proto["set"] = wrapChunkedCall2(instance.getVisitFn(Type2.Struct));
+  proto["indexOf"] = wrapChunkedIndexOf(instance3.getVisitFn(Type2.Struct));
   return "Table";
 })(Table.prototype);
 
-// packages/pyobsplot-js/node_modules/apache-arrow/recordbatch.mjs
+// node_modules/apache-arrow/recordbatch.mjs
 var _a4;
-var RecordBatch = class {
+var RecordBatch2 = class {
   constructor(...args) {
     switch (args.length) {
       case 2: {
@@ -38883,13 +39187,6 @@ var RecordBatch = class {
     return instance3.visit(this.data, element, offset2);
   }
   /**
-   * Get the size (in bytes) of a row by index.
-   * @param index The row index for which to compute the byteLength.
-   */
-  getByteLength(index3) {
-    return instance5.visit(this.data, index3);
-  }
-  /**
    * Iterator for rows in this RecordBatch.
    */
   [Symbol.iterator]() {
@@ -38916,7 +39213,7 @@ var RecordBatch = class {
    */
   slice(begin, end) {
     const [slice6] = new Vector2([this.data]).slice(begin, end).data;
-    return new RecordBatch(this.schema, slice6);
+    return new RecordBatch2(this.schema, slice6);
   }
   /**
    * Returns a child Vector by name, or null if this Vector has no child with the given name.
@@ -38950,7 +39247,7 @@ var RecordBatch = class {
     let data = this.data;
     if (index3 > -1 && index3 < this.numCols) {
       if (!child) {
-        child = new Vector2([makeData({ type: new Null(), length: this.numRows })]);
+        child = new Vector2([makeData({ type: new Null2(), length: this.numRows })]);
       }
       const fields = schema.fields.slice();
       const children2 = data.children.slice();
@@ -38959,7 +39256,7 @@ var RecordBatch = class {
       schema = new Schema2(fields, new Map(this.schema.metadata));
       data = makeData({ type: new Struct(fields), children: children2 });
     }
-    return new RecordBatch(schema, data);
+    return new RecordBatch2(schema, data);
   }
   /**
    * Construct a new RecordBatch containing only specified columns.
@@ -38977,7 +39274,7 @@ var RecordBatch = class {
         children2[index3] = this.data.children[index3];
       }
     }
-    return new RecordBatch(schema, makeData({ type: type2, length: this.numRows, children: children2 }));
+    return new RecordBatch2(schema, makeData({ type: type2, length: this.numRows, children: children2 }));
   }
   /**
    * Construct a new RecordBatch containing only columns at the specified indices.
@@ -38989,15 +39286,15 @@ var RecordBatch = class {
     const schema = this.schema.selectAt(columnIndices);
     const children2 = columnIndices.map((i) => this.data.children[i]).filter(Boolean);
     const subset2 = makeData({ type: new Struct(schema.fields), length: this.numRows, children: children2 });
-    return new RecordBatch(schema, subset2);
+    return new RecordBatch2(schema, subset2);
   }
 };
 _a4 = Symbol.toStringTag;
-RecordBatch[_a4] = ((proto) => {
+RecordBatch2[_a4] = ((proto) => {
   proto._nullCount = -1;
   proto[Symbol.isConcatSpreadable] = true;
   return "RecordBatch";
-})(RecordBatch.prototype);
+})(RecordBatch2.prototype);
 function ensureSameLengthData(schema, chunks, maxLength = chunks.reduce((max5, col) => Math.max(max5, col.length), 0)) {
   var _b2;
   const fields = [...schema.fields];
@@ -39043,7 +39340,7 @@ function collectDictionaries(fields, children2, dictionaries = /* @__PURE__ */ n
   }
   return dictionaries;
 }
-var _InternalEmptyPlaceholderRecordBatch = class extends RecordBatch {
+var _InternalEmptyPlaceholderRecordBatch = class extends RecordBatch2 {
   constructor(schema) {
     const children2 = schema.fields.map((f) => makeData({ type: f.type }));
     const data = makeData({ type: new Struct(schema.fields), nullCount: 0, children: children2 });
@@ -39051,301 +39348,7 @@ var _InternalEmptyPlaceholderRecordBatch = class extends RecordBatch {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/body-compression-method.mjs
-var BodyCompressionMethod;
-(function(BodyCompressionMethod2) {
-  BodyCompressionMethod2[BodyCompressionMethod2["BUFFER"] = 0] = "BUFFER";
-})(BodyCompressionMethod || (BodyCompressionMethod = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/compression-type.mjs
-var CompressionType;
-(function(CompressionType2) {
-  CompressionType2[CompressionType2["LZ4_FRAME"] = 0] = "LZ4_FRAME";
-  CompressionType2[CompressionType2["ZSTD"] = 1] = "ZSTD";
-})(CompressionType || (CompressionType = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/body-compression.mjs
-var BodyCompression = class {
-  constructor() {
-    this.bb = null;
-    this.bb_pos = 0;
-  }
-  __init(i, bb2) {
-    this.bb_pos = i;
-    this.bb = bb2;
-    return this;
-  }
-  static getRootAsBodyCompression(bb2, obj) {
-    return (obj || new BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
-  }
-  static getSizePrefixedRootAsBodyCompression(bb2, obj) {
-    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
-  }
-  /**
-   * Compressor library.
-   * For LZ4_FRAME, each compressed buffer must consist of a single frame.
-   */
-  codec() {
-    const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt8(this.bb_pos + offset2) : CompressionType.LZ4_FRAME;
-  }
-  /**
-   * Indicates the way the record batch body was compressed
-   */
-  method() {
-    const offset2 = this.bb.__offset(this.bb_pos, 6);
-    return offset2 ? this.bb.readInt8(this.bb_pos + offset2) : BodyCompressionMethod.BUFFER;
-  }
-  static startBodyCompression(builder) {
-    builder.startObject(2);
-  }
-  static addCodec(builder, codec) {
-    builder.addFieldInt8(0, codec, CompressionType.LZ4_FRAME);
-  }
-  static addMethod(builder, method) {
-    builder.addFieldInt8(1, method, BodyCompressionMethod.BUFFER);
-  }
-  static endBodyCompression(builder) {
-    const offset2 = builder.endObject();
-    return offset2;
-  }
-  static createBodyCompression(builder, codec, method) {
-    BodyCompression.startBodyCompression(builder);
-    BodyCompression.addCodec(builder, codec);
-    BodyCompression.addMethod(builder, method);
-    return BodyCompression.endBodyCompression(builder);
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/buffer.mjs
-var Buffer2 = class {
-  constructor() {
-    this.bb = null;
-    this.bb_pos = 0;
-  }
-  __init(i, bb2) {
-    this.bb_pos = i;
-    this.bb = bb2;
-    return this;
-  }
-  /**
-   * The relative offset into the shared memory page where the bytes for this
-   * buffer starts
-   */
-  offset() {
-    return this.bb.readInt64(this.bb_pos);
-  }
-  /**
-   * The absolute length (in bytes) of the memory buffer. The memory is found
-   * from offset (inclusive) to offset + length (non-inclusive). When building
-   * messages using the encapsulated IPC message, padding bytes may be written
-   * after a buffer, but such padding bytes do not need to be accounted for in
-   * the size here.
-   */
-  length() {
-    return this.bb.readInt64(this.bb_pos + 8);
-  }
-  static sizeOf() {
-    return 16;
-  }
-  static createBuffer(builder, offset2, length4) {
-    builder.prep(8, 16);
-    builder.writeInt64(BigInt(length4 !== null && length4 !== void 0 ? length4 : 0));
-    builder.writeInt64(BigInt(offset2 !== null && offset2 !== void 0 ? offset2 : 0));
-    return builder.offset();
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/field-node.mjs
-var FieldNode = class {
-  constructor() {
-    this.bb = null;
-    this.bb_pos = 0;
-  }
-  __init(i, bb2) {
-    this.bb_pos = i;
-    this.bb = bb2;
-    return this;
-  }
-  /**
-   * The number of value slots in the Arrow array at this level of a nested
-   * tree
-   */
-  length() {
-    return this.bb.readInt64(this.bb_pos);
-  }
-  /**
-   * The number of observed nulls. Fields with null_count == 0 may choose not
-   * to write their physical validity bitmap out as a materialized buffer,
-   * instead setting the length of the bitmap buffer to 0.
-   */
-  nullCount() {
-    return this.bb.readInt64(this.bb_pos + 8);
-  }
-  static sizeOf() {
-    return 16;
-  }
-  static createFieldNode(builder, length4, null_count) {
-    builder.prep(8, 16);
-    builder.writeInt64(BigInt(null_count !== null && null_count !== void 0 ? null_count : 0));
-    builder.writeInt64(BigInt(length4 !== null && length4 !== void 0 ? length4 : 0));
-    return builder.offset();
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/record-batch.mjs
-var RecordBatch2 = class {
-  constructor() {
-    this.bb = null;
-    this.bb_pos = 0;
-  }
-  __init(i, bb2) {
-    this.bb_pos = i;
-    this.bb = bb2;
-    return this;
-  }
-  static getRootAsRecordBatch(bb2, obj) {
-    return (obj || new RecordBatch2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
-  }
-  static getSizePrefixedRootAsRecordBatch(bb2, obj) {
-    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new RecordBatch2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
-  }
-  /**
-   * number of records / rows. The arrays in the batch should all have this
-   * length
-   */
-  length() {
-    const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt64(this.bb_pos + offset2) : BigInt("0");
-  }
-  /**
-   * Nodes correspond to the pre-ordered flattened logical schema
-   */
-  nodes(index3, obj) {
-    const offset2 = this.bb.__offset(this.bb_pos, 6);
-    return offset2 ? (obj || new FieldNode()).__init(this.bb.__vector(this.bb_pos + offset2) + index3 * 16, this.bb) : null;
-  }
-  nodesLength() {
-    const offset2 = this.bb.__offset(this.bb_pos, 6);
-    return offset2 ? this.bb.__vector_len(this.bb_pos + offset2) : 0;
-  }
-  /**
-   * Buffers correspond to the pre-ordered flattened buffer tree
-   *
-   * The number of buffers appended to this list depends on the schema. For
-   * example, most primitive arrays will have 2 buffers, 1 for the validity
-   * bitmap and 1 for the values. For struct arrays, there will only be a
-   * single buffer for the validity (nulls) bitmap
-   */
-  buffers(index3, obj) {
-    const offset2 = this.bb.__offset(this.bb_pos, 8);
-    return offset2 ? (obj || new Buffer2()).__init(this.bb.__vector(this.bb_pos + offset2) + index3 * 16, this.bb) : null;
-  }
-  buffersLength() {
-    const offset2 = this.bb.__offset(this.bb_pos, 8);
-    return offset2 ? this.bb.__vector_len(this.bb_pos + offset2) : 0;
-  }
-  /**
-   * Optional compression of the message body
-   */
-  compression(obj) {
-    const offset2 = this.bb.__offset(this.bb_pos, 10);
-    return offset2 ? (obj || new BodyCompression()).__init(this.bb.__indirect(this.bb_pos + offset2), this.bb) : null;
-  }
-  static startRecordBatch(builder) {
-    builder.startObject(4);
-  }
-  static addLength(builder, length4) {
-    builder.addFieldInt64(0, length4, BigInt("0"));
-  }
-  static addNodes(builder, nodesOffset) {
-    builder.addFieldOffset(1, nodesOffset, 0);
-  }
-  static startNodesVector(builder, numElems) {
-    builder.startVector(16, numElems, 8);
-  }
-  static addBuffers(builder, buffersOffset) {
-    builder.addFieldOffset(2, buffersOffset, 0);
-  }
-  static startBuffersVector(builder, numElems) {
-    builder.startVector(16, numElems, 8);
-  }
-  static addCompression(builder, compressionOffset) {
-    builder.addFieldOffset(3, compressionOffset, 0);
-  }
-  static endRecordBatch(builder) {
-    const offset2 = builder.endObject();
-    return offset2;
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/dictionary-batch.mjs
-var DictionaryBatch = class {
-  constructor() {
-    this.bb = null;
-    this.bb_pos = 0;
-  }
-  __init(i, bb2) {
-    this.bb_pos = i;
-    this.bb = bb2;
-    return this;
-  }
-  static getRootAsDictionaryBatch(bb2, obj) {
-    return (obj || new DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
-  }
-  static getSizePrefixedRootAsDictionaryBatch(bb2, obj) {
-    bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
-  }
-  id() {
-    const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt64(this.bb_pos + offset2) : BigInt("0");
-  }
-  data(obj) {
-    const offset2 = this.bb.__offset(this.bb_pos, 6);
-    return offset2 ? (obj || new RecordBatch2()).__init(this.bb.__indirect(this.bb_pos + offset2), this.bb) : null;
-  }
-  /**
-   * If isDelta is true the values in the dictionary are to be appended to a
-   * dictionary with the indicated id. If isDelta is false this dictionary
-   * should replace the existing dictionary.
-   */
-  isDelta() {
-    const offset2 = this.bb.__offset(this.bb_pos, 8);
-    return offset2 ? !!this.bb.readInt8(this.bb_pos + offset2) : false;
-  }
-  static startDictionaryBatch(builder) {
-    builder.startObject(3);
-  }
-  static addId(builder, id2) {
-    builder.addFieldInt64(0, id2, BigInt("0"));
-  }
-  static addData(builder, dataOffset) {
-    builder.addFieldOffset(1, dataOffset, 0);
-  }
-  static addIsDelta(builder, isDelta) {
-    builder.addFieldInt8(2, +isDelta, 0);
-  }
-  static endDictionaryBatch(builder) {
-    const offset2 = builder.endObject();
-    return offset2;
-  }
-};
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/message-header.mjs
-var MessageHeader2;
-(function(MessageHeader3) {
-  MessageHeader3[MessageHeader3["NONE"] = 0] = "NONE";
-  MessageHeader3[MessageHeader3["Schema"] = 1] = "Schema";
-  MessageHeader3[MessageHeader3["DictionaryBatch"] = 2] = "DictionaryBatch";
-  MessageHeader3[MessageHeader3["RecordBatch"] = 3] = "RecordBatch";
-  MessageHeader3[MessageHeader3["Tensor"] = 4] = "Tensor";
-  MessageHeader3[MessageHeader3["SparseTensor"] = 5] = "SparseTensor";
-})(MessageHeader2 || (MessageHeader2 = {}));
-
-// packages/pyobsplot-js/node_modules/apache-arrow/fb/message.mjs
+// node_modules/apache-arrow/fb/message.mjs
 var Message = class {
   constructor() {
     this.bb = null;
@@ -39365,11 +39368,11 @@ var Message = class {
   }
   version() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
-    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : MetadataVersion2.V1;
+    return offset2 ? this.bb.readInt16(this.bb_pos + offset2) : MetadataVersion.V1;
   }
   headerType() {
     const offset2 = this.bb.__offset(this.bb_pos, 6);
-    return offset2 ? this.bb.readUint8(this.bb_pos + offset2) : MessageHeader2.NONE;
+    return offset2 ? this.bb.readUint8(this.bb_pos + offset2) : MessageHeader.NONE;
   }
   header(obj) {
     const offset2 = this.bb.__offset(this.bb_pos, 8);
@@ -39391,10 +39394,10 @@ var Message = class {
     builder.startObject(5);
   }
   static addVersion(builder, version) {
-    builder.addFieldInt16(0, version, MetadataVersion2.V1);
+    builder.addFieldInt16(0, version, MetadataVersion.V1);
   }
   static addHeaderType(builder, headerType) {
-    builder.addFieldInt8(1, headerType, MessageHeader2.NONE);
+    builder.addFieldInt8(1, headerType, MessageHeader.NONE);
   }
   static addHeader(builder, headerOffset) {
     builder.addFieldOffset(2, headerOffset, 0);
@@ -39436,14 +39439,14 @@ var Message = class {
   }
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/typeassembler.mjs
+// node_modules/apache-arrow/visitor/typeassembler.mjs
 var TypeAssembler = class extends Visitor {
   visit(node, builder) {
     return node == null || builder == null ? void 0 : super.visit(node, builder);
   }
   visitNull(_node, b) {
-    Null2.startNull(b);
-    return Null2.endNull(b);
+    Null.startNull(b);
+    return Null.endNull(b);
   }
   visitInt(node, b) {
     Int.startInt(b);
@@ -39457,23 +39460,31 @@ var TypeAssembler = class extends Visitor {
     return FloatingPoint.endFloatingPoint(b);
   }
   visitBinary(_node, b) {
-    Binary2.startBinary(b);
-    return Binary2.endBinary(b);
+    Binary.startBinary(b);
+    return Binary.endBinary(b);
+  }
+  visitLargeBinary(_node, b) {
+    LargeBinary.startLargeBinary(b);
+    return LargeBinary.endLargeBinary(b);
   }
   visitBool(_node, b) {
-    Bool2.startBool(b);
-    return Bool2.endBool(b);
+    Bool.startBool(b);
+    return Bool.endBool(b);
   }
   visitUtf8(_node, b) {
-    Utf82.startUtf8(b);
-    return Utf82.endUtf8(b);
+    Utf8.startUtf8(b);
+    return Utf8.endUtf8(b);
+  }
+  visitLargeUtf8(_node, b) {
+    LargeUtf8.startLargeUtf8(b);
+    return LargeUtf8.endLargeUtf8(b);
   }
   visitDecimal(node, b) {
-    Decimal2.startDecimal(b);
-    Decimal2.addScale(b, node.scale);
-    Decimal2.addPrecision(b, node.precision);
-    Decimal2.addBitWidth(b, node.bitWidth);
-    return Decimal2.endDecimal(b);
+    Decimal.startDecimal(b);
+    Decimal.addScale(b, node.scale);
+    Decimal.addPrecision(b, node.precision);
+    Decimal.addBitWidth(b, node.bitWidth);
+    return Decimal.endDecimal(b);
   }
   visitDate(node, b) {
     Date2.startDate(b);
@@ -39501,13 +39512,13 @@ var TypeAssembler = class extends Visitor {
     return Interval.endInterval(b);
   }
   visitDuration(node, b) {
-    Duration2.startDuration(b);
-    Duration2.addUnit(b, node.unit);
-    return Duration2.endDuration(b);
+    Duration.startDuration(b);
+    Duration.addUnit(b, node.unit);
+    return Duration.endDuration(b);
   }
   visitList(_node, b) {
-    List2.startList(b);
-    return List2.endList(b);
+    List.startList(b);
+    return List.endList(b);
   }
   visitStruct(_node, b) {
     Struct_.startStruct_(b);
@@ -39532,14 +39543,14 @@ var TypeAssembler = class extends Visitor {
     return DictionaryEncoding.endDictionaryEncoding(b);
   }
   visitFixedSizeBinary(node, b) {
-    FixedSizeBinary2.startFixedSizeBinary(b);
-    FixedSizeBinary2.addByteWidth(b, node.byteWidth);
-    return FixedSizeBinary2.endFixedSizeBinary(b);
+    FixedSizeBinary.startFixedSizeBinary(b);
+    FixedSizeBinary.addByteWidth(b, node.byteWidth);
+    return FixedSizeBinary.endFixedSizeBinary(b);
   }
   visitFixedSizeList(node, b) {
-    FixedSizeList2.startFixedSizeList(b);
-    FixedSizeList2.addListSize(b, node.listSize);
-    return FixedSizeList2.endFixedSizeList(b);
+    FixedSizeList.startFixedSizeList(b);
+    FixedSizeList.addListSize(b, node.listSize);
+    return FixedSizeList.endFixedSizeList(b);
   }
   visitMap(node, b) {
     Map2.startMap(b);
@@ -39547,9 +39558,9 @@ var TypeAssembler = class extends Visitor {
     return Map2.endMap(b);
   }
 };
-var instance8 = new TypeAssembler();
+var instance7 = new TypeAssembler();
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/json.mjs
+// node_modules/apache-arrow/ipc/metadata/json.mjs
 function schemaFromJSON(_schema, dictionaries = /* @__PURE__ */ new Map()) {
   return new Schema2(schemaFieldsFromJSON(_schema, dictionaries), customMetadataFromJSON(_schema["metadata"]), dictionaries);
 }
@@ -39584,7 +39595,7 @@ function buffersFromJSON(xs, buffers = []) {
   return buffers;
 }
 function nullCountFromJSON(validity) {
-  return (validity || []).reduce((sum5, val) => sum5 + +(val === 0), 0);
+  return (validity || []).reduce((sum4, val) => sum4 + +(val === 0), 0);
 }
 function fieldFromJSON(_field, dictionaries) {
   let id2;
@@ -39618,17 +39629,21 @@ function typeFromJSON(f, children2) {
   const typeId = f["type"]["name"];
   switch (typeId) {
     case "NONE":
-      return new Null();
+      return new Null2();
     case "null":
-      return new Null();
+      return new Null2();
     case "binary":
-      return new Binary();
+      return new Binary2();
+    case "largebinary":
+      return new LargeBinary2();
     case "utf8":
-      return new Utf8();
+      return new Utf82();
+    case "largeutf8":
+      return new LargeUtf82();
     case "bool":
-      return new Bool();
+      return new Bool2();
     case "list":
-      return new List((children2 || [])[0]);
+      return new List2((children2 || [])[0]);
     case "struct":
       return new Struct(children2 || []);
     case "struct_":
@@ -39645,7 +39660,7 @@ function typeFromJSON(f, children2) {
     }
     case "decimal": {
       const t = f["type"];
-      return new Decimal(t["scale"], t["precision"], t["bitWidth"]);
+      return new Decimal2(t["scale"], t["precision"], t["bitWidth"]);
     }
     case "date": {
       const t = f["type"];
@@ -39665,7 +39680,7 @@ function typeFromJSON(f, children2) {
     }
     case "duration": {
       const t = f["type"];
-      return new Duration(TimeUnit[t["unit"]]);
+      return new Duration2(TimeUnit[t["unit"]]);
     }
     case "union": {
       const t = f["type"];
@@ -39675,11 +39690,11 @@ function typeFromJSON(f, children2) {
     }
     case "fixedsizebinary": {
       const t = f["type"];
-      return new FixedSizeBinary(t["byteWidth"]);
+      return new FixedSizeBinary2(t["byteWidth"]);
     }
     case "fixedsizelist": {
       const t = f["type"];
-      return new FixedSizeList(t["listSize"], (children2 || [])[0]);
+      return new FixedSizeList2(t["listSize"], (children2 || [])[0]);
     }
     case "map": {
       const t = f["type"];
@@ -39689,8 +39704,8 @@ function typeFromJSON(f, children2) {
   throw new Error(`Unrecognized type: "${typeId}"`);
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/metadata/message.mjs
-var Builder4 = Builder2;
+// node_modules/apache-arrow/ipc/metadata/message.mjs
+var Builder4 = Builder;
 var ByteBuffer3 = ByteBuffer;
 var Message2 = class {
   /** @nocollapse */
@@ -39846,7 +39861,7 @@ function decodeMessageHeader(message, type2) {
       case MessageHeader.Schema:
         return Schema2.decode(message.header(new Schema()), /* @__PURE__ */ new Map(), message.version());
       case MessageHeader.RecordBatch:
-        return RecordBatch3.decode(message.header(new RecordBatch2()), message.version());
+        return RecordBatch3.decode(message.header(new RecordBatch()), message.version());
       case MessageHeader.DictionaryBatch:
         return DictionaryBatch2.decode(message.header(new DictionaryBatch()), message.version());
     }
@@ -39966,72 +39981,76 @@ function decodeIndexType(_type) {
 function decodeFieldType(f, children2) {
   const typeId = f.typeType();
   switch (typeId) {
-    case Type2["NONE"]:
-      return new Null();
-    case Type2["Null"]:
-      return new Null();
-    case Type2["Binary"]:
-      return new Binary();
-    case Type2["Utf8"]:
-      return new Utf8();
-    case Type2["Bool"]:
-      return new Bool();
-    case Type2["List"]:
-      return new List((children2 || [])[0]);
-    case Type2["Struct_"]:
+    case Type["NONE"]:
+      return new Null2();
+    case Type["Null"]:
+      return new Null2();
+    case Type["Binary"]:
+      return new Binary2();
+    case Type["LargeBinary"]:
+      return new LargeBinary2();
+    case Type["Utf8"]:
+      return new Utf82();
+    case Type["LargeUtf8"]:
+      return new LargeUtf82();
+    case Type["Bool"]:
+      return new Bool2();
+    case Type["List"]:
+      return new List2((children2 || [])[0]);
+    case Type["Struct_"]:
       return new Struct(children2 || []);
   }
   switch (typeId) {
-    case Type2["Int"]: {
+    case Type["Int"]: {
       const t = f.type(new Int());
       return new Int_(t.isSigned(), t.bitWidth());
     }
-    case Type2["FloatingPoint"]: {
+    case Type["FloatingPoint"]: {
       const t = f.type(new FloatingPoint());
       return new Float(t.precision());
     }
-    case Type2["Decimal"]: {
-      const t = f.type(new Decimal2());
-      return new Decimal(t.scale(), t.precision(), t.bitWidth());
+    case Type["Decimal"]: {
+      const t = f.type(new Decimal());
+      return new Decimal2(t.scale(), t.precision(), t.bitWidth());
     }
-    case Type2["Date"]: {
+    case Type["Date"]: {
       const t = f.type(new Date2());
       return new Date_(t.unit());
     }
-    case Type2["Time"]: {
+    case Type["Time"]: {
       const t = f.type(new Time());
       return new Time_(t.unit(), t.bitWidth());
     }
-    case Type2["Timestamp"]: {
+    case Type["Timestamp"]: {
       const t = f.type(new Timestamp());
       return new Timestamp_(t.unit(), t.timezone());
     }
-    case Type2["Interval"]: {
+    case Type["Interval"]: {
       const t = f.type(new Interval());
       return new Interval_(t.unit());
     }
-    case Type2["Duration"]: {
-      const t = f.type(new Duration2());
-      return new Duration(t.unit());
+    case Type["Duration"]: {
+      const t = f.type(new Duration());
+      return new Duration2(t.unit());
     }
-    case Type2["Union"]: {
+    case Type["Union"]: {
       const t = f.type(new Union());
       return new Union_(t.mode(), t.typeIdsArray() || [], children2 || []);
     }
-    case Type2["FixedSizeBinary"]: {
-      const t = f.type(new FixedSizeBinary2());
-      return new FixedSizeBinary(t.byteWidth());
+    case Type["FixedSizeBinary"]: {
+      const t = f.type(new FixedSizeBinary());
+      return new FixedSizeBinary2(t.byteWidth());
     }
-    case Type2["FixedSizeList"]: {
-      const t = f.type(new FixedSizeList2());
-      return new FixedSizeList(t.listSize(), (children2 || [])[0]);
+    case Type["FixedSizeList"]: {
+      const t = f.type(new FixedSizeList());
+      return new FixedSizeList2(t.listSize(), (children2 || [])[0]);
     }
-    case Type2["Map"]: {
+    case Type["Map"]: {
       const t = f.type(new Map2());
       return new Map_((children2 || [])[0], t.keysSorted());
     }
   }
-  throw new Error(`Unrecognized type: "${Type2[typeId]}" (${typeId})`);
+  throw new Error(`Unrecognized type: "${Type[typeId]}" (${typeId})`);
 }
 function encodeSchema(b, schema) {
   const fieldOffsets = schema.fields.map((f) => Field2.encode(b, f));
@@ -40060,11 +40079,11 @@ function encodeField(b, field2) {
   const type2 = field2.type;
   let typeId = field2.typeId;
   if (!DataType.isDictionary(type2)) {
-    typeOffset = instance8.visit(type2, b);
+    typeOffset = instance7.visit(type2, b);
   } else {
     typeId = type2.dictionary.typeId;
-    dictionaryOffset = instance8.visit(type2, b);
-    typeOffset = instance8.visit(type2.dictionary, b);
+    dictionaryOffset = instance7.visit(type2, b);
+    typeOffset = instance7.visit(type2.dictionary, b);
   }
   const childOffsets = (type2.children || []).map((f) => Field2.encode(b, f));
   const childrenVectorOffset = Field.createChildrenVector(b, childOffsets);
@@ -40098,19 +40117,19 @@ function encodeField(b, field2) {
 function encodeRecordBatch(b, recordBatch) {
   const nodes = recordBatch.nodes || [];
   const buffers = recordBatch.buffers || [];
-  RecordBatch2.startNodesVector(b, nodes.length);
+  RecordBatch.startNodesVector(b, nodes.length);
   for (const n of nodes.slice().reverse())
     FieldNode2.encode(b, n);
   const nodesVectorOffset = b.endVector();
-  RecordBatch2.startBuffersVector(b, buffers.length);
+  RecordBatch.startBuffersVector(b, buffers.length);
   for (const b_ of buffers.slice().reverse())
     BufferRegion.encode(b, b_);
   const buffersVectorOffset = b.endVector();
-  RecordBatch2.startRecordBatch(b);
-  RecordBatch2.addLength(b, BigInt(recordBatch.length));
-  RecordBatch2.addNodes(b, nodesVectorOffset);
-  RecordBatch2.addBuffers(b, buffersVectorOffset);
-  return RecordBatch2.endRecordBatch(b);
+  RecordBatch.startRecordBatch(b);
+  RecordBatch.addLength(b, BigInt(recordBatch.length));
+  RecordBatch.addNodes(b, nodesVectorOffset);
+  RecordBatch.addBuffers(b, buffersVectorOffset);
+  return RecordBatch.endRecordBatch(b);
 }
 function encodeDictionaryBatch(b, dictionaryBatch) {
   const dataOffset = RecordBatch3.encode(b, dictionaryBatch.data);
@@ -40137,7 +40156,7 @@ var platformIsLittleEndian = (() => {
   return new Int16Array(buffer)[0] === 256;
 })();
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/message.mjs
+// node_modules/apache-arrow/ipc/message.mjs
 var invalidMessageType = (type2) => `Expected ${MessageHeader[type2]} Message in stream, but was null or length 0.`;
 var nullMessage = (type2) => `Header pointer of flatbuffer-encoded ${MessageHeader[type2]} Message is null or length 0.`;
 var invalidMessageMetadata = (expected, actual) => `Expected to read ${expected} metadata bytes, but only read ${actual}.`;
@@ -40392,7 +40411,7 @@ var magicLength = MAGIC.length;
 var magicAndPadding = magicLength + PADDING;
 var magicX2AndPadding = magicLength * 2 + PADDING;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/reader.mjs
+// node_modules/apache-arrow/ipc/reader.mjs
 var RecordBatchReader = class extends ReadableInterop {
   constructor(impl) {
     super();
@@ -40606,7 +40625,7 @@ var RecordBatchReaderImpl = class {
   _loadRecordBatch(header, body) {
     const children2 = this._loadVectors(header, body, this.schema.fields);
     const data = makeData({ type: new Struct(this.schema.fields), length: header.length, children: children2 });
-    return new RecordBatch(this.schema, data);
+    return new RecordBatch2(this.schema, data);
   }
   _loadDictionaryBatch(header, body) {
     const { id: id2, isDelta } = header;
@@ -41029,11 +41048,11 @@ function fromFileHandle(source) {
   });
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/visitor/vectorassembler.mjs
+// node_modules/apache-arrow/visitor/vectorassembler.mjs
 var VectorAssembler = class extends Visitor {
   /** @nocollapse */
   static assemble(...args) {
-    const unwrap = (nodes) => nodes.flatMap((node) => Array.isArray(node) ? unwrap(node) : node instanceof RecordBatch ? node.data.children : node.data);
+    const unwrap = (nodes) => nodes.flatMap((node) => Array.isArray(node) ? unwrap(node) : node instanceof RecordBatch2 ? node.data.children : node.data);
     const assembler = new VectorAssembler();
     assembler.visitMany(unwrap(args));
     return assembler;
@@ -41143,7 +41162,8 @@ function assembleFlatVector(data) {
 }
 function assembleFlatListVector(data) {
   const { length: length4, values: values2, valueOffsets } = data;
-  const { [0]: begin, [length4]: end } = valueOffsets;
+  const begin = bigIntToNumber(valueOffsets[0]);
+  const end = bigIntToNumber(valueOffsets[length4]);
   const byteLength = Math.min(end - begin, values2.byteLength - begin);
   addBuffer.call(this, rebaseValueOffsets(-begin, length4 + 1, valueOffsets));
   addBuffer.call(this, values2.subarray(begin, begin + byteLength));
@@ -41165,7 +41185,9 @@ VectorAssembler.prototype.visitBool = assembleBoolVector;
 VectorAssembler.prototype.visitInt = assembleFlatVector;
 VectorAssembler.prototype.visitFloat = assembleFlatVector;
 VectorAssembler.prototype.visitUtf8 = assembleFlatListVector;
+VectorAssembler.prototype.visitLargeUtf8 = assembleFlatListVector;
 VectorAssembler.prototype.visitBinary = assembleFlatListVector;
+VectorAssembler.prototype.visitLargeBinary = assembleFlatListVector;
 VectorAssembler.prototype.visitFixedSizeBinary = assembleFlatVector;
 VectorAssembler.prototype.visitDate = assembleFlatVector;
 VectorAssembler.prototype.visitTimestamp = assembleFlatVector;
@@ -41179,7 +41201,7 @@ VectorAssembler.prototype.visitDuration = assembleFlatVector;
 VectorAssembler.prototype.visitFixedSizeList = assembleListVector;
 VectorAssembler.prototype.visitMap = assembleListVector;
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/writer.mjs
+// node_modules/apache-arrow/ipc/writer.mjs
 var RecordBatchWriter = class extends ReadableInterop {
   /** @nocollapse */
   // @ts-ignore
@@ -41277,7 +41299,7 @@ var RecordBatchWriter = class extends ReadableInterop {
       return this.finish() && void 0;
     } else if (payload instanceof Table && !(schema = payload.schema)) {
       return this.finish() && void 0;
-    } else if (payload instanceof RecordBatch && !(schema = payload.schema)) {
+    } else if (payload instanceof RecordBatch2 && !(schema = payload.schema)) {
       return this.finish() && void 0;
     }
     if (schema && !compareSchemas(schema, this._schema)) {
@@ -41286,7 +41308,7 @@ var RecordBatchWriter = class extends ReadableInterop {
       }
       this.reset(this._sink, schema);
     }
-    if (payload instanceof RecordBatch) {
+    if (payload instanceof RecordBatch2) {
       if (!(payload instanceof _InternalEmptyPlaceholderRecordBatch)) {
         this._writeRecordBatch(payload);
       }
@@ -41453,7 +41475,7 @@ function writeAllAsync(writer, batches) {
   });
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/iterable.mjs
+// node_modules/apache-arrow/io/whatwg/iterable.mjs
 function toDOMStream(source, options) {
   if (isAsyncIterable(source)) {
     return asyncIterableAsReadableDOMStream(source, options);
@@ -41536,7 +41558,7 @@ function asyncIterableAsReadableDOMStream(source, options) {
   }
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/builder.mjs
+// node_modules/apache-arrow/io/whatwg/builder.mjs
 function builderThroughDOMStream(options) {
   return new BuilderTransform(options);
 }
@@ -41616,7 +41638,7 @@ var chunkByteLength = (chunk) => {
   return (_a5 = chunk === null || chunk === void 0 ? void 0 : chunk.byteLength) !== null && _a5 !== void 0 ? _a5 : 0;
 };
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/reader.mjs
+// node_modules/apache-arrow/io/whatwg/reader.mjs
 function recordBatchReaderThroughDOMStream(writableStrategy, readableStrategy) {
   const queue = new AsyncByteQueue();
   let reader = null;
@@ -41658,7 +41680,7 @@ function recordBatchReaderThroughDOMStream(writableStrategy, readableStrategy) {
   }
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/io/whatwg/writer.mjs
+// node_modules/apache-arrow/io/whatwg/writer.mjs
 function recordBatchWriterThroughDOMStream(writableStrategy, readableStrategy) {
   const writer = new this(writableStrategy);
   const reader = new AsyncByteStream(writer);
@@ -41696,7 +41718,7 @@ function recordBatchWriterThroughDOMStream(writableStrategy, readableStrategy) {
   }
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/ipc/serialization.mjs
+// node_modules/apache-arrow/ipc/serialization.mjs
 function tableFromIPC(input) {
   const reader = RecordBatchReader.from(input);
   if (isPromise(reader)) {
@@ -41708,16 +41730,16 @@ function tableFromIPC(input) {
   return new Table(reader.readAll());
 }
 
-// packages/pyobsplot-js/node_modules/apache-arrow/Arrow.mjs
+// node_modules/apache-arrow/Arrow.mjs
 var util = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, bn_exports), int_exports), bit_exports), math_exports), buffer_exports), vector_exports), pretty_exports), {
   compareSchemas,
   compareFields,
   compareTypes
 });
 
-// packages/pyobsplot-js/node_modules/apache-arrow/Arrow.dom.mjs
+// node_modules/apache-arrow/Arrow.dom.mjs
 adapters_default.toDOMStream = toDOMStream;
-Builder["throughDOM"] = builderThroughDOMStream;
+Builder2["throughDOM"] = builderThroughDOMStream;
 RecordBatchReader["throughDOM"] = recordBatchReaderThroughDOMStream;
 RecordBatchFileReader["throughDOM"] = recordBatchReaderThroughDOMStream;
 RecordBatchStreamReader["throughDOM"] = recordBatchReaderThroughDOMStream;
@@ -41848,7 +41870,7 @@ function debug_output(out, renderer) {
   }
 }
 
-// js/widget.js
+// src/js/widget.js
 window.d3 = src_exports;
 window.Plot = src_exports2;
 function render({ model, el }) {
