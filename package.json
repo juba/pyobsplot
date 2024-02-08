@@ -5,7 +5,7 @@
         "d3": "^7.8.5"
     },
     "scripts": {
-        "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css",
+        "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] src/js/widget.js src/js/styles.css",
         "dev": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] js/widget.js css/styles.css --watch",
         "build": "npm run bundle && hatch build",
         "test": "hatch run test",
