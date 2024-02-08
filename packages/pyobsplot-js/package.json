@@ -1,6 +1,6 @@
 {
     "name": "pyobsplot",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "JavaScript component for pyobsplot Python package",
     "main": "plot.js",
     "scripts": {
