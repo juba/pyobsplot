@@ -3,6 +3,7 @@
 -   Fix `jsdom` renderer file saving encoding (#22, @harrylojames)
 -   Update Observable Plot to 0.6.13
 -   Migrate build system from poetry to hatch
+-   Update pyarrow and apache-arrow to 15.0.0 and remove data frame conversion to 32bits data types before serialization
 
 ## pyobsplot 0.4.1
 
