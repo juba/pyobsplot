@@ -1042,6 +1042,7 @@ __export(src_exports, {
   schemeGnBu: () => scheme12,
   schemeGreens: () => scheme23,
   schemeGreys: () => scheme24,
+  schemeObservable10: () => observable10_default,
   schemeOrRd: () => scheme13,
   schemeOranges: () => scheme27,
   schemePRGn: () => scheme2,
@@ -15977,6 +15978,9 @@ var Accent_default = colors_default("7fc97fbeaed4fdc086ffff99386cb0f0027fbf5b176
 // node_modules/d3-scale-chromatic/src/categorical/Dark2.js
 var Dark2_default = colors_default("1b9e77d95f027570b3e7298a66a61ee6ab02a6761d666666");
 
+// node_modules/d3-scale-chromatic/src/categorical/observable10.js
+var observable10_default = colors_default("4269d0efb118ff725c6cc5b03ca951ff8ab7a463f297bbf59c6b4e9498a0");
+
 // node_modules/d3-scale-chromatic/src/categorical/Paired.js
 var Paired_default = colors_default("a6cee31f78b4b2df8a33a02cfb9a99e31a1cfdbf6fff7f00cab2d66a3d9affff99b15928");
 
@@ -18760,6 +18764,15 @@ function parse(string2, fallback) {
   return new Date(string2);
 }
 
+// node_modules/@observablehq/plot/src/order.js
+function orderof(values2) {
+  if (values2 == null)
+    return;
+  const first2 = values2[0];
+  const last = values2[values2.length - 1];
+  return descending(first2, last);
+}
+
 // node_modules/@observablehq/plot/src/time.js
 var durationSecond2 = 1e3;
 var durationMinute2 = durationSecond2 * 60;
@@ -19353,13 +19366,6 @@ function maybeAnchor(value, name) {
 function maybeFrameAnchor(value = "middle") {
   return maybeAnchor(value, "frameAnchor");
 }
-function orderof(values2) {
-  if (values2 == null)
-    return;
-  const first2 = values2[0];
-  const last = values2[values2.length - 1];
-  return descending(first2, last);
-}
 function inherit2(options = {}, ...rest) {
   let o = options;
   for (const defaults23 of rest) {
@@ -19395,6 +19401,15 @@ function named2(things) {
 }
 function maybeNamed(things) {
   return isIterable(things) ? named2(things) : things;
+}
+function maybeClip(clip) {
+  if (clip === true)
+    clip = "frame";
+  else if (clip === false)
+    clip = null;
+  else if (clip != null)
+    clip = keyword(clip, "clip", ["frame", "sphere"]);
+  return clip;
 }
 
 // node_modules/@observablehq/plot/src/scales/index.js
@@ -19715,6 +19730,8 @@ function groupn(x4, y4, {
                 extent3.x = x5;
               if (Y3)
                 extent3.y = y5;
+              if (G)
+                extent3.z = f;
               if (filter4 && !filter4.reduce(g, extent3))
                 continue;
               groupFacet.push(i++);
@@ -19813,10 +19830,7 @@ function maybeEvaluator(name, reduce2, inputs, asReduce = maybeReduce) {
   };
 }
 function maybeGroup(I, X3) {
-  return X3 ? sort(
-    group(I, (i) => X3[i]),
-    first
-  ) : [[, I]];
+  return X3 ? group(I, (i) => X3[i]) : [[, I]];
 }
 function maybeReduce(reduce2, value, fallback = invalidReduce) {
   if (reduce2 == null)
@@ -19888,6 +19902,8 @@ function maybeGroupReduceFallback(reduce2) {
       return reduceX;
     case "y":
       return reduceY;
+    case "z":
+      return reduceZ;
   }
   throw new Error(`invalid group reduce: ${reduce2}`);
 }
@@ -19996,6 +20012,11 @@ var reduceX = {
 var reduceY = {
   reduceIndex(I, X3, { y: y4 }) {
     return y4;
+  }
+};
+var reduceZ = {
+  reduceIndex(I, X3, { z }) {
+    return z;
   }
 };
 function find3(test) {
@@ -20174,48 +20195,14 @@ function getSource(channels, key) {
   return channel.source === null ? null : channel;
 }
 
-// node_modules/@observablehq/plot/src/memoize.js
-function memoize1(compute) {
-  let cacheValue, cacheKeys;
-  return (...keys) => {
-    if (cacheKeys?.length !== keys.length || cacheKeys.some((k2, i) => k2 !== keys[i])) {
-      cacheKeys = keys;
-      cacheValue = compute(...keys);
-    }
-    return cacheValue;
-  };
+// node_modules/@observablehq/plot/src/context.js
+function createContext(options = {}) {
+  const { document: document2 = typeof window !== "undefined" ? window.document : void 0, clip } = options;
+  return { document: document2, clip: maybeClip(clip) };
 }
-
-// node_modules/@observablehq/plot/src/format.js
-var numberFormat = memoize1((locale3) => {
-  return new Intl.NumberFormat(locale3);
-});
-var monthFormat = memoize1((locale3, month) => {
-  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...month && { month } });
-});
-var weekdayFormat = memoize1((locale3, weekday) => {
-  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...weekday && { weekday } });
-});
-function formatNumber(locale3 = "en-US") {
-  const format3 = numberFormat(locale3);
-  return (i) => i != null && !isNaN(i) ? format3.format(i) : void 0;
+function create2(name, { document: document2 }) {
+  return select_default2(creator_default(name).call(document2.documentElement));
 }
-function formatMonth(locale3 = "en-US", format3 = "short") {
-  const fmt = monthFormat(locale3, format3);
-  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2e3, +i))) ? fmt.format(i) : void 0;
-}
-function formatWeekday(locale3 = "en-US", format3 = "short") {
-  const fmt = weekdayFormat(locale3, format3);
-  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2001, 0, +i))) ? fmt.format(i) : void 0;
-}
-function formatIsoDate(date2) {
-  return format2(date2, "Invalid Date");
-}
-function formatAuto(locale3 = "en-US") {
-  const number7 = formatNumber(locale3);
-  return (v2) => (v2 instanceof Date ? formatIsoDate : typeof v2 === "number" ? number7 : string)(v2);
-}
-var formatDefault = formatAuto();
 
 // node_modules/@observablehq/plot/src/warnings.js
 var warnings = 0;
@@ -20232,387 +20219,6 @@ function warn(message) {
   lastMessage = message;
   console.warn(message);
   ++warnings;
-}
-
-// node_modules/@observablehq/plot/src/style.js
-var offset = (typeof window !== "undefined" ? window.devicePixelRatio > 1 : typeof it === "undefined") ? 0 : 0.5;
-var nextClipId = 0;
-function getClipId() {
-  return `plot-clip-${++nextClipId}`;
-}
-function styles(mark, {
-  title,
-  href,
-  ariaLabel: variaLabel,
-  ariaDescription,
-  ariaHidden,
-  target,
-  fill,
-  fillOpacity,
-  stroke,
-  strokeWidth,
-  strokeOpacity,
-  strokeLinejoin,
-  strokeLinecap,
-  strokeMiterlimit,
-  strokeDasharray,
-  strokeDashoffset,
-  opacity: opacity2,
-  mixBlendMode,
-  imageFilter,
-  paintOrder,
-  pointerEvents,
-  shapeRendering,
-  channels
-}, {
-  ariaLabel: cariaLabel,
-  fill: defaultFill = "currentColor",
-  fillOpacity: defaultFillOpacity,
-  stroke: defaultStroke = "none",
-  strokeOpacity: defaultStrokeOpacity,
-  strokeWidth: defaultStrokeWidth,
-  strokeLinecap: defaultStrokeLinecap,
-  strokeLinejoin: defaultStrokeLinejoin,
-  strokeMiterlimit: defaultStrokeMiterlimit,
-  paintOrder: defaultPaintOrder
-}) {
-  if (defaultFill === null) {
-    fill = null;
-    fillOpacity = null;
-  }
-  if (defaultStroke === null) {
-    stroke = null;
-    strokeOpacity = null;
-  }
-  if (isNoneish(defaultFill)) {
-    if (!isNoneish(defaultStroke) && (!isNoneish(fill) || channels?.fill))
-      defaultStroke = "none";
-  } else {
-    if (isNoneish(defaultStroke) && (!isNoneish(stroke) || channels?.stroke))
-      defaultFill = "none";
-  }
-  const [vfill, cfill] = maybeColorChannel(fill, defaultFill);
-  const [vfillOpacity, cfillOpacity] = maybeNumberChannel(fillOpacity, defaultFillOpacity);
-  const [vstroke, cstroke] = maybeColorChannel(stroke, defaultStroke);
-  const [vstrokeOpacity, cstrokeOpacity] = maybeNumberChannel(strokeOpacity, defaultStrokeOpacity);
-  const [vopacity, copacity] = maybeNumberChannel(opacity2);
-  if (!isNone(cstroke)) {
-    if (strokeWidth === void 0)
-      strokeWidth = defaultStrokeWidth;
-    if (strokeLinecap === void 0)
-      strokeLinecap = defaultStrokeLinecap;
-    if (strokeLinejoin === void 0)
-      strokeLinejoin = defaultStrokeLinejoin;
-    if (strokeMiterlimit === void 0 && !isRound(strokeLinejoin))
-      strokeMiterlimit = defaultStrokeMiterlimit;
-    if (!isNone(cfill) && paintOrder === void 0)
-      paintOrder = defaultPaintOrder;
-  }
-  const [vstrokeWidth, cstrokeWidth] = maybeNumberChannel(strokeWidth);
-  if (defaultFill !== null) {
-    mark.fill = impliedString(cfill, "currentColor");
-    mark.fillOpacity = impliedNumber(cfillOpacity, 1);
-  }
-  if (defaultStroke !== null) {
-    mark.stroke = impliedString(cstroke, "none");
-    mark.strokeWidth = impliedNumber(cstrokeWidth, 1);
-    mark.strokeOpacity = impliedNumber(cstrokeOpacity, 1);
-    mark.strokeLinejoin = impliedString(strokeLinejoin, "miter");
-    mark.strokeLinecap = impliedString(strokeLinecap, "butt");
-    mark.strokeMiterlimit = impliedNumber(strokeMiterlimit, 4);
-    mark.strokeDasharray = impliedString(strokeDasharray, "none");
-    mark.strokeDashoffset = impliedString(strokeDashoffset, "0");
-  }
-  mark.target = string(target);
-  mark.ariaLabel = string(cariaLabel);
-  mark.ariaDescription = string(ariaDescription);
-  mark.ariaHidden = string(ariaHidden);
-  mark.opacity = impliedNumber(copacity, 1);
-  mark.mixBlendMode = impliedString(mixBlendMode, "normal");
-  mark.imageFilter = impliedString(imageFilter, "none");
-  mark.paintOrder = impliedString(paintOrder, "normal");
-  mark.pointerEvents = impliedString(pointerEvents, "auto");
-  mark.shapeRendering = impliedString(shapeRendering, "auto");
-  return {
-    title: { value: title, optional: true, filter: null },
-    href: { value: href, optional: true, filter: null },
-    ariaLabel: { value: variaLabel, optional: true, filter: null },
-    fill: { value: vfill, scale: "auto", optional: true },
-    fillOpacity: { value: vfillOpacity, scale: "auto", optional: true },
-    stroke: { value: vstroke, scale: "auto", optional: true },
-    strokeOpacity: { value: vstrokeOpacity, scale: "auto", optional: true },
-    strokeWidth: { value: vstrokeWidth, optional: true },
-    opacity: { value: vopacity, scale: "auto", optional: true }
-  };
-}
-function applyTitle(selection2, L) {
-  if (L)
-    selection2.filter((i) => nonempty(L[i])).append("title").call(applyText, L);
-}
-function applyTitleGroup(selection2, L) {
-  if (L)
-    selection2.filter(([i]) => nonempty(L[i])).append("title").call(applyTextGroup, L);
-}
-function applyText(selection2, T) {
-  if (T)
-    selection2.text((i) => formatDefault(T[i]));
-}
-function applyTextGroup(selection2, T) {
-  if (T)
-    selection2.text(([i]) => formatDefault(T[i]));
-}
-function applyChannelStyles(selection2, { target, tip: tip2 }, {
-  ariaLabel: AL,
-  title: T,
-  fill: F,
-  fillOpacity: FO,
-  stroke: S,
-  strokeOpacity: SO,
-  strokeWidth: SW,
-  opacity: O,
-  href: H
-}) {
-  if (AL)
-    applyAttr(selection2, "aria-label", (i) => AL[i]);
-  if (F)
-    applyAttr(selection2, "fill", (i) => F[i]);
-  if (FO)
-    applyAttr(selection2, "fill-opacity", (i) => FO[i]);
-  if (S)
-    applyAttr(selection2, "stroke", (i) => S[i]);
-  if (SO)
-    applyAttr(selection2, "stroke-opacity", (i) => SO[i]);
-  if (SW)
-    applyAttr(selection2, "stroke-width", (i) => SW[i]);
-  if (O)
-    applyAttr(selection2, "opacity", (i) => O[i]);
-  if (H)
-    applyHref(selection2, (i) => H[i], target);
-  if (!tip2)
-    applyTitle(selection2, T);
-}
-function applyGroupedChannelStyles(selection2, { target, tip: tip2 }, {
-  ariaLabel: AL,
-  title: T,
-  fill: F,
-  fillOpacity: FO,
-  stroke: S,
-  strokeOpacity: SO,
-  strokeWidth: SW,
-  opacity: O,
-  href: H
-}) {
-  if (AL)
-    applyAttr(selection2, "aria-label", ([i]) => AL[i]);
-  if (F)
-    applyAttr(selection2, "fill", ([i]) => F[i]);
-  if (FO)
-    applyAttr(selection2, "fill-opacity", ([i]) => FO[i]);
-  if (S)
-    applyAttr(selection2, "stroke", ([i]) => S[i]);
-  if (SO)
-    applyAttr(selection2, "stroke-opacity", ([i]) => SO[i]);
-  if (SW)
-    applyAttr(selection2, "stroke-width", ([i]) => SW[i]);
-  if (O)
-    applyAttr(selection2, "opacity", ([i]) => O[i]);
-  if (H)
-    applyHref(selection2, ([i]) => H[i], target);
-  if (!tip2)
-    applyTitleGroup(selection2, T);
-}
-function groupAesthetics({
-  ariaLabel: AL,
-  title: T,
-  fill: F,
-  fillOpacity: FO,
-  stroke: S,
-  strokeOpacity: SO,
-  strokeWidth: SW,
-  opacity: O,
-  href: H
-}, { tip: tip2 }) {
-  return [AL, tip2 ? void 0 : T, F, FO, S, SO, SW, O, H].filter((c6) => c6 !== void 0);
-}
-function groupZ2(I, Z, z) {
-  const G = group(I, (i) => Z[i]);
-  if (z === void 0 && G.size > 1 + I.length >> 1) {
-    warn(
-      `Warning: the implicit z channel has high cardinality. This may occur when the fill or stroke channel is associated with quantitative data rather than ordinal or categorical data. You can suppress this warning by setting the z option explicitly; if this data represents a single series, set z to null.`
-    );
-  }
-  return G.values();
-}
-function* groupIndex(I, position3, mark, channels) {
-  const { z } = mark;
-  const { z: Z } = channels;
-  const A5 = groupAesthetics(channels, mark);
-  const C3 = [...position3, ...A5];
-  for (const G of Z ? groupZ2(I, Z, z) : [I]) {
-    let Ag;
-    let Gg;
-    out:
-      for (const i of G) {
-        for (const c6 of C3) {
-          if (!defined(c6[i])) {
-            if (Gg)
-              Gg.push(-1);
-            continue out;
-          }
-        }
-        if (Ag === void 0) {
-          if (Gg)
-            yield Gg;
-          Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
-          continue;
-        }
-        Gg.push(i);
-        for (let j = 0; j < A5.length; ++j) {
-          const k2 = keyof2(A5[j][i]);
-          if (k2 !== Ag[j]) {
-            yield Gg;
-            Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
-            continue out;
-          }
-        }
-      }
-    if (Gg)
-      yield Gg;
-  }
-}
-function maybeClip(clip) {
-  if (clip === true)
-    clip = "frame";
-  else if (clip === false)
-    clip = null;
-  else if (clip != null)
-    clip = keyword(clip, "clip", ["frame", "sphere"]);
-  return clip;
-}
-function applyClip(selection2, mark, dimensions, context) {
-  let clipUrl;
-  const { clip = context.clip } = mark;
-  switch (clip) {
-    case "frame": {
-      const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
-      const id2 = getClipId();
-      clipUrl = `url(#${id2})`;
-      selection2 = create2("svg:g", context).call(
-        (g) => g.append("svg:clipPath").attr("id", id2).append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom)
-      ).each(function() {
-        this.appendChild(selection2.node());
-        selection2.node = () => this;
-      });
-      break;
-    }
-    case "sphere": {
-      const { projection: projection3 } = context;
-      if (!projection3)
-        throw new Error(`the "sphere" clip option requires a projection`);
-      const id2 = getClipId();
-      clipUrl = `url(#${id2})`;
-      selection2.append("clipPath").attr("id", id2).append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
-      break;
-    }
-  }
-  applyAttr(selection2, "aria-label", mark.ariaLabel);
-  applyAttr(selection2, "aria-description", mark.ariaDescription);
-  applyAttr(selection2, "aria-hidden", mark.ariaHidden);
-  applyAttr(selection2, "clip-path", clipUrl);
-}
-function applyIndirectStyles(selection2, mark, dimensions, context) {
-  applyClip(selection2, mark, dimensions, context);
-  applyAttr(selection2, "fill", mark.fill);
-  applyAttr(selection2, "fill-opacity", mark.fillOpacity);
-  applyAttr(selection2, "stroke", mark.stroke);
-  applyAttr(selection2, "stroke-width", mark.strokeWidth);
-  applyAttr(selection2, "stroke-opacity", mark.strokeOpacity);
-  applyAttr(selection2, "stroke-linejoin", mark.strokeLinejoin);
-  applyAttr(selection2, "stroke-linecap", mark.strokeLinecap);
-  applyAttr(selection2, "stroke-miterlimit", mark.strokeMiterlimit);
-  applyAttr(selection2, "stroke-dasharray", mark.strokeDasharray);
-  applyAttr(selection2, "stroke-dashoffset", mark.strokeDashoffset);
-  applyAttr(selection2, "shape-rendering", mark.shapeRendering);
-  applyAttr(selection2, "filter", mark.imageFilter);
-  applyAttr(selection2, "paint-order", mark.paintOrder);
-  const { pointerEvents = context.pointerSticky === false ? "none" : void 0 } = mark;
-  applyAttr(selection2, "pointer-events", pointerEvents);
-}
-function applyDirectStyles(selection2, mark) {
-  applyStyle(selection2, "mix-blend-mode", mark.mixBlendMode);
-  applyAttr(selection2, "opacity", mark.opacity);
-}
-function applyHref(selection2, href, target) {
-  selection2.each(function(i) {
-    const h = href(i);
-    if (h != null) {
-      const a4 = this.ownerDocument.createElementNS(namespaces_default.svg, "a");
-      a4.setAttribute("fill", "inherit");
-      a4.setAttributeNS(namespaces_default.xlink, "href", h);
-      if (target != null)
-        a4.setAttribute("target", target);
-      this.parentNode.insertBefore(a4, this).appendChild(this);
-    }
-  });
-}
-function applyAttr(selection2, name, value) {
-  if (value != null)
-    selection2.attr(name, value);
-}
-function applyStyle(selection2, name, value) {
-  if (value != null)
-    selection2.style(name, value);
-}
-function applyTransform(selection2, mark, { x: x4, y: y4 }, tx = offset, ty = offset) {
-  tx += mark.dx;
-  ty += mark.dy;
-  if (x4?.bandwidth)
-    tx += x4.bandwidth() / 2;
-  if (y4?.bandwidth)
-    ty += y4.bandwidth() / 2;
-  if (tx || ty)
-    selection2.attr("transform", `translate(${tx},${ty})`);
-}
-function impliedString(value, impliedValue) {
-  if ((value = string(value)) !== impliedValue)
-    return value;
-}
-function impliedNumber(value, impliedValue) {
-  if ((value = number5(value)) !== impliedValue)
-    return value;
-}
-var validClassName = /^-?([_a-z]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])([_a-z0-9-]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*$/i;
-function maybeClassName(name) {
-  if (name === void 0)
-    return "plot-d6a7b5";
-  name = `${name}`;
-  if (!validClassName.test(name))
-    throw new Error(`invalid class name: ${name}`);
-  return name;
-}
-function applyInlineStyles(selection2, style) {
-  if (typeof style === "string") {
-    selection2.property("style", style);
-  } else if (style != null) {
-    for (const element of selection2) {
-      Object.assign(element.style, style);
-    }
-  }
-}
-function applyFrameAnchor({ frameAnchor }, { width, height, marginTop, marginRight, marginBottom, marginLeft }) {
-  return [
-    /left$/.test(frameAnchor) ? marginLeft : /right$/.test(frameAnchor) ? width - marginRight : (marginLeft + width - marginRight) / 2,
-    /^top/.test(frameAnchor) ? marginTop : /^bottom/.test(frameAnchor) ? height - marginBottom : (marginTop + height - marginBottom) / 2
-  ];
-}
-
-// node_modules/@observablehq/plot/src/context.js
-function createContext(options = {}) {
-  const { document: document2 = typeof window !== "undefined" ? window.document : void 0, clip } = options;
-  return { document: document2, clip: maybeClip(clip) };
-}
-function create2(name, { document: document2 }) {
-  return select_default2(creator_default(name).call(document2.documentElement));
 }
 
 // node_modules/@observablehq/plot/src/projection.js
@@ -20859,23 +20465,11 @@ function getGeometryChannels(channel) {
 }
 
 // node_modules/@observablehq/plot/src/scales/schemes.js
-var schemeObservable10 = [
-  "#4269d0",
-  "#efb118",
-  "#ff725c",
-  "#6cc5b0",
-  "#3ca951",
-  "#ff8ab7",
-  "#a463f2",
-  "#97bbf5",
-  "#9c6b4e",
-  "#9498a0"
-];
 var categoricalSchemes = /* @__PURE__ */ new Map([
   ["accent", Accent_default],
   ["category10", category10_default],
   ["dark2", Dark2_default],
-  ["observable10", schemeObservable10],
+  ["observable10", observable10_default],
   ["paired", Paired_default],
   ["pastel1", Pastel1_default],
   ["pastel2", Pastel2_default],
@@ -22015,6 +21609,412 @@ function exposeScale({ scale: scale3, type: type2, domain, range: range5, interp
     apply: (t) => scale3(t),
     ...scale3.invert && { invert: (t) => scale3.invert(t) }
   };
+}
+
+// node_modules/@observablehq/plot/src/memoize.js
+function memoize1(compute) {
+  let cacheValue, cacheKeys;
+  return (...keys) => {
+    if (cacheKeys?.length !== keys.length || cacheKeys.some((k2, i) => k2 !== keys[i])) {
+      cacheKeys = keys;
+      cacheValue = compute(...keys);
+    }
+    return cacheValue;
+  };
+}
+
+// node_modules/@observablehq/plot/src/format.js
+var numberFormat = memoize1((locale3) => {
+  return new Intl.NumberFormat(locale3);
+});
+var monthFormat = memoize1((locale3, month) => {
+  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...month && { month } });
+});
+var weekdayFormat = memoize1((locale3, weekday) => {
+  return new Intl.DateTimeFormat(locale3, { timeZone: "UTC", ...weekday && { weekday } });
+});
+function formatNumber(locale3 = "en-US") {
+  const format3 = numberFormat(locale3);
+  return (i) => i != null && !isNaN(i) ? format3.format(i) : void 0;
+}
+function formatMonth(locale3 = "en-US", format3 = "short") {
+  const fmt = monthFormat(locale3, format3);
+  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2e3, +i))) ? fmt.format(i) : void 0;
+}
+function formatWeekday(locale3 = "en-US", format3 = "short") {
+  const fmt = weekdayFormat(locale3, format3);
+  return (i) => i != null && !isNaN(i = +new Date(Date.UTC(2001, 0, +i))) ? fmt.format(i) : void 0;
+}
+function formatIsoDate(date2) {
+  return format2(date2, "Invalid Date");
+}
+function formatAuto(locale3 = "en-US") {
+  const number7 = formatNumber(locale3);
+  return (v2) => (v2 instanceof Date ? formatIsoDate : typeof v2 === "number" ? number7 : string)(v2);
+}
+var formatDefault = formatAuto();
+
+// node_modules/@observablehq/plot/src/style.js
+var offset = (typeof window !== "undefined" ? window.devicePixelRatio > 1 : typeof it === "undefined") ? 0 : 0.5;
+var nextClipId = 0;
+function getClipId() {
+  return `plot-clip-${++nextClipId}`;
+}
+function styles(mark, {
+  title,
+  href,
+  ariaLabel: variaLabel,
+  ariaDescription,
+  ariaHidden,
+  target,
+  fill,
+  fillOpacity,
+  stroke,
+  strokeWidth,
+  strokeOpacity,
+  strokeLinejoin,
+  strokeLinecap,
+  strokeMiterlimit,
+  strokeDasharray,
+  strokeDashoffset,
+  opacity: opacity2,
+  mixBlendMode,
+  imageFilter,
+  paintOrder,
+  pointerEvents,
+  shapeRendering,
+  channels
+}, {
+  ariaLabel: cariaLabel,
+  fill: defaultFill = "currentColor",
+  fillOpacity: defaultFillOpacity,
+  stroke: defaultStroke = "none",
+  strokeOpacity: defaultStrokeOpacity,
+  strokeWidth: defaultStrokeWidth,
+  strokeLinecap: defaultStrokeLinecap,
+  strokeLinejoin: defaultStrokeLinejoin,
+  strokeMiterlimit: defaultStrokeMiterlimit,
+  paintOrder: defaultPaintOrder
+}) {
+  if (defaultFill === null) {
+    fill = null;
+    fillOpacity = null;
+  }
+  if (defaultStroke === null) {
+    stroke = null;
+    strokeOpacity = null;
+  }
+  if (isNoneish(defaultFill)) {
+    if (!isNoneish(defaultStroke) && (!isNoneish(fill) || channels?.fill))
+      defaultStroke = "none";
+  } else {
+    if (isNoneish(defaultStroke) && (!isNoneish(stroke) || channels?.stroke))
+      defaultFill = "none";
+  }
+  const [vfill, cfill] = maybeColorChannel(fill, defaultFill);
+  const [vfillOpacity, cfillOpacity] = maybeNumberChannel(fillOpacity, defaultFillOpacity);
+  const [vstroke, cstroke] = maybeColorChannel(stroke, defaultStroke);
+  const [vstrokeOpacity, cstrokeOpacity] = maybeNumberChannel(strokeOpacity, defaultStrokeOpacity);
+  const [vopacity, copacity] = maybeNumberChannel(opacity2);
+  if (!isNone(cstroke)) {
+    if (strokeWidth === void 0)
+      strokeWidth = defaultStrokeWidth;
+    if (strokeLinecap === void 0)
+      strokeLinecap = defaultStrokeLinecap;
+    if (strokeLinejoin === void 0)
+      strokeLinejoin = defaultStrokeLinejoin;
+    if (strokeMiterlimit === void 0 && !isRound(strokeLinejoin))
+      strokeMiterlimit = defaultStrokeMiterlimit;
+    if (!isNone(cfill) && paintOrder === void 0)
+      paintOrder = defaultPaintOrder;
+  }
+  const [vstrokeWidth, cstrokeWidth] = maybeNumberChannel(strokeWidth);
+  if (defaultFill !== null) {
+    mark.fill = impliedString(cfill, "currentColor");
+    mark.fillOpacity = impliedNumber(cfillOpacity, 1);
+  }
+  if (defaultStroke !== null) {
+    mark.stroke = impliedString(cstroke, "none");
+    mark.strokeWidth = impliedNumber(cstrokeWidth, 1);
+    mark.strokeOpacity = impliedNumber(cstrokeOpacity, 1);
+    mark.strokeLinejoin = impliedString(strokeLinejoin, "miter");
+    mark.strokeLinecap = impliedString(strokeLinecap, "butt");
+    mark.strokeMiterlimit = impliedNumber(strokeMiterlimit, 4);
+    mark.strokeDasharray = impliedString(strokeDasharray, "none");
+    mark.strokeDashoffset = impliedString(strokeDashoffset, "0");
+  }
+  mark.target = string(target);
+  mark.ariaLabel = string(cariaLabel);
+  mark.ariaDescription = string(ariaDescription);
+  mark.ariaHidden = string(ariaHidden);
+  mark.opacity = impliedNumber(copacity, 1);
+  mark.mixBlendMode = impliedString(mixBlendMode, "normal");
+  mark.imageFilter = impliedString(imageFilter, "none");
+  mark.paintOrder = impliedString(paintOrder, "normal");
+  mark.pointerEvents = impliedString(pointerEvents, "auto");
+  mark.shapeRendering = impliedString(shapeRendering, "auto");
+  return {
+    title: { value: title, optional: true, filter: null },
+    href: { value: href, optional: true, filter: null },
+    ariaLabel: { value: variaLabel, optional: true, filter: null },
+    fill: { value: vfill, scale: "auto", optional: true },
+    fillOpacity: { value: vfillOpacity, scale: "auto", optional: true },
+    stroke: { value: vstroke, scale: "auto", optional: true },
+    strokeOpacity: { value: vstrokeOpacity, scale: "auto", optional: true },
+    strokeWidth: { value: vstrokeWidth, optional: true },
+    opacity: { value: vopacity, scale: "auto", optional: true }
+  };
+}
+function applyTitle(selection2, L) {
+  if (L)
+    selection2.filter((i) => nonempty(L[i])).append("title").call(applyText, L);
+}
+function applyTitleGroup(selection2, L) {
+  if (L)
+    selection2.filter(([i]) => nonempty(L[i])).append("title").call(applyTextGroup, L);
+}
+function applyText(selection2, T) {
+  if (T)
+    selection2.text((i) => formatDefault(T[i]));
+}
+function applyTextGroup(selection2, T) {
+  if (T)
+    selection2.text(([i]) => formatDefault(T[i]));
+}
+function applyChannelStyles(selection2, { target, tip: tip2 }, {
+  ariaLabel: AL,
+  title: T,
+  fill: F,
+  fillOpacity: FO,
+  stroke: S,
+  strokeOpacity: SO,
+  strokeWidth: SW,
+  opacity: O,
+  href: H
+}) {
+  if (AL)
+    applyAttr(selection2, "aria-label", (i) => AL[i]);
+  if (F)
+    applyAttr(selection2, "fill", (i) => F[i]);
+  if (FO)
+    applyAttr(selection2, "fill-opacity", (i) => FO[i]);
+  if (S)
+    applyAttr(selection2, "stroke", (i) => S[i]);
+  if (SO)
+    applyAttr(selection2, "stroke-opacity", (i) => SO[i]);
+  if (SW)
+    applyAttr(selection2, "stroke-width", (i) => SW[i]);
+  if (O)
+    applyAttr(selection2, "opacity", (i) => O[i]);
+  if (H)
+    applyHref(selection2, (i) => H[i], target);
+  if (!tip2)
+    applyTitle(selection2, T);
+}
+function applyGroupedChannelStyles(selection2, { target, tip: tip2 }, {
+  ariaLabel: AL,
+  title: T,
+  fill: F,
+  fillOpacity: FO,
+  stroke: S,
+  strokeOpacity: SO,
+  strokeWidth: SW,
+  opacity: O,
+  href: H
+}) {
+  if (AL)
+    applyAttr(selection2, "aria-label", ([i]) => AL[i]);
+  if (F)
+    applyAttr(selection2, "fill", ([i]) => F[i]);
+  if (FO)
+    applyAttr(selection2, "fill-opacity", ([i]) => FO[i]);
+  if (S)
+    applyAttr(selection2, "stroke", ([i]) => S[i]);
+  if (SO)
+    applyAttr(selection2, "stroke-opacity", ([i]) => SO[i]);
+  if (SW)
+    applyAttr(selection2, "stroke-width", ([i]) => SW[i]);
+  if (O)
+    applyAttr(selection2, "opacity", ([i]) => O[i]);
+  if (H)
+    applyHref(selection2, ([i]) => H[i], target);
+  if (!tip2)
+    applyTitleGroup(selection2, T);
+}
+function groupAesthetics({
+  ariaLabel: AL,
+  title: T,
+  fill: F,
+  fillOpacity: FO,
+  stroke: S,
+  strokeOpacity: SO,
+  strokeWidth: SW,
+  opacity: O,
+  href: H
+}, { tip: tip2 }) {
+  return [AL, tip2 ? void 0 : T, F, FO, S, SO, SW, O, H].filter((c6) => c6 !== void 0);
+}
+function groupZ2(I, Z, z) {
+  const G = group(I, (i) => Z[i]);
+  if (z === void 0 && G.size > 1 + I.length >> 1) {
+    warn(
+      `Warning: the implicit z channel has high cardinality. This may occur when the fill or stroke channel is associated with quantitative data rather than ordinal or categorical data. You can suppress this warning by setting the z option explicitly; if this data represents a single series, set z to null.`
+    );
+  }
+  return G.values();
+}
+function* groupIndex(I, position3, mark, channels) {
+  const { z } = mark;
+  const { z: Z } = channels;
+  const A5 = groupAesthetics(channels, mark);
+  const C3 = [...position3, ...A5];
+  for (const G of Z ? groupZ2(I, Z, z) : [I]) {
+    let Ag;
+    let Gg;
+    out:
+      for (const i of G) {
+        for (const c6 of C3) {
+          if (!defined(c6[i])) {
+            if (Gg)
+              Gg.push(-1);
+            continue out;
+          }
+        }
+        if (Ag === void 0) {
+          if (Gg)
+            yield Gg;
+          Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
+          continue;
+        }
+        Gg.push(i);
+        for (let j = 0; j < A5.length; ++j) {
+          const k2 = keyof2(A5[j][i]);
+          if (k2 !== Ag[j]) {
+            yield Gg;
+            Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
+            continue out;
+          }
+        }
+      }
+    if (Gg)
+      yield Gg;
+  }
+}
+function applyClip(selection2, mark, dimensions, context) {
+  let clipUrl;
+  const { clip = context.clip } = mark;
+  switch (clip) {
+    case "frame": {
+      const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
+      const id2 = getClipId();
+      clipUrl = `url(#${id2})`;
+      selection2 = create2("svg:g", context).call(
+        (g) => g.append("svg:clipPath").attr("id", id2).append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom)
+      ).each(function() {
+        this.appendChild(selection2.node());
+        selection2.node = () => this;
+      });
+      break;
+    }
+    case "sphere": {
+      const { projection: projection3 } = context;
+      if (!projection3)
+        throw new Error(`the "sphere" clip option requires a projection`);
+      const id2 = getClipId();
+      clipUrl = `url(#${id2})`;
+      selection2.append("clipPath").attr("id", id2).append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
+      break;
+    }
+  }
+  applyAttr(selection2, "aria-label", mark.ariaLabel);
+  applyAttr(selection2, "aria-description", mark.ariaDescription);
+  applyAttr(selection2, "aria-hidden", mark.ariaHidden);
+  applyAttr(selection2, "clip-path", clipUrl);
+}
+function applyIndirectStyles(selection2, mark, dimensions, context) {
+  applyClip(selection2, mark, dimensions, context);
+  applyAttr(selection2, "fill", mark.fill);
+  applyAttr(selection2, "fill-opacity", mark.fillOpacity);
+  applyAttr(selection2, "stroke", mark.stroke);
+  applyAttr(selection2, "stroke-width", mark.strokeWidth);
+  applyAttr(selection2, "stroke-opacity", mark.strokeOpacity);
+  applyAttr(selection2, "stroke-linejoin", mark.strokeLinejoin);
+  applyAttr(selection2, "stroke-linecap", mark.strokeLinecap);
+  applyAttr(selection2, "stroke-miterlimit", mark.strokeMiterlimit);
+  applyAttr(selection2, "stroke-dasharray", mark.strokeDasharray);
+  applyAttr(selection2, "stroke-dashoffset", mark.strokeDashoffset);
+  applyAttr(selection2, "shape-rendering", mark.shapeRendering);
+  applyAttr(selection2, "filter", mark.imageFilter);
+  applyAttr(selection2, "paint-order", mark.paintOrder);
+  const { pointerEvents = context.pointerSticky === false ? "none" : void 0 } = mark;
+  applyAttr(selection2, "pointer-events", pointerEvents);
+}
+function applyDirectStyles(selection2, mark) {
+  applyStyle(selection2, "mix-blend-mode", mark.mixBlendMode);
+  applyAttr(selection2, "opacity", mark.opacity);
+}
+function applyHref(selection2, href, target) {
+  selection2.each(function(i) {
+    const h = href(i);
+    if (h != null) {
+      const a4 = this.ownerDocument.createElementNS(namespaces_default.svg, "a");
+      a4.setAttribute("fill", "inherit");
+      a4.setAttributeNS(namespaces_default.xlink, "href", h);
+      if (target != null)
+        a4.setAttribute("target", target);
+      this.parentNode.insertBefore(a4, this).appendChild(this);
+    }
+  });
+}
+function applyAttr(selection2, name, value) {
+  if (value != null)
+    selection2.attr(name, value);
+}
+function applyStyle(selection2, name, value) {
+  if (value != null)
+    selection2.style(name, value);
+}
+function applyTransform(selection2, mark, { x: x4, y: y4 }, tx = offset, ty = offset) {
+  tx += mark.dx;
+  ty += mark.dy;
+  if (x4?.bandwidth)
+    tx += x4.bandwidth() / 2;
+  if (y4?.bandwidth)
+    ty += y4.bandwidth() / 2;
+  if (tx || ty)
+    selection2.attr("transform", `translate(${tx},${ty})`);
+}
+function impliedString(value, impliedValue) {
+  if ((value = string(value)) !== impliedValue)
+    return value;
+}
+function impliedNumber(value, impliedValue) {
+  if ((value = number5(value)) !== impliedValue)
+    return value;
+}
+var validClassName = /^-?([_a-z]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])([_a-z0-9-]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*$/i;
+function maybeClassName(name) {
+  if (name === void 0)
+    return "plot-d6a7b5";
+  name = `${name}`;
+  if (!validClassName.test(name))
+    throw new Error(`invalid class name: ${name}`);
+  return name;
+}
+function applyInlineStyles(selection2, style) {
+  if (typeof style === "string") {
+    selection2.property("style", style);
+  } else if (style != null) {
+    for (const element of selection2) {
+      Object.assign(element.style, style);
+    }
+  }
+}
+function applyFrameAnchor({ frameAnchor }, { width, height, marginTop, marginRight, marginBottom, marginLeft }) {
+  return [
+    /left$/.test(frameAnchor) ? marginLeft : /right$/.test(frameAnchor) ? width - marginRight : (marginLeft + width - marginRight) / 2,
+    /^top/.test(frameAnchor) ? marginTop : /^bottom/.test(frameAnchor) ? height - marginBottom : (marginTop + height - marginBottom) / 2
+  ];
 }
 
 // node_modules/@observablehq/plot/src/dimensions.js
@@ -23760,19 +23760,28 @@ function axisTickKy(k2, anchor, data, {
   y: y4 = k2 === "y" ? void 0 : null,
   ...options
 }) {
-  return axisMark(vectorY, k2, anchor, `${k2}-axis tick`, data, {
-    strokeWidth,
-    strokeLinecap,
-    strokeLinejoin,
-    facetAnchor,
-    frameAnchor,
-    y: y4,
-    ...options,
-    dx: anchor === "left" ? +dx - offset + +insetLeft : +dx + offset - insetRight,
-    anchor: "start",
-    length: tickSize,
-    shape: anchor === "left" ? shapeTickLeft : shapeTickRight
-  });
+  return axisMark(
+    vectorY,
+    k2,
+    data,
+    {
+      ariaLabel: `${k2}-axis tick`,
+      ariaHidden: true
+    },
+    {
+      strokeWidth,
+      strokeLinecap,
+      strokeLinejoin,
+      facetAnchor,
+      frameAnchor,
+      y: y4,
+      ...options,
+      dx: anchor === "left" ? +dx - offset + +insetLeft : +dx + offset - insetRight,
+      anchor: "start",
+      length: tickSize,
+      shape: anchor === "left" ? shapeTickLeft : shapeTickRight
+    }
+  );
 }
 function axisTickKx(k2, anchor, data, {
   strokeWidth = 1,
@@ -23788,19 +23797,28 @@ function axisTickKx(k2, anchor, data, {
   x: x4 = k2 === "x" ? void 0 : null,
   ...options
 }) {
-  return axisMark(vectorX, k2, anchor, `${k2}-axis tick`, data, {
-    strokeWidth,
-    strokeLinejoin,
-    strokeLinecap,
-    facetAnchor,
-    frameAnchor,
-    x: x4,
-    ...options,
-    dy: anchor === "bottom" ? +dy - offset - insetBottom : +dy + offset + +insetTop,
-    anchor: "start",
-    length: tickSize,
-    shape: anchor === "bottom" ? shapeTickBottom : shapeTickTop
-  });
+  return axisMark(
+    vectorX,
+    k2,
+    data,
+    {
+      ariaLabel: `${k2}-axis tick`,
+      ariaHidden: true
+    },
+    {
+      strokeWidth,
+      strokeLinejoin,
+      strokeLinecap,
+      facetAnchor,
+      frameAnchor,
+      x: x4,
+      ...options,
+      dy: anchor === "bottom" ? +dy - offset - insetBottom : +dy + offset + +insetTop,
+      anchor: "start",
+      length: tickSize,
+      shape: anchor === "bottom" ? shapeTickBottom : shapeTickTop
+    }
+  );
 }
 function axisTextKy(k2, anchor, data, {
   facetAnchor = anchor + (k2 === "y" ? "-empty" : ""),
@@ -23822,9 +23840,8 @@ function axisTextKy(k2, anchor, data, {
   return axisMark(
     textY,
     k2,
-    anchor,
-    `${k2}-axis tick label`,
     data,
+    { ariaLabel: `${k2}-axis tick label` },
     {
       facetAnchor,
       frameAnchor,
@@ -23865,9 +23882,8 @@ function axisTextKx(k2, anchor, data, {
   return axisMark(
     textX,
     k2,
-    anchor,
-    `${k2}-axis tick label`,
     data,
+    { ariaLabel: `${k2}-axis tick label` },
     {
       facetAnchor,
       frameAnchor,
@@ -23911,7 +23927,7 @@ function gridKy(k2, anchor, data, {
   x2: x22 = anchor === "right" ? x4 : null,
   ...options
 }) {
-  return axisMark(ruleY, k2, anchor, `${k2}-grid`, data, { y: y4, x1: x12, x2: x22, ...gridDefaults(options) });
+  return axisMark(ruleY, k2, data, { ariaLabel: `${k2}-grid`, ariaHidden: true }, { y: y4, x1: x12, x2: x22, ...gridDefaults(options) });
 }
 function gridKx(k2, anchor, data, {
   x: x4 = k2 === "x" ? void 0 : null,
@@ -23920,7 +23936,7 @@ function gridKx(k2, anchor, data, {
   y2: y22 = anchor === "bottom" ? y4 : null,
   ...options
 }) {
-  return axisMark(ruleX, k2, anchor, `${k2}-grid`, data, { x: x4, y1: y12, y2: y22, ...gridDefaults(options) });
+  return axisMark(ruleX, k2, data, { ariaLabel: `${k2}-grid`, ariaHidden: true }, { x: x4, y1: y12, y2: y22, ...gridDefaults(options) });
 }
 function gridDefaults({
   color: color3 = "currentColor",
@@ -23965,7 +23981,7 @@ function labelOptions({
     initializer: initializer2
   };
 }
-function axisMark(mark, k2, anchor, ariaLabel, data, options, initialize) {
+function axisMark(mark, k2, data, properties, options, initialize) {
   let channels;
   function axisInitializer(data2, facets, _channels, scales, dimensions, context) {
     const initializeFacets = data2 == null && (k2 === "fx" || k2 === "fy");
@@ -24037,7 +24053,8 @@ function axisMark(mark, k2, anchor, ariaLabel, data, options, initialize) {
   } else {
     channels = {};
   }
-  m3.ariaLabel = ariaLabel;
+  if (properties !== void 0)
+    Object.assign(m3, properties);
   if (m3.clip === void 0)
     m3.clip = false;
   return m3;
@@ -25466,6 +25483,8 @@ function binn(bx, by, gx, gy, {
         for (const [f, I] of maybeGroup(facet, G)) {
           for (const [k3, g] of maybeGroup(I, K2)) {
             for (const [b, extent3] of bin3(g)) {
+              if (G)
+                extent3.z = f;
               if (filter4 && !filter4.reduce(b, extent3))
                 continue;
               groupFacet.push(i++);
@@ -25485,7 +25504,7 @@ function binn(bx, by, gx, gy, {
               for (const o of outputs)
                 o.reduce(b, extent3);
               if (sort3)
-                sort3.reduce(b);
+                sort3.reduce(b, extent3);
             }
           }
         }
@@ -25652,6 +25671,8 @@ function maybeBinReduceFallback(reduce2) {
       return reduceY1;
     case "y2":
       return reduceY22;
+    case "z":
+      return reduceZ;
   }
   throw new Error(`invalid bin reduce: ${reduce2}`);
 }
