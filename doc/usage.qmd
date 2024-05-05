@@ -425,7 +425,7 @@ You can see a live version of this example in the following Colab notebook: [![]
 
 ## Saving plots to file
 
-Generated plots can be savec to a file. To do this, just add a `path` argument to your generator call:
+Generated plots can be saved to a file. To do this, just add a `path` argument to your generator call:
 
 ```{python}
 #| eval: false
@@ -433,6 +433,8 @@ Generated plots can be savec to a file. To do this, just add a `path` argument t
 op = Obsplot(renderer="jsdom")
 op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 ```
+
+### jsdom renderer
 
 When using the `jsdom` renderer, charts can be saved either as SVG or HTML files : Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. When using the `path` option, `pyobsplot` will warn you if you try to save an HTML output to a SVG file.
 
@@ -449,5 +451,7 @@ op({
     path="/tmp/out.html"
 )
 ```
+
+### widget renderer
 
 When using the `widget` renderer, plots can only be saved to full HTML files. These files retain interactivity features such as tooltips. To embed widgets into an HTML website or document, Quarto documents can be more practical.
