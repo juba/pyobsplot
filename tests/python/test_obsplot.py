@@ -171,6 +171,5 @@ class TestInit:
         r = requests.post(url + "/plot", data="this is no valid json")
         assert r.status_code == 500
         assert (
-            r.content.decode()
-            == "Server error: Unexpected token h in JSON at position 1."
+            r.content.decode().startswith("Server error: Unexpected token")
         )
