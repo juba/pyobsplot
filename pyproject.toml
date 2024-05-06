@@ -24,6 +24,9 @@ dependencies = [
     "polars>=0.20.0",
     "pyarrow==15.0.0",
     "requests",
+    "typst>=0.11.0",
+    "beautifulsoup4>=4.10.0",
+    "lxml>=5.0.0",
 ]
 
 [project.urls]

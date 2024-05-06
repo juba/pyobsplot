@@ -7,11 +7,14 @@ import os
 import shutil
 import signal
 import warnings
+import tempfile
+import typst
+from bs4 import BeautifulSoup
 from pathlib import Path
 from subprocess import PIPE, Popen, SubprocessError
 from typing import Any, Optional, Union
 
-from IPython.display import HTML, SVG, display
+from IPython.display import HTML, SVG, Image, display
 from ipywidgets.embed import embed_minimal_html
 
 from pyobsplot.jsdom import ObsplotJsdom
@@ -38,6 +41,7 @@ class Obsplot:
         theme: str = DEFAULT_THEME,
         default: Optional[dict] = None,
         debug: bool = False,  # noqa: FBT001, FBT002
+        **kwargs,
     ) -> Any:
         """
         Main Obsplot class constructor. Returns a Creator instance depending on the
@@ -70,6 +74,8 @@ class Obsplot:
             return ObsplotWidgetCreator(theme=theme, default=default, debug=debug)
         elif renderer == "jsdom":
             return ObsplotJsdomCreator(theme=theme, default=default, debug=debug)
+        elif renderer == "typst":
+            return ObsplotTypstCreator(theme=theme, default=default, debug=debug, **kwargs)
         else:
             msg = f"""
                 Incorrect renderer '{renderer}'.
@@ -319,3 +325,142 @@ class ObsplotJsdomCreator(ObsplotCreator):
             )
         with open(path, "w", encoding="utf-8") as f:
             f.write(str(res.data))
+
+
+class ObsplotTypstCreator(ObsplotJsdomCreator):
+    """
+    Jsdom renderer Creator class.
+    """
+
+    def __init__(
+        self,
+        theme: str = DEFAULT_THEME,
+        default: Optional[dict] = None,
+        debug: bool = False, 
+        font_size: int = 12,
+        font: str = "sans-serif",
+        dpi: int = 300,
+        margin: int = 4
+    ) -> None:
+        super().__init__(theme, default, debug)
+        self._proc = None
+        self.font_size = font_size
+        self.font = font
+        self.dpi = dpi
+        self.margin = margin
+        self.start_server()
+
+    def __call__(self, *args, **kwargs) -> None:
+        """
+        Method called when an instance is called.
+        """
+        if self._proc is not None and self._proc.poll() is not None:
+            msg = "Server has ended, please recreate your plot generator object."
+            raise RuntimeError(msg)
+        path = None
+        if "path" in kwargs:
+            path = kwargs["path"]
+            del kwargs["path"]
+        spec = self.get_spec(*args, **kwargs)
+        if "figure" not in spec:
+            spec["figure"] = True
+        res = ObsplotJsdom(
+            spec,
+            port=self._port,
+            theme=self._theme,
+            default=self._default,
+            debug=self._debug,
+        ).plot()
+        if path is None:
+            with tempfile.NamedTemporaryFile(suffix=".png") as f:
+                self.render_typst(str(res.data), f.name)
+                width = spec["width"] if "width" in spec else 640
+                if "margin" in spec:
+                    width += 2*spec["margin"]
+                else: 
+                    if "marginLeft" in spec:
+                        width += spec["marginLeft"]
+                    if "marginRight" in spec:
+                        width += spec["marginRight"]
+                display(
+                    Image(filename=f.name, width=width, height=spec["height"] if "height" in spec else None)
+                )
+        else:
+            self.save_to_file(path, res)
+
+    def save_to_file(self, path: str, res: HTML) -> None:
+        if isinstance(path, io.StringIO):
+            path.write(str(res.data))
+            return
+        extension = Path(path).suffix.lower()
+        if extension not in [".png", ".jpg", ".jpeg", ".svg", ".pdf"]:
+            warnings.warn(
+                "Output file extension should be one of 'png', 'jpg', 'jpeg', 'svg', or 'pdf'",
+                RuntimeWarning,
+                stacklevel=1,
+            )
+        with open(path, "w", encoding="utf-8") as f:
+            self.render_typst(str(res.data), f.name)
+
+    @staticmethod
+    def shift_svg(svg):
+        soup = BeautifulSoup(str(svg), "xml")
+        svg = soup.svg
+        if "viewBox" in svg.attrs:
+            x, y, width, height = map(int, svg.attrs["viewBox"].split())
+            if x != 0 or y != 0:
+                g = soup.new_tag("g", transform=f"translate({-x}, {-y})")
+                g.extend(svg.contents)
+                svg.clear()
+                svg.append(g)
+                svg.attrs["viewBox"] = f"0 0 {width} {height}"
+        return str(svg)
+    
+    def render_typst(self, html: str, path: str) -> None:
+        path_obj = Path(path)
+        ext = "".join(path_obj.suffixes)
+        stem = str(path_obj.name).removesuffix("".join(path_obj.suffixes))
+
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            soup = BeautifulSoup(html, "xml")
+            figure = soup.find("figure", recursive=False)
+            swatches = []
+            plots = []
+            for i, swatch in enumerate(figure.find_all("div", recursive=False)):
+                new_swatch = []
+                for j, svg in enumerate(swatch.find_all("svg", recursive=True)):
+                    with open(f"{tmpdirname}/{stem}_{i}_{j}.svg", "w") as f:
+                        f.write(ObsplotTypstCreator.shift_svg(str(svg)))
+                    new_swatch.append(
+                        {"file": f"{stem}_{i}_{j}.svg", "width": svg.attrs["width"], "height": svg.attrs["height"], "text": svg.next_sibling}
+                    )
+                swatches.append(new_swatch)
+            for i, svg in enumerate(figure.find_all("svg", recursive=False)):
+                with open(f"{tmpdirname}/{stem}_{i}.svg", "w") as f:
+                    f.write(ObsplotTypstCreator.shift_svg(str(svg)))
+                plots.append({"file": f"{stem}_{i}.svg", "width": svg.attrs["width"], "height": svg.attrs["height"]})
+            max_width = max(int(svg["width"]) for svg in plots)
+            typeset = (
+                f'#set text(\nfont: "{self.font}",\nsize: {self.font_size}pt,\nfallback: false)\n'
+                + f"#set page(\nwidth: {max_width+2*self.margin}pt,\nheight: auto,\nmargin: (x: {self.margin}pt, y: {self.margin}pt),\n)\n"
+            )
+            if title := figure.find("h2"):
+                typeset += f"= {title.text}"
+            if subtitle := figure.find("h3"):
+                typeset += f"\n{subtitle.text}"
+            typeset += "\n\n"
+            for swatch in swatches:
+                typeset += "#{\nset align(horizon)\nstack(\n  dir: ltr,\n  spacing: 10pt,\n"
+                for el in swatch:
+                    typeset += f'  image("{el["file"]}", width: {el["width"]}pt),\n'
+                    typeset += f'  "{el["text"]}",\n'
+                typeset += ")}\n\n"
+            typeset += "#v(-10pt)\n".join([f'#image("{plot["file"]}", width: {plot["width"]}pt)\n' for plot in plots])
+
+            if caption := figure.find("figcaption"):
+                typeset += f"\n{caption.text}"
+
+            with open(f"{tmpdirname}/{stem}.typ", "w") as f:
+                f.write(typeset)
+
+            typst.compile(f"{tmpdirname}/{stem}.typ", output=path, ppi=self.dpi, format=ext[1:])
