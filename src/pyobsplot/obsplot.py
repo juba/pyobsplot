@@ -383,7 +383,7 @@ class ObsplotTypstCreator(ObsplotJsdomCreator):
                     if "marginRight" in spec:
                         width += spec["marginRight"]
                 display(
-                    Image(filename=f.name, width=width, height=spec["height"] if "height" in spec else None)
+                    Image(data=f.read(), width=width, height=spec["height"] if "height" in spec else None)
                 )
         else:
             self.save_to_file(path, res)
