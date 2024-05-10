@@ -436,7 +436,7 @@ class ObsplotTypstCreator(ObsplotJsdomCreator):
                     )
                 swatches.append(new_swatch)
             for i, svg in enumerate(figure.find_all("svg", recursive=False)):
-                with open(f"{tmpdirname}/{stem}_{i}.svg", "w") as f:
+                with open(f"{tmpdirname}/{stem}_{i}.svg", "w", encoding = 'utf-8') as f:
                     f.write(ObsplotTypstCreator.shift_svg(str(svg)))
                 plots.append({"file": f"{stem}_{i}.svg", "width": svg.attrs["width"], "height": svg.attrs["height"]})
             max_width = max(int(svg["width"]) for svg in plots)
