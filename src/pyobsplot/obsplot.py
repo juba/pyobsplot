@@ -329,7 +329,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
 
 class ObsplotTypstCreator(ObsplotJsdomCreator):
     """
-    Jsdom renderer Creator class.
+    Typst renderer Creator class.
     """
 
     def __init__(
@@ -393,11 +393,9 @@ class ObsplotTypstCreator(ObsplotJsdomCreator):
             path.write(str(res.data))
             return
         extension = Path(path).suffix.lower()
-        if extension not in [".png", ".jpg", ".jpeg", ".svg", ".pdf"]:
-            warnings.warn(
-                "Output file extension should be one of 'png', 'jpg', 'jpeg', 'svg', or 'pdf'",
-                RuntimeWarning,
-                stacklevel=1,
+        if extension not in [".png", ".svg", ".pdf"]:
+            raise ValueError(
+                "Output file extension should be one of 'png', 'svg' or 'pdf'"
             )
         with open(path, "w", encoding="utf-8") as f:
             self.render_typst(str(res.data), f.name)
