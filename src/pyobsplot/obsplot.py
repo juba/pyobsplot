@@ -9,7 +9,6 @@ import signal
 import warnings
 import tempfile
 import typst
-from bs4 import BeautifulSoup
 from pathlib import Path
 from subprocess import PIPE, Popen, SubprocessError
 from typing import Any, Optional, Union
@@ -23,6 +22,7 @@ from pyobsplot.utils import (
     AVAILABLE_THEMES,
     DEFAULT_THEME,
     MIN_NPM_VERSION,
+    bundler_output_dir
 )
 from pyobsplot.widget import ObsplotWidget
 
@@ -400,65 +400,24 @@ class ObsplotTypstCreator(ObsplotJsdomCreator):
         with open(path, "w", encoding="utf-8") as f:
             self.render_typst(str(res.data), f.name)
 
-    @staticmethod
-    def shift_svg(svg):
-        soup = BeautifulSoup(str(svg), "xml")
-        svg = soup.svg
-        if "viewBox" in svg.attrs:
-            x, y, width, height = map(int, svg.attrs["viewBox"].split())
-            if x != 0 or y != 0:
-                g = soup.new_tag("g", transform=f"translate({-x}, {-y})")
-                g.extend(svg.contents)
-                svg.clear()
-                svg.append(g)
-                svg.attrs["viewBox"] = f"0 0 {width} {height}"
-        return str(svg)
-    
     def render_typst(self, html: str, path: str) -> None:
         path_obj = Path(path)
         ext = "".join(path_obj.suffixes)
-        stem = str(path_obj.name).removesuffix("".join(path_obj.suffixes))
 
         with tempfile.TemporaryDirectory() as tmpdirname:
-            soup = BeautifulSoup(html, "xml")
-            figure = soup.find("figure", recursive=False)
-            swatches = []
-            plots = []
-            for i, swatch in enumerate(figure.find_all("div", recursive=False)):
-                new_swatch = []
-                for j, svg in enumerate(swatch.find_all("svg", recursive=True)):
-                    with open(f"{tmpdirname}/{stem}_{i}_{j}.svg", "w") as f:
-                        f.write(ObsplotTypstCreator.shift_svg(str(svg)))
-                    new_swatch.append(
-                        {"file": f"{stem}_{i}_{j}.svg", "width": svg.attrs["width"], "height": svg.attrs["height"], "text": svg.next_sibling}
-                    )
-                swatches.append(new_swatch)
-            for i, svg in enumerate(figure.find_all("svg", recursive=False)):
-                with open(f"{tmpdirname}/{stem}_{i}.svg", "w", encoding = 'utf-8') as f:
-                    f.write(ObsplotTypstCreator.shift_svg(str(svg)))
-                plots.append({"file": f"{stem}_{i}.svg", "width": svg.attrs["width"], "height": svg.attrs["height"]})
-            max_width = max(int(svg["width"]) for svg in plots)
-            typeset = (
-                f'#set text(\nfont: "{self.font}",\nsize: {self.font_size}pt,\nfallback: false)\n'
-                + f"#set page(\nwidth: {max_width+2*self.margin}pt,\nheight: auto,\nmargin: (x: {self.margin}pt, y: {self.margin}pt),\n)\n"
-            )
-            if title := figure.find("h2"):
-                typeset += f"= {title.text}"
-            if subtitle := figure.find("h3"):
-                typeset += f"\n{subtitle.text}"
-            typeset += "\n\n"
-            for swatch in swatches:
-                typeset += "#{\nset align(horizon)\nstack(\n  dir: ltr,\n  spacing: 10pt,\n"
-                for el in swatch:
-                    typeset += f'  image("{el["file"]}", width: {el["width"]}pt),\n'
-                    typeset += f'  "{el["text"]}",\n'
-                typeset += ")}\n\n"
-            typeset += "#v(-10pt)\n".join([f'#image("{plot["file"]}", width: {plot["width"]}pt)\n' for plot in plots])
+            with open(f"{tmpdirname}/jsdom.html", "w") as f:
+                f.write(html)
+            shutil.copy(bundler_output_dir / "template.typ", f"{tmpdirname}/template.typ")
+            with open(f"{tmpdirname}/input.typ", "w") as f:
+                f.write(f"""
+#import "template.typ": obsplot
 
-            if caption := figure.find("figcaption"):
-                typeset += f"\n{caption.text}"
+#show: obsplot(
+  "jsdom.html",
+  margin: {self.margin}4pt,
+  font: "{self.font}",
+  font-size: {self.font_size}pt,
+)
+                """)
 
-            with open(f"{tmpdirname}/{stem}.typ", "w") as f:
-                f.write(typeset)
-
-            typst.compile(f"{tmpdirname}/{stem}.typ", output=path, ppi=self.dpi, format=ext[1:])
+            typst.compile(f"{tmpdirname}/input.typ", output=path, ppi=self.dpi, format=ext[1:])
