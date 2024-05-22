@@ -72,6 +72,7 @@ function jsdom_plot(request) {
             figcaption.style.lineHeight = "20px";
             figcaption.style.fontSize = "12px";
             figcaption.style.fontWeight = "500";
+            figcaption.style.color = "#555555";
         }
     }
 
