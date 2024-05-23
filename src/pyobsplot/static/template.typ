@@ -15,7 +15,7 @@
 
 #let obsplot(
     file,
-    margin: 4pt,
+    margin: 10pt,
     font-family: ("San Francisco", "Segoe UI", "Noto Sans", "Roboto", "Cantarell", "Ubuntu"),
     scale: 1
 ) = {
@@ -82,7 +82,7 @@
         if (caption != none) {
             set text(size: 1in * 13/dpi, fill: rgb(85, 85, 85), weight: 500)
             text(caption.children.first())
-            v(1in * 8/dpi)
+            v(1in * 4/dpi)
         }
     )
 }
