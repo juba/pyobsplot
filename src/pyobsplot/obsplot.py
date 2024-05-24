@@ -336,7 +336,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
             format_options = self.format_options
 
         allowed_formats = ["html", "png", "svg"]
-        if format not in allowed_formats:
+        if format is not None and format not in allowed_formats:
             msg = f"Invalid format: {format}.\n Allowed formats: {allowed_formats}."
             raise ValueError(msg)
 
