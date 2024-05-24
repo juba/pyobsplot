@@ -16,7 +16,7 @@
 #let obsplot(
     file,
     margin: 10pt,
-    font-family: ("San Francisco", "Segoe UI", "Noto Sans", "Roboto", "Cantarell", "Ubuntu"),
+    font-family: ("San Francisco", "Segoe UI", "Noto Sans", "Roboto", "Cantarell", "Ubuntu", "Lucida Grande", "Arial"),
     scale: 1
 ) = {
 
