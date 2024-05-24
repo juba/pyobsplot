@@ -361,7 +361,7 @@
     "href": "development.html#maintenance-notes",
     "title": "Development",
     "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nChange version in NEWS.md and src/pyobsplot/__about__.py\nRelease the Python package with rye build and rye publish in pyobsplot\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nChange version in NEWS.md and pyproject.toml\nRelease the Python package with rye build and rye publish in pyobsplot\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
   },
   {
     "objectID": "getting_started.html",
