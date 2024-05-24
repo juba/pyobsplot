@@ -27,14 +27,16 @@ jobs:
                   npm ci 
                   npm ci --workspaces
 
-            - name: Install rye
-              run: curl -sSf https://rye.astral.sh/get | bash
-
             - name: Install Python
               uses: actions/setup-python@v5
               with:
                   python-version: ${{ matrix.python-version }}
                   cache: "pip"
+
+            - name: Install rye
+              run: |
+                  curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
+                  rye sync
 
             - name: Run pytest
               run: rye run test

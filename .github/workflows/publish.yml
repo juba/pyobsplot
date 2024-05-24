@@ -34,7 +34,9 @@ jobs:
                   cache: "pip"
 
             - name: Install rye
-              run: curl -sSf https://rye.astral.sh/get | bash
+              run: |
+                  curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
+                  rye sync
 
             - name: Bundle
               run: npm run bundle
