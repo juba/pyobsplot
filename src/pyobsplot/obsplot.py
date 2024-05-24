@@ -6,13 +6,13 @@ import io
 import os
 import shutil
 import signal
-import warnings
 import tempfile
-import typst
+import warnings
 from pathlib import Path
 from subprocess import PIPE, Popen, SubprocessError
 from typing import Any, Optional, Union
 
+import typst
 from IPython.display import HTML, SVG, Image, display
 from ipywidgets.embed import embed_minimal_html
 
@@ -22,7 +22,7 @@ from pyobsplot.utils import (
     AVAILABLE_THEMES,
     DEFAULT_THEME,
     MIN_NPM_VERSION,
-    bundler_output_dir
+    bundler_output_dir,
 )
 from pyobsplot.widget import ObsplotWidget
 
@@ -38,10 +38,12 @@ class Obsplot:
     def __new__(
         cls,
         renderer: str = "widget",
+        *,
         theme: str = DEFAULT_THEME,
         default: Optional[dict] = None,
-        debug: bool = False,  # noqa: FBT001, FBT002
-        **kwargs,
+        format: Optional[str] = None,  # noqa: A002
+        format_options: Optional[dict] = None,
+        debug: bool = False,
     ) -> Any:
         """
         Main Obsplot class constructor. Returns a Creator instance depending on the
@@ -52,6 +54,10 @@ class Obsplot:
             theme (str): color theme to use, can be "light" (default), "dark" or
                 "current".
             default (dict): dict of default spec values.
+            format (str): default output display format for jsdom renderer, can be
+                "html", "svg", "png" or "pdf".
+            format_options (dict): default options passed to typst when converting
+                to png or pdf.
             debug (bool): if True, activate debug mode (for widget renderer only)
 
         returns:
@@ -62,26 +68,39 @@ class Obsplot:
         if theme not in AVAILABLE_THEMES:
             msg = f"""
                 Incorrect theme '{theme}'.
-                Available renderers are {AVAILABLE_THEMES}
+                Available themes are {AVAILABLE_THEMES}
                 """
             raise ValueError(msg)
 
         # Check renderer value
         available_renderers = ["widget", "jsdom"]
-
-        # Plot spec with the configured renderer
-        if renderer == "widget":
-            return ObsplotWidgetCreator(theme=theme, default=default, debug=debug)
-        elif renderer == "jsdom":
-            return ObsplotJsdomCreator(theme=theme, default=default, debug=debug)
-        elif renderer == "typst":
-            return ObsplotTypstCreator(theme=theme, default=default, debug=debug, **kwargs)
-        else:
-            msg = f"""
-                Incorrect renderer '{renderer}'.
-                Available renderers are {available_renderers}
-                """
+        if renderer not in available_renderers:
+            msg = (
+                f"Incorrect renderer '{renderer}'."
+                f"Available renderers are {available_renderers}."
+            )
             raise ValueError(msg)
+
+        # Generate and return creator object
+        if renderer == "widget":
+            if format is not None:
+                msg = (
+                    "The format option is incompatible with the widget renderer."
+                    "Use the jsdom renderer instead."
+                )
+                raise ValueError(msg)
+            return ObsplotWidgetCreator(theme=theme, default=default, debug=debug)
+
+        elif renderer == "jsdom":
+            if format_options is None:
+                format_options = {}
+            return ObsplotJsdomCreator(
+                theme=theme,
+                default=default,
+                debug=debug,
+                format=format,
+                format_options=format_options,
+            )
 
 
 class ObsplotCreator:
@@ -215,26 +234,78 @@ class ObsplotJsdomCreator(ObsplotCreator):
 
     def __init__(
         self,
+        *,
         theme: str = DEFAULT_THEME,
         default: Optional[dict] = None,
-        debug: bool = False,  # noqa: FBT001, FBT002
+        format: Optional[str] = None,  # noqa: A002
+        format_options: Optional[dict] = None,
+        debug: bool = False,
     ) -> None:
+
         super().__init__(theme, default, debug)
+
+        allowed_formats = ["html", "svg", "png"]
+        if format is not None and format not in allowed_formats:
+            msg = (
+                f"Incorrect format '{format}'. "
+                f"Available formats are '{allowed_formats}'."
+            )
+            raise ValueError(msg)
+
+        self.format = format
+        if format_options is None:
+            format_options = {}
+        self.format_options = format_options
         self._proc = None
         self.start_server()
 
-    def __call__(self, *args, **kwargs) -> None:
+    def __call__(
+        self,
+        *args,
+        **kwargs,
+    ) -> None:
         """
         Method called when an instance is called.
         """
         if self._proc is not None and self._proc.poll() is not None:
             msg = "Server has ended, please recreate your plot generator object."
             raise RuntimeError(msg)
+
+        # Extract configuration arguments from spec
         path = None
         if "path" in kwargs:
             path = kwargs["path"]
             del kwargs["path"]
+        if "format" in kwargs:
+            format = kwargs["format"]  # noqa: A001
+            del kwargs["format"]
+        else:
+            format =self.format  # noqa: A001
+        if "format_options" in kwargs:
+            format_options = kwargs["format_options"]
+            del kwargs["format_options"]
+        else:
+            format_options = self.format_options
+
+        # If both format and path are provided, use path extension
+        if path is not None:
+            extension = Path(path).suffix.lower()[1:]
+            allowed_extensions = ["html", "svg", "pdf", "png"]
+            if extension not in allowed_extensions:
+                msg = f"Output file extension should be one of {allowed_extensions}"
+                raise ValueError(msg)
+            if format is not None and format != extension[1:]:
+                warnings.warn(
+                    f"Generating file in {extension} format based on file extension.",
+                    RuntimeWarning,
+                    stacklevel=1,
+                )
+                format = extension # noqa: A001
+
+
         spec = self.get_spec(*args, **kwargs)
+        if "figure" not in spec and format in ["html", "png", "pdf"]:
+            spec["figure"] = True
         res = ObsplotJsdom(
             spec,
             port=self._port,
@@ -242,10 +313,14 @@ class ObsplotJsdomCreator(ObsplotCreator):
             default=self._default,
             debug=self._debug,
         ).plot()
+        if format in ["png", "pdf"]:
+            res = self.typst_render(res, format, format_options)
+        if format == "png":
+            res = Image(res)
         if path is None:
             display(res)
         else:
-            ObsplotJsdomCreator.save_to_file(path, res)
+            ObsplotJsdomCreator.save_to_file(path, res) # type: ignore
 
     def start_server(self):
         """
@@ -295,8 +370,44 @@ class ObsplotJsdomCreator(ObsplotCreator):
         if self._proc is not None:
             os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)
 
+    def typst_render(self, res, format, options) -> bytes:  # noqa: A002
+
+        if format not in ["png", "pdf"]:
+            msg = "Invalid output: {output}."
+            raise ValueError(msg)
+
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            tmpdir = Path(tmpdirname)
+            input_file = tmpdir / "input.typ"
+            output_file = tmpdir / f"out.{format}"
+
+            # Write HTML jsdom output to file
+            with open(tmpdir / "jsdom.html", "w") as jsdom_out:
+                jsdom_out.write(res.data)
+            # Copy typst template
+            shutil.copy(
+                bundler_output_dir / "template.typ", tmpdir/ "template.typ"
+            )
+            # Create the typst input file
+            with open(input_file, "w") as typst_file:
+                typst_content = (
+                    '#import "template.typ": obsplot\n'
+                    '#show: obsplot("jsdom.html",'
+                    f"{'margin: ' + str(options["margin"]) + 'pt,' if "margin" in options else ''}"
+                    f"{'font-family: "' + options["font"] + '",' if "font" in options else ''}"
+                    f"{'scale: ' + str(options["scale"]) + ',' if "scale" in options else ''}"
+                    ")"
+                )
+                typst_file.write(typst_content)
+            typst.compile(
+                input_file, output=output_file, ppi=100, format=format
+            )
+            with open(output_file, "rb") as f:
+                res = f.read()
+        return res
+
     @staticmethod
-    def save_to_file(path: str, res: Union[SVG, HTML]) -> None:
+    def save_to_file(path: str, res: Union[SVG, HTML, Image]) -> None:
         """
         Save an Obsplot object generated by a Jsdom creator to a file.
 
@@ -311,113 +422,10 @@ class ObsplotJsdomCreator(ObsplotCreator):
             path.write(str(res.data))
             return
         extension = Path(path).suffix.lower()
-        if extension not in [".html", ".svg", ".htm"]:
-            warnings.warn(
-                "Output file extension should be one of 'html' or 'svg'",
-                RuntimeWarning,
-                stacklevel=1,
-            )
-        if isinstance(res, HTML) and extension == ".svg":
-            warnings.warn(
-                f"Output is HTML but file extension is '{extension}'",
-                RuntimeWarning,
-                stacklevel=1,
-            )
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(str(res.data))
-
-
-class ObsplotTypstCreator(ObsplotJsdomCreator):
-    """
-    Typst renderer Creator class.
-    """
-
-    def __init__(
-        self,
-        theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        debug: bool = False, 
-        font_size: int = 12,
-        font: str = "sans-serif",
-        dpi: int = 300,
-        margin: int = 4
-    ) -> None:
-        super().__init__(theme, default, debug)
-        self._proc = None
-        self.font_size = font_size
-        self.font = font
-        self.dpi = dpi
-        self.margin = margin
-        self.start_server()
-
-    def __call__(self, *args, **kwargs) -> None:
-        """
-        Method called when an instance is called.
-        """
-        if self._proc is not None and self._proc.poll() is not None:
-            msg = "Server has ended, please recreate your plot generator object."
-            raise RuntimeError(msg)
-        path = None
-        if "path" in kwargs:
-            path = kwargs["path"]
-            del kwargs["path"]
-        spec = self.get_spec(*args, **kwargs)
-        if "figure" not in spec:
-            spec["figure"] = True
-        res = ObsplotJsdom(
-            spec,
-            port=self._port,
-            theme=self._theme,
-            default=self._default,
-            debug=self._debug,
-        ).plot()
-        if path is None:
-            with tempfile.NamedTemporaryFile(suffix=".png") as f:
-                self.render_typst(str(res.data), f.name)
-                width = spec["width"] if "width" in spec else 640
-                if "margin" in spec:
-                    width += 2*spec["margin"]
-                else: 
-                    if "marginLeft" in spec:
-                        width += spec["marginLeft"]
-                    if "marginRight" in spec:
-                        width += spec["marginRight"]
-                display(
-                    Image(data=f.read(), width=width, height=spec["height"] if "height" in spec else None)
-                )
+        if extension in [".html", ".svg"]:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(str(res.data))
         else:
-            self.save_to_file(path, res)
+            with open(path, "wb") as f:
+                f.write(res) # type: ignore
 
-    def save_to_file(self, path: str, res: HTML) -> None:
-        if isinstance(path, io.StringIO):
-            path.write(str(res.data))
-            return
-        extension = Path(path).suffix.lower()
-        if extension not in [".png", ".svg", ".pdf"]:
-            raise ValueError(
-                "Output file extension should be one of 'png', 'svg' or 'pdf'"
-            )
-        with open(path, "w", encoding="utf-8") as f:
-            self.render_typst(str(res.data), f.name)
-
-    def render_typst(self, html: str, path: str) -> None:
-        path_obj = Path(path)
-        ext = "".join(path_obj.suffixes)
-
-        with tempfile.TemporaryDirectory() as tmpdirname:
-            with open(f"{tmpdirname}/jsdom.html", "w") as f:
-                f.write(html)
-            shutil.copy(bundler_output_dir / "template.typ", f"{tmpdirname}/template.typ")
-            with open(f"{tmpdirname}/input.typ", "w") as f:
-                f.write(f"""
-#import "template.typ": obsplot
-
-#show: obsplot(
-  "jsdom.html",
-  margin: {self.margin}4pt,
-  font: "{self.font}",
-  font-size: {self.font_size}pt,
-)
-                """)
-
-            typst.compile(f"{tmpdirname}/input.typ", output=path, ppi=self.dpi, format=ext[1:])
