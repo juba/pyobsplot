@@ -12,10 +12,10 @@ jobs:
             contents: write
         steps:
             - name: Check out repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   cache: "npm"
 
@@ -28,7 +28,7 @@ jobs:
               uses: quarto-dev/quarto-actions/setup@v2
 
             - name: Install Python
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@v5
               with:
                   python-version: "3.11"
                   cache: "pip"
