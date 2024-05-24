@@ -151,14 +151,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Plots can now be generated in “png” and “pdf” formats when using the jsdom renderer. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.14"
+    "text": "Plots can now be generated in “png” and “pdf” formats when using the jsdom renderer. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.14\nMigrate build system from hatch to rye"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.4.3-dev",
     "href": "changelog.html#pyobsplot-0.4.3-dev",
     "title": "Changelog",
     "section": "",
-    "text": "Plots can now be generated in “png” and “pdf” formats when using the jsdom renderer. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.14"
+    "text": "Plots can now be generated in “png” and “pdf” formats when using the jsdom renderer. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.14\nMigrate build system from hatch to rye"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.4.2",
@@ -333,7 +333,7 @@
     "href": "development.html#install-fom-source",
     "title": "Development",
     "section": "Install fom source",
-    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall hatch dependency management system\nClone the pyobsplot repository\nInstall Python dependencies with : hatch shell\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code are in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
+    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall rye dependency management system\nClone the pyobsplot repository\nInstall Python dependencies with : rye sync\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code are in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py."
   },
   {
     "objectID": "development.html#widget-javascript-modification-and-bundling",
@@ -361,7 +361,7 @@
     "href": "development.html#maintenance-notes",
     "title": "Development",
     "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nChange version in NEWS.md and src/pyobsplot/__about__.py\nRelease the Python package with hatch build and hatch publish in pyobsplot\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in .utils is correct\nChange version in NEWS.md and src/pyobsplot/__about__.py\nRelease the Python package with rye build and rye publish in pyobsplot\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js and update utils.py in pyobsplot"
   },
   {
     "objectID": "getting_started.html",
