@@ -6,7 +6,6 @@
 [![Documentation](https://github.com/juba/pyobsplot/actions/workflows/publish.yml/badge.svg)](https://github.com/juba/pyobsplot/actions/workflows/publish.yml)
 [![Open In Colab](https://github.com/juba/pyobsplot/raw/main/doc/img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
-
 `pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in [Jupyter](https://jupyter.org) notebooks, [VSCode](https://code.visualstudio.com) notebooks, [Google Colab](https://colab.research.google.com) and [Quarto](https://quarto.org) documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.
 
 It allows to do things like :
@@ -22,11 +21,11 @@ Plot.plot({
     "color": {"legend": True},
     "marks": [
         Plot.dot(
-            penguins, 
+            penguins,
             {"x": "flipper_length_mm", "y": "body_mass_g", "fill": "species"}
         ),
         Plot.density(
-            penguins, 
+            penguins,
             {"x": "flipper_length_mm", "y": "body_mass_g", "stroke": "species"}
         )
     ]
@@ -34,7 +33,6 @@ Plot.plot({
 ```
 
 ![Sample plot screenshot](https://github.com/juba/pyobsplot/raw/main/doc/screenshots/readme_plot.png)
-
 
 ## Installation and usage
 
@@ -46,39 +44,36 @@ pip install pyobsplot
 
 For usage instructions, see the [documentation website](https://juba.github.io/pyobsplot):
 
-- See [getting started](https://juba.github.io/pyobsplot/getting_started.html) for a quick usage overview.
-- See [usage](https://juba.github.io/pyobsplot/usage.html) for more detailed usage instructions.
+-   See [getting started](https://juba.github.io/pyobsplot/getting_started.html) for a quick usage overview.
+-   See [usage](https://juba.github.io/pyobsplot/usage.html) for more detailed usage instructions.
 
-If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab: 
+If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:
 
 [![](https://github.com/juba/pyobsplot/raw/main/doc/img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
-
 
 ## Features and limitations
 
 **Features:**
 
-- Syntax as close as possible to the JavaScript one
-- Two renderers available: `widget`, which generates plots as Jupyter widgets, and `jsdom`, which generates SVG or HTML outputs
-- [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and better data type conversions
-- Works offline, no iframe or dependency to Observable runtime
-- Caching mechanism of data objects if they are used several times in the same plot
-- Custom JavaScript code can be passed as strings with the `js` method
-- Python `date` and `datetime` objects are automatically converted to JavaScript `Date` objects
-- Works with Jupyter notebooks and Quarto HTML documents. Plots without legends are also supported in PDF and docx outputs with the `jsdom` renderer.
-- Plots can be saved to SVG or HTML files
+-   Syntax as close as possible to the JavaScript one
+-   Two renderers available: `widget`, which generates plots as Jupyter widgets, and `jsdom`, which generates SVG, HTML or PNG outputs (via typst)
+-   [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and better data type conversions
+-   Works offline, no iframe or dependency to Observable runtime
+-   Caching mechanism of data objects if they are used several times in the same plot
+-   Custom JavaScript code can be passed as strings with the `js` method
+-   Python `date` and `datetime` objects are automatically converted to JavaScript `Date` objects
+-   Works with Jupyter notebooks and Quarto documents
+-   Plots can be saved to SVG, HTML, PNG or PDF files
 
 **Limitations:**
 
-- Plot interactions (tooltips, crosshair...) are not available with the `jsdom` renderer (<https://github.com/juba/pyobsplot/issues/16>).
-- Plots with legends don't work in Quarto in formats other than HTML. (<https://github.com/juba/pyobsplot/issues/9>)
-- Very limited integration with IDE (documentation and autocompletion) for Plot methods. (<https://github.com/juba/pyobsplot/issues/13>)
-
-
+-   Plot interactions (tooltips, crosshair...) are not available with the `jsdom` renderer (<https://github.com/juba/pyobsplot/issues/16>).
+-   Very limited integration with IDE (documentation and autocompletion) for Plot methods. (<https://github.com/juba/pyobsplot/issues/13>)
 
 ## Credits
 
-- [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot), developed by [Mike Bostock](https://observablehq.com/@mbostock) and [Philippe Rivière](https://observablehq.com/@fil) among others.
-- The widget is developed thanks to the [anywidget](https://anywidget.dev) framework.
-- Some code from the `jsdom` renderer has been adapted from [altair_saver](https://github.com/altair-viz/altair_saver).
-- The documentation website is generated by [Quarto](https://quarto.org).
+-   [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot), developed by [Mike Bostock](https://observablehq.com/@mbostock) and [Philippe Rivière](https://observablehq.com/@fil) among others.
+-   The widget is developed thanks to the [anywidget](https://anywidget.dev) framework.
+-   [typst](https://typst.app) is used to convert HTML figures to PNG, SVG or PDF.
+-   Some code from the `jsdom` renderer has been adapted from [altair_saver](https://github.com/altair-viz/altair_saver).
+-   The documentation website is generated by [Quarto](https://quarto.org).
