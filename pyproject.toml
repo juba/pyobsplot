@@ -132,6 +132,8 @@ ignore = [
     "PLR0912",
     "PLR0913",
     "PLR0915",
+    "S301",
+    "S113"
 ]
 unfixable = [
     # Don't touch unused imports
