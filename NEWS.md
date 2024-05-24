@@ -1,5 +1,8 @@
 ## pyobsplot 0.4.3 (dev)
 
+-   Plots can now be generated in "png" and "pdf" formats when using the `jsdom` renderer.
+    This is done by converting figures using [typst](https://typst.app). Many thanks to
+    @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.
 -   Update Observable Plot to 0.6.14
 
 ## pyobsplot 0.4.2
