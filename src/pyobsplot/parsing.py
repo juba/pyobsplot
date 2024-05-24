@@ -4,7 +4,7 @@ Plot specification parsing.
 
 import datetime
 import json
-from typing import Any, Optional
+from typing import Any, Literal
 
 import pandas as pd
 import polars as pl
@@ -13,19 +13,21 @@ from pyobsplot.data import serialize
 
 
 class SpecParser:
-    """
-    Class implementing plot specification parsing.
-    """
 
     def __init__(
-        self, renderer: str = "widget", default: Optional[dict] = None
+        self,
+        renderer: Literal["widget", "jsdom"] = "widget",
+        default: dict | None = None,
     ) -> None:
         """
-        SpecParser constructor.
+        Class implementing plot specification parsing.
 
-        Args:
-            renderer(str): type of renderer ("widget" or "jsdom").
-            default(dict): dict of default spec values.
+        Parameters
+        ----------
+        renderer : {'widget', 'jsdom'}
+            type of renderer.
+        default : dict
+            dict of default spec values.
         """
         self.renderer = renderer
         self.data = []
@@ -48,14 +50,19 @@ class SpecParser:
             value = {"marks": [value]}
         self._spec = value
 
-    def cache_index(self, data: Any) -> Optional[int]:
-        """Returns the index of a data object in the data cache.
+    def cache_index(self, data: Any) -> int | None:
+        """
+        Returns the index of a data object in the data cache.
 
-        Args:
-            data (Any): a data object (DataFeame, GeoJson...)
+        Parameters
+        ----------
+        data : Any
+            a data object (DataFeame, GeoJson...)
 
-        Returns:
-            Optional[int]: index of the data object in the cache, or None if absent.
+        Returns
+        -------
+        int, optional
+            index of the data object in the cache, or None if absent.
         """
         index = [i for i, d in enumerate(self.data) if d is data]
         if len(index) == 1:
@@ -63,13 +70,18 @@ class SpecParser:
         return None
 
     def merge_default(self, spec: dict) -> dict:
-        """Merge SpecParser default spec values with an actual spec.
+        """
+        Merge SpecParser default spec values with an actual spec.
 
-        Args:
-            spec (dict): spec to update with default values.
+        Parameters
+        ----------
+        spec : dict
+            spec to update with default values.
 
-        Returns:
-            dict: merged spec.
+        Returns
+        -------
+        dict
+            merged spec.
         """
         default = self._default
         for k in default:
@@ -78,13 +90,18 @@ class SpecParser:
         return spec
 
     def parse_spec(self) -> dict:
-        """Start spec parsing from _spec attribute.
+        """
+        Start spec parsing from _spec attribute.
 
-        Args:
-            default (dict): default spec values defined during Creator creation.
+        Parameters
+        ----------
+        default : dict
+            default spec values defined during Creator creation.
 
-        Returns:
-            dict: parsed specification.
+        Returns
+        -------
+        dict
+            parsed specification.
         """
         # Deep copy should not be needed and copy should be sufficient as
         # merge_default only affects top-level elements.
@@ -93,14 +110,19 @@ class SpecParser:
         return self.parse(spec)
 
     def parse(self, spec: Any) -> Any:
-        """Recursively parse part of a Plot specification to check and convert
+        """
+        Recursively parse part of a Plot specification to check and convert
         its elements.
 
-        Args:
-            spec (Any): part of a specification.
+        Parameters
+        ----------
+        spec : Any
+            part of a specification.
 
-        Returns:
-            Any: parsed part of a specification.
+        Returns
+        -------
+        Any
+            parsed part of a specification.
         """
         if spec is None:
             return None
@@ -172,21 +194,29 @@ class SpecParser:
         return spec
 
     def serialize_data(self) -> list:
-        """Serialize data in the data cache.
+        """
+        Serialize data in the data cache.
 
-        Returns:
-            list: list of serialized data objects.
+        Returns
+        -------
+        list
+            list of serialized data objects.
         """
         return [serialize(d, renderer=self.renderer) for d in self.data]
 
 
 def js(txt: str) -> dict:
-    """Tag a string as JavaScript code.
+    """
+    Tag a string as JavaScript code.
 
-    Args:
-        txt (str): string containing JavaScript code.
+    Parameters
+    ----------
+    txt : str
+        string containing JavaScript code.
 
-    Returns:
-        dict: tagged string as dict with type value.
+    Returns
+    -------
+    dict
+        tagged string as dict with type value.
     """
     return {"pyobsplot-type": "js", "value": txt}

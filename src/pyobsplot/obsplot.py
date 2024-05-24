@@ -2,6 +2,8 @@
 Obsplot main class.
 """
 
+from __future__ import annotations
+
 import io
 import os
 import shutil
@@ -10,7 +12,7 @@ import tempfile
 import warnings
 from pathlib import Path
 from subprocess import PIPE, Popen, SubprocessError
-from typing import Any, Optional, Union
+from typing import Literal
 
 import typst
 from IPython.display import HTML, SVG, Image, display
@@ -28,39 +30,41 @@ from pyobsplot.widget import ObsplotWidget
 
 
 class Obsplot:
-    """
-    Main Obsplot class.
-
-    Launches a Jupyter widget with ObsplotWidget class, or displays an IPython display
-    with ObsplotJsdom depending on the renderer.
-    """
 
     def __new__(
         cls,
-        renderer: str = "widget",
+        renderer: Literal["widget", "jsdom"] | None = "widget",
         *,
-        theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        format: Optional[str] = None,  # noqa: A002
-        format_options: Optional[dict] = None,
+        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        default: dict | None = None,
+        format: Literal["html", "svg", "png"] | None = None,  # noqa: A002
+        format_options: dict | None = None,
         debug: bool = False,
-    ) -> Any:
+    ) -> ObsplotCreator:
         """
-        Main Obsplot class constructor. Returns a Creator instance depending on the
+        Main Obsplot class. Returns a Creator instance depending on the
         renderer passed as argument.
 
-        Args:
-            renderer (str): renderer to be used.
-            theme (str): color theme to use, can be "light" (default), "dark" or
-                "current".
-            default (dict): dict of default spec values.
-            format (str): default output display format for jsdom renderer, can be
-                "html", "svg", "png" or "pdf".
-            format_options (dict): default options passed to typst when converting
-                to png or pdf.
-            debug (bool): if True, activate debug mode (for widget renderer only)
+        Parameters
+        ----------
+        renderer : {'widget', 'jsdom'}, optional
+            renderer to be used, by default "widget"
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        default : dict, optional
+            dict of default spec values, by default None
+        format : {'html', 'svg', 'png'}, optional
+            default output format for jsdom renderer, by default None
+        format_options : dict, optional
+            default output format options for typst formatter. Currently
+            possible keys are 'font' (name of font family), 'scale' (font scaling)
+            and 'margin' (margin in pt around the plot)
+        debug : bool, optional
+            activate debug mode, by default False
 
-        returns:
+        Returns
+        -------
+        ObsplotCreator
             A Creator object of type depending of the renderer.
         """
 
@@ -91,7 +95,7 @@ class Obsplot:
                 raise ValueError(msg)
             return ObsplotWidgetCreator(theme=theme, default=default, debug=debug)
 
-        elif renderer == "jsdom":
+        else:
             if format_options is None:
                 format_options = {}
             return ObsplotJsdomCreator(
@@ -104,21 +108,27 @@ class Obsplot:
 
 
 class ObsplotCreator:
-    """
-    Creator class.
-    """
 
     def __init__(
         self,
-        theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        debug: bool = False,  # noqa: FBT001, FBT002
+        *,
+        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        default: dict | None = None,
+        debug: bool = False,
     ) -> None:
-        """Generic Creator constructor
-
-        Args:
-            default (dict, optional): dict of default spec values. Defaults to {}.
         """
+        Generic Creator constructor.
+
+        Parameters
+        ----------
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        default : dict, optional
+            dict of default spec values, by default None
+        debug : bool, optional
+            activate debug mode, by default False
+        """
+
         if default is None:
             default = {}
         for k in default:
@@ -126,8 +136,8 @@ class ObsplotCreator:
                 msg = f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
                 raise ValueError(msg)
         self._default = default
-        self._debug = debug
         self._theme = theme
+        self._debug = debug
 
     def __repr__(self):
         return (
@@ -179,29 +189,52 @@ class ObsplotCreator:
 
 
 class ObsplotWidgetCreator(ObsplotCreator):
-    """
-    Widget renderer Creator class.
-    """
 
     def __init__(
         self,
-        theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        debug: bool = False,  # noqa: FBT001, FBT002
+        *,
+        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        default: dict | None = None,
+        debug: bool = False,
     ) -> None:
-        super().__init__(theme, default, debug)
+        """
+        Widget renderer Creator class.
 
-    def __call__(self, *args, **kwargs) -> Optional[ObsplotWidget]:
+        Parameters
+        ----------
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        default : dict, optional
+            dict of default spec values, by default None
+        debug : bool, optional
+            activate debug mode (for widget renderer only), by default False
         """
-        Method called when an instance is called.
+
+        super().__init__(theme=theme, default=default, debug=debug)
+
+    def __call__(self, *args, **kwargs) -> ObsplotWidget | None:
         """
+        Method called when an instance is called directly.
+
+        Parameters
+        ----------
+        path : str, optional
+            if provided, plot is saved to disk to an HTML file instead of displayed
+            as a jupyter widget.
+
+        Returns
+        -------
+        Optional[ObsplotWidget]
+            An ObsplotWidget widget object if path is not defined, otherwse None.
+        """
+
         path = None
         if "path" in kwargs:
             path = kwargs["path"]
             del kwargs["path"]
         spec = self.get_spec(*args, **kwargs)
         res = ObsplotWidget(
-            spec, theme=self._theme, default=self._default, debug=self._debug
+            spec=spec, theme=self._theme, default=self._default, debug=self._debug
         )  # type: ignore
         if path is not None:
             ObsplotWidgetCreator.save_to_file(path, res)
@@ -213,9 +246,12 @@ class ObsplotWidgetCreator(ObsplotCreator):
         """
         Save an Obsplot object generated by a widget creator to a file.
 
-        Args:
-            path (str): path to output file.
-            res (ObsplotWidget): result of a call to Obsplot().
+        Parameters
+        ----------
+        path : str
+            path to output file. Must have an "html" extension
+        res : ObsplotWidget
+            widget object to be saved to disk
         """
         extension = Path(path).suffix.lower()
         if extension not in [".html", ".htm"]:
@@ -228,21 +264,36 @@ class ObsplotWidgetCreator(ObsplotCreator):
 
 
 class ObsplotJsdomCreator(ObsplotCreator):
-    """
-    Jsdom renderer Creator class.
-    """
 
     def __init__(
         self,
         *,
-        theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        format: Optional[str] = None,  # noqa: A002
-        format_options: Optional[dict] = None,
+        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        default: dict | None = None,
+        format: Literal["html", "svg", "png"] | None = None,  # noqa: A002
+        format_options: dict | None = None,
         debug: bool = False,
     ) -> None:
+        """
+        Jsdom renderer Creator class.
 
-        super().__init__(theme, default, debug)
+        Parameters
+        ----------
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        default : dict, optional
+            dict of default spec values, by default None
+        format : {'html', 'svg', 'png'}, optional
+            default output format for jsdom renderer, by default None
+        format_options : dict, optional
+            default output format options for typst formatter. Currently
+            possible keys are 'font' (name of font family), 'scale' (font scaling)
+            and 'margin' (margin in pt around the plot)
+        debug : bool, optional
+            activate debug mode (for widget renderer only), by default False
+        """
+
+        super().__init__(theme=theme, default=default, debug=debug)
 
         allowed_formats = ["html", "svg", "png"]
         if format is not None and format not in allowed_formats:
@@ -360,7 +411,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
             spec["figure"] = True
 
         res = ObsplotJsdom(
-            spec,
+            spec=spec,
             port=self._port,
             theme=self._theme,
             default=self._default,
@@ -370,18 +421,47 @@ class ObsplotJsdomCreator(ObsplotCreator):
         if format in ["png", "pdf"] or format == "svg" and isinstance(res, HTML):
             if format == "svg" and isinstance(res, HTML):
                 warnings.warn(
-                    f"HTML figure converted to SVG via typst.",
+                    "HTML figure converted to SVG via typst.",
                     RuntimeWarning,
                     stacklevel=1,
                 )
-            res = self.typst_render(res, format, format_options)
+            res = self.typst_render(res, format, format_options)  # type: ignore
 
         if path is None:
             display(res)
         else:
             ObsplotJsdomCreator.save_to_file(path, res)  # type: ignore
 
-    def typst_render(self, res, format, options) -> SVG | Image | bytes:  # noqa: A002
+    def typst_render(
+        self,
+        figure: HTML,
+        format: Literal["pdf", "svg", "png"],  # noqa: A002
+        options: dict | None = None,
+    ) -> SVG | Image | bytes:
+        """
+        Run an HTML jsdom output through typst for conversion to png, pdf or svg.
+
+        Parameters
+        ----------
+        figure : HTML
+            output of jsdom renderer (HTML)
+        format : {'png', 'pdf', 'svg'}
+            format of output to generate.
+        options : dict, optional
+
+        Returns
+        -------
+        _type_
+            _description_
+
+        Raises
+        ------
+        ValueError
+            _description_
+        """
+
+        if options is None:
+            options = {}
 
         if format not in ["png", "pdf", "svg"]:
             msg = f"Invalid format: {format}."
@@ -394,7 +474,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
 
             # Write HTML jsdom output to file
             with open(tmpdir / "jsdom.html", "w") as jsdom_out:
-                jsdom_out.write(res.data)
+                jsdom_out.write(str(figure.data))
             # Copy typst template
             shutil.copy(bundler_output_dir / "template.typ", tmpdir / "template.typ")
             # Create the typst input file
@@ -427,7 +507,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
         return res
 
     @staticmethod
-    def save_to_file(path: str, res: Union[SVG, HTML, Image]) -> None:
+    def save_to_file(path: str, res: SVG | HTML | Image) -> None:
         """
         Save an Obsplot object generated by a Jsdom creator to a file.
 

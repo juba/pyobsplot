@@ -2,8 +2,7 @@
 Obsplot widget handling.
 """
 
-
-from typing import Optional
+from typing import Any
 
 import anywidget
 import traitlets
@@ -13,15 +12,6 @@ from pyobsplot.utils import DEFAULT_THEME, bundler_output_dir
 
 
 class ObsplotWidget(anywidget.AnyWidget):
-    """Obsplot widget class.
-
-    It inherits from anywidget.Anywidget.
-
-    The class takes a plot specification as input and generates a plot.
-
-    The specification can be given as a dict, a Plot function call or as
-    Python kwargs.
-    """
 
     # Disable _esm and _css watching and live reload to avoid "exception not rethrown"
     # error with pytest.
@@ -36,12 +26,26 @@ class ObsplotWidget(anywidget.AnyWidget):
 
     def __init__(
         self,
-        spec,
+        *,
+        spec: Any,
         theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        debug: bool = False,  # noqa: FBT001, FBT002
-    ):
-        """Obsplot widget constructor."""
+        default: dict | None = None,
+        debug: bool = False,
+    ) -> None:
+        """
+        Obsplot widget class, inherits from anywidget.Anywidget.
+
+        Parameters
+        ----------
+        spec : Any
+            Plot specification as dict, Plot function call or Python kwargs.
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        default : dict, optional
+            dict of default spec values, by default None
+        debug : bool, optional
+            activate debug mode, by default False
+        """
         self._debug = debug
         self._default = default
         self._theme = theme

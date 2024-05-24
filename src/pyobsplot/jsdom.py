@@ -4,7 +4,7 @@ Obsplot jsdom handling.
 
 import json
 import warnings
-from typing import Any, Optional, Union
+from typing import Any
 
 import requests
 from IPython.display import HTML, SVG
@@ -16,26 +16,34 @@ HTTP_SERVER_ERROR = 500
 
 
 class ObsplotJsdom:
-    """Obsplot JSDom class.
-
-    The class takes a plot specification as input and generates a plot as SVG or HTML
-    by calling a JSDom script with node.
-
-    The specification can be given as a dict, a Plot function call or as
-    Python kwargs.
-    """
 
     def __init__(
         self,
+        *,
         spec: Any,
         port: int,
         theme: str = DEFAULT_THEME,
-        default: Optional[dict] = None,
-        debug: bool = False,  # noqa: FBT002, FBT001
+        default: dict | None = None,
+        debug: bool = False,
     ) -> None:
         """
-        Constructor. Parse the spec given as argument.
+        Obsplot JSDom class. The class takes a plot specification as input and generates
+        a plot as SVG or HTML by calling a JSDom script with node.
+
+        Parameters
+        ----------
+        spec : Any
+            Plot specification as dict, Plot function call or Python kwargs.
+        port : int
+            port number of the jsdom server.
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        default : dict, optional
+            dict of default spec values, by default None
+        debug : bool, optional
+            activate debug mode, by default False
         """
+
         # Create parser
         parser = SpecParser(renderer="jsdom", default=default)
         # Parse spec code
@@ -47,10 +55,13 @@ class ObsplotJsdom:
         self.port = port
         self.theme = theme
 
-    def plot(self) -> Union[SVG, HTML]:
-        """Generates the plot by sending request to http node server.
+    def plot(self) -> SVG | HTML:
+        """
+        Generates the plot by sending request to http node server.
 
-        Returns:
+        Returns
+        -------
+        HTML | SVG
             Either an HTML or SVG IPython.display object.
         """
 
@@ -63,8 +74,10 @@ class ObsplotJsdom:
                 timeout=600,
             )
         except ConnectionRefusedError:
-            msg = f"""Error: can't connect to generator server on port {self.port}.
-            Please recreate your generator object."""
+            msg = (
+                f"Error: can't connect to generator server on port {self.port}.\n"
+                f"Please recreate your generator object."
+            )
             warnings.warn(msg, stacklevel=1)
         # Read back result
         if r.status_code == HTTP_SERVER_ERROR:  # type: ignore

@@ -8,20 +8,26 @@ from typing import Any
 
 import pandas as pd
 import polars as pl
-import pyarrow as pa
 import pyarrow.feather as pf
 
 
 def serialize(data: Any, renderer: str) -> Any:
-    """Serialize a data object.
-
-    Args:
-        data (Any): data object to serialize.
-        renderer (str): renderer.
-
-    Returns:
-        Any: serialized data object.
     """
+    Serialize a data object.
+
+    Parameters
+    ----------
+    data : Any
+        data object to serialize.
+    renderer : str
+        renderer type.
+
+    Returns
+    -------
+    Any
+        serialized data object.
+    """
+
     # If polars DataFrame, serialize to Arrow IPC
     if isinstance(data, pl.DataFrame):
         value = pl_to_arrow(data)
@@ -40,13 +46,18 @@ def serialize(data: Any, renderer: str) -> Any:
 
 
 def pd_to_arrow(df: pd.DataFrame) -> bytes:
-    """Convert a pandas DataFrame to Arrow IPC bytes.
+    """
+    Convert a pandas DataFrame to Arrow IPC bytes.
 
-    Args:
-        df (pd.DataFrame): pandas DataFrame to convert.
+    Parameters
+    ----------
+    df : pd.DataFrame
+        pandas DataFrame to convert.
 
-    Returns:
-        bytes: Arrow IPC bytes
+    Returns
+    -------
+    bytes
+        Arrow IPC bytes.
     """
     f = io.BytesIO()
     df.to_feather(f, compression="uncompressed")
@@ -54,15 +65,19 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
 
 
 def pl_to_arrow(df: pl.DataFrame) -> bytes:
-    """Convert a polars DataFrame to Arrow IPC bytes.
-
-    Args:
-        df (pl.DataFrame): polars DataFrame to convert.
-
-    Returns:
-        bytes: Arrow IPC bytes.
     """
+    Convert a polars DataFrame to Arrow IPC bytes.
 
+    Parameters
+    ----------
+    df : pl.DataFrame
+        polars DataFrame to convert.
+
+    Returns
+    -------
+    bytes
+        Arrow IPC bytes.
+    """
     f = io.BytesIO()
     pf.write_feather(df.to_arrow(), f, compression="uncompressed")
     return f.getvalue()

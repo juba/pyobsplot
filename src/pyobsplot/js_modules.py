@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable, Optional
+from typing import Callable
 
 from pyobsplot.obsplot import ObsplotJsdomCreator, ObsplotWidgetCreator
 from pyobsplot.utils import PLOT_METHODS
@@ -11,10 +11,12 @@ _plot_renderer = "widget"
 
 
 class Plot:
-    """Plot methods class."""
+    """
+    Plot methods class.
+    """
 
     @staticmethod
-    def plot(*args, **kwargs) -> Optional[ObsplotWidget]:
+    def plot(*args, **kwargs) -> ObsplotWidget | None:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
         or an ObpsplotJsdom with args and kwargs.
@@ -29,11 +31,14 @@ class Plot:
 
 
 def method_to_spec(*args, **kwargs) -> dict:
-    """Function used for creating Plot.xyz static methods.
+    """
+    Function used for creating Plot.xyz static methods.
     Generates a dict of specification with method name and args.
 
-    Returns:
-        dict: Plot function specification.
+    Returns
+    -------
+    dict
+        Plot function specification.
     """
     name = kwargs["name"]
     if len(kwargs) > 1:
@@ -55,10 +60,14 @@ for method in PLOT_METHODS:
 
 
 class JSModule(type):
-    """metaclass to allow JavaScript module and methods handling."""
+    """
+    Metaclass to allow JavaScript module and methods handling.
+    """
 
     def __getattr__(cls: type, name: str) -> Callable:
-        """Intercept methods calling and returns a parsed and typed dict object."""
+        """
+        Intercept methods calling and returns a parsed and typed dict object.
+        """
 
         def wrapper(*args, **kwargs) -> dict:
             if kwargs:
@@ -75,12 +84,16 @@ class JSModule(type):
 
 
 class d3(metaclass=JSModule):  # noqa: N801
-    """JSModule class to allow d3 objects in specification."""
+    """
+    JSModule class to allow d3 objects in specification.
+    """
 
     pass
 
 
 class Math(metaclass=JSModule):
-    """JSModule class to allow Math objects in specification."""
+    """
+    JSModule class to allow Math objects in specification.
+    """
 
     pass
