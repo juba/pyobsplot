@@ -391,11 +391,14 @@ class ObsplotJsdomCreator(ObsplotCreator):
                     '#import "template.typ": obsplot\n#show: obsplot("jsdom.html",'
                 )
                 if "margin" in options:
-                    typst_content += f"margin: {options['margin']}pt,"
+                    value = options["margin"]
+                    typst_content += f"margin: {value}pt,"
                 if "font" in options:
-                    typst_content += f'font-family: "{options['font']}",'
+                    value = options["font"]
+                    typst_content += f'font-family: "{value}",'
                 if "scale" in options:
-                    typst_content += f"scale: {options['scale']},"
+                    value = options["scale"]
+                    typst_content += f"scale: {value},"
                 typst_content += ")"
                 typst_file.write(typst_content)
             typst.compile(input_file, output=output_file, ppi=100, format=format)
