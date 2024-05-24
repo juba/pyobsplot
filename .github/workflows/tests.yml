@@ -34,10 +34,10 @@ jobs:
                   cache: "pip"
 
             - name: Install rye
-              run: |
-                  curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
-                  source "$HOME/.rye/env"
-                  rye sync
+              uses: eifinger/setup-rye@v3
+              with:
+                  version: "latest"
+                  enable-cache: true
 
             - name: Run pytest
               run: rye run test
