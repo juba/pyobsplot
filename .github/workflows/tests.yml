@@ -39,6 +39,9 @@ jobs:
                   version: "latest"
                   enable-cache: true
 
+            - name: Rye sync
+              run: rye sync
+
             - name: Run pytest
               run: rye run test
 
