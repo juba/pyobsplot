@@ -36,6 +36,7 @@ jobs:
             - name: Install rye
               run: |
                   curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
+                  source "$HOME/.rye/env"
                   rye sync
 
             - name: Run pytest
