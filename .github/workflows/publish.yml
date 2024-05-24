@@ -33,8 +33,8 @@ jobs:
                   python-version: "3.11"
                   cache: "pip"
 
-            - name: Install hatch
-              run: pipx install hatch
+            - name: Install rye
+              run: curl -sSf https://rye.astral.sh/get | bash
 
             - name: Bundle
               run: npm run bundle
@@ -46,4 +46,5 @@ jobs:
               run: |
                   git config --global user.email "julien@nozav.org"
                   git config --global user.name "Julien Barnier"
-                  hatch -e docs run quarto publish gh-pages doc
+                  source .venv/bin/activate
+                  quarto publish gh-pages doc

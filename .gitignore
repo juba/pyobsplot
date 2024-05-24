@@ -5,10 +5,10 @@ dist/
 *_files/
 *_cache/
 .ipynb_checkpoints/
-.python-version
 examples/test*
 **/test-results/
 **/playwright-report/
 **/playwright/.cache/
 *-snapshots/
 /.luarc.json
+/.venv/

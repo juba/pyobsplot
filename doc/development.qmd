@@ -22,9 +22,9 @@ npm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'
 If you want to build `pyobsplot` from source, you'll have to follow these steps:
 
 - Install [node.js](https://nodejs.org/en)
-- Install [hatch](https://hatch.pypa.io/latest/) dependency management system
+- Install [rye](https://rye.astral.sh/guide/installation/) dependency management system
 - Clone the [pyobsplot](https://github.com/juba/pyobsplot) repository
-- Install Python dependencies with : `hatch shell`
+- Install Python dependencies with : `rye sync`
 - Install `pyobsplot-js` JavaScript dependencies with : `npm install --workspaces`
 - Install `pyobsplot` dependencies with : `npm install`
 
@@ -102,7 +102,7 @@ If using the `widget` renderer, debug output will be displayed in JavaScript con
 - If necessary release the npm package with `npm publish` in `packages/pyobsplot-js`
 - Check that the `min_npm_version` value in `.utils` is correct
 - Change version in `NEWS.md` and `src/pyobsplot/__about__.py`
-- Release the Python package with `hatch build` and `hatch publish` in `pyobsplot`
+- Release the Python package with `rye build` and `rye publish` in `pyobsplot`
 - Tag the version in git
 - Create a release on Github
 - Bump to dev version in `pyproject.toml` and `NEWS.md`
