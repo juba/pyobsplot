@@ -280,7 +280,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
             format = kwargs["format"]  # noqa: A001
             del kwargs["format"]
         else:
-            format =self.format  # noqa: A001
+            format = self.format  # noqa: A001
         if "format_options" in kwargs:
             format_options = kwargs["format_options"]
             del kwargs["format_options"]
@@ -300,8 +300,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
                     RuntimeWarning,
                     stacklevel=1,
                 )
-                format = extension # noqa: A001
-
+                format = extension  # noqa: A001
 
         spec = self.get_spec(*args, **kwargs)
         if "figure" not in spec and format in ["html", "png", "pdf"]:
@@ -320,7 +319,7 @@ class ObsplotJsdomCreator(ObsplotCreator):
         if path is None:
             display(res)
         else:
-            ObsplotJsdomCreator.save_to_file(path, res) # type: ignore
+            ObsplotJsdomCreator.save_to_file(path, res)  # type: ignore
 
     def start_server(self):
         """
@@ -385,23 +384,21 @@ class ObsplotJsdomCreator(ObsplotCreator):
             with open(tmpdir / "jsdom.html", "w") as jsdom_out:
                 jsdom_out.write(res.data)
             # Copy typst template
-            shutil.copy(
-                bundler_output_dir / "template.typ", tmpdir/ "template.typ"
-            )
+            shutil.copy(bundler_output_dir / "template.typ", tmpdir / "template.typ")
             # Create the typst input file
             with open(input_file, "w") as typst_file:
                 typst_content = (
-                    '#import "template.typ": obsplot\n'
-                    '#show: obsplot("jsdom.html",'
-                    f"{'margin: ' + str(options["margin"]) + 'pt,' if "margin" in options else ''}"
-                    f"{'font-family: "' + options["font"] + '",' if "font" in options else ''}"
-                    f"{'scale: ' + str(options["scale"]) + ',' if "scale" in options else ''}"
-                    ")"
+                    '#import "template.typ": obsplot\n#show: obsplot("jsdom.html",'
                 )
+                if "margin" in options:
+                    typst_content += f"margin: {options['margin']}pt,"
+                if "font" in options:
+                    typst_content += f'font-family: "{options['font']}",'
+                if "scale" in options:
+                    typst_content += f"scale: {options['scale']},"
+                typst_content += ")"
                 typst_file.write(typst_content)
-            typst.compile(
-                input_file, output=output_file, ppi=100, format=format
-            )
+            typst.compile(input_file, output=output_file, ppi=100, format=format)
             with open(output_file, "rb") as f:
                 res = f.read()
         return res
@@ -427,5 +424,4 @@ class ObsplotJsdomCreator(ObsplotCreator):
                 f.write(str(res.data))
         else:
             with open(path, "wb") as f:
-                f.write(res) # type: ignore
-
+                f.write(res)  # type: ignore
