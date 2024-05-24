@@ -287,13 +287,13 @@ class ObsplotJsdomCreator(ObsplotCreator):
         else:
             format_options = self.format_options
 
-        # If both format and path are provided, use path extension
-        if path is not None:
+        if path is not None and not isinstance(path, io.StringIO):
             extension = Path(path).suffix.lower()[1:]
             allowed_extensions = ["html", "svg", "pdf", "png"]
             if extension not in allowed_extensions:
                 msg = f"Output file extension should be one of {allowed_extensions}"
                 raise ValueError(msg)
+            # If both format and path are provided, use path extension
             if format is not None and format != extension[1:]:
                 warnings.warn(
                     f"Generating file in {extension} format based on file extension.",
