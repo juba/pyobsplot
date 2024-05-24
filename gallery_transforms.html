@@ -218,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="group-transform" class="level2">
 <h2 class="anchored" data-anchor-id="group-transform">Group transform</h2>
 <p><a href="https://observablehq.com/@observablehq/plot-group?collection=@observablehq/plot">Group transform</a> allows to compute summary values before plotting them. It is often used to make bar charts.</p>
-<div id="347ce85b" class="cell" data-execution_count="2">
+<div id="89e76619" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Plot, d3, Math, js</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="dodge-transform" class="level2">
 <h2 class="anchored" data-anchor-id="dodge-transform">Dodge transform</h2>
 <p>The <a href="https://observablehq.com/@observablehq/plot-dodge?collection=@observablehq/plot">Dodge transform</a> allows to pack marks without overlapping. The following chart shows data about IPO offerings in the US.</p>
-<div id="5a02fbb9" class="cell" data-execution_count="3">
+<div id="e4e2134e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ipos <span class="op">=</span> pl.read_csv(<span class="st">"data/ipos.csv"</span>, try_parse_dates<span class="op">=</span><span class="va">True</span>).<span class="bu">filter</span>(</span>
@@ -295,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="hexbin-transform" class="level2">
 <h2 class="anchored" data-anchor-id="hexbin-transform">Hexbin transform</h2>
 <p>The <a href="https://observablehq.com/@observablehq/plot-hexbin?collection=@observablehq/plot">Hexbin transform</a> aggregates two dimensional points into hexagonal bins.</p>
-<div id="7c0f21f0" class="cell" data-execution_count="4">
+<div id="ab9e961c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"inset"</span>: <span class="dv">10</span>,</span>
@@ -355,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="map-transform" class="level2">
 <h2 class="anchored" data-anchor-id="map-transform">Map transform</h2>
 <p><a href="https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot">Map transform</a> family can be used to normalize values.</p>
-<div id="a59b6f9e" class="cell" data-execution_count="5">
+<div id="ea3196be" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stocks <span class="op">=</span> pl.read_csv(<span class="st">"data/stocks.csv"</span>, try_parse_dates<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
@@ -402,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="transforms-composition" class="level2">
 <h2 class="anchored" data-anchor-id="transforms-composition">Transforms composition</h2>
 <p>Several group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the <a href="https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot">Map transform</a> notebook.</p>
-<div id="5a2f0d42" class="cell" data-execution_count="6">
+<div id="21ece693" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and prepare data</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>stateage <span class="op">=</span> (</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    pl.read_csv(<span class="st">"data/us-population-state-age.csv"</span>)</span>
