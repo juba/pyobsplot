@@ -69,7 +69,6 @@ filterwarnings = "ignore::DeprecationWarning"
 
 [tool.ruff]
 exclude = ["__pycache__", "__pypackages__", ".git"]
-target-version = "py39"
 line-length = 88
 select = [
     "A",
