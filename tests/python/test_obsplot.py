@@ -2,9 +2,10 @@
 Tests for Obsplot main class.
 """
 
+import json
+
 import pytest
 import requests
-import json
 
 import pyobsplot
 from pyobsplot import Obsplot, Plot
@@ -170,6 +171,4 @@ class TestInit:
         # bad /plot request
         r = requests.post(url + "/plot", data="this is no valid json")
         assert r.status_code == 500
-        assert (
-            r.content.decode().startswith("Server error: Unexpected token")
-        )
+        assert r.content.decode().startswith("Server error: Unexpected token")

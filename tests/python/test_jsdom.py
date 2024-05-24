@@ -2,9 +2,10 @@
 Tests for Obsplot jsdom file output.
 """
 
-import pytest
 import io
 import pickle
+
+import pytest
 
 from pyobsplot import Obsplot
 from pyobsplot.utils import DEFAULT_THEME
@@ -40,7 +41,7 @@ def defaults():
 
 class TestSpecs:
     def test_jsdom_plots(self, op, specs, themes, defaults):
-        results = dict()
+        results = {}
         for key, spec in specs.items():
             out = io.StringIO()
             if key in themes:
@@ -52,7 +53,7 @@ class TestSpecs:
             else:
                 op.default = {}
             op(spec, path=out)
-            with open(f"tests/python/reference/{key}", "r") as f:
+            with open(f"tests/python/reference/{key}") as f:
                 results[key] = out.getvalue() == f.read()
             out.close()
         print(results)
