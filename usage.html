@@ -226,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For a quick usage introduction, see <a href="./getting_started.html">getting started</a>.</p>
 <p>To create a plot we can either use <code>Plot.plot()</code> to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.</p>
 <p>So we start by importing the needed classes and create a plot generator object:</p>
-<div id="b7632f3d" class="cell" data-execution_count="2">
+<div id="70945c07" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -248,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Becomes:</p>
-<div id="0ba233f5" class="cell" data-execution_count="3">
+<div id="a3452db1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: {<span class="st">"legend"</span>: <span class="va">True</span>},</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">False</span>,</span>
@@ -256,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is possible to replace JavaScript methods from the <code>Plot</code>, <code>d3</code> and <code>Math</code> modules with Python methods, but you must first import the corresponding classes.</p>
-<div id="8c87f825" class="cell" data-execution_count="4">
+<div id="fab5a7ab" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot, d3</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>op({</span>
@@ -279,11 +279,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 :where(.plot-d6a7b5 text),
 :where(.plot-d6a7b5 tspan) {
   white-space: pre;
-}</style><g aria-label="y-axis tick" aria-hidden="true" fill="none" stroke="currentColor"><path transform="translate(40,364.9970380267469)" d="M0,0L-6,0"></path><path transform="translate(40,337.43390249099866)" d="M0,0L-6,0"></path><path transform="translate(40,309.8707669552504)" d="M0,0L-6,0"></path><path transform="translate(40,282.3076314195022)" d="M0,0L-6,0"></path><path transform="translate(40,254.7444958837539)" d="M0,0L-6,0"></path><path transform="translate(40,227.18136034800563)" d="M0,0L-6,0"></path><path transform="translate(40,199.6182248122574)" d="M0,0L-6,0"></path><path transform="translate(40,172.05508927650914)" d="M0,0L-6,0"></path><path transform="translate(40,144.49195374076083)" d="M0,0L-6,0"></path><path transform="translate(40,116.92881820501256)" d="M0,0L-6,0"></path><path transform="translate(40,89.36568266926432)" d="M0,0L-6,0"></path><path transform="translate(40,61.80254713351604)" d="M0,0L-6,0"></path><path transform="translate(40,34.239411597767784)" d="M0,0L-6,0"></path></g><g aria-label="y-axis tick label" text-anchor="end" font-variant="tabular-nums" transform="translate(-9,0)"><text y="0.32em" transform="translate(40,364.9970380267469)">−10</text><text y="0.32em" transform="translate(40,337.43390249099866)">−9</text><text y="0.32em" transform="translate(40,309.8707669552504)">−8</text><text y="0.32em" transform="translate(40,282.3076314195022)">−7</text><text y="0.32em" transform="translate(40,254.7444958837539)">−6</text><text y="0.32em" transform="translate(40,227.18136034800563)">−5</text><text y="0.32em" transform="translate(40,199.6182248122574)">−4</text><text y="0.32em" transform="translate(40,172.05508927650914)">−3</text><text y="0.32em" transform="translate(40,144.49195374076083)">−2</text><text y="0.32em" transform="translate(40,116.92881820501256)">−1</text><text y="0.32em" transform="translate(40,89.36568266926432)">0</text><text y="0.32em" transform="translate(40,61.80254713351604)">1</text><text y="0.32em" transform="translate(40,34.239411597767784)">2</text></g><g aria-label="rule" stroke="steelblue"><line x1="40" x2="639.5" y1="89.36568266926432" y2="89.36568266926432"></line></g><g aria-label="line" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M40,121.499L46.056,84.732L52.111,87.038L58.167,96.174L64.222,85.592L70.278,108.041L76.333,120.219L82.389,98.063L88.444,51.398L94.5,26.939L100.556,53.878L106.611,61.317L112.667,60.961L118.722,49.016L124.778,102.529L130.833,95.693L136.889,74.046L142.944,57.803L149,91.908L155.056,53.676L161.111,22.745L167.167,20L173.222,44.128L179.278,87.203L185.333,63.321L191.389,76.705L197.444,81.577L203.5,101.7L209.556,106.928L215.611,89.271L221.667,104.499L227.722,114.197L233.778,117.737L239.833,111.186L245.889,88.772L251.944,106.553L258,117.379L264.056,180.642L270.111,221.105L276.167,214.879L282.222,211.753L288.278,187.887L294.333,193.132L300.389,198.862L306.444,250.372L312.5,297.572L318.556,327.5L324.611,279.701L330.667,248.287L336.722,271.744L342.778,281.276L348.833,320.516L354.889,380L360.944,363.376L367,306.956L373.056,267.347L379.111,276.085L385.167,244.89L391.222,249.66L397.278,203.945L403.333,176.24L409.389,159.379L415.444,112.049L421.5,117.566L427.556,144.829L433.611,165.533L439.667,156.64L445.722,134.851L451.778,161.695L457.833,116.292L463.889,90.134L469.944,77.764L476,74.325L482.056,96.393L488.111,94.252L494.167,93.082L500.222,89.211L506.278,106.183L512.333,130.532L518.389,151.001L524.444,131.683L530.5,135.015L536.556,131.647L542.611,147.669L548.667,116.538L554.722,64.306L560.778,89.97L566.833,64.5L572.889,53.685L578.944,60.223L585,60.145L591.056,57.511L597.111,80.164L603.167,63.856L609.222,129.509L615.278,104.321L621.333,95.849L627.389,61.204L633.444,79.405L639.5,142.265"></path></g></svg></figure>
+}</style><g aria-label="y-axis tick" aria-hidden="true" fill="none" stroke="currentColor"><path transform="translate(40,350.34917494676336)" d="M0,0L-6,0"></path><path transform="translate(40,308.9770990929602)" d="M0,0L-6,0"></path><path transform="translate(40,267.605023239157)" d="M0,0L-6,0"></path><path transform="translate(40,226.23294738535384)" d="M0,0L-6,0"></path><path transform="translate(40,184.8608715315506)" d="M0,0L-6,0"></path><path transform="translate(40,143.48879567774745)" d="M0,0L-6,0"></path><path transform="translate(40,102.1167198239443)" d="M0,0L-6,0"></path><path transform="translate(40,60.74464397014107)" d="M0,0L-6,0"></path></g><g aria-label="y-axis tick label" text-anchor="end" font-variant="tabular-nums" transform="translate(-9,0)"><text y="0.32em" transform="translate(40,350.34917494676336)">−4</text><text y="0.32em" transform="translate(40,308.9770990929602)">−2</text><text y="0.32em" transform="translate(40,267.605023239157)">0</text><text y="0.32em" transform="translate(40,226.23294738535384)">2</text><text y="0.32em" transform="translate(40,184.8608715315506)">4</text><text y="0.32em" transform="translate(40,143.48879567774745)">6</text><text y="0.32em" transform="translate(40,102.1167198239443)">8</text><text y="0.32em" transform="translate(40,60.74464397014107)">10</text></g><g aria-label="rule" stroke="steelblue"><line x1="40" x2="639.5" y1="267.605023239157" y2="267.605023239157"></line></g><g aria-label="line" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M40,288.67L46.056,276.674L52.111,270.813L58.167,294.58L64.222,273.914L70.278,277.162L76.333,332.504L82.389,301.863L88.444,292.976L94.5,303.417L100.556,311.781L106.611,291.202L112.667,269.703L118.722,309.147L124.778,332.044L130.833,325.132L136.889,305.739L142.944,319.861L149,355.19L155.056,352.042L161.111,353.187L167.167,346.139L173.222,380L179.278,349.076L185.333,363.304L191.389,316.58L197.444,307.92L203.5,332.784L209.556,319.963L215.611,304.707L221.667,334.232L227.722,334.94L233.778,344.835L239.833,318.21L245.889,293.671L251.944,330.036L258,310.979L264.056,268.126L270.111,269.265L276.167,234.108L282.222,232.506L288.278,260.124L294.333,186.226L300.389,158.684L306.444,193.782L312.5,207.802L318.556,197.701L324.611,174.693L330.667,150.703L336.722,107.826L342.778,107.19L348.833,85.368L354.889,74L360.944,75.337L367,71.376L373.056,70.634L379.111,89.572L385.167,92.34L391.222,73.799L397.278,77.714L403.333,60.366L409.389,64.972L415.444,39.623L421.5,20L427.556,27.291L433.611,82.15L439.667,103.727L445.722,103.259L451.778,121.082L457.833,121.431L463.889,129.448L469.944,90.997L476,129.294L482.056,109.741L488.111,160.445L494.167,155.77L500.222,161.526L506.278,162.954L512.333,188.251L518.389,228.295L524.444,252.232L530.5,247.79L536.556,198.5L542.611,192.126L548.667,184.481L554.722,232.744L560.778,231.56L566.833,244.335L572.889,270.557L578.944,269.286L585,246.683L591.056,269.176L597.111,275.49L603.167,297.843L609.222,310.835L615.278,328.336L621.333,334.365L627.389,318.31L633.444,349.144L639.5,368.512"></path></g></svg></figure>
 </div>
 </div>
 <p>If your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the <code>js</code> method (after importing it):</p>
-<div id="daea30e6" class="cell" data-execution_count="5">
+<div id="1ad814df" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot, d3, js</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -508,14 +508,14 @@ Output is saved between sessions
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Install globally</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> pyobsplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>After that, you can select which format to use when creating a plot generator object:</p>
-<div id="4d9ddf39" class="cell" data-execution_count="6">
+<div id="11179a71" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generator with a widget output (default)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>opw <span class="op">=</span> Obsplot(<span class="bu">format</span><span class="op">=</span><span class="st">"widget"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Generator with a PNG output</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>opj <span class="op">=</span> Obsplot(<span class="bu">format</span><span class="op">=</span><span class="st">"png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is also possible to specifiy a format when creating the plot by adding a <code>format</code> argument:</p>
-<div id="41433e32" class="cell" data-execution_count="7">
+<div id="b279351e" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generator with default widget output format</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to PNG output for this plot</span></span>
@@ -525,7 +525,7 @@ Output is saved between sessions
 <section id="alternative-syntaxes" class="level2">
 <h2 class="anchored" data-anchor-id="alternative-syntaxes">Alternative syntaxes</h2>
 <p>As we’ve already seen, the most common syntax for a plot specification is to pass it as a dictionary :</p>
-<div id="8e22471d" class="cell" data-execution_count="8">
+<div id="016def61" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span>,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: {<span class="st">"legend"</span>: <span class="va">True</span>}</span>
@@ -535,7 +535,7 @@ Output is saved between sessions
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For the simplest cases, you can also pass a mark method directly. The JavaScript <code>plot()</code> method will be called automatically to display the plot:</p>
-<div id="c12e625f" class="cell" data-execution_count="9">
+<div id="7558edd6" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>op(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    Plot.tickX(</span>
@@ -557,13 +557,13 @@ Output is saved between sessions
 <p>When creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.</p>
 <p>Only the top-level layout options can be specified as defaults. This can be useful to specify a default <code>width</code>, colors, margins or even <code>style</code>.</p>
 <p>The complete list of available default attributes is :</p>
-<div id="9b6f4144" class="cell" data-execution_count="10">
+<div id="056779d9" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-stdout">
 <pre><code>['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'margin', 'width', 'height', 'aspectRatio', 'style']</code></pre>
 </div>
 </div>
 <p>So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :</p>
-<div id="9e4665b3" class="cell" data-execution_count="11">
+<div id="8acad8b6" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>op_colors <span class="op">=</span> Obsplot(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">format</span> <span class="op">=</span> <span class="st">"html"</span>,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    default<span class="op">=</span>{</span>
@@ -573,7 +573,7 @@ Output is saved between sessions
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="05f6e2ca" class="cell" data-execution_count="12">
+<div id="528a56f3" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>op_colors(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    Plot.dot(data, {<span class="st">"x"</span>: <span class="st">"x"</span>, <span class="st">"y"</span>: <span class="st">"y"</span>})</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -595,7 +595,7 @@ Output is saved between sessions
 <li><code>current</code> theme creates plots with a transparent background and a <code>currentColor</code> foreground</li>
 </ul>
 <p>You can specify a mode when creating the plot generator object by using the <code>theme</code> argument:</p>
-<div id="d5b4bdf1" class="cell" data-execution_count="13">
+<div id="4f17a90e" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>op_dark <span class="op">=</span> Obsplot(theme<span class="op">=</span><span class="st">"dark"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can see output examples in the <a href="./gallery_themes.html">themes gallery</a></p>
@@ -603,7 +603,7 @@ Output is saved between sessions
 <section id="dataframes-and-series" class="level2">
 <h2 class="anchored" data-anchor-id="dataframes-and-series">DataFrames and Series</h2>
 <p>Pandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.</p>
-<div id="c10f58a2" class="cell" data-execution_count="14">
+<div id="37c023e4" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -632,7 +632,7 @@ Output is saved between sessions
 </div>
 </div>
 <p>If you pass a pandas or polars Series object, it will be automatically converted to a DataFrame with one column:</p>
-<div id="e2b1ac00" class="cell" data-execution_count="15">
+<div id="3f7517a6" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> df.get_column(<span class="st">"Value"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>op(</span>
@@ -647,7 +647,7 @@ Output is saved between sessions
 </div>
 </div>
 <p><code>pyobsplot</code> implements a simple caching mechanism for some data objects (it currently works for DataFrames and for GeoJson data). Sometimes the same data object is used several times in a plot specification:</p>
-<div id="5188eaf6" class="cell" data-execution_count="16">
+<div id="b3e8bc21" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>op({</span>
@@ -695,7 +695,7 @@ Output is saved between sessions
 <h2 class="anchored" data-anchor-id="datetime-objects">datetime objects</h2>
 <p><code>datetime.date</code> and <code>datetime.datetime</code> Python objects are automatically serialized and converted to JavaScript <code>Date</code> objects.</p>
 <p>That makes the following two specifications equivalent:</p>
-<div id="a86e947a" class="cell" data-execution_count="17">
+<div id="3ee3eb8a" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01')"</span>), js(<span class="st">"new Date('2022-01-01')"</span>)]}, </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
@@ -714,7 +714,7 @@ Output is saved between sessions
 }</style><g aria-label="x-grid" aria-hidden="true" stroke="currentColor" stroke-opacity="0.1"><line x1="20" x2="20" y1="0.5" y2="30"></line><line x1="70.95890410958904" x2="70.95890410958904" y1="0.5" y2="30"></line><line x1="116.98630136986301" x2="116.98630136986301" y1="0.5" y2="30"></line><line x1="167.94520547945206" x2="167.94520547945206" y1="0.5" y2="30"></line><line x1="217.2602739726027" x2="217.2602739726027" y1="0.5" y2="30"></line><line x1="268.2191780821918" x2="268.2191780821918" y1="0.5" y2="30"></line><line x1="317.5342465753425" x2="317.5342465753425" y1="0.5" y2="30"></line><line x1="368.49315068493144" x2="368.49315068493144" y1="0.5" y2="30"></line><line x1="419.45205479452056" x2="419.45205479452056" y1="0.5" y2="30"></line><line x1="468.7671232876712" x2="468.7671232876712" y1="0.5" y2="30"></line><line x1="519.7260273972603" x2="519.7260273972603" y1="0.5" y2="30"></line><line x1="569.0410958904109" x2="569.0410958904109" y1="0.5" y2="30"></line><line x1="620" x2="620" y1="0.5" y2="30"></line></g><g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor"><path transform="translate(20,30)" d="M0,0L0,6"></path><path transform="translate(70.95890410958904,30)" d="M0,0L0,6"></path><path transform="translate(116.98630136986301,30)" d="M0,0L0,6"></path><path transform="translate(167.94520547945206,30)" d="M0,0L0,6"></path><path transform="translate(217.2602739726027,30)" d="M0,0L0,6"></path><path transform="translate(268.2191780821918,30)" d="M0,0L0,6"></path><path transform="translate(317.5342465753425,30)" d="M0,0L0,6"></path><path transform="translate(368.49315068493144,30)" d="M0,0L0,6"></path><path transform="translate(419.45205479452056,30)" d="M0,0L0,6"></path><path transform="translate(468.7671232876712,30)" d="M0,0L0,6"></path><path transform="translate(519.7260273972603,30)" d="M0,0L0,6"></path><path transform="translate(569.0410958904109,30)" d="M0,0L0,6"></path><path transform="translate(620,30)" d="M0,0L0,6"></path></g><g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0,9)"><text transform="translate(20,30)"><tspan x="0" y="0.71em">Jan</tspan><tspan x="0" dy="1em">2021</tspan></text><text y="0.71em" transform="translate(70.95890410958904,30)">Feb</text><text y="0.71em" transform="translate(116.98630136986301,30)">Mar</text><text y="0.71em" transform="translate(167.94520547945206,30)">Apr</text><text y="0.71em" transform="translate(217.2602739726027,30)">May</text><text y="0.71em" transform="translate(268.2191780821918,30)">Jun</text><text y="0.71em" transform="translate(317.5342465753425,30)">Jul</text><text y="0.71em" transform="translate(368.49315068493144,30)">Aug</text><text y="0.71em" transform="translate(419.45205479452056,30)">Sep</text><text y="0.71em" transform="translate(468.7671232876712,30)">Oct</text><text y="0.71em" transform="translate(519.7260273972603,30)">Nov</text><text y="0.71em" transform="translate(569.0410958904109,30)">Dec</text><text transform="translate(620,30)"><tspan x="0" y="0.71em">Jan</tspan><tspan x="0" dy="1em">2022</tspan></text></g></svg></figure>
 </div>
 </div>
-<div id="57539694" class="cell" data-execution_count="18">
+<div id="d876ab3b" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [date(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>), date(<span class="dv">2022</span>,<span class="dv">1</span>,<span class="dv">1</span>)]}, </span>
@@ -735,7 +735,7 @@ Output is saved between sessions
 </div>
 </div>
 <p>As well as the two following ones, using <code>datetime</code>:</p>
-<div id="34ba331d" class="cell" data-execution_count="19">
+<div id="4304cff5" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [js(<span class="st">"new Date('2021-01-01T07:00:00')"</span>), js(<span class="st">"new Date('2021-01-01T08:00:00')"</span>)]}, </span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid"</span>: <span class="va">True</span></span>
@@ -754,7 +754,7 @@ Output is saved between sessions
 }</style><g aria-label="x-grid" aria-hidden="true" stroke="currentColor" stroke-opacity="0.1"><line x1="20" x2="20" y1="0.5" y2="30"></line><line x1="70" x2="70" y1="0.5" y2="30"></line><line x1="120" x2="120" y1="0.5" y2="30"></line><line x1="170" x2="170" y1="0.5" y2="30"></line><line x1="220" x2="220" y1="0.5" y2="30"></line><line x1="270.00000000000006" x2="270.00000000000006" y1="0.5" y2="30"></line><line x1="320" x2="320" y1="0.5" y2="30"></line><line x1="370" x2="370" y1="0.5" y2="30"></line><line x1="420" x2="420" y1="0.5" y2="30"></line><line x1="470" x2="470" y1="0.5" y2="30"></line><line x1="520.0000000000001" x2="520.0000000000001" y1="0.5" y2="30"></line><line x1="569.9999999999999" x2="569.9999999999999" y1="0.5" y2="30"></line><line x1="620" x2="620" y1="0.5" y2="30"></line></g><g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor"><path transform="translate(20,30)" d="M0,0L0,6"></path><path transform="translate(70,30)" d="M0,0L0,6"></path><path transform="translate(120,30)" d="M0,0L0,6"></path><path transform="translate(170,30)" d="M0,0L0,6"></path><path transform="translate(220,30)" d="M0,0L0,6"></path><path transform="translate(270.00000000000006,30)" d="M0,0L0,6"></path><path transform="translate(320,30)" d="M0,0L0,6"></path><path transform="translate(370,30)" d="M0,0L0,6"></path><path transform="translate(420,30)" d="M0,0L0,6"></path><path transform="translate(470,30)" d="M0,0L0,6"></path><path transform="translate(520.0000000000001,30)" d="M0,0L0,6"></path><path transform="translate(569.9999999999999,30)" d="M0,0L0,6"></path><path transform="translate(620,30)" d="M0,0L0,6"></path></g><g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0,9)"><text transform="translate(20,30)"><tspan x="0" y="0.71em">7:00</tspan><tspan x="0" dy="1em">AM</tspan></text><text y="0.71em" transform="translate(70,30)">7:05</text><text y="0.71em" transform="translate(120,30)">7:10</text><text y="0.71em" transform="translate(170,30)">7:15</text><text y="0.71em" transform="translate(220,30)">7:20</text><text y="0.71em" transform="translate(270.00000000000006,30)">7:25</text><text y="0.71em" transform="translate(320,30)">7:30</text><text y="0.71em" transform="translate(370,30)">7:35</text><text y="0.71em" transform="translate(420,30)">7:40</text><text y="0.71em" transform="translate(470,30)">7:45</text><text y="0.71em" transform="translate(520.0000000000001,30)">7:50</text><text y="0.71em" transform="translate(569.9999999999999,30)">7:55</text><text y="0.71em" transform="translate(620,30)">8:00</text></g></svg></figure>
 </div>
 </div>
-<div id="2cdae5e6" class="cell" data-execution_count="20">
+<div id="3dc4448d" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>op({</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: {<span class="st">"domain"</span>: [datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">0</span>,<span class="dv">0</span>), datetime(<span class="dv">2021</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">0</span>,<span class="dv">0</span>)]}, </span>
@@ -785,7 +785,7 @@ Output is saved between sessions
 <h2 class="anchored" data-anchor-id="jupyter-interactivity">Jupyter Interactivity</h2>
 <p>When using the <code>widget</code> format, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the <code>spec</code> attribute of an existing <code>Obsplot</code> to another plot specification and it will update it.</p>
 <p>This allows to do things like the following, where a plot is updated depending on the value of a Jupyter <code>IntSlider</code> widget:</p>
-<div id="830e5c53" class="cell" data-execution_count="21">
+<div id="1120af88" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_plot_spec(opacity):</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>      <span class="st">"grid"</span>: <span class="va">True</span>,</span>
@@ -813,13 +813,13 @@ Output is saved between sessions
 <section id="saving-plots-to-file" class="level2">
 <h2 class="anchored" data-anchor-id="saving-plots-to-file">Saving plots to file</h2>
 <p>Generated plots can be saved to a file. To do this, just add a <code>path</code> argument to your generator call:</p>
-<div id="4a7d3b50" class="cell" data-execution_count="22">
+<div id="73cfb3a2" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>op(Plot.lineY([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>]), path<span class="op">=</span><span class="st">"path_to/file.svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="widget-format" class="level3">
 <h3 class="anchored" data-anchor-id="widget-format">Widget format</h3>
 <p>When using the <code>widget</code> renderer, plots can only be saved to full HTML files. These files retain interactive features such as tooltips.</p>
-<div id="974575d8" class="cell" data-execution_count="23">
+<div id="c6bcdad7" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>opw <span class="op">=</span> Obsplot()</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>opw(Plot.lineY([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>]), path<span class="op">=</span><span class="st">"path_to/file.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -840,7 +840,7 @@ Tip
 <section id="other-output-formats" class="level3">
 <h3 class="anchored" data-anchor-id="other-output-formats">Other output formats</h3>
 <p>Plots can also be saved as SVG, PNG, PDF or static HTML files. The output format is determined by the <code>path</code> file extension.</p>
-<div id="bcc84829" class="cell" data-execution_count="24">
+<div id="d4a782b3" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>opw <span class="op">=</span> Obsplot()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>opw(Plot.lineY([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>]), path<span class="op">=</span><span class="st">"path_to/file.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
