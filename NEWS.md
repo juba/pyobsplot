@@ -1,4 +1,11 @@
-## pyobsplot 0.4.3 (dev)
+## pyobsplot 0.5.0 (dev)
+
+### Breaking changes
+
+-   The plot generator API has been changed. Generators are no more defined with a `renderer` argument, a `format` is specified instead. This format can either be `widget`, `html`, `svg` or `png`. So `renderer="widget"` is replaced by `format="widget"` (which is the default), whereas `renderer="jsdom"` is replaced by `format="html"` or one of the new `format="svg"` and `format="png"`.
+-   The "kwargs" alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a `Plot.xxx` method.
+
+### Other changes
 
 -   Plots can now be generated in "png" and "pdf" formats when using the `jsdom` renderer.
     This is done by converting figures using [typst](https://typst.app). Many thanks to
