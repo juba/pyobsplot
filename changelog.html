@@ -147,7 +147,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#pyobsplot-0.4.3-dev" id="toc-pyobsplot-0.4.3-dev" class="nav-link active" data-scroll-target="#pyobsplot-0.4.3-dev">pyobsplot 0.4.3 (dev)</a></li>
+  <li><a href="#pyobsplot-0.5.0-dev" id="toc-pyobsplot-0.5.0-dev" class="nav-link active" data-scroll-target="#pyobsplot-0.5.0-dev">pyobsplot 0.5.0 (dev)</a>
+  <ul class="collapse">
+  <li><a href="#breaking-changes" id="toc-breaking-changes" class="nav-link" data-scroll-target="#breaking-changes">Breaking changes</a></li>
+  <li><a href="#other-changes" id="toc-other-changes" class="nav-link" data-scroll-target="#other-changes">Other changes</a></li>
+  </ul></li>
   <li><a href="#pyobsplot-0.4.2" id="toc-pyobsplot-0.4.2" class="nav-link" data-scroll-target="#pyobsplot-0.4.2">pyobsplot 0.4.2</a></li>
   <li><a href="#pyobsplot-0.4.1" id="toc-pyobsplot-0.4.1" class="nav-link" data-scroll-target="#pyobsplot-0.4.1">pyobsplot 0.4.1</a></li>
   <li><a href="#pyobsplot-0.4.0" id="toc-pyobsplot-0.4.0" class="nav-link" data-scroll-target="#pyobsplot-0.4.0">pyobsplot 0.4.0</a></li>
@@ -189,13 +193,23 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="pyobsplot-0.4.3-dev" class="level2">
-<h2 class="anchored" data-anchor-id="pyobsplot-0.4.3-dev">pyobsplot 0.4.3 (dev)</h2>
+<section id="pyobsplot-0.5.0-dev" class="level2">
+<h2 class="anchored" data-anchor-id="pyobsplot-0.5.0-dev">pyobsplot 0.5.0 (dev)</h2>
+<section id="breaking-changes" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h3>
+<ul>
+<li>The plot generator API has been changed. Generators are no more defined with a <code>renderer</code> argument, a <code>format</code> is specified instead. This format can either be <code>widget</code>, <code>html</code>, <code>svg</code> or <code>png</code>. So <code>renderer="widget"</code> is replaced by <code>format="widget"</code> (which is the default), whereas <code>renderer="jsdom"</code> is replaced by <code>format="html"</code> or one of the new <code>format="svg"</code> and <code>format="png"</code>.</li>
+<li>The “kwargs” alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a <code>Plot.xxx</code> method.</li>
+</ul>
+</section>
+<section id="other-changes" class="level3">
+<h3 class="anchored" data-anchor-id="other-changes">Other changes</h3>
 <ul>
 <li>Plots can now be generated in “png” and “pdf” formats when using the <code>jsdom</code> renderer. This is done by converting figures using <a href="https://typst.app">typst</a>. Many thanks to <span class="citation" data-cites="wirhabenzeit">@wirhabenzeit</span> and <span class="citation" data-cites="harrylojames">@harrylojames</span> for the idea, the underlying code and the feedback.</li>
 <li>Update Observable Plot to 0.6.14</li>
 <li>Migrate build system from hatch to rye</li>
 </ul>
+</section>
 </section>
 <section id="pyobsplot-0.4.2" class="level2">
 <h2 class="anchored" data-anchor-id="pyobsplot-0.4.2">pyobsplot 0.4.2</h2>
