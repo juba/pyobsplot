@@ -27,7 +27,6 @@ To use `pyobsplot`, you must import at least its `Plot` class with:
 
 ```{python}
 from pyobsplot import Plot
-
 ```
 
 To create a plot, call the `Plot.plot` method with a plot specification. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one. 
@@ -102,7 +101,7 @@ op = Obsplot()
 ```{python}
 # | include: false
 
-op = Obsplot(renderer="jsdom")
+op = Obsplot(format="html")
 ```
 
 You can then create plots by calling this generator object with your plot specification:
@@ -118,24 +117,34 @@ op(
 )
 ```
 
-For the simplest cases, you can also create your plot directly by passing a `Plot` mark method:
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to the generator object:
 
 ```{python}
 op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
 ```
 
-## jsdom renderer
+## Output formats
 
-By default, plots will be created as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/). This allows for [(very basic) interactivity](usage.qmd#interactivity), but also generates bigger files. An alternative is to use the [`jsdom` renderer](usage.qmd#renderers), which generates SVG or HTML outputs.
+By default, plots will be created as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/), but `pyobsplot` is also able to output plots in PNG, SVG or static HTML formats.
 
-The renderer is configured by passing a `renderer` argument to `Obsplot()` when creating a generator object:
+The output format is configured by passing a `format` argument to `Obsplot()` when creating a generator object:
 
 ```{python}
 # | eval: false
-# Switch to widget renderer (default one)
-opw = Obsplot(renderer="widget")
-# Switch to jsdom renderer
-opj = Obsplot(renderer="jsdom")
+# Generator with widget output (default)
+op = Obsplot(format="widget")
+# Generate with static HTML output
+opj = Obsplot(format="html")
+```
+
+It is also possible to specifiy a format when creating the plot by adding a `format` argument:
+
+```{python}
+# | eval: false
+# Generator with default widget output format
+op = Obsplot()
+# Switch to PNG output for this plot
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
 ```
 
 

@@ -89,11 +89,11 @@ op({
 })
 ```
 
-## Renderers
+## Output formats
 
-`pyobsplot` provides two renderers : `widget` and `jsdom`. The `widget` renderer outputs plots as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/). The `jsdom` renderer uses an external npm package to generate plots as either SVG or HTML.
+`pyobsplot` allows to output plots as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/), but also as static HTML, SVG or PNG outputs.
 
-The following table lists the differences between the two renderers.
+The following table lists the differences between the formats.
 
 <style>
 .renderers-table {
@@ -113,13 +113,13 @@ The following table lists the differences between the two renderers.
 
 <table class="table table-striped renderers-table">
 <thead>
-<tr><th style="width: 25%;"></th><th style="width: 37%;">widget</th><th style="width: 37%;">jsdom</th></tr>
+<tr><th style="width: 25%;"></th><th style="width: 37%;">Widget output</th><th style="width: 37%;">Static output</th></tr>
 </thead>
 <tbody>
 <tr>
 <td>**Output**</td>
 <td>Jupyter Widget</td>
-<td>SVG (plots without legend)<br>HTML (plots with legend)</td>
+<td>Staitc HTML, SVG, PNG. PDF is available when saving to a file.</td>
 </tr>
 <tr>
 <td>**Additional<br>installation**</td>
@@ -129,12 +129,12 @@ The following table lists the differences between the two renderers.
 <tr>
 <td>**Quarto**</td>
 <td>Supported only in HTML format</td>
-<td>Supported in HTML format, SVG output supported in other formats</td>
+<td>HTML output supported in HTML format, SVG and PNG outputs supported in other formats</td>
 </tr>
 <tr>
 <td>**Output size**</td>
 <td>Big : includes the data and code needed to generate the plot</td>
-<td>Moderate : size of the SVG or HTML output</td>
+<td>Moderate : size of the output file</td>
 </tr>
 <tr>
 <td>**Plot interactions<br>(tooltips...)**</td>
@@ -143,8 +143,8 @@ The following table lists the differences between the two renderers.
 </tr>
 <tr>
 <td>**Save plot to file**</td>
-<td>Plots can be saved as embeddable SVG or HTML files</td>
-<td>Plots can be saved to a full HTML file</td>
+<td>Plots can be saved as embeddable HTML file</td>
+<td>Plots can be saved to HTML, SVG, PNG or PDF files.</td>
 </tr>
 <tr>
 <td>**Jupyter<br>interactivity**</td>
@@ -159,7 +159,7 @@ The following table lists the differences between the two renderers.
 </tbody>
 </table>
 
-To use the `jsdom` renderer, you need a working [node.js](https://nodejs.org/en) installation and you must install the npm `pyobsplot` package globally or locally:
+To use a static output format like HTML, SVG or PNG, you need a working [node.js](https://nodejs.org/en) installation and you must install the npm `pyobsplot` package globally or locally:
 
 ```sh
 # Install locally
@@ -168,15 +168,26 @@ npm install pyobsplot
 npm install -g pyobsplot
 ```
 
-After that, you can select which renderer to use when creating a plot generator object:
+After that, you can select which format to use when creating a plot generator object:
 
 ```{python}
 # | eval: false
-# Switch to widget renderer (the default one)
-opw = Obsplot(renderer="widget")
-# Switch to jsdom renderer
-opj = Obsplot(renderer="jsdom")
+# Generator with a widget output (default)
+opw = Obsplot(format="widget")
+# Generator with a PNG output
+opj = Obsplot(format="png")
 ```
+
+It is also possible to specifiy a format when creating the plot by adding a `format` argument:
+
+```{python}
+# | eval: false
+# Generator with default widget output format
+op = Obsplot()
+# Switch to PNG output for this plot
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
+```
+
 
 
 ## Alternative syntaxes
@@ -194,20 +205,7 @@ op({
 })
 ```
 
-But it is also possible to pass top level arguments as `kwargs` to the generator object, which would give the following:
-
-```{python}
-#| eval: false
-op(
-    grid = True,
-    color = {"legend": True},
-    marks = [
-        Plot.dot(data, {"x": "x", "y": "y", "fill": "type"})
-    ],
-)
-```
-
-Finally, for the simplest cases, you can also pass a mark method directly. The JavaScript `plot()` method will be called automatically to display the plot:
+For the simplest cases, you can also pass a mark method directly. The JavaScript `plot()` method will be called automatically to display the plot:
 
 ```{python}
 import random
@@ -236,18 +234,16 @@ print(ALLOWED_DEFAULTS)
 
 So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :
 
-```{python}
-#| echo: false
-op_colors = Obsplot(renderer="jsdom", default={"width": 400, "margin": 50, "style": {"color": "white", "background-color": "#004"}})
-```
 
 ```{python}
-#| eval: false
-op_colors = Obsplot(default={
-    "width": 400, 
-    "margin": 50,
-    "style": {"color": "white", "background-color": "#004"}
-})
+op_colors = Obsplot(
+    format = "html",
+    default={
+        "width": 400, 
+        "margin": 50,
+        "style": {"color": "white", "background-color": "#004"}
+    }
+)
 ```
 
 ```{python}
@@ -258,11 +254,11 @@ op_colors(
 
 ## Themes
 
-When using a plot generator object, it is possible to specify one of three output themes:
+When using a plot generator object, it is possible to specify one of three color themes:
 
 - `light` theme (default) creates plots with a white background and a black foreground color
 - `dark` theme creates plots with a black background and a white foreground
-- `current` theme creates plots with a transparent background and a currentColor foreground
+- `current` theme creates plots with a transparent background and a `currentColor` foreground
 
 You can specify a mode when creating the plot generator object by using the `theme` argument:
 
@@ -389,9 +385,9 @@ quarto render test.ipynb --execute --to html
 
 
 
-## Interactivity
+## Jupyter Interactivity
 
-When using the `widget` renderer, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the `spec` attribute of an existing `Obsplot` to another plot specification and it will update it.
+When using the `widget` format, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the `spec` attribute of an existing `Obsplot` to another plot specification and it will update it.
 
 This allows to do things like the following, where a plot is updated depending on the value of a Jupyter `IntSlider` widget:
 
@@ -430,28 +426,39 @@ Generated plots can be saved to a file. To do this, just add a `path` argument t
 ```{python}
 #| eval: false
 
-op = Obsplot(renderer="jsdom")
 op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 ```
 
-### jsdom renderer
+### Widget format
 
-When using the `jsdom` renderer, charts can be saved either as SVG or HTML files : Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. When using the `path` option, `pyobsplot` will warn you if you try to save an HTML output to a SVG file.
+When using the `widget` renderer, plots can only be saved to full HTML files. These files retain interactive features such as tooltips. 
 
-In any case, you can also use Plot's `figure` option to force the output to be wrapped in `<figure>`:
 
 ```{python}
 #| eval: false
-
-op = Obsplot(renderer="jsdom")
-op({
-        "marks": Plot.lineY([1, 2, 3, 2]), 
-        "figure": True
-    }, 
-    path="/tmp/out.html"
-)
+opw = Obsplot()
+opw(Plot.lineY([1,2,3,2]), path="path_to/file.html")
 ```
 
-### widget renderer
+::: {.callout-tip}
+To embed widgets into an HTML website or document, Quarto documents can be more practical.
+:::
 
-When using the `widget` renderer, plots can only be saved to full HTML files. These files retain interactivity features such as tooltips. To embed widgets into an HTML website or document, Quarto documents can be more practical.
+### Other output formats
+
+Plots can also be saved as SVG, PNG, PDF or static HTML files. The output format is determined by the `path` file extension.
+
+```{python}
+#| eval: false
+opw = Obsplot()
+opw(Plot.lineY([1,2,3,2]), path="path_to/file.png")
+```
+
+::: {.callout-note}
+PDF format is only available when saving to a file, as PDF output cannot be embedded and displayed in a Jupyter notebook.
+:::
+
+::: {.callout-caution}
+Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. In this case, when saving to an SVG file, the plot will be converted using `typst`.
+:::
+

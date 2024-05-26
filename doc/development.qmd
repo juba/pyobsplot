@@ -89,10 +89,19 @@ To activate it, add `debug=True` when creating your plot generator object:
 
 ```{python}
 # | eval: false
-op = Obsplot(render="widget", debug=True)
+op = Obsplot(debug=True)
 ```
 
 If using the `widget` renderer, debug output will be displayed in JavaScript console. With the `jsdom` renderer, it will be displayed directly in the notebook.
+
+## Documentation
+
+To generate the documentation with Quarto:
+
+```sh
+source .venv/bin/activate
+quarto render doc/
+```
 
 
 ## Maintenance notes
