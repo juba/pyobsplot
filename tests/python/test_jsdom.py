@@ -15,7 +15,7 @@ from pyobsplot.utils import DEFAULT_THEME
 def op():
     op = Obsplot(format="html")
     yield op
-    op.jsdom_close()  # type: ignore
+    op._jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")

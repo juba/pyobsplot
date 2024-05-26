@@ -43,21 +43,21 @@ def ow_default():
 def oj():
     oj = Obsplot(format="html")
     yield oj
-    oj.jsdom_close()  # type: ignore
+    oj._jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_debug():
     oj_debug = Obsplot(format="html", debug=True)
     yield oj_debug
-    oj_debug.jsdom_close()  # type: ignore
+    oj_debug._jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_default():
     oj_default = Obsplot(format="html", default=default)
     yield oj_default
-    oj_default.jsdom_close()  # type: ignore
+    oj_default._jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
@@ -132,7 +132,7 @@ class TestInit:
             Obsplot(format="html", default=wrong_default)
 
     def test_jsdom_server(self, oj):
-        oj.jsdom_start()
+        oj._jsdom_start()
         port = oj.jsdom_creator._port
         assert port > 1024 and port <= 65535
 
