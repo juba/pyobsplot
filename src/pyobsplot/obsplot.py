@@ -119,21 +119,36 @@ class Obsplot:
         theme: Literal["light", "dark", "current"] | None = None,
         path: str | io.StringIO | None = None,
         format_options: dict | None = None,
-    ):
+    ) -> ObsplotWidget | None:
         """
         Method called when an Obsplot instance is called directly.
 
         Parameters
         ----------
-        path : str, optional
+        spec : dict
+            plot specification
+        format : {'widget', 'html', 'svg', 'png'}, optional
+            default output format, by default "widget"
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        path : str | io.StringIO | None, optional
             if provided, plot is saved to disk to an HTML file instead of displayed
-            as a jupyter widget.
+            as a jupyter widget, by default None
+        format_options : dict, optional
+            default output format options for typst formatter. Currently
+            possible keys are 'font' (name of font family), 'scale' (font scaling)
+            and 'margin' (margin in pt around the plot)
+
+        Returns
+        -------
+        _type_
+            _description_
 
         """
 
         format_value = format or self.format
         format_options = format_options or self.format_options
-        theme_value = theme or self.theme
+        theme = theme or self.theme  # type: ignore
         default = self.default
         debug = self.debug
 
@@ -163,7 +178,7 @@ class Obsplot:
         # Render widget
         if format_value == "widget":
             res = ObsplotWidget(
-                spec=spec, theme=theme_value, default=default, debug=debug
+                spec=spec, theme=theme, default=default, debug=debug  # type: ignore
             )  # type: ignore
             if path is not None:
                 embed_minimal_html(path, views=[res], drop_defaults=False)
@@ -172,27 +187,27 @@ class Obsplot:
 
         # Render jsdom
         if format_value != "widget":
-            self.jsdom_start()
+            self._jsdom_start()
             self.jsdom_creator.render(  # type: ignore
                 spec=spec,
-                format=format_value,
+                format=format_value,  # type: ignore
                 format_options=format_options,
-                theme=theme_value,
+                theme=theme,  # type: ignore
                 default=default,
                 debug=debug,
                 path=path,
             )
 
-    def jsdom_start(self):
+    def _jsdom_start(self):
         """
-        TODO _summary_
+        Start the JsdomCreator server.
         """
         if self.jsdom_creator is None:
             self.jsdom_creator = ObsplotJsdomCreator()
 
-    def jsdom_close(self):
+    def _jsdom_close(self):
         """
-        TODO _summary_
+        Stop the JsdomCreator server.
         """
         if self.jsdom_creator is not None:
             self.jsdom_creator.close()
@@ -255,11 +270,38 @@ class ObsplotJsdomCreator:
             os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)
 
     def render(
-        self, spec, format, format_options, path, theme, default, debug  # noqa: A002
+        self,
+        spec: dict,
+        *,
+        format: Literal["widget", "html", "svg", "png"] = "widget",  # noqa: A002
+        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        path: str | io.StringIO | None = None,
+        format_options: dict | None = None,
+        default: dict | None = None,
+        debug: bool = False,
     ) -> None:
         """
-        TODO
         Method called when an instance is called.
+
+        Parameters
+        ----------
+        spec : dict
+            plot specification
+        format : {'widget', 'html', 'svg', 'png'}, optional
+            default output format, by default "widget"
+        theme : {'light', 'dark', 'current'}, optional
+            color theme to use, by default 'light'
+        path : str | io.StringIO | None, optional
+            if provided, plot is saved to disk to an HTML file instead of displayed
+            as a jupyter widget, by default None
+        format_options : dict, optional
+            default output format options for typst formatter. Currently
+            possible keys are 'font' (name of font family), 'scale' (font scaling)
+            and 'margin' (margin in pt around the plot)
+        default : dict, optional
+            dict of default spec values, by default None
+        debug : bool, optional
+            activate debug mode, by default False
         """
         if self._proc is not None and self._proc.poll() is not None:
             msg = "Server has ended, please recreate your plot generator object."
@@ -306,16 +348,13 @@ class ObsplotJsdomCreator:
         format : {'png', 'pdf', 'svg'}
             format of output to generate.
         options : dict, optional
+            dictionary of format options.
 
         Returns
         -------
-        _type_
-            _description_
+        SVG | Image | bytes
+            Conversion result.
 
-        Raises
-        ------
-        ValueError
-            _description_
         """
 
         if options is None:
