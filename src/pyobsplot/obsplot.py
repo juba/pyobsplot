@@ -116,7 +116,7 @@ class Obsplot:
         self,
         spec: dict,
         format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
-        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        theme: Literal["light", "dark", "current"] | None = None,
         path: str | io.StringIO | None = None,
         format_options: dict | None = None,
     ):
@@ -152,7 +152,7 @@ class Obsplot:
             if format_value == "widget" and extension != "html":
                 msg = "File extension should be 'html' when exporting a widget."
                 raise ValueError(msg)
-            if format_value is not None and format_value != extension:
+            if format_value not in ["widget", extension]:
                 warnings.warn(
                     f"Generating file in {extension} format based on file extension.",
                     RuntimeWarning,
@@ -163,7 +163,7 @@ class Obsplot:
         # Render widget
         if format_value == "widget":
             res = ObsplotWidget(
-                spec=spec, theme=theme, default=default, debug=debug
+                spec=spec, theme=theme_value, default=default, debug=debug
             )  # type: ignore
             if path is not None:
                 embed_minimal_html(path, views=[res], drop_defaults=False)
