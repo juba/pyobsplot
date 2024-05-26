@@ -8,7 +8,7 @@ import pytest
 import requests
 
 import pyobsplot
-from pyobsplot import Obsplot, Plot
+from pyobsplot import Obsplot, Plot, obsplot
 from pyobsplot.utils import DEFAULT_THEME
 
 default = {"width": 100, "style": {"color": "red"}}
@@ -26,87 +26,87 @@ def op_debug():
 
 @pytest.fixture
 def ow():
-    return Obsplot(renderer="widget")
+    return Obsplot(format="widget")
 
 
 @pytest.fixture
 def ow_debug():
-    return Obsplot(renderer="widget", debug=True)
+    return Obsplot(format="widget", debug=True)
 
 
 @pytest.fixture
 def ow_default():
-    return Obsplot(renderer="widget", default=default)
+    return Obsplot(format="widget", default=default)
 
 
 @pytest.fixture(scope="module")
 def oj():
-    oj = Obsplot(renderer="jsdom")
+    oj = Obsplot(format="html")
     yield oj
-    oj.close()  # type: ignore
+    oj.jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_debug():
-    oj_debug = Obsplot(renderer="jsdom", debug=True)
+    oj_debug = Obsplot(format="html", debug=True)
     yield oj_debug
-    oj_debug.close()  # type: ignore
+    oj_debug.jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_default():
-    oj_default = Obsplot(renderer="jsdom", default=default)
+    oj_default = Obsplot(format="html", default=default)
     yield oj_default
-    oj_default.close()  # type: ignore
+    oj_default.jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
 def oj_theme_dark():
-    return Obsplot(renderer="jsdom", theme="dark")
+    return Obsplot(format="html", theme="dark")
 
 
 @pytest.fixture(scope="module")
 def oj_theme_current():
-    return Obsplot(renderer="jsdom", theme="current")
+    return Obsplot(format="html", theme="current")
 
 
 class TestInit:
     def test_renderers(self, op, ow, oj):
-        assert isinstance(op, pyobsplot.obsplot.ObsplotWidgetCreator)
-        assert isinstance(ow, pyobsplot.obsplot.ObsplotWidgetCreator)
-        assert isinstance(oj, pyobsplot.obsplot.ObsplotJsdomCreator)
+        assert isinstance(op, pyobsplot.Obsplot)
+        assert isinstance(ow, pyobsplot.Obsplot)
+        assert isinstance(oj, pyobsplot.Obsplot)
         with pytest.raises(ValueError):
-            Obsplot(renderer="foobar")
+            Obsplot(format="foobar")  # type: ignore
 
     def test_debug(self, op, op_debug, ow, ow_debug, oj, oj_debug):
-        assert op._debug is False
-        assert op_debug._debug
-        assert ow._debug is False
-        assert ow_debug._debug
-        assert oj._debug is False
-        assert oj_debug._debug
+        assert op.debug is False
+        assert op_debug.debug
+        assert ow.debug is False
+        assert ow_debug.debug
+        assert oj.debug is False
+        assert oj_debug.debug
 
     def test_themes(self, oj, oj_theme_dark, oj_theme_current):
-        assert oj._theme == DEFAULT_THEME
-        assert oj_theme_dark._theme == "dark"
-        assert oj_theme_current._theme == "current"
+        assert oj.theme == DEFAULT_THEME
+        assert oj_theme_dark.theme == "dark"
+        assert oj_theme_current.theme == "current"
         with pytest.raises(ValueError):
-            Obsplot(theme="foobar")
+            Obsplot(theme="foobar")  # type: ignore
 
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:traitlets")
     def test_init(self, op, ow, oj):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             op(0, x=1)
         with pytest.raises(ValueError):
             ow("foo")
         with pytest.raises(ValueError):
             oj("foo")
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             oj()
         spec = Plot.lineY([1, 2])  # type: ignore
-        assert isinstance(op(spec), pyobsplot.obsplot.ObsplotWidget)
-        assert isinstance(ow(spec), pyobsplot.obsplot.ObsplotWidget)
+        assert isinstance(op(spec), obsplot.ObsplotWidget)
+        assert isinstance(ow(spec), obsplot.ObsplotWidget)
         assert oj(spec) is None
 
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
@@ -114,25 +114,26 @@ class TestInit:
     def test_plot_plot(self, ow, oj):
         spec = Plot.lineY([1, 2])  # type: ignore
         plot = Plot.plot(spec)
-        assert isinstance(plot, pyobsplot.obsplot.ObsplotWidget)
+        assert isinstance(plot, obsplot.ObsplotWidget)
         with pytest.raises(ValueError):
             ow(plot)
         with pytest.raises(ValueError):
             oj(plot)
 
     def test_default(self, ow, oj, ow_default, oj_default):
-        assert ow._default == {}
-        assert oj._default == {}
-        assert ow_default._default == default
-        assert oj_default._default == default
+        assert ow.default == {}
+        assert oj.default == {}
+        assert ow_default.default == default
+        assert oj_default.default == default
         wrong_default = {"x": 100}
         with pytest.raises(ValueError):
-            Obsplot(renderer="widget", default=wrong_default)
+            Obsplot(format="widget", default=wrong_default)
         with pytest.raises(ValueError):
-            Obsplot(renderer="jsdom", default=wrong_default)
+            Obsplot(format="html", default=wrong_default)
 
     def test_jsdom_server(self, oj):
-        port = oj._port
+        oj.jsdom_start()
+        port = oj.jsdom_creator._port
         assert port > 1024 and port <= 65535
 
         url = f"http://localhost:{port}"

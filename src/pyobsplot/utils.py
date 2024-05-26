@@ -23,6 +23,9 @@ ALLOWED_DEFAULTS = [
     "style",
 ]
 
+# Allowed format options
+ALLOWED_FORMAT_OPTIONS = ["font", "scale", "margin"]
+
 # Themes
 AVAILABLE_THEMES = ["light", "dark", "current"]
 DEFAULT_THEME = "light"

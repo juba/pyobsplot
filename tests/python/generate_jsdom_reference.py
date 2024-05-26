@@ -13,7 +13,6 @@ from pyobsplot.utils import DEFAULT_THEME
 # Change working directory to script directory
 os.chdir(sys.path[0])
 
-op = Obsplot(renderer="jsdom")
 specs = {}
 themes = {}
 defaults = {}
@@ -486,6 +485,7 @@ specs["bug_utf8.svg"] = Plot.tickX([-1])
 
 if __name__ == "__main__":
     # Generate output files for each spec
+    op = Obsplot(format="html")
     for key in specs:
         path = f"reference/{key}"
         if not (os.path.exists(path)):

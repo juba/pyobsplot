@@ -21,6 +21,7 @@ from ipywidgets.embed import embed_minimal_html
 from pyobsplot.jsdom import ObsplotJsdom
 from pyobsplot.utils import (
     ALLOWED_DEFAULTS,
+    ALLOWED_FORMAT_OPTIONS,
     AVAILABLE_THEMES,
     DEFAULT_THEME,
     MIN_NPM_VERSION,
@@ -28,33 +29,31 @@ from pyobsplot.utils import (
 )
 from pyobsplot.widget import ObsplotWidget
 
+AVAILABLE_FORMATS = ["widget", "html", "svg", "png"]
+
 
 class Obsplot:
 
-    def __new__(
-        cls,
-        renderer: Literal["widget", "jsdom"] | None = "widget",
+    def __init__(
+        self,
+        format: Literal["widget", "html", "svg", "png"] = "widget",  # noqa: A002
         *,
         theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
         default: dict | None = None,
-        format: Literal["html", "svg", "png"] | None = None,  # noqa: A002
         format_options: dict | None = None,
         debug: bool = False,
-    ) -> ObsplotCreator:
+    ) -> None:
         """
-        Main Obsplot class. Returns a Creator instance depending on the
-        renderer passed as argument.
+        Main Obsplot class.
 
         Parameters
         ----------
-        renderer : {'widget', 'jsdom'}, optional
-            renderer to be used, by default "widget"
+        format : {'widget', 'html', 'svg', 'png'}, optional
+            default output format, by default "widget"
         theme : {'light', 'dark', 'current'}, optional
             color theme to use, by default 'light'
         default : dict, optional
             dict of default spec values, by default None
-        format : {'html', 'svg', 'png'}, optional
-            default output format for jsdom renderer, by default None
         format_options : dict, optional
             default output format options for typst formatter. Currently
             possible keys are 'font' (name of font family), 'scale' (font scaling)
@@ -62,10 +61,6 @@ class Obsplot:
         debug : bool, optional
             activate debug mode, by default False
 
-        Returns
-        -------
-        ObsplotCreator
-            A Creator object of type depending of the renderer.
         """
 
         # Check theme value
@@ -76,145 +71,57 @@ class Obsplot:
                 """
             raise ValueError(msg)
 
-        # Check renderer value
-        available_renderers = ["widget", "jsdom"]
-        if renderer not in available_renderers:
+        # Check format value
+        if format not in AVAILABLE_FORMATS:
             msg = (
-                f"Incorrect renderer '{renderer}'."
-                f"Available renderers are {available_renderers}."
+                f"Incorrect format value '{format}'."
+                f"Available formats are {AVAILABLE_FORMATS}."
             )
             raise ValueError(msg)
 
-        # Generate and return creator object
-        if renderer == "widget":
-            if format is not None:
-                msg = (
-                    "The format option is incompatible with the widget renderer."
-                    "Use the jsdom renderer instead."
-                )
-                raise ValueError(msg)
-            return ObsplotWidgetCreator(theme=theme, default=default, debug=debug)
-
-        else:
-            if format_options is None:
-                format_options = {}
-            return ObsplotJsdomCreator(
-                theme=theme,
-                default=default,
-                debug=debug,
-                format=format,
-                format_options=format_options,
-            )
-
-
-class ObsplotCreator:
-
-    def __init__(
-        self,
-        *,
-        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
-        default: dict | None = None,
-        debug: bool = False,
-    ) -> None:
-        """
-        Generic Creator constructor.
-
-        Parameters
-        ----------
-        theme : {'light', 'dark', 'current'}, optional
-            color theme to use, by default 'light'
-        default : dict, optional
-            dict of default spec values, by default None
-        debug : bool, optional
-            activate debug mode, by default False
-        """
-
-        if default is None:
-            default = {}
+        # Check default value
+        default = default or {}
         for k in default:
             if k not in ALLOWED_DEFAULTS:
                 msg = f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
                 raise ValueError(msg)
-        self._default = default
-        self._theme = theme
-        self._debug = debug
+
+        # Check format options
+        format_options = format_options or {}
+        for k in format_options:
+            if k not in ALLOWED_FORMAT_OPTIONS:
+                msg = f"{k} is not allowed in format options.\nAllowed values: {ALLOWED_FORMAT_OPTIONS}."  # noqa: E501
+                raise ValueError(msg)
+
+        self.theme = theme
+        self.default = default
+        self.format = format
+        self.format_options = format_options
+        self.debug = debug
+
+        self.widget_creator = None
+        self.jsdom_creator = None
 
     def __repr__(self):
         return (
             f"<{type(self).__name__}>\n"
-            f"theme: {self._theme!r}\n"
-            f"debug: {self._debug!r}\n"
-            f"default: {self._default!r}\n"
+            f"format: {self.format!r}\n"
+            f"theme: {self.theme!r}\n"
+            f"default: {self.default!r}\n"
+            f"format_options: {self.format_options!r}\n"
+            f"debug: {self.debug!r}\n"
         )
 
-    @property
-    def theme(self):
-        return self._theme
-
-    @theme.setter
-    def theme(self, val):
-        self._theme = val
-
-    @property
-    def default(self):
-        return self._default
-
-    @default.setter
-    def default(self, val):
-        self._default = val
-
-    def get_spec(self, *args, **kwargs):
-        """
-        Extract plot specification from args and kwargs, taking into account
-        the alternative specification syntaxes.
-        """
-
-        # Only one dict arg -> spec passed as dict
-        if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
-            spec = args[0]
-        # Only one kwarg called spec
-        elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
-            spec = kwargs["spec"]
-        # Only kwargs -> spec is kwargs
-        elif len(args) == 0 and len(kwargs) > 0:
-            spec = kwargs
-        # No arguments given
-        elif len(args) == 0 and len(kwargs) == 0:
-            msg = "Missing plot specification"
-            raise ValueError(msg)
-        else:
-            msg = "Incorrect plot specification"
-            raise ValueError(msg)
-        return spec
-
-
-class ObsplotWidgetCreator(ObsplotCreator):
-
-    def __init__(
+    def __call__(
         self,
-        *,
+        spec: dict,
+        format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
         theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
-        default: dict | None = None,
-        debug: bool = False,
-    ) -> None:
+        path: str | io.StringIO | None = None,
+        format_options: dict | None = None,
+    ):
         """
-        Widget renderer Creator class.
-
-        Parameters
-        ----------
-        theme : {'light', 'dark', 'current'}, optional
-            color theme to use, by default 'light'
-        default : dict, optional
-            dict of default spec values, by default None
-        debug : bool, optional
-            activate debug mode (for widget renderer only), by default False
-        """
-
-        super().__init__(theme=theme, default=default, debug=debug)
-
-    def __call__(self, *args, **kwargs) -> ObsplotWidget | None:
-        """
-        Method called when an instance is called directly.
+        Method called when an Obsplot instance is called directly.
 
         Parameters
         ----------
@@ -222,91 +129,176 @@ class ObsplotWidgetCreator(ObsplotCreator):
             if provided, plot is saved to disk to an HTML file instead of displayed
             as a jupyter widget.
 
-        Returns
-        -------
-        Optional[ObsplotWidget]
-            An ObsplotWidget widget object if path is not defined, otherwse None.
         """
 
-        path = None
-        if "path" in kwargs:
-            path = kwargs["path"]
-            del kwargs["path"]
-        spec = self.get_spec(*args, **kwargs)
-        res = ObsplotWidget(
-            spec=spec, theme=self._theme, default=self._default, debug=self._debug
-        )  # type: ignore
-        if path is not None:
-            ObsplotWidgetCreator.save_to_file(path, res)
-        else:
-            return res
+        format_value = format or self.format
+        format_options = format_options or self.format_options
+        theme_value = theme or self.theme
+        default = self.default
+        debug = self.debug
 
-    @staticmethod
-    def save_to_file(path: str, res: ObsplotWidget) -> None:
-        """
-        Save an Obsplot object generated by a widget creator to a file.
+        # Check spec
+        if not isinstance(spec, dict):
+            msg = "Plot specification should be given as a dictionary."
+            raise ValueError(msg)
 
-        Parameters
-        ----------
-        path : str
-            path to output file. Must have an "html" extension
-        res : ObsplotWidget
-            widget object to be saved to disk
-        """
-        extension = Path(path).suffix.lower()
-        if extension not in [".html", ".htm"]:
-            warnings.warn(
-                "Output file extension should be one of 'html' or 'htm'",
-                RuntimeWarning,
-                stacklevel=1,
+        # Check path value and update format_value based on extension
+        if path is not None and not isinstance(path, io.StringIO):
+            extension = Path(path).suffix.lower()[1:]
+            allowed_extensions = ["html", "svg", "pdf", "png"]
+            if extension not in allowed_extensions:
+                msg = f"Output file extension should be one of {allowed_extensions}"
+                raise ValueError(msg)
+            if format_value == "widget" and extension != "html":
+                msg = "File extension should be 'html' when exporting a widget."
+                raise ValueError(msg)
+            if format_value is not None and format_value != extension:
+                warnings.warn(
+                    f"Generating file in {extension} format based on file extension.",
+                    RuntimeWarning,
+                    stacklevel=1,
+                )
+            format_value = extension
+
+        # Render widget
+        if format_value == "widget":
+            res = ObsplotWidget(
+                spec=spec, theme=theme, default=default, debug=debug
+            )  # type: ignore
+            if path is not None:
+                embed_minimal_html(path, views=[res], drop_defaults=False)
+            else:
+                return res
+
+        # Render jsdom
+        if format_value != "widget":
+            self.jsdom_start()
+            self.jsdom_creator.render(  # type: ignore
+                spec=spec,
+                format=format_value,
+                format_options=format_options,
+                theme=theme_value,
+                default=default,
+                debug=debug,
+                path=path,
             )
-        embed_minimal_html(path, views=[res], drop_defaults=False)
+
+    def jsdom_start(self):
+        """
+        TODO _summary_
+        """
+        if self.jsdom_creator is None:
+            self.jsdom_creator = ObsplotJsdomCreator()
+
+    def jsdom_close(self):
+        """
+        TODO _summary_
+        """
+        if self.jsdom_creator is not None:
+            self.jsdom_creator.close()
 
 
-class ObsplotJsdomCreator(ObsplotCreator):
+# class ObsplotCreator:
+
+#     def __init__(
+#         self,
+#         *,
+#         theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+#         default: dict | None = None,
+#         debug: bool = False,
+#     ) -> None:
+#         """
+#         Generic Creator constructor.
+
+#         Parameters
+#         ----------
+#         theme : {'light', 'dark', 'current'}, optional
+#             color theme to use, by default 'light'
+#         default : dict, optional
+#             dict of default spec values, by default None
+#         debug : bool, optional
+#             activate debug mode, by default False
+#         """
+
+#         if default is None:
+#             default = {}
+#         for k in default:
+#             if k not in ALLOWED_DEFAULTS:
+#                 msg = f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
+#                 raise ValueError(msg)
+#         self._default = default
+#         self._theme = theme
+#         self._debug = debug
+
+# def get_spec(self, *args, **kwargs):
+#     """
+#     Extract plot specification from args and kwargs, taking into account
+#     the alternative specification syntaxes.
+#     """
+
+#     # Only one dict arg -> spec passed as dict
+#     if len(args) == 1 and len(kwargs) == 0 and isinstance(args[0], dict):
+#         spec = args[0]
+#     # Only one kwarg called spec
+#     elif len(args) == 0 and len(kwargs) == 1 and "spec" in kwargs:
+#         spec = kwargs["spec"]
+#     # Only kwargs -> spec is kwargs
+#     elif len(args) == 0 and len(kwargs) > 0:
+#         spec = kwargs
+#     # No arguments given
+#     elif len(args) == 0 and len(kwargs) == 0:
+#         msg = "Missing plot specification"
+#         raise ValueError(msg)
+#     else:
+#         msg = "Incorrect plot specification"
+#         raise ValueError(msg)
+#     return spec
+
+
+# class ObsplotWidgetCreator(ObsplotCreator):
+
+#     def __init__(self) -> None:
+#         pass
+
+#     def render(
+#         self,
+#         spec: dict,
+#         *,
+#         path: str | None = None,
+#         default: dict | None = None,
+#         debug: bool = False,
+#     ) -> ObsplotWidget | None:
+#         """
+#         Method called when an Obsplot instance is called directly.
+
+#         Parameters
+#         ----------
+#         path : str, optional
+#             if provided, plot is saved to disk to an HTML file instead of displayed
+#             as a jupyter widget.
+
+#         Returns
+#         -------
+#         Optional[ObsplotWidget]
+#             An ObsplotWidget widget object if path is not defined, otherwise None.
+#         """
+
+#         default = default or {}
+
+#         res = ObsplotWidget(
+#             spec=spec, theme=theme, default=default, debug=debug
+#         )  # type: ignore
+#         if path is not None:
+#             embed_minimal_html(path, views=[res], drop_defaults=False)
+#         else:
+#             return res
+
+
+class ObsplotJsdomCreator:
 
     def __init__(
         self,
-        *,
-        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
-        default: dict | None = None,
-        format: Literal["html", "svg", "png"] | None = None,  # noqa: A002
-        format_options: dict | None = None,
-        debug: bool = False,
     ) -> None:
-        """
-        Jsdom renderer Creator class.
-
-        Parameters
-        ----------
-        theme : {'light', 'dark', 'current'}, optional
-            color theme to use, by default 'light'
-        default : dict, optional
-            dict of default spec values, by default None
-        format : {'html', 'svg', 'png'}, optional
-            default output format for jsdom renderer, by default None
-        format_options : dict, optional
-            default output format options for typst formatter. Currently
-            possible keys are 'font' (name of font family), 'scale' (font scaling)
-            and 'margin' (margin in pt around the plot)
-        debug : bool, optional
-            activate debug mode (for widget renderer only), by default False
-        """
-
-        super().__init__(theme=theme, default=default, debug=debug)
-
-        allowed_formats = ["html", "svg", "png"]
-        if format is not None and format not in allowed_formats:
-            msg = (
-                f"Incorrect format '{format}'. "
-                f"Available formats are '{allowed_formats}'."
-            )
-            raise ValueError(msg)
-
-        self.format = format
-        if format_options is None:
-            format_options = {}
-        self.format_options = format_options
         self._proc = None
         self.start_server()
 
@@ -358,64 +350,26 @@ class ObsplotJsdomCreator(ObsplotCreator):
         if self._proc is not None:
             os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)
 
-    def __call__(
-        self,
-        *args,
-        **kwargs,
+    def render(
+        self, spec, format, format_options, path, theme, default, debug  # noqa: A002
     ) -> None:
         """
+        TODO
         Method called when an instance is called.
         """
         if self._proc is not None and self._proc.poll() is not None:
             msg = "Server has ended, please recreate your plot generator object."
             raise RuntimeError(msg)
 
-        # Extract configuration arguments from spec
-        path = None
-        if "path" in kwargs:
-            path = kwargs["path"]
-            del kwargs["path"]
-        if "format" in kwargs:
-            format = kwargs["format"]  # noqa: A001
-            del kwargs["format"]
-        else:
-            format = self.format  # noqa: A001
-        if "format_options" in kwargs:
-            format_options = kwargs["format_options"]
-            del kwargs["format_options"]
-        else:
-            format_options = self.format_options
-
-        allowed_formats = ["html", "png", "svg"]
-        if format is not None and format not in allowed_formats:
-            msg = f"Invalid format: {format}.\n Allowed formats: {allowed_formats}."
-            raise ValueError(msg)
-
-        if path is not None and not isinstance(path, io.StringIO):
-            extension = Path(path).suffix.lower()[1:]
-            allowed_extensions = ["html", "svg", "pdf", "png"]
-            if extension not in allowed_extensions:
-                msg = f"Output file extension should be one of {allowed_extensions}"
-                raise ValueError(msg)
-            # If both format and path are provided, use path extension
-            if format is not None and format != extension:
-                warnings.warn(
-                    f"Generating file in {extension} format based on file extension.",
-                    RuntimeWarning,
-                    stacklevel=1,
-                )
-            format = extension  # noqa: A001
-
-        spec = self.get_spec(*args, **kwargs)
         if "figure" not in spec and format in ["html", "png", "pdf"]:
             spec["figure"] = True
 
         res = ObsplotJsdom(
             spec=spec,
             port=self._port,
-            theme=self._theme,
-            default=self._default,
-            debug=self._debug,
+            theme=theme,
+            default=default,
+            debug=debug,
         ).plot()
 
         if format in ["png", "pdf"] or format == "svg" and isinstance(res, HTML):

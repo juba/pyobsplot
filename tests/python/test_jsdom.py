@@ -13,9 +13,9 @@ from pyobsplot.utils import DEFAULT_THEME
 
 @pytest.fixture(scope="module")
 def op():
-    op = Obsplot(renderer="jsdom")
+    op = Obsplot(format="html")
     yield op
-    op.close()  # type: ignore
+    op.jsdom_close()  # type: ignore
 
 
 @pytest.fixture(scope="module")
@@ -56,5 +56,4 @@ class TestSpecs:
             with open(f"tests/python/reference/{key}") as f:
                 results[key] = out.getvalue() == f.read()
             out.close()
-        print(results)
         assert all(results)

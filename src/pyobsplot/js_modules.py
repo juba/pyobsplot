@@ -1,13 +1,13 @@
 from functools import partial
 from typing import Callable
 
-from pyobsplot.obsplot import ObsplotJsdomCreator, ObsplotWidgetCreator
+from pyobsplot.obsplot import Obsplot
 from pyobsplot.utils import PLOT_METHODS
 from pyobsplot.widget import ObsplotWidget
 
-# Default renderer for Plot.plot() calls.
+# Default format for Plot.plot() calls.
 # Not documented, only internal use for documentation generation
-_plot_renderer = "widget"
+_plot_format = "widget"
 
 
 class Plot:
@@ -16,18 +16,18 @@ class Plot:
     """
 
     @staticmethod
-    def plot(*args, **kwargs) -> ObsplotWidget | None:
+    def plot(spec: dict) -> ObsplotWidget | None:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
         or an ObpsplotJsdom with args and kwargs.
         """
         op = None
-        if _plot_renderer == "widget":
-            op = ObsplotWidgetCreator()
-        if _plot_renderer == "jsdom":
-            op = ObsplotJsdomCreator()
+        if _plot_format == "widget":
+            op = Obsplot(format="widget")
+        else:
+            op = Obsplot(format="html")
         if op is not None:
-            return op(*args, **kwargs)
+            return op(spec)
 
 
 def method_to_spec(*args, **kwargs) -> dict:
