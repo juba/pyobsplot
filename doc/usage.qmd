@@ -93,7 +93,20 @@ op({
 
 `pyobsplot` allows to output plots as [Jupyter widgets](https://ipywidgets.readthedocs.io/en/stable/), but also as static HTML, SVG or PNG outputs.
 
-The following table lists the differences between the formats.
+<table class="table table-striped renderers-table">
+<thead>
+<tr><th>Format</th><th>Output type</th><th>Renderer</th><th>Note</th></tr>
+</thead>
+<tbody>
+<tr><td>"widget"</td><td>Jupyter Widget</td><td>widget</td><td></td></tr>
+<tr><td>"html"</td><td>Static HTML</td><td>jsdom</td><td></td></tr>
+<tr><td>"svg"</td><td>SVG image</td><td>jsdom or jsdom+typst </td><td>`typst` conversion occurs if a legend, title or caption is present</td></tr>
+<tr><td>"png"</td><td>PNG image</td><td>jsdom+typst</td><td></td></tr>
+
+</tbody>
+</table>
+
+The following table lists the differences between the widget output and the other static formats (HTML, PNG and SVG).
 
 <style>
 .renderers-table {
