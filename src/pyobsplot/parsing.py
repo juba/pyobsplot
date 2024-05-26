@@ -40,14 +40,15 @@ class SpecParser:
     def spec(self):
         return self._spec
 
-    @spec.setter
-    def spec(self, value):
+    def set_spec(self, value: dict, *, force_figure: bool = False):
         if (
             "pyobsplot-type" in value
             and value["pyobsplot-type"] == "function"
             and value["module"] == "Plot"
         ):
             value = {"marks": [value]}
+        if force_figure:
+            value["figure"] = True
         self._spec = value
 
     def cache_index(self, data: Any) -> int | None:

@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable
+from typing import Callable, Literal
 
 from pyobsplot.obsplot import Obsplot
 from pyobsplot.utils import PLOT_METHODS
@@ -16,18 +16,28 @@ class Plot:
     """
 
     @staticmethod
-    def plot(spec: dict) -> ObsplotWidget | None:
+    def plot(
+        spec: dict,
+        format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
+        path: str | None = None,
+    ) -> ObsplotWidget | None:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
         or an ObpsplotJsdom with args and kwargs.
+
+        Parameters
+        ----------
+        spec : dict
+            plot specification dictionary
+        format : {'widget', 'html', 'svg', 'png'}, optional
+            default output format, by default "widget"
+        path : str | io.StringIO | None, optional
+            if provided, plot is saved to disk to an HTML file instead of displayed
+            as a jupyter widget, by default None
         """
-        op = None
-        if _plot_format == "widget":
-            op = Obsplot(format="widget")
-        else:
-            op = Obsplot(format="html")
-        if op is not None:
-            return op(spec)
+        format_value = format or _plot_format
+        op = Obsplot(format=format_value)  # type: ignore
+        return op(spec, path=path)
 
 
 def method_to_spec(*args, **kwargs) -> dict:

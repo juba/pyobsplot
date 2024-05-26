@@ -63,7 +63,6 @@ class Obsplot:
             activate debug mode, by default False
         renderer : str, optional
             DEPRECATED, use `format` instead.
-
         """
 
         # Check for renderer value
@@ -159,12 +158,6 @@ class Obsplot:
             default output format options for typst formatter. Currently
             possible keys are 'font' (name of font family), 'scale' (font scaling)
             and 'margin' (margin in pt around the plot)
-
-        Returns
-        -------
-        _type_
-            _description_
-
         """
 
         format_value = format or self.format
@@ -328,8 +321,7 @@ class ObsplotJsdomCreator:
             msg = "Server has ended, please recreate your plot generator object."
             raise RuntimeError(msg)
 
-        if "figure" not in spec and format in ["html", "png", "pdf"]:
-            spec["figure"] = True
+        force_figure = "figure" not in spec and format in ["html", "png", "pdf"]
 
         res = ObsplotJsdom(
             spec=spec,
@@ -337,6 +329,7 @@ class ObsplotJsdomCreator:
             theme=theme,
             default=default,
             debug=debug,
+            force_figure=force_figure,
         ).plot()
 
         if format in ["png", "pdf"] or format == "svg" and isinstance(res, HTML):

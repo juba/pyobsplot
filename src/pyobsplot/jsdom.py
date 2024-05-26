@@ -25,6 +25,7 @@ class ObsplotJsdom:
         theme: str = DEFAULT_THEME,
         default: dict | None = None,
         debug: bool = False,
+        force_figure: bool = False,
     ) -> None:
         """
         Obsplot JSDom class. The class takes a plot specification as input and generates
@@ -42,12 +43,14 @@ class ObsplotJsdom:
             dict of default spec values, by default None
         debug : bool, optional
             activate debug mode, by default False
+        force_figure : bool, optional
+            if True, set figure to true in plot specification, by default False
         """
 
         # Create parser
         parser = SpecParser(renderer="jsdom", default=default)
         # Parse spec code
-        parser.spec = spec
+        parser.set_spec(spec, force_figure=force_figure)
         code = parser.parse_spec()
         # Create spec object
         spec = {"data": parser.serialize_data(), "code": code, "debug": debug}

@@ -2,15 +2,15 @@
 Tests for specification parsing.
 """
 
-import pytest
+import datetime
 
 import pandas as pd
 import polars as pl
-import datetime
+import pytest
 
-from pyobsplot import js_modules, Plot
-from pyobsplot.parsing import SpecParser, js
+from pyobsplot import Plot, js_modules
 from pyobsplot.data import pd_to_arrow, pl_to_arrow
+from pyobsplot.parsing import SpecParser, js
 
 
 class TestSpecParser:
@@ -34,7 +34,7 @@ class TestSpecParser:
 
     def test_parse_plot_mark(self):
         parser = SpecParser()
-        parser.spec = Plot.lineY([1, 2, 3])  # type: ignore
+        parser.set_spec(Plot.lineY([1, 2, 3]))  # type: ignore
         assert parser.spec == {
             "marks": [
                 {
@@ -51,11 +51,11 @@ class TestMergedefault:
     def test_merge_without_default(self):
         spec = {"width": 100, "color": {"legend": True}}
         parser = SpecParser(renderer="widget")
-        parser.spec = spec
+        parser.set_spec(spec)
         parsed = parser.parse_spec()
         assert parsed == spec
         parser = SpecParser(renderer="jsdom")
-        parser.spec = spec
+        parser.set_spec(spec)
         parsed = parser.parse_spec()
         assert parsed == spec
 
@@ -64,11 +64,11 @@ class TestMergedefault:
         default = {"width": 200, "style": {"color": "red"}}
         merged = {"width": 100, "color": {"legend": True}, "style": {"color": "red"}}
         parser = SpecParser(renderer="widget", default=default)
-        parser.spec = spec
+        parser.set_spec(spec)
         parsed = parser.parse_spec()
         assert parsed == merged
         parser = SpecParser(renderer="jsdom", default=default)
-        parser.spec = spec
+        parser.set_spec(spec)
         parsed = parser.parse_spec()
         assert parsed == merged
 
