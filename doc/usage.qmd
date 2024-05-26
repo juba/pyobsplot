@@ -95,13 +95,13 @@ op({
 
 <table class="table table-striped renderers-table">
 <thead>
-<tr><th>Format</th><th>Output type</th><th>Renderer</th><th>Note</th></tr>
+<tr><th>Format</th><th>Output type</th><th>Renderer</th></tr>
 </thead>
 <tbody>
-<tr><td>"widget"</td><td>Jupyter Widget</td><td>widget</td><td></td></tr>
-<tr><td>"html"</td><td>Static HTML</td><td>jsdom</td><td></td></tr>
-<tr><td>"svg"</td><td>SVG image</td><td>jsdom or jsdom+typst </td><td>`typst` conversion occurs if a legend, title or caption is present</td></tr>
-<tr><td>"png"</td><td>PNG image</td><td>jsdom+typst</td><td></td></tr>
+<tr><td>"widget"</td><td>Jupyter Widget</td><td>widget</td></tr>
+<tr><td>"html"</td><td>Static HTML</td><td>jsdom</td></tr>
+<tr><td>"svg"</td><td>SVG image</td><td>jsdom or jsdom+typst </td></tr>
+<tr><td>"png"</td><td>PNG image</td><td>jsdom+typst</td></tr>
 
 </tbody>
 </table>
@@ -166,7 +166,7 @@ The following table lists the differences between the widget output and the othe
 </tr>
 <tr>
 <td>**Persistence<br>between sessions**</td>
-<td>Widget state is not saved between session in VSCode</td>
+<td>Widget state is not saved between sessions (for now)</td>
 <td>Output is saved between sessions</td>
 </tr>
 </tbody>
