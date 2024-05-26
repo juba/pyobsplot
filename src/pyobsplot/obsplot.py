@@ -42,6 +42,7 @@ class Obsplot:
         default: dict | None = None,
         format_options: dict | None = None,
         debug: bool = False,
+        renderer: str | None = None,
     ) -> None:
         """
         Main Obsplot class.
@@ -60,8 +61,28 @@ class Obsplot:
             and 'margin' (margin in pt around the plot)
         debug : bool, optional
             activate debug mode, by default False
+        renderer : str, optional
+            DEPRECATED, use `format` instead.
 
         """
+
+        # Check for renderer value
+        if renderer is not None:
+            if renderer == "widget":
+                msg = (
+                    "The 'renderer' argument is deprecated.\n"
+                    "Use format='widget' instead."
+                )
+                raise ValueError(msg)
+            if renderer == "jsdom":
+                msg = (
+                    "The 'renderer' argument is deprecated.\n"
+                    "Use format='html', format='svg' or format='png' instead."
+                )
+                raise ValueError(msg)
+            else:
+                msg = "The 'renderer' argument is deprecated. Use 'format' instead."
+                raise ValueError(msg)
 
         # Check theme value
         if theme not in AVAILABLE_THEMES:
