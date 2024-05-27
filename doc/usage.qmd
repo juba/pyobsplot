@@ -18,7 +18,7 @@ op = Obsplot()
 ```
 
 
-## From JavaScript to Python
+## Plot specification
 
 Converting a plot specification from JavaScript to Python should be straightforward most of the time:
 
@@ -88,6 +88,21 @@ op({
     ]
 })
 ```
+
+### Alternative syntax
+
+For the simplest cases, you can also pass a mark method directly as plot specification. The JavaScript `plot()` method will be called automatically to display the plot:
+
+```{python}
+import random
+op(
+    Plot.tickX(
+        [random.gauss(0,1) for i in range(1000)], 
+        {"stroke": "steelblue", "opacity": 0.2}
+    )
+)
+```
+
 
 ## Output formats
 
@@ -203,32 +218,69 @@ op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
 
 
 
-## Alternative syntaxes
+## Saving plots to file
 
-As we've already seen, the most common syntax for a plot specification is to pass it as a dictionary :
+Generated plots can be saved to a file. To do this, just add a `path` argument to your generator call:
 
 ```{python}
 #| eval: false
-op({
-    "grid": True,
-    "color": {"legend": True}
-    "marks": [
-        Plot.dot(data, {"x": "x", "y": "y", "fill": "type"})
-    ],
-})
+
+op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 ```
 
-For the simplest cases, you can also pass a mark method directly. The JavaScript `plot()` method will be called automatically to display the plot:
+### Widget format
+
+When using the `widget` format, plots can only be saved to full HTML files. These files retain interactive features such as tooltips. 
+
 
 ```{python}
-import random
-op(
-    Plot.tickX(
-        [random.gauss(0,1) for i in range(1000)], 
-        {"stroke": "steelblue", "opacity": 0.2}
-    )
-)
+#| eval: false
+opw = Obsplot()
+opw(Plot.lineY([1,2,3,2]), path="path_to/file.html")
 ```
+
+::: {.callout-tip}
+To embed widgets into an HTML website or document, Quarto documents can be more practical.
+:::
+
+### Other output formats
+
+Plots can also be saved as SVG, PNG, PDF or static HTML files. The output format is determined by the `path` file extension.
+
+```{python}
+#| eval: false
+opw = Obsplot()
+opw(Plot.lineY([1,2,3,2]), path="path_to/file.png")
+```
+
+::: {.callout-note}
+PDF format is only available when saving to a file, as PDF output cannot be embedded and displayed in a Jupyter notebook.
+:::
+
+::: {.callout-caution}
+Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. In this case, when saving to an SVG file, the plot will be converted using `typst`.
+:::
+
+
+
+
+
+## Themes
+
+When using a plot generator object, it is possible to specify one of three color themes:
+
+- `light` theme (default) creates plots with a white background and a black foreground color
+- `dark` theme creates plots with a black background and a white foreground
+- `current` theme creates plots with a transparent background and a `currentColor` foreground
+
+You can specify a mode when creating the plot generator object by using the `theme` argument:
+
+```{python}
+#| eval: false
+op_dark = Obsplot(theme="dark")
+```
+
+You can see output examples in the [themes gallery](gallery_themes.qmd)
 
 
 ## Default specification values
@@ -265,25 +317,9 @@ op_colors(
 )
 ```
 
-## Themes
+## Data handling
 
-When using a plot generator object, it is possible to specify one of three color themes:
-
-- `light` theme (default) creates plots with a white background and a black foreground color
-- `dark` theme creates plots with a black background and a white foreground
-- `current` theme creates plots with a transparent background and a `currentColor` foreground
-
-You can specify a mode when creating the plot generator object by using the `theme` argument:
-
-```{python}
-#| eval: false
-op_dark = Obsplot(theme="dark")
-```
-
-You can see output examples in the [themes gallery](gallery_themes.qmd)
-
-
-## DataFrames and Series
+### DataFrames and Series
 
 Pandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.
 
@@ -347,7 +383,7 @@ op({
 
 In this case, caching ensures that the `penguins` DataFrame is only serialized and transmitted once instead of twice. 
 
-## datetime objects
+### datetime objects
 
 `datetime.date` and `datetime.datetime` Python objects are automatically serialized and converted to JavaScript `Date` objects.
 
@@ -431,47 +467,4 @@ display(plot)
 
 You can see a live version of this example in the following Colab notebook: [![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
 
-
-## Saving plots to file
-
-Generated plots can be saved to a file. To do this, just add a `path` argument to your generator call:
-
-```{python}
-#| eval: false
-
-op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
-```
-
-### Widget format
-
-When using the `widget` renderer, plots can only be saved to full HTML files. These files retain interactive features such as tooltips. 
-
-
-```{python}
-#| eval: false
-opw = Obsplot()
-opw(Plot.lineY([1,2,3,2]), path="path_to/file.html")
-```
-
-::: {.callout-tip}
-To embed widgets into an HTML website or document, Quarto documents can be more practical.
-:::
-
-### Other output formats
-
-Plots can also be saved as SVG, PNG, PDF or static HTML files. The output format is determined by the `path` file extension.
-
-```{python}
-#| eval: false
-opw = Obsplot()
-opw(Plot.lineY([1,2,3,2]), path="path_to/file.png")
-```
-
-::: {.callout-note}
-PDF format is only available when saving to a file, as PDF output cannot be embedded and displayed in a Jupyter notebook.
-:::
-
-::: {.callout-caution}
-Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. In this case, when saving to an SVG file, the plot will be converted using `typst`.
-:::
 
