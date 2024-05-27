@@ -1,11 +1,11 @@
 ---
-title: "Interaction"
+title: "Interactions"
 ---
 
 {{< include _setup_widget.qmd >}}
 
 ::::{.callout-warning}
-As of now, interactions are only supported by the `widget` renderer. When using the `jsdom` renderer, only static plots can be produced.
+Interactions are only supported by the `widget` format. When using another output format, only static plots can be produced.
 ::::
 
 ## Tooltips

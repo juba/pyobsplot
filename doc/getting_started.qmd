@@ -21,7 +21,7 @@ npm install pyobsplot
 npm install -g pyobsplot
 ```
 
-## Usage
+## Creating a plot
 
 To use `pyobsplot`, you must import at least its `Plot` class with:
 
@@ -88,9 +88,9 @@ Plot.plot(
 )
 ```
 
-## Plot generator object
+## Plot generator
 
-Calling `Plot.plot()` is the fastest way to generate a plot with the default settings, but for further customization you can import the `Obsplot` class and create a *plot generator object*:
+Calling `Plot.plot()` is the fastest way to generate a plot with the default settings, but for further customization you can import the `Obsplot` class and create a *plot generator*:
 
 ```{python}
 from pyobsplot import Obsplot, Plot
@@ -104,7 +104,7 @@ op = Obsplot()
 op = Obsplot(format="html")
 ```
 
-You can then create plots by calling this generator object with your plot specification:
+You can then create plots by calling this generator with your plot specification:
 
 ```{python}
 # | eval: false
@@ -117,7 +117,7 @@ op(
 )
 ```
 
-For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to the generator object:
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to the generator:
 
 ```{python}
 op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
@@ -147,6 +147,30 @@ op = Obsplot()
 op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
 ```
 
+To save the plot to a file, you can add a `path` argument. The file extension will determine the output type: 
+
+```{python}
+# | eval: false
+# Save widget to HTML file
+op = Obsplot(format="widget")
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.html")
+# Save plot to PNG file
+op = Obsplot(format="png")
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.png")
+```
+
+::: {.callout-note}
+With the "widget" format, export can only be done to HTML files. For other formats, plots can be saved as PNG, SVG, HTML and PDF.
+:::
+
+It is also possible to specify a `format` or a `path` when using the `Plot.plot()` syntax:
+
+```python
+# Display plot as PNG
+Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
+# Save plot as SVG
+Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.svg")
+```
 
 ## Learn more
 
