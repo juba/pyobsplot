@@ -22,6 +22,7 @@ class Plot:
         spec: dict,
         format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
         path: str | None = None,
+        format_options: dict | None = None,
     ) -> ObsplotWidget | None:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
@@ -36,18 +37,22 @@ class Plot:
         path : str | io.StringIO | None, optional
             if provided, plot is saved to disk to an HTML file instead of displayed
             as a jupyter widget, by default None
+        format_options : dict, optional
+            default output format options for typst formatter. Currently
+            possible keys are 'font' (name of font family), 'scale' (font scaling)
+            and 'margin' (margin around the plot, e.g. '1in' or '10pt')
         """
         format_value = format
         if path is not None and not isinstance(path, io.StringIO):
             extension = Path(path).suffix.lower()[1:]
-            allowed_extensions = ["html", "svg", "pdf", "png"]
+            allowed_extensions = ["html", "svg", "pdf", "png", "pdf"]
             if extension not in allowed_extensions:
                 msg = f"Output file extension should be one of {allowed_extensions}"
                 raise ValueError(msg)
             format_value = format_value or extension
 
         format_value = format_value or _plot_format
-        op = Obsplot(format=format_value)  # type: ignore
+        op = Obsplot(format=format_value if format_value != "pdf" else "svg", format_options=format_options)  # type: ignore
         return op(spec, path=path)
 
 
