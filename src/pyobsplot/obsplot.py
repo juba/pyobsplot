@@ -403,6 +403,8 @@ class ObsplotJsdomCreator:
                 )
                 if "margin" in options:
                     value = options["margin"]
+                    if value.isnumeric():
+                        value = value + "pt"
                     typst_content += f"margin: {value},"
                 if "font" in options:
                     value = options["font"]
@@ -410,6 +412,8 @@ class ObsplotJsdomCreator:
                 if "scale" in options:
                     value = options["scale"]
                     typst_content += f"scale: {value},"
+                    if value.isnumeric():
+                        value = value + "pt"
                 if "legend-padding" in options:
                     value = options["legend-padding"]
                     typst_content += f"legend-padding: {value},"
