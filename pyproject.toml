@@ -5,7 +5,7 @@ description = "Observable Plot in Jupyter notebooks and Quarto documents"
 authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
 license = {file = "LICENSE"}
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Framework :: Jupyter :: JupyterLab",
@@ -57,7 +57,7 @@ exclude = [".github", "doc", ".vscode", "examples"]
 packages = ["src/pyobsplot"]
 
 [tool.black]
-target-version = ["py39"]
+target-version = ["py310"]
 line-length = 88
 skip-string-normalization = true
 
