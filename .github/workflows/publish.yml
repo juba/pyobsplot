@@ -27,11 +27,11 @@ jobs:
             - name: Set up Quarto
               uses: quarto-dev/quarto-actions/setup@v2
 
-            - name: Install Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.11"
-                  cache: "pip"
+            #- name: Install Python
+            #  uses: actions/setup-python@v5
+            #  with:
+            #      python-version: "3.11"
+            #      cache: "pip"
 
             - name: Install rye
               uses: eifinger/setup-rye@v3
