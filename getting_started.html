@@ -291,12 +291,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="creating-a-plot" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-plot">Creating a plot</h2>
 <p>To use <code>pyobsplot</code>, you must import at least its <code>Plot</code> class with:</p>
-<div id="122c4929" class="cell" data-execution_count="2">
+<div id="5bb6c662" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To create a plot, call the <code>Plot.plot</code> method with a plot specification. The simplest specification form is a Python dictionary with a syntax nearly identical as the JavaScript one.</p>
 <p>So, starting with a very simple DataFrame:</p>
-<div id="48ff78f8" class="cell" data-execution_count="3">
+<div id="4a36596c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pl.DataFrame(</span>
@@ -315,7 +315,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then you can reproduce the plot with:</p>
-<div id="a1934e7e" class="cell" data-execution_count="4">
+<div id="7b418c6e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
@@ -338,7 +338,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript <code>true</code> must be replaced by Python <code>True</code>.</p>
 <p>You can use <a href="https://pandas.pydata.org">pandas</a> and <a href="https://pola.rs">polars</a> DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:</p>
-<div id="3a1edb47" class="cell" data-execution_count="5">
+<div id="a6a10323" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
@@ -390,13 +390,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plot-generator" class="level2">
 <h2 class="anchored" data-anchor-id="plot-generator">Plot generator</h2>
 <p>Calling <code>Plot.plot()</code> is the fastest way to generate a plot with the default settings, but for further customization you can import the <code>Obsplot</code> class and create a <em>plot generator</em>:</p>
-<div id="c64991c8" class="cell" data-execution_count="6">
+<div id="f9a809e8" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can then create plots by calling this generator with your plot specification:</p>
-<div id="3bfcb8d5" class="cell" data-execution_count="8">
+<div id="0140bea3" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>op(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
@@ -405,7 +405,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For the simplest cases, you can also create your plot directly by passing a <code>Plot</code> mark method to the generator:</p>
-<div id="cbc60ca7" class="cell" data-execution_count="9">
+<div id="90ec9405" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>op(Plot.auto(penguins, {<span class="st">"x"</span>: <span class="st">"flipper_length_mm"</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <figure class="plot-d6a7b5-figure figure" style="max-width: initial; padding: 0px 5px 5px 5px; color: black; background-color: white;"><svg class="plot-d6a7b5" fill="currentColor" font-family="system-ui, sans-serif" font-size="10" text-anchor="middle" width="640" height="400" viewbox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="color: black; background-color: white;"><style>:where(.plot-d6a7b5) {
@@ -426,21 +426,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="output-formats">Output formats</h2>
 <p>By default, plots will be created as <a href="https://ipywidgets.readthedocs.io/en/stable/">Jupyter widgets</a>, but <code>pyobsplot</code> is also able to output plots in PNG, SVG or static HTML formats.</p>
 <p>The output format is configured by passing a <code>format</code> argument to <code>Obsplot()</code> when creating a generator object:</p>
-<div id="616fb2a8" class="cell" data-execution_count="10">
+<div id="ac1ff663" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generator with widget output (default)</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(<span class="bu">format</span><span class="op">=</span><span class="st">"widget"</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate with static HTML output</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>opj <span class="op">=</span> Obsplot(<span class="bu">format</span><span class="op">=</span><span class="st">"html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is also possible to specifiy a format when creating the plot by adding a <code>format</code> argument:</p>
-<div id="fea7bbbf" class="cell" data-execution_count="11">
+<div id="e74be349" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generator with default widget output format</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to PNG output for this plot</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>op(Plot.auto(penguins, {<span class="st">"x"</span>: <span class="st">"flipper_length_mm"</span>}), <span class="bu">format</span><span class="op">=</span><span class="st">"png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To save the plot to a file, you can add a <code>path</code> argument. The file extension will determine the output type:</p>
-<div id="ed5c23b3" class="cell" data-execution_count="12">
+<div id="f8ac9d42" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save widget to HTML file</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(<span class="bu">format</span><span class="op">=</span><span class="st">"widget"</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>op(Plot.auto(penguins, {<span class="st">"x"</span>: <span class="st">"flipper_length_mm"</span>}), path<span class="op">=</span><span class="st">"plot.html"</span>)</span>
