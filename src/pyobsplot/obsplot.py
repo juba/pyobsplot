@@ -100,6 +100,11 @@ class Obsplot:
                 f"Incorrect format value '{format}'."
                 f"Available formats are {AVAILABLE_FORMATS}."
             )
+            if format == "pdf":
+                msg += (
+                    "\nPDF output is only available when exporting to a file, "
+                    "use path='<myfile>.pdf' instead. "
+                )
             raise ValueError(msg)
 
         # Check default value
