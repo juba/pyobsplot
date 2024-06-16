@@ -33,17 +33,13 @@ jobs:
                   python-version: ${{ matrix.python-version }}
                   cache: "pip"
 
-            - name: Install rye
-              uses: eifinger/setup-rye@v3
-              with:
-                  version: "latest"
-                  enable-cache: true
-
-            - name: Rye sync
-              run: rye sync
+            - name: Install Python dependencies
+              run: |
+                  pip install -r requirements.lock
+                  pip install -r requirements-dev.lock
 
             - name: Run pytest
-              run: rye run test
+              run: pytest
 
     JS-tests:
         runs-on: ubuntu-latest
