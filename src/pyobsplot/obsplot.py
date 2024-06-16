@@ -58,7 +58,8 @@ class Obsplot:
         format_options : dict, optional
             default output format options for typst formatter. Currently
             possible keys are 'font' (name of font family), 'scale' (font scaling)
-            and 'margin' (margin around the plot, e.g. '1in' or '10pt')
+            'margin' (margin around the plot, e.g. '1in' or '10pt') and 'legend-padding'
+            (padding around the legend).
         debug : bool, optional
             activate debug mode, by default False
         renderer : str, optional
@@ -164,8 +165,9 @@ class Obsplot:
             as a jupyter widget, by default None
         format_options : dict, optional
             default output format options for typst formatter. Currently
-            possible keys are 'font' (name of font family), 'scale' (font scaling)
-            and 'margin' (margin in pt around the plot)
+            possible keys are 'font' (name of font family), 'scale' (font scaling),
+            'margin' (margin around the plot, e.g. '1in' or '10pt') and 'legend-padding'
+            (padding around the legend).
         """
 
         format_value = format or self.format
@@ -318,8 +320,9 @@ class ObsplotJsdomCreator:
             as a jupyter widget, by default None
         format_options : dict, optional
             default output format options for typst formatter. Currently
-            possible keys are 'font' (name of font family), 'scale' (font scaling)
-            and 'margin' (margin in pt around the plot)
+            possible keys are 'font' (name of font family), 'scale' (font scaling),
+            'margin' (margin around the plot, e.g. '1in' or '10pt') and 'legend-padding'
+            (padding around the legend).
         default : dict, optional
             dict of default spec values, by default None
         debug : bool, optional
@@ -412,10 +415,10 @@ class ObsplotJsdomCreator:
                 if "scale" in options:
                     value = options["scale"]
                     typst_content += f"scale: {value},"
-                    if value.isnumeric():
-                        value = value + "pt"
                 if "legend-padding" in options:
                     value = options["legend-padding"]
+                    if value.isnumeric():
+                        value = value + "pt"
                     typst_content += f"legend-padding: {value},"
                 typst_content += ")"
                 typst_file.write(typst_content)
