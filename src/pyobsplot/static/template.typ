@@ -17,7 +17,8 @@
     file,
     margin: 10pt,
     font-family: ("San Francisco", "Segoe UI", "Noto Sans", "Roboto", "Cantarell", "Ubuntu", "Lucida Grande", "Arial"),
-    scale: 1
+    scale: 1,
+    legend-padding: 20,
 ) = {
 
     set text(
@@ -54,8 +55,15 @@
     let title = find-child(figure, "h2")
     let subtitle = find-child(figure, "h3")
     let caption = find-child(figure, "figcaption")
-    let figuresvg = find-child(figure, "svg")
-    let figurewidth = int(figuresvg.attrs.width)
+    let figuresvgs = figure.children.filter(e => "tag" in e and e.tag == "svg")
+    let legends = figuresvgs
+    .filter(svg => "ramp" in svg.attrs.class)
+    .map(svg => (..svg, attrs: (..svg.attrs,
+                                 width: str(int(svg.attrs.width) + 2*legend-padding), 
+                                 viewbox: "-"+str(legend-padding)+" 0 "+str(int(svg.attrs.width)+legend-padding)+" "+str(int(svg.attrs.height)))
+                                ))
+    let mainfigure = figuresvgs.find(svg => "ramp" not in svg.attrs.class)
+    let figurewidth = calc.max(..figuresvgs.map(svg => int(svg.attrs.width)))
 
     set page(
         width: 1in*figurewidth/dpi + 2*margin,
@@ -78,7 +86,8 @@
             v(1in * 8/dpi)
         },
         ..figure.children.filter(e => e.tag == "div").map(swatch),
-        image.decode(encode-xml(figuresvg)),
+        ..legends.map(svg => image.decode(encode-xml(svg), height: 1in * int(svg.attrs.height) / dpi)),
+        image.decode(encode-xml(mainfigure), height: 1in * int(mainfigure.attrs.height) / dpi),
         if (caption != none) {
             set text(size: 1in * 13/dpi, fill: rgb(85, 85, 85), weight: 500)
             text(caption.children.first())

@@ -58,7 +58,7 @@ class Obsplot:
         format_options : dict, optional
             default output format options for typst formatter. Currently
             possible keys are 'font' (name of font family), 'scale' (font scaling)
-            and 'margin' (margin in pt around the plot)
+            and 'margin' (margin around the plot, e.g. '1in' or '10pt')
         debug : bool, optional
             activate debug mode, by default False
         renderer : str, optional
@@ -395,13 +395,16 @@ class ObsplotJsdomCreator:
                 )
                 if "margin" in options:
                     value = options["margin"]
-                    typst_content += f"margin: {value}pt,"
+                    typst_content += f"margin: {value},"
                 if "font" in options:
                     value = options["font"]
                     typst_content += f'font-family: "{value}",'
                 if "scale" in options:
                     value = options["scale"]
                     typst_content += f"scale: {value},"
+                if "legend-padding" in options:
+                    value = options["legend-padding"]
+                    typst_content += f"legend-padding: {value},"
                 typst_content += ")"
                 typst_file.write(typst_content)
 

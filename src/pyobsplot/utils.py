@@ -24,7 +24,7 @@ ALLOWED_DEFAULTS = [
 ]
 
 # Allowed format options
-ALLOWED_FORMAT_OPTIONS = ["font", "scale", "margin"]
+ALLOWED_FORMAT_OPTIONS = ["font", "scale", "margin", "legend-padding"]
 
 # Themes
 AVAILABLE_THEMES = ["light", "dark", "current"]
