@@ -170,7 +170,9 @@ class TestParse:
             "pyobsplot-type": "datetime",
             "value": "2023-01-01",
         }
-        assert SpecParser().parse(datetime.datetime(2023, 1, 1, 14, 25, 12)) == {
+        assert SpecParser().parse(
+            datetime.datetime(2023, 1, 1, 14, 25, 12)  # noqa: DTZ001
+        ) == {
             "pyobsplot-type": "datetime",
             "value": "2023-01-01T14:25:12",
         }
@@ -195,12 +197,7 @@ class TestParse:
             "args": (),
         }
         with pytest.raises(ValueError):
-            SpecParser().parse(js_modules.d3.bar(1, x="baz")) == {
-                "pyobsplot-type": "function",
-                "module": "d3",
-                "method": "bar",
-                "args": [1, "baz"],
-            }  # type: ignore
+            SpecParser().parse(js_modules.d3.bar(1, x="baz"))
         assert SpecParser().parse(js("d => d.foo")) == {
             "pyobsplot-type": "js",
             "value": "d => d.foo",
