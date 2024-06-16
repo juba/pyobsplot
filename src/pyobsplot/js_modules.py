@@ -45,14 +45,14 @@ class Plot:
         format_value = format
         if path is not None and not isinstance(path, io.StringIO):
             extension = Path(path).suffix.lower()[1:]
-            allowed_extensions = ["html", "svg", "pdf", "png", "pdf"]
+            allowed_extensions = ["html", "svg", "png", "pdf"]
             if extension not in allowed_extensions:
                 msg = f"Output file extension should be one of {allowed_extensions}"
                 raise ValueError(msg)
             format_value = format_value or extension
 
         format_value = format_value or _plot_format
-        op = Obsplot(format=format_value if format_value != "pdf" else "svg", format_options=format_options)  # type: ignore
+        op = Obsplot(format=format_value, format_options=format_options)  # type: ignore
         return op(spec, path=path)
 
 
