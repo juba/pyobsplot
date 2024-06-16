@@ -6,7 +6,7 @@ import io
 
 import pandas as pd
 import polars as pl
-import pyarrow as pa
+from pyarrow import feather
 
 from pyobsplot.data import pd_to_arrow, pl_to_arrow
 
@@ -16,7 +16,7 @@ class TestDataFrame:
         df = pd.DataFrame({"i": [1, 2], "f": [1.0, 2.0], "s": ["foo", "bar"]})
         df_arrow = pd_to_arrow(df)
         f = io.BytesIO(df_arrow)
-        df_arrow = pa.feather.read_feather(f)
+        df_arrow = feather.read_feather(f)
         assert df_arrow.equals(df)
 
     def test_data_frame_polars(self):
