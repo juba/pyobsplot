@@ -65,6 +65,9 @@ class Obsplot:
             DEPRECATED, use `format` instead.
         """
 
+        format = format.lower()  # type: ignore  # noqa: A001
+        theme = theme.lower()  # type: ignore
+
         # Check for renderer value
         if renderer is not None:
             if renderer == "widget":
