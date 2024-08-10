@@ -7,6 +7,7 @@ import datetime
 import pandas as pd
 import polars as pl
 import pytest
+from polars.testing import assert_frame_equal
 
 from pyobsplot import Plot, js_modules
 from pyobsplot.data import pd_to_arrow, pl_to_arrow
@@ -159,7 +160,7 @@ class TestParse:
             "pyobsplot-type": "DataFrame-ref",
             "value": 0,
         }
-        assert parser_pl.data[0].frame_equal(pl.DataFrame(df_pl.get_column("x")))
+        assert_frame_equal(parser_pl.data[0], pl.DataFrame(df_pl.get_column("x")))
         assert parser_pl.serialize_data()[0] == {
             "pyobsplot-type": "DataFrame",
             "value": pl_to_arrow(pl.DataFrame(df_pl.get_column("x"))),
@@ -211,8 +212,8 @@ class TestParse:
         parser = SpecParser()
         parsed = parser.parse(spec)
         assert len(parser.data) == 2
-        assert parser.data[0].frame_equal(df_pl)
-        assert parser.data[1].frame_equal(df_pl2)
+        assert_frame_equal(parser.data[0], df_pl)
+        assert_frame_equal(parser.data[1], df_pl2)
         assert parsed["x"] == {"pyobsplot-type": "DataFrame-ref", "value": 0}
         assert parsed["y"] == {"pyobsplot-type": "DataFrame-ref", "value": 1}
         assert parsed["z"] == {"pyobsplot-type": "DataFrame-ref", "value": 0}
