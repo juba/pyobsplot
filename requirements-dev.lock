@@ -7,6 +7,7 @@
 #   all-features: false
 #   with-sources: false
 #   generate-hashes: false
+#   universal: false
 
 -e file:.
 anyio==4.3.0
@@ -192,7 +193,7 @@ platformdirs==4.2.2
 playwright==1.44.0
 pluggy==1.5.0
     # via pytest
-polars==0.20.29
+polars==1.4.1
     # via pyobsplot
 prometheus-client==0.20.0
     # via jupyter-server
@@ -207,7 +208,7 @@ ptyprocess==0.7.0
     # via terminado
 pure-eval==0.2.2
     # via stack-data
-pyarrow==16.1.0
+pyarrow==17.0.0
     # via pyobsplot
 pycparser==2.22
     # via cffi

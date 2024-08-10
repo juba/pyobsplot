@@ -7,6 +7,7 @@
 #   all-features: false
 #   with-sources: false
 #   generate-hashes: false
+#   universal: false
 
 -e file:.
 anyio==4.3.0
@@ -48,7 +49,7 @@ parso==0.8.4
     # via jedi
 pexpect==4.9.0
     # via ipython
-polars==0.20.29
+polars==1.4.1
     # via pyobsplot
 prompt-toolkit==3.0.43
     # via ipython
@@ -58,7 +59,7 @@ ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.2
     # via stack-data
-pyarrow==16.1.0
+pyarrow==17.0.0
     # via pyobsplot
 pygments==2.18.0
     # via ipython

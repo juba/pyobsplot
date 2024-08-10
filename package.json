@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "@observablehq/plot": "^0.6.15",
+        "@observablehq/plot": "^0.6.16",
         "anywidget": "^0.9.0",
         "d3": "^7.9.0",
         "d3-scale-chromatic": "^3.1.0"
