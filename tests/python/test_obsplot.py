@@ -173,3 +173,39 @@ class TestInit:
         r = requests.post(url + "/plot", data="this is no valid json")
         assert r.status_code == 500
         assert r.content.decode().startswith("Server error: Unexpected token")
+
+    def test_formats(self):
+        with pytest.raises(ValueError):
+            Obsplot(format="foo")  # type: ignore
+
+    def test_path_format_override_warning(self, op):
+        with pytest.warns():
+            Obsplot(format="png")({}, path="foo.html")
+        with pytest.warns():
+            op({}, format="png", path="foo.html")
+        with pytest.warns():
+            Plot.plot({}, format="png", path="foo.html")
+
+    def test_path_invalid_extension(self, op):
+        with pytest.raises(ValueError):
+            op({}, path="foo.foo")
+        with pytest.raises(ValueError):
+            Plot.plot({}, path="foo.foo")
+
+    def test_path_invalid_widget_extension(self, op):
+        with pytest.raises(ValueError):
+            Obsplot(format="widget")({}, path="foo.png")
+        with pytest.raises(ValueError):
+            op({}, format="widget", path="foo.png")
+        with pytest.raises(ValueError):
+            Plot.plot({}, format="widget", path="foo.png")
+
+    def test_path_html_warning(self, op):
+        html_warning = (
+            "Exporting widget to HTML. If you want "
+            "to output to a static HTML file, add format='html'"
+        )
+        with pytest.warns(match=html_warning):
+            op({}, path="foo.html")
+        with pytest.warns(match=html_warning):
+            Plot.plot({}, path="foo.html")
