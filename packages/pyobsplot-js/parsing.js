@@ -12,20 +12,22 @@ export function unserialize_data(data, renderer) {
             if (renderer == "jsdom") {
                 value = Buffer.from(value, "base64");
             }
+            console.log(value);
             let table = arrow.tableFromIPC(value);
+            console.log(table);
             // Find timestamp column names
-            const date_columns = table.schema.fields
-                .filter((d) => d.type.toString().startsWith("Timestamp"))
-                .map((d) => d.name);
-            // Convert to JS array (it is done by Plot afterward anyway)
-            table = Array.from(table);
-            // Convert timestamp columns to Date
-            table = table.map((d) => {
-                for (let col of date_columns) {
-                    d[col] = new Date(d[col]);
-                }
-                return d;
-            });
+            // const date_columns = table.schema.fields
+            //     .filter((d) => d.type.toString().startsWith("Timestamp"))
+            //     .map((d) => d.name);
+            // // Convert to JS array (it is done by Plot afterward anyway)
+            // table = Array.from(table);
+            // // Convert timestamp columns to Date
+            // table = table.map((d) => {
+            //     for (let col of date_columns) {
+            //         d[col] = new Date(d[col]);
+            //     }
+            //     return d;
+            // });
             result.push(table);
         } else {
             result.push(d);
