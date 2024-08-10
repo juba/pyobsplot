@@ -12,7 +12,6 @@ import { generate_plot } from "./plot.js";
 const jsdom = new JSDOM("");
 global.window = jsdom.window;
 global.document = jsdom.window.document;
-global.navigator = jsdom.window.navigator;
 global.Event = jsdom.window.Event;
 global.Node = jsdom.window.Node;
 global.NodeList = jsdom.window.NodeList;
