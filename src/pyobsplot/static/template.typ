@@ -3,12 +3,18 @@
     .find(e => "tag" in e and e.tag == tag)
 }
 
+#let decode-ampersand(text) = {
+    let res = text.replace("&", "&#x26;")
+    res
+}
+
+
 #let encode-xml(elem) = {
   if (type(elem) == "string") {
-    elem
+    decode-ampersand(elem)
   } else if (type(elem) == "dictionary") {
     "<" + elem.tag + elem.attrs.pairs().map(
-        v => " " + v.at(0) + "=\"" + v.at(1) + "\""
+        v => " " + v.at(0) + "=\"" + decode-ampersand(v.at(1)) + "\""
     ).join("") + if (elem.tag == "svg") {" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\""} + ">" + elem.children.map(encode-xml).join("") + "</" + elem.tag + ">"
   }
 }
