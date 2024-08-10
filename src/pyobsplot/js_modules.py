@@ -9,7 +9,7 @@ from pyobsplot.widget import ObsplotWidget
 
 # Default format for Plot.plot() calls.
 # Not documented, only internal use for documentation generation
-_plot_format = "widget"
+_plot_format = None
 
 
 class Plot:
@@ -42,16 +42,7 @@ class Plot:
             possible keys are 'font' (name of font family), 'scale' (font scaling)
             and 'margin' (margin around the plot, e.g. '1in' or '10pt')
         """
-        format_value = format
-        if path is not None and not isinstance(path, io.StringIO):
-            extension = Path(path).suffix.lower()[1:]
-            allowed_extensions = ["html", "svg", "png", "pdf"]
-            if extension not in allowed_extensions:
-                msg = f"Output file extension should be one of {allowed_extensions}"
-                raise ValueError(msg)
-            format_value = format_value or extension
-
-        format_value = format_value or _plot_format
+        format_value = format or _plot_format
         op = Obsplot(format=format_value, format_options=format_options)  # type: ignore
         return op(spec, path=path)
 

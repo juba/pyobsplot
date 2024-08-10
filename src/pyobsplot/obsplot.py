@@ -30,13 +30,28 @@ from pyobsplot.utils import (
 from pyobsplot.widget import ObsplotWidget
 
 AVAILABLE_FORMATS = ["widget", "html", "svg", "png"]
+AVAILABLE_EXTENSIONS = ["html", "svg", "png", "pdf"]
+
+
+def check_format_value(format: str | None) -> None:  # noqa: A002
+    if format is not None and format not in AVAILABLE_FORMATS:
+        msg = (
+            f"Incorrect format value '{format}'."
+            f" Available formats are {AVAILABLE_FORMATS}."
+        )
+        if format == "pdf":
+            msg += (
+                "\nPDF output is only available when exporting to a file,"
+                " use path='<myfile>.pdf' instead. "
+            )
+        raise ValueError(msg)
 
 
 class Obsplot:
 
     def __init__(
         self,
-        format: Literal["widget", "html", "svg", "png"] = "widget",  # noqa: A002
+        format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
         *,
         theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
         default: dict | None = None,
@@ -50,7 +65,7 @@ class Obsplot:
         Parameters
         ----------
         format : {'widget', 'html', 'svg', 'png'}, optional
-            default output format, by default "widget"
+            default output format, by default None
         theme : {'light', 'dark', 'current'}, optional
             color theme to use, by default 'light'
         default : dict, optional
@@ -66,8 +81,10 @@ class Obsplot:
             DEPRECATED, use `format` instead.
         """
 
-        format = format.lower()  # type: ignore  # noqa: A001
-        theme = theme.lower()  # type: ignore
+        if format is not None:
+            format = format.lower()  # type: ignore  # noqa: A001
+        if theme is not None:
+            theme = theme.lower()  # type: ignore
 
         # Check for renderer value
         if renderer is not None:
@@ -96,17 +113,7 @@ class Obsplot:
             raise ValueError(msg)
 
         # Check format value
-        if format not in AVAILABLE_FORMATS:
-            msg = (
-                f"Incorrect format value '{format}'."
-                f"Available formats are {AVAILABLE_FORMATS}."
-            )
-            if format == "pdf":
-                msg += (
-                    "\nPDF output is only available when exporting to a file, "
-                    "use path='<myfile>.pdf' instead. "
-                )
-            raise ValueError(msg)
+        check_format_value(format)
 
         # Check default value
         default = default or {}
@@ -146,7 +153,7 @@ class Obsplot:
         spec: dict,
         format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
         theme: Literal["light", "dark", "current"] | None = None,
-        path: str | io.StringIO | None = None,
+        path: str | io.StringIO | Path | None = None,
         format_options: dict | None = None,
     ) -> ObsplotWidget | None:
         """
@@ -176,6 +183,13 @@ class Obsplot:
         default = self.default
         debug = self.debug
 
+        # Default to widget format
+        if format_value is None and path is None:
+            format_value = "widget"
+
+        # Check format value
+        check_format_value(format_value)
+
         # Check spec
         if not isinstance(spec, dict):
             msg = "Plot specification should be given as a dictionary."
@@ -184,20 +198,34 @@ class Obsplot:
         # Check path value and update format_value based on extension
         if path is not None and not isinstance(path, io.StringIO):
             extension = Path(path).suffix.lower()[1:]
-            allowed_extensions = ["html", "svg", "pdf", "png"]
-            if extension not in allowed_extensions:
-                msg = f"Output file extension should be one of {allowed_extensions}"
-                raise ValueError(msg)
-            if format_value == "widget" and extension != "html":
-                msg = "File extension should be 'html' when exporting a widget."
-                raise ValueError(msg)
-            if format_value not in ["widget", extension]:
-                warnings.warn(
-                    f"Generating file in {extension} format based on file extension.",
-                    RuntimeWarning,
-                    stacklevel=1,
-                )
-            format_value = extension
+            match format_value, extension:
+                case None, "html":
+                    format_value = "widget"
+                    warnings.warn(
+                        "Exporting widget to HTML. If you want to output to a static"
+                        " HTML file, add format='html'",
+                        stacklevel=1,
+                    )
+                case None, extension if extension in AVAILABLE_EXTENSIONS:
+                    format_value = extension
+                case _, extension if extension not in AVAILABLE_EXTENSIONS:
+                    msg = (
+                        f"Output file extension should be one of {AVAILABLE_EXTENSIONS}"
+                    )
+                    raise ValueError(msg)
+                case "widget", extension if extension != "html":
+                    msg = "File extension should be 'html' when exporting a widget."
+                    raise ValueError(msg)
+                case format_value, extension if format_value not in (
+                    "widget",
+                    extension,
+                ):
+                    warnings.warn(
+                        f"Overriding '{format_value}' format,"
+                        f" saving to '{extension}' file.",
+                        stacklevel=1,
+                    )
+                    format_value = extension
 
         # Render widget
         if format_value == "widget":
@@ -297,9 +325,9 @@ class ObsplotJsdomCreator:
         self,
         spec: dict,
         *,
-        format: Literal["widget", "html", "svg", "png"] = "widget",  # noqa: A002
+        format: Literal["widget", "html", "svg", "png"],  # noqa: A002
         theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
-        path: str | io.StringIO | None = None,
+        path: str | io.StringIO | Path | None = None,
         format_options: dict | None = None,
         default: dict | None = None,
         debug: bool = False,
@@ -311,8 +339,8 @@ class ObsplotJsdomCreator:
         ----------
         spec : dict
             plot specification
-        format : {'widget', 'html', 'svg', 'png'}, optional
-            default output format, by default "widget"
+        format : {'pdf', 'html', 'svg', 'png'}
+            output format
         theme : {'light', 'dark', 'current'}, optional
             color theme to use, by default 'light'
         path : str | io.StringIO | None, optional
@@ -332,6 +360,7 @@ class ObsplotJsdomCreator:
             msg = "Server has ended, please recreate your plot generator object."
             raise RuntimeError(msg)
 
+        # Force output to HTML for formats that need it
         force_figure = "figure" not in spec and format in ["html", "png", "pdf"]
 
         res = ObsplotJsdom(
@@ -343,15 +372,24 @@ class ObsplotJsdomCreator:
             force_figure=force_figure,
         ).plot()
 
-        if format in ["png", "pdf"] or format == "svg" and isinstance(res, HTML):
-            if format == "svg" and isinstance(res, HTML):
-                warnings.warn(
-                    "HTML figure converted to SVG via typst.",
-                    RuntimeWarning,
-                    stacklevel=1,
-                )
+        # Display error
+        if res.data is not None and res.data[:4] == "<pre":
+            display(res)
+            msg = "Error during plot generation: "
+            raise ValueError(msg + str(res.data))
+
+        # Conversion via typst
+        if format in ["png", "pdf"]:
+            res = self.typst_render(res, format, format_options)  # type: ignore
+        if format == "svg" and isinstance(res, HTML):
+            warnings.warn(
+                "HTML figure converted to SVG via typst.",
+                RuntimeWarning,
+                stacklevel=1,
+            )
             res = self.typst_render(res, format, format_options)  # type: ignore
 
+        # Save to file if path has been given
         if path is None:
             display(res)
         else:
@@ -456,6 +494,6 @@ class ObsplotJsdomCreator:
         if isinstance(res, bytes):
             with open(path, "wb") as f:
                 f.write(res)  # type: ignore
-        if isinstance(res, (HTML, SVG)):
+        if isinstance(res, HTML | SVG):
             with open(path, "w", encoding="utf-8") as f:
                 f.write(str(res.data))
