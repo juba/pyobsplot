@@ -44,5 +44,3 @@ function debug_output(out, renderer) {
         console.log("<br>--- end pyobsplot debugging output ---</br>");
     }
 }
-
-export { parse_spec, get_fun } from "./parsing.js";
