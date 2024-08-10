@@ -3,6 +3,7 @@ import json
 import os
 import pickle
 import sys
+from pathlib import Path
 
 import pandas as pd
 import polars as pl
@@ -25,22 +26,23 @@ simpsons = pl.read_csv("../../doc/data/simpsons.csv")
 metros = pl.read_csv("../../doc/data/metros.csv")
 stateage = (
     pl.read_csv("../../doc/data/us-population-state-age.csv")
-    .melt(id_vars="name", variable_name="age", value_name="population")
+    .unpivot(index="name", variable_name="age", value_name="population")
     .rename({"name": "state"})
 )
+stateage = stateage.with_columns(pl.col("population").cast(pl.Int32))
 with open("../../doc/data/us_states.json") as f:
     us_states = json.load(f)
 ca55 = pl.read_csv("../../doc/data/ca55-south.csv")
 vapor = (
     pl.read_csv("../../doc/data/vapor.csv", has_header=False, null_values="99999.0")
     .transpose()
-    .melt(variable_name="column", value_name="values")
+    .unpivot(variable_name="column", value_name="values")
 )
 
 
 # Simple examples ---
 
-specs["simple_svg1.svg"] = Plot.lineY([1, 2, 3, 2])
+specs["simple_svg1"] = Plot.lineY([1, 2, 3, 2])
 
 
 df = pd.DataFrame(
@@ -53,14 +55,12 @@ df = pd.DataFrame(
     }
 )
 
-specs["simple_svg2.svg"] = {
-    "marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})]
-}
+specs["simple_svg2"] = {"marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})]}
 
 
 # Transforms ---
 
-specs["transform_groupx.svg"] = {
+specs["transform_groupx"] = {
     "y": {"grid": True},
     "marks": [
         Plot.barY(penguins, Plot.groupX({"y": "count"}, {"x": "species"})),
@@ -70,22 +70,22 @@ specs["transform_groupx.svg"] = {
 
 # Date and times ---
 
-specs["date_dates_js_array.svg"] = {
+specs["date_dates_js_array"] = {
     "x": {"domain": js("[new Date('2021-01-01'), new Date('2022-01-01')]")},
     "grid": True,
 }
 
-specs["date_dates_array_js.svg"] = {
+specs["date_dates_array_js"] = {
     "x": {"domain": [js("new Date('2021-01-01')"), js("new Date('2022-01-01')")]},
     "grid": True,
 }
 
-specs["date_datetime_date.svg"] = {
+specs["date_datetime_date"] = {
     "x": {"domain": [datetime.date(2021, 1, 1), datetime.date(2022, 1, 1)]},
     "grid": True,
 }
 
-specs["date_datetime_datetime.svg"] = {
+specs["date_datetime_datetime"] = {
     "x": {
         "type": "time",
         "domain": [
@@ -107,7 +107,7 @@ d_pl = pl.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_polars_datetime_date.svg"] = {
+specs["date_polars_datetime_date"] = {
     "marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]
 }
 
@@ -121,7 +121,7 @@ d_pl = pl.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_polars_datetime_datetime.svg"] = {
+specs["date_polars_datetime_datetime"] = {
     "marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]
 }
 
@@ -135,7 +135,7 @@ d_pd = pd.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_pandas_datetime_date.svg"] = {
+specs["date_pandas_datetime_date"] = {
     "marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]
 }
 
@@ -149,7 +149,7 @@ d_pd = pd.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_pandas_datetime_datetime.svg"] = {
+specs["date_pandas_datetime_datetime"] = {
     "marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]
 }
 
@@ -158,25 +158,25 @@ specs["date_pandas_datetime_datetime.svg"] = {
 simpsons_pl = simpsons
 simpsons_pd = simpsons_pl.to_pandas()
 
-specs["source_pl_df.svg"] = {
+specs["source_pl_df"] = {
     "marks": [
         Plot.dot(simpsons_pl, {"x": "number_in_season", "y": "imdb_rating"}),
     ]
 }
 
-specs["source_pd_df.svg"] = {
+specs["source_pd_df"] = {
     "marks": [
         Plot.dot(simpsons_pd, {"x": "number_in_season", "y": "imdb_rating"}),
     ]
 }
 
-specs["source_pl_series.svg"] = {
+specs["source_pl_series"] = {
     "marks": [
         Plot.tickX(simpsons_pl.get_column("imdb_rating"), {"x": "imdb_rating"}),
     ]
 }
 
-specs["source_pd_series.svg"] = {
+specs["source_pd_series"] = {
     "marks": [
         Plot.tickX(simpsons_pd["imdb_rating"], {"x": "imdb_rating"}),
     ]
@@ -184,7 +184,7 @@ specs["source_pd_series.svg"] = {
 
 # Complex plots ---
 
-specs["complex_simpsons_cells.svg"] = {
+specs["complex_simpsons_cells"] = {
     "height": 640,
     "padding": 0.05,
     "grid": True,
@@ -207,7 +207,7 @@ specs["complex_simpsons_cells.svg"] = {
     ],
 }
 
-specs["complex_penguins_facet.svg"] = {
+specs["complex_penguins_facet"] = {
     "height": 600,
     "grid": True,
     "facet": {"data": penguins, "x": "sex", "y": "species", "marginRight": 80},
@@ -231,7 +231,7 @@ specs["complex_penguins_facet.svg"] = {
 }
 
 
-specs["complex_metros_arrow.html"] = {
+specs["complex_metros_arrow"] = {
     "height": 600,
     "grid": True,
     "inset": 10,
@@ -272,7 +272,7 @@ specs["complex_metros_arrow.html"] = {
     ],
 }
 
-specs["complex_stocks.svg"] = {
+specs["complex_stocks"] = {
     "marginRight": 40,
     "y": {
         "type": "log",
@@ -319,7 +319,7 @@ states = (
 
 xy = {"basis": "sum", "z": "state", "x": "population", "y": "state"}
 
-specs["complex_stateage.html"] = {
+specs["complex_stateage"] = {
     "height": 660,
     "grid": True,
     "x": {"axis": "top", "label": "Percent (%) →", "transform": js("d => d * 100")},
@@ -356,7 +356,7 @@ specs["complex_stateage.html"] = {
 
 # Geo ---
 
-specs["geo_states.html"] = {
+specs["geo_states"] = {
     "projection": "albers-usa",
     "color": {
         "type": "quantile",
@@ -376,7 +376,7 @@ projection = {
     },
 }
 
-specs["geo_ca55.svg"] = {
+specs["geo_ca55"] = {
     "data": "projection",
     "x": {"axis": None},
     "y": {"axis": None},
@@ -399,7 +399,7 @@ specs["geo_ca55.svg"] = {
     ],
 }
 
-specs["geo_vapor.html"] = {
+specs["geo_vapor"] = {
     "projection": "equal-earth",
     "color": {
         "scheme": "blues",
@@ -435,61 +435,62 @@ specs["geo_vapor.html"] = {
 
 df = pl.DataFrame({"x": range(4), "col": list("AABB")})
 
-specs["themes_default.html"] = {
+specs["themes_default"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
 
-specs["themes_light.html"] = {
+specs["themes_light"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-themes["themes_light.html"] = "light"
+themes["themes_light"] = "light"
 
-specs["themes_dark.html"] = {
+specs["themes_dark"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-themes["themes_dark.html"] = "dark"
+themes["themes_dark"] = "dark"
 
-specs["themes_current.html"] = {
+specs["themes_current"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-themes["themes_current.html"] = "current"
+themes["themes_current"] = "current"
 
 # Defaults ---
 
 default = {"width": 200, "style": {"color": "white", "background-color": "#005"}}
 
-specs["defaults_svg_no_default.svg"] = Plot.lineY(range(4))
-specs["defaults_svg_default.svg"] = Plot.lineY(range(4))
-defaults["defaults_svg_default.svg"] = default
-specs["defaults_html_no_default.html"] = {
+specs["defaults_svg_no_default"] = Plot.lineY(range(4))
+specs["defaults_svg_default"] = Plot.lineY(range(4))
+defaults["defaults_svg_default"] = default
+specs["defaults_html_no_default"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-specs["defaults_html_default.html"] = {
+specs["defaults_html_default"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-defaults["defaults_html_default.html"] = default
+defaults["defaults_html_default"] = default
 
 # utf-8 encoding ---
 
-specs["bug_utf8.html"] = Plot.tickX([-1])
-specs["bug_utf8.svg"] = Plot.tickX([-1])
+specs["bug_utf8"] = Plot.tickX([-1])
+specs["bug_utf8"] = Plot.tickX([-1])
 
 
 # Main ---
 
-if __name__ == "__main__":
-    # Generate output files for each spec
-    op = Obsplot(format="html")
+
+def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
+    output_folder = output_folder / format
+    output_folder.mkdir(exist_ok=True)
     for key in specs:
-        path = f"reference/{key}"
-        if not (os.path.exists(path)):
-            print(f"Generating {key}")
+        path = output_folder / f"{key}.{format}"
+        if not (path.exists()):
+            print(f"Generating {key}.{format}")
             if key in themes:
                 op.theme = themes[key]
             else:
@@ -498,13 +499,22 @@ if __name__ == "__main__":
                 op.default = defaults[key]
             else:
                 op.default = {}
-            op(specs[key], path=path)
+            format_value = None if format == "pdf" else format
+            op(specs[key], format=format_value, path=path)  # type: ignore
         else:
-            print(f"{key} already exists")
+            print(f"{key}.{format} already exists")
+
+
+if __name__ == "__main__":
+    # Generate output files for each spec
+    op = Obsplot()
+    output_folder = Path("./jsdom_reference")
+    for format in ("html", "png", "pdf", "svg"):  # noqa: A001
+        generate_format(format, output_folder)
     # Serialize specs, themes and default
-    with open("reference/specs.pkl", "wb") as f:
+    with open(output_folder / "specs.pkl", "wb") as f:
         pickle.dump(specs, f)
-    with open("reference/themes.pkl", "wb") as f:
+    with open(output_folder / "themes.pkl", "wb") as f:
         pickle.dump(themes, f)
-    with open("reference/defaults.pkl", "wb") as f:
+    with open(output_folder / "defaults.pkl", "wb") as f:
         pickle.dump(defaults, f)
