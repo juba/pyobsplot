@@ -56,7 +56,7 @@ class TestSpecs:
             else:
                 op.default = {}
             op(spec, format="html", path=out)
-            with open(REFERENCE_PATH / f"{key}.html") as f:
+            with open(REFERENCE_PATH / "html" / f"{key}.html") as f:
                 results[key] = out.getvalue() == f.read()
             out.close()
         assert all(results)
