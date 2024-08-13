@@ -16,12 +16,14 @@
   line-height: 20px;
   font-size: 12px;
   font-weight: 500;
-  color: #555555;
 }
 .pyobsplot-plot.light svg,
 .pyobsplot-plot.light figure {
   color: black;
   background-color: white;
+}
+.pyobsplot-plot.light figcaption {
+  color: #777777;
 }
 .pyobsplot-plot.dark svg,
 .pyobsplot-plot.dark figure {
@@ -29,11 +31,17 @@
   color: white;
   background-color: black;
 }
+.pyobsplot-plot.dark figcaption {
+  color: #999999;
+}
 .pyobsplot-plot.current svg,
 .pyobsplot-plot.current figure {
   --plot-background: transparent;
   color: currentColor;
   background-color: transparent;
+}
+.pyobsplot-plot.current figcaption {
+  color: currentColor;
 }
 .pyobsplot-plot.current [aria-label=tip] {
   fill: white;

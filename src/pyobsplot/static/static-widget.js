@@ -511,6 +511,8 @@ __export(src_exports2, {
   TickY: () => TickY,
   Tip: () => Tip,
   Vector: () => Vector,
+  WaffleX: () => WaffleX,
+  WaffleY: () => WaffleY,
   area: () => area,
   areaX: () => areaX,
   areaY: () => areaY,
@@ -545,6 +547,7 @@ __export(src_exports2, {
   delaunayLink: () => delaunayLink,
   delaunayMesh: () => delaunayMesh,
   density: () => density,
+  differenceX: () => differenceX,
   differenceY: () => differenceY,
   dodgeX: () => dodgeX,
   dodgeY: () => dodgeY,
@@ -555,6 +558,7 @@ __export(src_exports2, {
   find: () => find3,
   formatIsoDate: () => formatIsoDate,
   formatMonth: () => formatMonth,
+  formatNumber: () => formatNumber,
   formatWeekday: () => formatWeekday,
   frame: () => frame2,
   geo: () => geo,
@@ -594,6 +598,7 @@ __export(src_exports2, {
   normalize: () => normalize3,
   normalizeX: () => normalizeX,
   normalizeY: () => normalizeY,
+  numberInterval: () => numberInterval,
   plot: () => plot,
   pointer: () => pointer,
   pointerX: () => pointerX,
@@ -614,6 +619,7 @@ __export(src_exports2, {
   selectMinX: () => selectMinX,
   selectMinY: () => selectMinY,
   shiftX: () => shiftX,
+  shiftY: () => shiftY,
   shuffle: () => shuffle2,
   sort: () => sort2,
   sphere: () => sphere,
@@ -629,17 +635,21 @@ __export(src_exports2, {
   textY: () => textY,
   tickX: () => tickX,
   tickY: () => tickY,
+  timeInterval: () => timeInterval2,
   tip: () => tip,
   transform: () => basic,
   tree: () => tree,
   treeLink: () => treeLink,
   treeNode: () => treeNode,
+  utcInterval: () => utcInterval,
   valueof: () => valueof,
   vector: () => vector,
   vectorX: () => vectorX,
   vectorY: () => vectorY,
   voronoi: () => voronoi,
   voronoiMesh: () => voronoiMesh,
+  waffleX: () => waffleX,
+  waffleY: () => waffleY,
   window: () => window2,
   windowX: () => windowX,
   windowY: () => windowY
@@ -2165,16 +2175,18 @@ function quantileSorted(values2, p, valueof2 = number) {
   var n, i = (n - 1) * p, i0 = Math.floor(i), value0 = +valueof2(values2[i0], i0, values2), value1 = +valueof2(values2[i0 + 1], i0 + 1, values2);
   return value0 + (value1 - value0) * (i - i0);
 }
-function quantileIndex(values2, p, valueof2) {
-  values2 = Float64Array.from(numbers(values2, valueof2));
-  if (!(n = values2.length) || isNaN(p = +p))
+function quantileIndex(values2, p, valueof2 = number) {
+  if (isNaN(p = +p))
     return;
-  if (p <= 0 || n < 2)
-    return minIndex(values2);
+  numbers2 = Float64Array.from(values2, (_, i2) => number(valueof2(values2[i2], i2, values2)));
+  if (p <= 0)
+    return minIndex(numbers2);
   if (p >= 1)
-    return maxIndex(values2);
-  var n, i = Math.floor((n - 1) * p), order = (i2, j) => ascendingDefined(values2[i2], values2[j]), index3 = quickselect(Uint32Array.from(values2, (_, i2) => i2), i, 0, n - 1, order);
-  return greatest(index3.subarray(0, i + 1), (i2) => values2[i2]);
+    return maxIndex(numbers2);
+  var numbers2, index3 = Uint32Array.from(values2, (_, i2) => i2), j = numbers2.length - 1, i = Math.floor(j * p);
+  quickselect(index3, i, 0, j, (i2, j2) => ascendingDefined(numbers2[i2], numbers2[j2]));
+  i = greatest(index3.subarray(0, i + 1), (i2) => numbers2[i2]);
+  return i >= 0 ? i : -1;
 }
 
 // node_modules/d3-array/src/threshold/freedmanDiaconis.js
@@ -7441,8 +7453,6 @@ function orient2d(ax, ay, bx, by, cx, cy) {
   const detleft = (ay - cy) * (bx - cx);
   const detright = (ax - cx) * (by - cy);
   const det = detleft - detright;
-  if (detleft === 0 || detright === 0 || detleft > 0 !== detright > 0)
-    return det;
   const detsum = Math.abs(detleft + detright);
   if (Math.abs(det) >= ccwerrboundA * detsum)
     return det;
@@ -7585,7 +7595,7 @@ var Delaunator = class {
     this._hullPrev = new Uint32Array(n);
     this._hullNext = new Uint32Array(n);
     this._hullTri = new Uint32Array(n);
-    this._hullHash = new Int32Array(this._hashSize).fill(-1);
+    this._hullHash = new Int32Array(this._hashSize);
     this._ids = new Uint32Array(n);
     this._dists = new Float64Array(n);
     this.update();
@@ -7612,9 +7622,8 @@ var Delaunator = class {
     }
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY2) / 2;
-    let minDist = Infinity;
     let i0, i1, i2;
-    for (let i = 0; i < n; i++) {
+    for (let i = 0, minDist = Infinity; i < n; i++) {
       const d = dist(cx, cy, coords[2 * i], coords[2 * i + 1]);
       if (d < minDist) {
         i0 = i;
@@ -7623,8 +7632,7 @@ var Delaunator = class {
     }
     const i0x = coords[2 * i0];
     const i0y = coords[2 * i0 + 1];
-    minDist = Infinity;
-    for (let i = 0; i < n; i++) {
+    for (let i = 0, minDist = Infinity; i < n; i++) {
       if (i === i0)
         continue;
       const d = dist(i0x, i0y, coords[2 * i], coords[2 * i + 1]);
@@ -7656,9 +7664,10 @@ var Delaunator = class {
       let j = 0;
       for (let i = 0, d0 = -Infinity; i < n; i++) {
         const id2 = this._ids[i];
-        if (this._dists[id2] > d0) {
+        const d = this._dists[id2];
+        if (d > d0) {
           hull2[j++] = id2;
-          d0 = this._dists[id2];
+          d0 = d;
         }
       }
       this.hull = hull2.subarray(0, j);
@@ -8024,6 +8033,7 @@ var Voronoi = class {
   }
   _init() {
     const { delaunay: { points, hull: hull2, triangles }, vectors } = this;
+    let bx, by;
     const circumcenters = this.circumcenters = this._circumcenters.subarray(0, triangles.length / 3 * 2);
     for (let i = 0, j = 0, n = triangles.length, x4, y4; i < n; i += 3, j += 2) {
       const t13 = triangles[i] * 2;
@@ -8041,9 +8051,13 @@ var Voronoi = class {
       const ey = y32 - y13;
       const ab4 = (dx * ey - dy * ex) * 2;
       if (Math.abs(ab4) < 1e-9) {
-        let a4 = 1e9;
-        const r = triangles[0] * 2;
-        a4 *= Math.sign((points[r] - x13) * ey - (points[r + 1] - y13) * ex);
+        if (bx === void 0) {
+          bx = by = 0;
+          for (const i2 of hull2)
+            bx += points[i2 * 2], by += points[i2 * 2 + 1];
+          bx /= hull2.length, by /= hull2.length;
+        }
+        const a4 = 1e9 * Math.sign((bx - x13) * ey - (by - y13) * ex);
         x4 = (x13 + x32) / 2 - a4 * ey;
         y4 = (y13 + y32) / 2 + a4 * ex;
       } else {
@@ -8159,7 +8173,7 @@ var Voronoi = class {
           loop:
             for (let ai = 0, li = ci.length; ai < li; ai += 2) {
               for (let aj = 0, lj = cj.length; aj < lj; aj += 2) {
-                if (ci[ai] == cj[aj] && ci[ai + 1] == cj[aj + 1] && ci[(ai + 2) % li] == cj[(aj + lj - 2) % lj] && ci[(ai + 3) % li] == cj[(aj + lj - 1) % lj]) {
+                if (ci[ai] === cj[aj] && ci[ai + 1] === cj[aj + 1] && ci[(ai + 2) % li] === cj[(aj + lj - 2) % lj] && ci[(ai + 3) % li] === cj[(aj + lj - 1) % lj]) {
                   yield j;
                   break loop;
                 }
@@ -8193,7 +8207,7 @@ var Voronoi = class {
       return null;
     const { vectors: V } = this;
     const v2 = i * 4;
-    return V[v2] || V[v2 + 1] ? this._clipInfinite(i, points, V[v2], V[v2 + 1], V[v2 + 2], V[v2 + 3]) : this._clipFinite(i, points);
+    return this._simplify(V[v2] || V[v2 + 1] ? this._clipInfinite(i, points, V[v2], V[v2 + 1], V[v2 + 2], V[v2 + 3]) : this._clipFinite(i, points));
   }
   _clipFinite(i, points) {
     const n = points.length;
@@ -8247,9 +8261,12 @@ var Voronoi = class {
     return P;
   }
   _clipSegment(x06, y06, x12, y12, c0, c1) {
+    const flip2 = c0 < c1;
+    if (flip2)
+      [x06, y06, x12, y12, c0, c1] = [x12, y12, x06, y06, c1, c0];
     while (true) {
       if (c0 === 0 && c1 === 0)
-        return [x06, y06, x12, y12];
+        return flip2 ? [x12, y12, x06, y06] : [x06, y06, x12, y12];
       if (c0 & c1)
         return null;
       let x4, y4, c6 = c0 || c1;
@@ -8317,13 +8334,6 @@ var Voronoi = class {
         P.splice(j, 0, x4, y4), j += 2;
       }
     }
-    if (P.length > 4) {
-      for (let i2 = 0; i2 < P.length; i2 += 2) {
-        const j2 = (i2 + 2) % P.length, k2 = (i2 + 4) % P.length;
-        if (P[i2] === P[j2] && P[j2] === P[k2] || P[i2 + 1] === P[j2 + 1] && P[j2 + 1] === P[k2 + 1])
-          P.splice(j2, 2), i2 -= 2;
-      }
-    }
     return j;
   }
   _project(x06, y06, vx, vy) {
@@ -8357,6 +8367,19 @@ var Voronoi = class {
   }
   _regioncode(x4, y4) {
     return (x4 < this.xmin ? 1 : x4 > this.xmax ? 2 : 0) | (y4 < this.ymin ? 4 : y4 > this.ymax ? 8 : 0);
+  }
+  _simplify(P) {
+    if (P && P.length > 4) {
+      for (let i = 0; i < P.length; i += 2) {
+        const j = (i + 2) % P.length, k2 = (i + 4) % P.length;
+        if (P[i] === P[j] && P[j] === P[k2] || P[i + 1] === P[j + 1] && P[j + 1] === P[k2 + 1]) {
+          P.splice(j, 2), i -= 2;
+        }
+      }
+      if (!P.length)
+        P = null;
+    }
+    return P;
   }
 };
 
@@ -10578,7 +10601,7 @@ function circleRadius(cosRadius, point6) {
   return ((-point6[2] < 0 ? -radius2 : radius2) + tau5 - epsilon7) % tau5;
 }
 function circle_default() {
-  var center2 = constant_default8([0, 0]), radius2 = constant_default8(90), precision = constant_default8(6), ring, rotate, stream = { point: point6 };
+  var center2 = constant_default8([0, 0]), radius2 = constant_default8(90), precision = constant_default8(2), ring, rotate, stream = { point: point6 };
   function point6(x4, y4) {
     ring.push(x4 = rotate(x4, y4));
     x4[0] *= degrees3, x4[1] *= degrees3;
@@ -10935,7 +10958,7 @@ function clipAntimeridianInterpolate(from, to, direction, stream) {
 
 // node_modules/d3-geo/src/clip/circle.js
 function circle_default2(radius2) {
-  var cr = cos2(radius2), delta = 6 * radians2, smallRadius = cr > 0, notHemisphere = abs3(cr) > epsilon7;
+  var cr = cos2(radius2), delta = 2 * radians2, smallRadius = cr > 0, notHemisphere = abs3(cr) > epsilon7;
   function interpolate(from, to, direction, stream) {
     circleStream(stream, radius2, delta, direction, from, to);
   }
@@ -18935,10 +18958,10 @@ function parseTimeInterval(input) {
     throw new Error(`non-periodic interval: ${name}`);
   return [name, period2];
 }
-function maybeTimeInterval(input) {
+function timeInterval2(input) {
   return asInterval(parseTimeInterval(input), "time");
 }
-function maybeUtcInterval(input) {
+function utcInterval(input) {
   return asInterval(parseTimeInterval(input), "utc");
 }
 function asInterval([name, period2], type2) {
@@ -18959,7 +18982,7 @@ function generalizeTimeInterval(interval2, n) {
   if (duration % durationDay2 === 0 && durationDay2 < duration && duration < durationMonth2)
     return;
   const [i] = tickIntervals[bisector(([, step]) => Math.log(step)).center(tickIntervals, Math.log(duration * n))];
-  return (interval2[intervalType] === "time" ? maybeTimeInterval : maybeUtcInterval)(i);
+  return (interval2[intervalType] === "time" ? timeInterval2 : utcInterval)(i);
 }
 function formatTimeInterval(name, type2, anchor) {
   const format3 = type2 === "time" ? timeFormat : utcFormat;
@@ -19022,25 +19045,43 @@ function formatConditional(format1, format22, template2) {
 // node_modules/@observablehq/plot/src/options.js
 var TypedArray = Object.getPrototypeOf(Uint8Array);
 var objectToString = Object.prototype.toString;
+function isArray(value) {
+  return value instanceof Array || value instanceof TypedArray;
+}
+function isNumberArray2(value) {
+  return value instanceof TypedArray && !isBigIntArray(value);
+}
+function isNumberType(type2) {
+  return type2?.prototype instanceof TypedArray && !isBigIntType(type2);
+}
+function isBigIntArray(value) {
+  return value instanceof BigInt64Array || value instanceof BigUint64Array;
+}
+function isBigIntType(type2) {
+  return type2 === BigInt64Array || type2 === BigUint64Array;
+}
 var reindex = Symbol("reindex");
 function valueof(data, value, type2) {
   const valueType = typeof value;
-  return valueType === "string" ? maybeTypedMap(data, field(value), type2) : valueType === "function" ? maybeTypedMap(data, value, type2) : valueType === "number" || value instanceof Date || valueType === "boolean" ? map4(data, constant2(value), type2) : typeof value?.transform === "function" ? maybeTypedArrayify(value.transform(data), type2) : maybeTake(maybeTypedArrayify(value, type2), data?.[reindex]);
+  return valueType === "string" ? isArrowTable(data) ? maybeTypedArrowify(data.getChild(value), type2) : maybeTypedMap(data, field(value), type2) : valueType === "function" ? maybeTypedMap(data, value, type2) : valueType === "number" || value instanceof Date || valueType === "boolean" ? map4(data, constant2(value), type2) : typeof value?.transform === "function" ? maybeTypedArrayify(value.transform(data), type2) : maybeTake(maybeTypedArrayify(value, type2), data?.[reindex]);
 }
 function maybeTake(values2, index3) {
-  return index3 ? take(values2, index3) : values2;
+  return values2 != null && index3 ? take(values2, index3) : values2;
 }
 function maybeTypedMap(data, f, type2) {
-  return map4(data, type2?.prototype instanceof TypedArray ? floater(f) : f, type2);
+  return map4(data, isNumberType(type2) ? (d, i) => coerceNumber(f(d, i)) : f, type2);
 }
 function maybeTypedArrayify(data, type2) {
-  return type2 === void 0 ? arrayify2(data) : data instanceof type2 ? data : type2.prototype instanceof TypedArray && !(data instanceof TypedArray) ? type2.from(data, coerceNumber) : type2.from(data);
+  return type2 === void 0 ? arrayify2(data) : isArrowVector(data) ? maybeTypedArrowify(data, type2) : data instanceof type2 ? data : type2.from(data, isNumberType(type2) && !isNumberArray2(data) ? coerceNumber : void 0);
 }
-function floater(f) {
-  return (d, i) => coerceNumber(f(d, i));
+function maybeTypedArrowify(vector2, type2) {
+  return vector2 == null ? vector2 : (type2 === void 0 || type2 === Array) && isArrowDateType(vector2.type) ? coerceDates(vector2.toArray()) : maybeTypedArrayify(vector2.toArray(), type2);
 }
 var singleton = [null];
-var field = (name) => (d) => d[name];
+var field = (name) => (d) => {
+  const v2 = d[name];
+  return v2 === void 0 && d.type === "Feature" ? d.properties?.[name] : v2;
+};
 var indexOf = { transform: range4 };
 var identity6 = { transform: (d) => d };
 var one2 = () => 1;
@@ -19056,7 +19097,7 @@ function percentile(reduce2) {
   return (I, f) => quantile(I, p, f);
 }
 function coerceNumbers(values2) {
-  return values2 instanceof TypedArray ? values2 : map4(values2, coerceNumber, Float64Array);
+  return isNumberArray2(values2) ? values2 : map4(values2, coerceNumber, Float64Array);
 }
 function coerceNumber(x4) {
   return x4 == null ? NaN : Number(x4);
@@ -19065,7 +19106,7 @@ function coerceDates(values2) {
   return map4(values2, coerceDate);
 }
 function coerceDate(x4) {
-  return x4 instanceof Date && !isNaN(x4) ? x4 : typeof x4 === "string" ? parse(x4) : x4 == null || isNaN(x4 = +x4) ? void 0 : new Date(x4);
+  return x4 instanceof Date && !isNaN(x4) ? x4 : typeof x4 === "string" ? parse(x4) : x4 == null || isNaN(x4 = Number(x4)) ? void 0 : new Date(x4);
 }
 function maybeColorChannel(value, defaultValue) {
   if (value === void 0)
@@ -19087,8 +19128,30 @@ function keyword(input, name, allowed) {
     throw new Error(`invalid ${name}: ${input}`);
   return i;
 }
-function arrayify2(data) {
-  return data == null || data instanceof Array || data instanceof TypedArray ? data : Array.from(data);
+function dataify(data) {
+  return isArrowTable(data) ? data : arrayify2(data);
+}
+function arrayify2(values2) {
+  if (values2 == null || isArray(values2))
+    return values2;
+  if (isArrowVector(values2))
+    return maybeTypedArrowify(values2);
+  switch (values2.type) {
+    case "FeatureCollection":
+      return values2.features;
+    case "GeometryCollection":
+      return values2.geometries;
+    case "Feature":
+    case "LineString":
+    case "MultiLineString":
+    case "MultiPoint":
+    case "MultiPolygon":
+    case "Point":
+    case "Polygon":
+    case "Sphere":
+      return [values2];
+  }
+  return Array.from(values2);
 }
 function map4(values2, f, type2 = Array) {
   return values2 == null ? values2 : values2 instanceof type2 ? values2.map(f) : type2.from(values2, f);
@@ -19137,15 +19200,18 @@ function maybeZ({ z, fill, stroke } = {}) {
     [z] = maybeColorChannel(stroke);
   return z;
 }
+function lengthof(data) {
+  return isArray(data) ? data.length : data?.numRows;
+}
 function range4(data) {
-  const n = data.length;
+  const n = lengthof(data);
   const r = new Uint32Array(n);
   for (let i = 0; i < n; ++i)
     r[i] = i;
   return r;
 }
 function take(values2, index3) {
-  return map4(index3, (i) => values2[i], values2.constructor);
+  return isArray(values2) ? map4(index3, (i) => values2[i], values2.constructor) : map4(index3, (i) => values2.at(i));
 }
 function taker(f) {
   return f.length === 1 ? (index3, values2) => f(take(values2, index3)) : f;
@@ -19208,29 +19274,30 @@ function maybeIntervalTransform(interval2, type2) {
 function maybeInterval(interval2, type2) {
   if (interval2 == null)
     return;
-  if (typeof interval2 === "number") {
-    if (0 < interval2 && interval2 < 1 && Number.isInteger(1 / interval2))
-      interval2 = -1 / interval2;
-    const n = Math.abs(interval2);
-    return interval2 < 0 ? {
-      floor: (d) => Math.floor(d * n) / n,
-      offset: (d) => (d * n + 1) / n,
-      // note: no optional step for simplicity
-      range: (lo, hi) => range(Math.ceil(lo * n), hi * n).map((x4) => x4 / n)
-    } : {
-      floor: (d) => Math.floor(d / n) * n,
-      offset: (d) => d + n,
-      // note: no optional step for simplicity
-      range: (lo, hi) => range(Math.ceil(lo / n), hi / n).map((x4) => x4 * n)
-    };
-  }
+  if (typeof interval2 === "number")
+    return numberInterval(interval2);
   if (typeof interval2 === "string")
-    return (type2 === "time" ? maybeTimeInterval : maybeUtcInterval)(interval2);
+    return (type2 === "time" ? timeInterval2 : utcInterval)(interval2);
   if (typeof interval2.floor !== "function")
     throw new Error("invalid interval; missing floor method");
   if (typeof interval2.offset !== "function")
     throw new Error("invalid interval; missing offset method");
   return interval2;
+}
+function numberInterval(interval2) {
+  interval2 = +interval2;
+  if (0 < interval2 && interval2 < 1 && Number.isInteger(1 / interval2))
+    interval2 = -1 / interval2;
+  const n = Math.abs(interval2);
+  return interval2 < 0 ? {
+    floor: (d) => Math.floor(d * n) / n,
+    offset: (d, s2 = 1) => (d * n + Math.floor(s2)) / n,
+    range: (lo, hi) => range(Math.ceil(lo * n), hi * n).map((x4) => x4 / n)
+  } : {
+    floor: (d) => Math.floor(d / n) * n,
+    offset: (d, s2 = 1) => d + n * Math.floor(s2),
+    range: (lo, hi) => range(Math.ceil(lo / n), hi / n).map((x4) => x4 * n)
+  };
 }
 function maybeRangeInterval(interval2, type2) {
   interval2 = maybeInterval(interval2, type2);
@@ -19368,10 +19435,10 @@ function maybeFrameAnchor(value = "middle") {
 }
 function inherit2(options = {}, ...rest) {
   let o = options;
-  for (const defaults23 of rest) {
-    for (const key in defaults23) {
+  for (const defaults22 of rest) {
+    for (const key in defaults22) {
       if (o[key] === void 0) {
-        const value = defaults23[key];
+        const value = defaults22[key];
         if (o === options)
           o = { ...o, [key]: value };
         else
@@ -19410,6 +19477,17 @@ function maybeClip(clip) {
   else if (clip != null)
     clip = keyword(clip, "clip", ["frame", "sphere"]);
   return clip;
+}
+function isArrowTable(value) {
+  return value && typeof value.getChild === "function" && typeof value.toArray === "function" && value.schema && Array.isArray(value.schema.fields);
+}
+function isArrowVector(value) {
+  return value && typeof value.toArray === "function" && value.type;
+}
+function isArrowDateType(type2) {
+  return type2 && (type2.typeId === 8 || // date
+  type2.typeId === 10) && // timestamp
+  type2.unit === 1;
 }
 
 // node_modules/@observablehq/plot/src/scales/index.js
@@ -19539,7 +19617,7 @@ function composeTransform(t13, t22) {
     return t13 === null ? void 0 : t13;
   return function(data, facets, plotOptions) {
     ({ data, facets } = t13.call(this, data, facets, plotOptions));
-    return t22.call(this, arrayify2(data), facets, plotOptions);
+    return t22.call(this, dataify(data), facets, plotOptions);
   };
 }
 function composeInitializer(i1, i2) {
@@ -19592,7 +19670,7 @@ function sortTransform(value) {
 }
 function sortData(compare) {
   return (data, facets) => {
-    const compareData = (i, j) => compare(data[i], data[j]);
+    const compareData = isArray(data) ? (i, j) => compare(data[i], data[j]) : (i, j) => compare(data.get(i), data.get(j));
     return { data, facets: facets.map((I) => I.slice().sort(compareData)) };
   };
 }
@@ -20024,7 +20102,7 @@ function find3(test) {
     throw new Error(`invalid test function: ${test}`);
   return {
     reduceIndex(I, V, { data }) {
-      return V[I.find((i) => test(data[i], i, data))];
+      return V[I.find(isArray(data) ? (i) => test(data[i], i, data) : (i) => test(data.get(i), i, data))];
     }
   };
 }
@@ -20065,11 +20143,13 @@ function inferChannelScale(name, channel) {
       case "stroke":
       case "color":
         channel.scale = scale3 !== true && isEvery(value, isColor) ? null : "color";
+        channel.defaultScale = "color";
         break;
       case "fillOpacity":
       case "strokeOpacity":
       case "opacity":
         channel.scale = scale3 !== true && isEvery(value, isOpacity) ? null : "opacity";
+        channel.defaultScale = "opacity";
         break;
       case "symbol":
         if (scale3 !== true && isEvery(value, isSymbol)) {
@@ -20078,6 +20158,7 @@ function inferChannelScale(name, channel) {
         } else {
           channel.scale = "symbol";
         }
+        channel.defaultScale = "symbol";
         break;
       default:
         channel.scale = registry.has(name) ? name : null;
@@ -20193,275 +20274,6 @@ function getSource(channels, key) {
   while (channel.source)
     channel = channel.source;
   return channel.source === null ? null : channel;
-}
-
-// node_modules/@observablehq/plot/src/context.js
-function createContext(options = {}) {
-  const { document: document2 = typeof window !== "undefined" ? window.document : void 0, clip } = options;
-  return { document: document2, clip: maybeClip(clip) };
-}
-function create2(name, { document: document2 }) {
-  return select_default2(creator_default(name).call(document2.documentElement));
-}
-
-// node_modules/@observablehq/plot/src/warnings.js
-var warnings = 0;
-var lastMessage;
-function consumeWarnings() {
-  const w = warnings;
-  warnings = 0;
-  lastMessage = void 0;
-  return w;
-}
-function warn(message) {
-  if (message === lastMessage)
-    return;
-  lastMessage = message;
-  console.warn(message);
-  ++warnings;
-}
-
-// node_modules/@observablehq/plot/src/projection.js
-var pi6 = Math.PI;
-var tau7 = 2 * pi6;
-var defaultAspectRatio = 0.618;
-function createProjection({
-  projection: projection3,
-  inset: globalInset = 0,
-  insetTop = globalInset,
-  insetRight = globalInset,
-  insetBottom = globalInset,
-  insetLeft = globalInset
-} = {}, dimensions) {
-  if (projection3 == null)
-    return;
-  if (typeof projection3.stream === "function")
-    return projection3;
-  let options;
-  let domain;
-  let clip = "frame";
-  if (isObject(projection3)) {
-    let inset;
-    ({
-      type: projection3,
-      domain,
-      inset,
-      insetTop = inset !== void 0 ? inset : insetTop,
-      insetRight = inset !== void 0 ? inset : insetRight,
-      insetBottom = inset !== void 0 ? inset : insetBottom,
-      insetLeft = inset !== void 0 ? inset : insetLeft,
-      clip = clip,
-      ...options
-    } = projection3);
-    if (projection3 == null)
-      return;
-  }
-  if (typeof projection3 !== "function")
-    ({ type: projection3 } = namedProjection(projection3));
-  const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
-  const dx = width - marginLeft - marginRight - insetLeft - insetRight;
-  const dy = height - marginTop - marginBottom - insetTop - insetBottom;
-  projection3 = projection3?.({ width: dx, height: dy, clip, ...options });
-  if (projection3 == null)
-    return;
-  clip = maybePostClip(clip, marginLeft, marginTop, width - marginRight, height - marginBottom);
-  let tx = marginLeft + insetLeft;
-  let ty = marginTop + insetTop;
-  let transform2;
-  if (domain != null) {
-    const [[x06, y06], [x12, y12]] = path_default(projection3).bounds(domain);
-    const k2 = Math.min(dx / (x12 - x06), dy / (y12 - y06));
-    if (k2 > 0) {
-      tx -= (k2 * (x06 + x12) - dx) / 2;
-      ty -= (k2 * (y06 + y12) - dy) / 2;
-      transform2 = transform_default({
-        point(x4, y4) {
-          this.stream.point(x4 * k2 + tx, y4 * k2 + ty);
-        }
-      });
-    } else {
-      warn(`Warning: the projection could not be fit to the specified domain; using the default scale.`);
-    }
-  }
-  transform2 ??= tx === 0 && ty === 0 ? identity7() : transform_default({
-    point(x4, y4) {
-      this.stream.point(x4 + tx, y4 + ty);
-    }
-  });
-  return { stream: (s2) => projection3.stream(transform2.stream(clip(s2))) };
-}
-function namedProjection(projection3) {
-  switch (`${projection3}`.toLowerCase()) {
-    case "albers-usa":
-      return scaleProjection(albersUsa_default, 0.7463, 0.4673);
-    case "albers":
-      return conicProjection2(albers_default, 0.7463, 0.4673);
-    case "azimuthal-equal-area":
-      return scaleProjection(azimuthalEqualArea_default, 4, 4);
-    case "azimuthal-equidistant":
-      return scaleProjection(azimuthalEquidistant_default, tau7, tau7);
-    case "conic-conformal":
-      return conicProjection2(conicConformal_default, tau7, tau7);
-    case "conic-equal-area":
-      return conicProjection2(conicEqualArea_default, 6.1702, 2.9781);
-    case "conic-equidistant":
-      return conicProjection2(conicEquidistant_default, 7.312, 3.6282);
-    case "equal-earth":
-      return scaleProjection(equalEarth_default, 5.4133, 2.6347);
-    case "equirectangular":
-      return scaleProjection(equirectangular_default, tau7, pi6);
-    case "gnomonic":
-      return scaleProjection(gnomonic_default, 3.4641, 3.4641);
-    case "identity":
-      return { type: identity7 };
-    case "reflect-y":
-      return { type: reflectY };
-    case "mercator":
-      return scaleProjection(mercator_default, tau7, tau7);
-    case "orthographic":
-      return scaleProjection(orthographic_default, 2, 2);
-    case "stereographic":
-      return scaleProjection(stereographic_default, 2, 2);
-    case "transverse-mercator":
-      return scaleProjection(transverseMercator_default, tau7, tau7);
-    default:
-      throw new Error(`unknown projection type: ${projection3}`);
-  }
-}
-function maybePostClip(clip, x12, y12, x22, y22) {
-  if (clip === false || clip == null || typeof clip === "number")
-    return (s2) => s2;
-  if (clip === true)
-    clip = "frame";
-  switch (`${clip}`.toLowerCase()) {
-    case "frame":
-      return clipRectangle(x12, y12, x22, y22);
-    default:
-      throw new Error(`unknown projection clip type: ${clip}`);
-  }
-}
-function scaleProjection(createProjection2, kx2, ky2) {
-  return {
-    type: ({ width, height, rotate, precision = 0.15, clip }) => {
-      const projection3 = createProjection2();
-      if (precision != null)
-        projection3.precision?.(precision);
-      if (rotate != null)
-        projection3.rotate?.(rotate);
-      if (typeof clip === "number")
-        projection3.clipAngle?.(clip);
-      projection3.scale(Math.min(width / kx2, height / ky2));
-      projection3.translate([width / 2, height / 2]);
-      return projection3;
-    },
-    aspectRatio: ky2 / kx2
-  };
-}
-function conicProjection2(createProjection2, kx2, ky2) {
-  const { type: type2, aspectRatio } = scaleProjection(createProjection2, kx2, ky2);
-  return {
-    type: (options) => {
-      const { parallels, domain, width, height } = options;
-      const projection3 = type2(options);
-      if (parallels != null) {
-        projection3.parallels(parallels);
-        if (domain === void 0) {
-          projection3.fitSize([width, height], { type: "Sphere" });
-        }
-      }
-      return projection3;
-    },
-    aspectRatio
-  };
-}
-var identity7 = constant2({ stream: (stream) => stream });
-var reflectY = constant2(
-  transform_default({
-    point(x4, y4) {
-      this.stream.point(x4, -y4);
-    }
-  })
-);
-function project(cx, cy, values2, projection3) {
-  const x4 = values2[cx];
-  const y4 = values2[cy];
-  const n = x4.length;
-  const X3 = values2[cx] = new Float64Array(n).fill(NaN);
-  const Y3 = values2[cy] = new Float64Array(n).fill(NaN);
-  let i;
-  const stream = projection3.stream({
-    point(x5, y5) {
-      X3[i] = x5;
-      Y3[i] = y5;
-    }
-  });
-  for (i = 0; i < n; ++i) {
-    stream.point(x4[i], y4[i]);
-  }
-}
-function hasProjection({ projection: projection3 } = {}) {
-  if (projection3 == null)
-    return false;
-  if (typeof projection3.stream === "function")
-    return true;
-  if (isObject(projection3))
-    projection3 = projection3.type;
-  return projection3 != null;
-}
-function projectionAspectRatio(projection3) {
-  if (typeof projection3?.stream === "function")
-    return defaultAspectRatio;
-  if (isObject(projection3))
-    projection3 = projection3.type;
-  if (projection3 == null)
-    return;
-  if (typeof projection3 !== "function") {
-    const { aspectRatio } = namedProjection(projection3);
-    if (aspectRatio)
-      return aspectRatio;
-  }
-  return defaultAspectRatio;
-}
-function applyPosition(channels, scales, { projection: projection3 }) {
-  const { x: x4, y: y4 } = channels;
-  let position3 = {};
-  if (x4)
-    position3.x = x4;
-  if (y4)
-    position3.y = y4;
-  position3 = valueObject(position3, scales);
-  if (projection3 && x4?.scale === "x" && y4?.scale === "y")
-    project("x", "y", position3, projection3);
-  if (x4)
-    position3.x = coerceNumbers(position3.x);
-  if (y4)
-    position3.y = coerceNumbers(position3.y);
-  return position3;
-}
-function getGeometryChannels(channel) {
-  const X3 = [];
-  const Y3 = [];
-  const x4 = { scale: "x", value: X3 };
-  const y4 = { scale: "y", value: Y3 };
-  const sink = {
-    point(x5, y5) {
-      X3.push(x5);
-      Y3.push(y5);
-    },
-    lineStart() {
-    },
-    lineEnd() {
-    },
-    polygonStart() {
-    },
-    polygonEnd() {
-    },
-    sphere() {
-    }
-  };
-  for (const object2 of channel.value)
-    stream_default(object2, sink);
-  return [x4, y4];
 }
 
 // node_modules/@observablehq/plot/src/scales/schemes.js
@@ -20723,10 +20535,11 @@ function createScaleQ(key, scale3, channels, {
     const [min4, max5] = extent(domain);
     if (min4 > 0 || max5 < 0) {
       domain = slice5(domain);
-      if (orderof(domain) !== Math.sign(min4))
-        domain[domain.length - 1] = 0;
-      else
+      const o = orderof(domain) || 1;
+      if (o === Math.sign(min4))
         domain[0] = 0;
+      else
+        domain[domain.length - 1] = 0;
     }
   }
   if (reverse3)
@@ -20891,6 +20704,23 @@ function inferQuantileDomain(channels) {
 }
 function interpolatePiecewise(interpolate) {
   return (i, j) => (t) => interpolate(i + t * (j - i));
+}
+
+// node_modules/@observablehq/plot/src/warnings.js
+var warnings = 0;
+var lastMessage;
+function consumeWarnings() {
+  const w = warnings;
+  warnings = 0;
+  lastMessage = void 0;
+  return w;
+}
+function warn(message) {
+  if (message === lastMessage)
+    return;
+  lastMessage = message;
+  console.warn(message);
+  ++warnings;
 }
 
 // node_modules/@observablehq/plot/src/scales/diverging.js
@@ -21611,11 +21441,442 @@ function exposeScale({ scale: scale3, type: type2, domain, range: range5, interp
   };
 }
 
+// node_modules/@observablehq/plot/src/facet.js
+function createFacets(channelsByScale, options) {
+  const { fx, fy } = createScales(channelsByScale, options);
+  const fxDomain = fx?.scale.domain();
+  const fyDomain = fy?.scale.domain();
+  return fxDomain && fyDomain ? cross(fxDomain, fyDomain).map(([x4, y4], i) => ({ x: x4, y: y4, i })) : fxDomain ? fxDomain.map((x4, i) => ({ x: x4, i })) : fyDomain ? fyDomain.map((y4, i) => ({ y: y4, i })) : void 0;
+}
+function recreateFacets(facets, { x: X3, y: Y3 }) {
+  X3 &&= facetIndex(X3);
+  Y3 &&= facetIndex(Y3);
+  return facets.filter(
+    X3 && Y3 ? (f) => X3.has(f.x) && Y3.has(f.y) : X3 ? (f) => X3.has(f.x) : (f) => Y3.has(f.y)
+  ).sort(
+    X3 && Y3 ? (a4, b) => X3.get(a4.x) - X3.get(b.x) || Y3.get(a4.y) - Y3.get(b.y) : X3 ? (a4, b) => X3.get(a4.x) - X3.get(b.x) : (a4, b) => Y3.get(a4.y) - Y3.get(b.y)
+  );
+}
+function facetGroups(data, { fx, fy }) {
+  const I = range4(data);
+  const FX = fx?.value;
+  const FY = fy?.value;
+  return fx && fy ? rollup(
+    I,
+    (G) => (G.fx = FX[G[0]], G.fy = FY[G[0]], G),
+    (i) => FX[i],
+    (i) => FY[i]
+  ) : fx ? rollup(
+    I,
+    (G) => (G.fx = FX[G[0]], G),
+    (i) => FX[i]
+  ) : rollup(
+    I,
+    (G) => (G.fy = FY[G[0]], G),
+    (i) => FY[i]
+  );
+}
+function facetTranslator(fx, fy, { marginTop, marginLeft }) {
+  return fx && fy ? ({ x: x4, y: y4 }) => `translate(${fx(x4) - marginLeft},${fy(y4) - marginTop})` : fx ? ({ x: x4 }) => `translate(${fx(x4) - marginLeft},0)` : ({ y: y4 }) => `translate(0,${fy(y4) - marginTop})`;
+}
+function facetExclude(index3) {
+  const ex = [];
+  const e = new Uint32Array(sum(index3, (d) => d.length));
+  for (const i of index3) {
+    let n = 0;
+    for (const j of index3) {
+      if (i === j)
+        continue;
+      e.set(j, n);
+      n += j.length;
+    }
+    ex.push(e.slice(0, n));
+  }
+  return ex;
+}
+var facetAnchors = /* @__PURE__ */ new Map([
+  ["top", facetAnchorTop],
+  ["right", facetAnchorRight],
+  ["bottom", facetAnchorBottom],
+  ["left", facetAnchorLeft],
+  ["top-left", and(facetAnchorTop, facetAnchorLeft)],
+  ["top-right", and(facetAnchorTop, facetAnchorRight)],
+  ["bottom-left", and(facetAnchorBottom, facetAnchorLeft)],
+  ["bottom-right", and(facetAnchorBottom, facetAnchorRight)],
+  ["top-empty", facetAnchorTopEmpty],
+  ["right-empty", facetAnchorRightEmpty],
+  ["bottom-empty", facetAnchorBottomEmpty],
+  ["left-empty", facetAnchorLeftEmpty],
+  ["empty", facetAnchorEmpty]
+]);
+function maybeFacetAnchor(facetAnchor) {
+  if (facetAnchor == null)
+    return null;
+  const anchor = facetAnchors.get(`${facetAnchor}`.toLowerCase());
+  if (anchor)
+    return anchor;
+  throw new Error(`invalid facet anchor: ${facetAnchor}`);
+}
+var indexCache = /* @__PURE__ */ new WeakMap();
+function facetIndex(V) {
+  let I = indexCache.get(V);
+  if (!I)
+    indexCache.set(V, I = new InternMap(map4(V, (v2, i) => [v2, i])));
+  return I;
+}
+function facetIndexOf(V, v2) {
+  return facetIndex(V).get(v2);
+}
+function facetFind(facets, x4, y4) {
+  x4 = keyof2(x4);
+  y4 = keyof2(y4);
+  return facets.find((f) => Object.is(keyof2(f.x), x4) && Object.is(keyof2(f.y), y4));
+}
+function facetEmpty(facets, x4, y4) {
+  return facetFind(facets, x4, y4)?.empty;
+}
+function facetAnchorTop(facets, { y: Y3 }, { y: y4 }) {
+  return Y3 ? facetIndexOf(Y3, y4) === 0 : true;
+}
+function facetAnchorBottom(facets, { y: Y3 }, { y: y4 }) {
+  return Y3 ? facetIndexOf(Y3, y4) === Y3.length - 1 : true;
+}
+function facetAnchorLeft(facets, { x: X3 }, { x: x4 }) {
+  return X3 ? facetIndexOf(X3, x4) === 0 : true;
+}
+function facetAnchorRight(facets, { x: X3 }, { x: x4 }) {
+  return X3 ? facetIndexOf(X3, x4) === X3.length - 1 : true;
+}
+function facetAnchorTopEmpty(facets, { y: Y3 }, { x: x4, y: y4, empty: empty4 }) {
+  if (empty4)
+    return false;
+  if (!Y3)
+    return;
+  const i = facetIndexOf(Y3, y4);
+  if (i > 0)
+    return facetEmpty(facets, x4, Y3[i - 1]);
+}
+function facetAnchorBottomEmpty(facets, { y: Y3 }, { x: x4, y: y4, empty: empty4 }) {
+  if (empty4)
+    return false;
+  if (!Y3)
+    return;
+  const i = facetIndexOf(Y3, y4);
+  if (i < Y3.length - 1)
+    return facetEmpty(facets, x4, Y3[i + 1]);
+}
+function facetAnchorLeftEmpty(facets, { x: X3 }, { x: x4, y: y4, empty: empty4 }) {
+  if (empty4)
+    return false;
+  if (!X3)
+    return;
+  const i = facetIndexOf(X3, x4);
+  if (i > 0)
+    return facetEmpty(facets, X3[i - 1], y4);
+}
+function facetAnchorRightEmpty(facets, { x: X3 }, { x: x4, y: y4, empty: empty4 }) {
+  if (empty4)
+    return false;
+  if (!X3)
+    return;
+  const i = facetIndexOf(X3, x4);
+  if (i < X3.length - 1)
+    return facetEmpty(facets, X3[i + 1], y4);
+}
+function facetAnchorEmpty(facets, channels, { empty: empty4 }) {
+  return empty4;
+}
+function and(a4, b) {
+  return function() {
+    return a4.apply(null, arguments) && b.apply(null, arguments);
+  };
+}
+function facetFilter(facets, { channels: { fx, fy }, groups: groups2 }) {
+  return fx && fy ? facets.map(({ x: x4, y: y4 }) => groups2.get(x4)?.get(y4) ?? []) : fx ? facets.map(({ x: x4 }) => groups2.get(x4) ?? []) : facets.map(({ y: y4 }) => groups2.get(y4) ?? []);
+}
+
+// node_modules/@observablehq/plot/src/projection.js
+var pi6 = Math.PI;
+var tau7 = 2 * pi6;
+var defaultAspectRatio = 0.618;
+function createProjection({
+  projection: projection3,
+  inset: globalInset = 0,
+  insetTop = globalInset,
+  insetRight = globalInset,
+  insetBottom = globalInset,
+  insetLeft = globalInset
+} = {}, dimensions) {
+  if (projection3 == null)
+    return;
+  if (typeof projection3.stream === "function")
+    return projection3;
+  let options;
+  let domain;
+  let clip = "frame";
+  if (isObject(projection3)) {
+    let inset;
+    ({
+      type: projection3,
+      domain,
+      inset,
+      insetTop = inset !== void 0 ? inset : insetTop,
+      insetRight = inset !== void 0 ? inset : insetRight,
+      insetBottom = inset !== void 0 ? inset : insetBottom,
+      insetLeft = inset !== void 0 ? inset : insetLeft,
+      clip = clip,
+      ...options
+    } = projection3);
+    if (projection3 == null)
+      return;
+  }
+  if (typeof projection3 !== "function")
+    ({ type: projection3 } = namedProjection(projection3));
+  const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
+  const dx = width - marginLeft - marginRight - insetLeft - insetRight;
+  const dy = height - marginTop - marginBottom - insetTop - insetBottom;
+  projection3 = projection3?.({ width: dx, height: dy, clip, ...options });
+  if (projection3 == null)
+    return;
+  clip = maybePostClip(clip, marginLeft, marginTop, width - marginRight, height - marginBottom);
+  let tx = marginLeft + insetLeft;
+  let ty = marginTop + insetTop;
+  let transform2;
+  if (domain != null) {
+    const [[x06, y06], [x12, y12]] = path_default(projection3).bounds(domain);
+    const k2 = Math.min(dx / (x12 - x06), dy / (y12 - y06));
+    if (k2 > 0) {
+      tx -= (k2 * (x06 + x12) - dx) / 2;
+      ty -= (k2 * (y06 + y12) - dy) / 2;
+      transform2 = transform_default({
+        point(x4, y4) {
+          this.stream.point(x4 * k2 + tx, y4 * k2 + ty);
+        }
+      });
+    } else {
+      warn(`Warning: the projection could not be fit to the specified domain; using the default scale.`);
+    }
+  }
+  transform2 ??= tx === 0 && ty === 0 ? identity7() : transform_default({
+    point(x4, y4) {
+      this.stream.point(x4 + tx, y4 + ty);
+    }
+  });
+  return { stream: (s2) => projection3.stream(transform2.stream(clip(s2))) };
+}
+function namedProjection(projection3) {
+  switch (`${projection3}`.toLowerCase()) {
+    case "albers-usa":
+      return scaleProjection(albersUsa_default, 0.7463, 0.4673);
+    case "albers":
+      return conicProjection2(albers_default, 0.7463, 0.4673);
+    case "azimuthal-equal-area":
+      return scaleProjection(azimuthalEqualArea_default, 4, 4);
+    case "azimuthal-equidistant":
+      return scaleProjection(azimuthalEquidistant_default, tau7, tau7);
+    case "conic-conformal":
+      return conicProjection2(conicConformal_default, tau7, tau7);
+    case "conic-equal-area":
+      return conicProjection2(conicEqualArea_default, 6.1702, 2.9781);
+    case "conic-equidistant":
+      return conicProjection2(conicEquidistant_default, 7.312, 3.6282);
+    case "equal-earth":
+      return scaleProjection(equalEarth_default, 5.4133, 2.6347);
+    case "equirectangular":
+      return scaleProjection(equirectangular_default, tau7, pi6);
+    case "gnomonic":
+      return scaleProjection(gnomonic_default, 3.4641, 3.4641);
+    case "identity":
+      return { type: identity7 };
+    case "reflect-y":
+      return { type: reflectY };
+    case "mercator":
+      return scaleProjection(mercator_default, tau7, tau7);
+    case "orthographic":
+      return scaleProjection(orthographic_default, 2, 2);
+    case "stereographic":
+      return scaleProjection(stereographic_default, 2, 2);
+    case "transverse-mercator":
+      return scaleProjection(transverseMercator_default, tau7, tau7);
+    default:
+      throw new Error(`unknown projection type: ${projection3}`);
+  }
+}
+function maybePostClip(clip, x12, y12, x22, y22) {
+  if (clip === false || clip == null || typeof clip === "number")
+    return (s2) => s2;
+  if (clip === true)
+    clip = "frame";
+  switch (`${clip}`.toLowerCase()) {
+    case "frame":
+      return clipRectangle(x12, y12, x22, y22);
+    default:
+      throw new Error(`unknown projection clip type: ${clip}`);
+  }
+}
+function scaleProjection(createProjection2, kx2, ky2) {
+  return {
+    type: ({ width, height, rotate, precision = 0.15, clip }) => {
+      const projection3 = createProjection2();
+      if (precision != null)
+        projection3.precision?.(precision);
+      if (rotate != null)
+        projection3.rotate?.(rotate);
+      if (typeof clip === "number")
+        projection3.clipAngle?.(clip);
+      if (width != null) {
+        projection3.scale(Math.min(width / kx2, height / ky2));
+        projection3.translate([width / 2, height / 2]);
+      }
+      return projection3;
+    },
+    aspectRatio: ky2 / kx2
+  };
+}
+function conicProjection2(createProjection2, kx2, ky2) {
+  const { type: type2, aspectRatio } = scaleProjection(createProjection2, kx2, ky2);
+  return {
+    type: (options) => {
+      const { parallels, domain, width, height } = options;
+      const projection3 = type2(options);
+      if (parallels != null) {
+        projection3.parallels(parallels);
+        if (domain === void 0 && width != null) {
+          projection3.fitSize([width, height], { type: "Sphere" });
+        }
+      }
+      return projection3;
+    },
+    aspectRatio
+  };
+}
+var identity7 = constant2({ stream: (stream) => stream });
+var reflectY = constant2(
+  transform_default({
+    point(x4, y4) {
+      this.stream.point(x4, -y4);
+    }
+  })
+);
+function project(cx, cy, values2, projection3) {
+  const x4 = values2[cx];
+  const y4 = values2[cy];
+  const n = x4.length;
+  const X3 = values2[cx] = new Float64Array(n).fill(NaN);
+  const Y3 = values2[cy] = new Float64Array(n).fill(NaN);
+  let i;
+  const stream = projection3.stream({
+    point(x5, y5) {
+      X3[i] = x5;
+      Y3[i] = y5;
+    }
+  });
+  for (i = 0; i < n; ++i) {
+    stream.point(x4[i], y4[i]);
+  }
+}
+function hasProjection({ projection: projection3 } = {}) {
+  if (projection3 == null)
+    return false;
+  if (typeof projection3.stream === "function")
+    return true;
+  if (isObject(projection3))
+    projection3 = projection3.type;
+  return projection3 != null;
+}
+function projectionAspectRatio(projection3) {
+  if (typeof projection3?.stream === "function")
+    return defaultAspectRatio;
+  if (isObject(projection3)) {
+    let domain, options;
+    ({ domain, type: projection3, ...options } = projection3);
+    if (domain != null && projection3 != null) {
+      const type2 = typeof projection3 === "string" ? namedProjection(projection3).type : projection3;
+      const [[x06, y06], [x12, y12]] = path_default(type2({ ...options, width: 100, height: 100 })).bounds(domain);
+      const r = (y12 - y06) / (x12 - x06);
+      return r && isFinite(r) ? r < 0.2 ? 0.2 : r > 5 ? 5 : r : defaultAspectRatio;
+    }
+  }
+  if (projection3 == null)
+    return;
+  if (typeof projection3 !== "function") {
+    const { aspectRatio } = namedProjection(projection3);
+    if (aspectRatio)
+      return aspectRatio;
+  }
+  return defaultAspectRatio;
+}
+function applyPosition(channels, scales, { projection: projection3 }) {
+  const { x: x4, y: y4 } = channels;
+  let position3 = {};
+  if (x4)
+    position3.x = x4;
+  if (y4)
+    position3.y = y4;
+  position3 = valueObject(position3, scales);
+  if (projection3 && x4?.scale === "x" && y4?.scale === "y")
+    project("x", "y", position3, projection3);
+  if (x4)
+    position3.x = coerceNumbers(position3.x);
+  if (y4)
+    position3.y = coerceNumbers(position3.y);
+  return position3;
+}
+function getGeometryChannels(channel) {
+  const X3 = [];
+  const Y3 = [];
+  const x4 = { scale: "x", value: X3 };
+  const y4 = { scale: "y", value: Y3 };
+  const sink = {
+    point(x5, y5) {
+      X3.push(x5);
+      Y3.push(y5);
+    },
+    lineStart() {
+    },
+    lineEnd() {
+    },
+    polygonStart() {
+    },
+    polygonEnd() {
+    },
+    sphere() {
+    }
+  };
+  for (const object2 of channel.value)
+    stream_default(object2, sink);
+  return [x4, y4];
+}
+
+// node_modules/@observablehq/plot/src/context.js
+function createContext(options = {}) {
+  const { document: document2 = typeof window !== "undefined" ? window.document : void 0, clip } = options;
+  return { document: document2, clip: maybeClip(clip) };
+}
+function create2(name, { document: document2 }) {
+  return select_default2(creator_default(name).call(document2.documentElement));
+}
+
 // node_modules/@observablehq/plot/src/memoize.js
+var unset = Symbol("unset");
 function memoize1(compute) {
+  return (compute.length === 1 ? memoize1Arg : memoize1Args)(compute);
+}
+function memoize1Arg(compute) {
+  let cacheValue;
+  let cacheKey = unset;
+  return (key) => {
+    if (!Object.is(cacheKey, key)) {
+      cacheKey = key;
+      cacheValue = compute(key);
+    }
+    return cacheValue;
+  };
+}
+function memoize1Args(compute) {
   let cacheValue, cacheKeys;
   return (...keys) => {
-    if (cacheKeys?.length !== keys.length || cacheKeys.some((k2, i) => k2 !== keys[i])) {
+    if (cacheKeys?.length !== keys.length || cacheKeys.some((k2, i) => !Object.is(k2, keys[i]))) {
       cacheKeys = keys;
       cacheValue = compute(...keys);
     }
@@ -21657,8 +21918,12 @@ var formatDefault = formatAuto();
 // node_modules/@observablehq/plot/src/style.js
 var offset = (typeof window !== "undefined" ? window.devicePixelRatio > 1 : typeof it === "undefined") ? 0 : 0.5;
 var nextClipId = 0;
+var nextPatternId = 0;
 function getClipId() {
   return `plot-clip-${++nextClipId}`;
+}
+function getPatternId() {
+  return `plot-pattern-${++nextPatternId}`;
 }
 function styles(mark, {
   title,
@@ -21905,24 +22170,15 @@ function applyClip(selection2, mark, dimensions, context) {
   const { clip = context.clip } = mark;
   switch (clip) {
     case "frame": {
-      const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
-      const id2 = getClipId();
-      clipUrl = `url(#${id2})`;
-      selection2 = create2("svg:g", context).call(
-        (g) => g.append("svg:clipPath").attr("id", id2).append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom)
-      ).each(function() {
+      selection2 = create2("svg:g", context).each(function() {
         this.appendChild(selection2.node());
         selection2.node = () => this;
       });
+      clipUrl = getFrameClip(context, dimensions);
       break;
     }
     case "sphere": {
-      const { projection: projection3 } = context;
-      if (!projection3)
-        throw new Error(`the "sphere" clip option requires a projection`);
-      const id2 = getClipId();
-      clipUrl = `url(#${id2})`;
-      selection2.append("clipPath").attr("id", id2).append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
+      clipUrl = getProjectionClip(context);
       break;
     }
   }
@@ -21931,8 +22187,31 @@ function applyClip(selection2, mark, dimensions, context) {
   applyAttr(selection2, "aria-hidden", mark.ariaHidden);
   applyAttr(selection2, "clip-path", clipUrl);
 }
+function memoizeClip(clip) {
+  const cache = /* @__PURE__ */ new WeakMap();
+  return (context, dimensions) => {
+    let url = cache.get(context);
+    if (!url) {
+      const id2 = getClipId();
+      select_default2(context.ownerSVGElement).append("clipPath").attr("id", id2).call(clip, context, dimensions);
+      cache.set(context, url = `url(#${id2})`);
+    }
+    return url;
+  };
+}
+var getFrameClip = memoizeClip((clipPath, context, dimensions) => {
+  const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
+  clipPath.append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom);
+});
+var getProjectionClip = memoizeClip((clipPath, context) => {
+  const { projection: projection3 } = context;
+  if (!projection3)
+    throw new Error(`the "sphere" clip option requires a projection`);
+  clipPath.append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
+});
 function applyIndirectStyles(selection2, mark, dimensions, context) {
   applyClip(selection2, mark, dimensions, context);
+  applyAttr(selection2, "class", mark.className);
   applyAttr(selection2, "fill", mark.fill);
   applyAttr(selection2, "fill-opacity", mark.fillOpacity);
   applyAttr(selection2, "stroke", mark.stroke);
@@ -22017,279 +22296,9 @@ function applyFrameAnchor({ frameAnchor }, { width, height, marginTop, marginRig
   ];
 }
 
-// node_modules/@observablehq/plot/src/dimensions.js
-function createDimensions(scales, marks2, options = {}) {
-  let marginTopDefault = 0.5 - offset, marginRightDefault = 0.5 + offset, marginBottomDefault = 0.5 + offset, marginLeftDefault = 0.5 - offset;
-  for (const { marginTop: marginTop2, marginRight: marginRight2, marginBottom: marginBottom2, marginLeft: marginLeft2 } of marks2) {
-    if (marginTop2 > marginTopDefault)
-      marginTopDefault = marginTop2;
-    if (marginRight2 > marginRightDefault)
-      marginRightDefault = marginRight2;
-    if (marginBottom2 > marginBottomDefault)
-      marginBottomDefault = marginBottom2;
-    if (marginLeft2 > marginLeftDefault)
-      marginLeftDefault = marginLeft2;
-  }
-  let {
-    margin,
-    marginTop = margin !== void 0 ? margin : marginTopDefault,
-    marginRight = margin !== void 0 ? margin : marginRightDefault,
-    marginBottom = margin !== void 0 ? margin : marginBottomDefault,
-    marginLeft = margin !== void 0 ? margin : marginLeftDefault
-  } = options;
-  marginTop = +marginTop;
-  marginRight = +marginRight;
-  marginBottom = +marginBottom;
-  marginLeft = +marginLeft;
-  let {
-    width = 640,
-    height = autoHeight(scales, options, {
-      width,
-      marginTopDefault,
-      marginRightDefault,
-      marginBottomDefault,
-      marginLeftDefault
-    }) + Math.max(0, marginTop - marginTopDefault + marginBottom - marginBottomDefault)
-  } = options;
-  width = +width;
-  height = +height;
-  const dimensions = {
-    width,
-    height,
-    marginTop,
-    marginRight,
-    marginBottom,
-    marginLeft
-  };
-  if (scales.fx || scales.fy) {
-    let {
-      margin: facetMargin,
-      marginTop: facetMarginTop = facetMargin !== void 0 ? facetMargin : marginTop,
-      marginRight: facetMarginRight = facetMargin !== void 0 ? facetMargin : marginRight,
-      marginBottom: facetMarginBottom = facetMargin !== void 0 ? facetMargin : marginBottom,
-      marginLeft: facetMarginLeft = facetMargin !== void 0 ? facetMargin : marginLeft
-    } = options.facet ?? {};
-    facetMarginTop = +facetMarginTop;
-    facetMarginRight = +facetMarginRight;
-    facetMarginBottom = +facetMarginBottom;
-    facetMarginLeft = +facetMarginLeft;
-    dimensions.facet = {
-      marginTop: facetMarginTop,
-      marginRight: facetMarginRight,
-      marginBottom: facetMarginBottom,
-      marginLeft: facetMarginLeft
-    };
-  }
-  return dimensions;
-}
-function autoHeight({ x: x4, y: y4, fy, fx }, { projection: projection3, aspectRatio }, { width, marginTopDefault, marginRightDefault, marginBottomDefault, marginLeftDefault }) {
-  const nfy = fy ? fy.scale.domain().length : 1;
-  const ar = projectionAspectRatio(projection3);
-  if (ar) {
-    const nfx = fx ? fx.scale.domain().length : 1;
-    const far = (1.1 * nfy - 0.1) / (1.1 * nfx - 0.1) * ar;
-    const lar = Math.max(0.1, Math.min(10, far));
-    return Math.round((width - marginLeftDefault - marginRightDefault) * lar + marginTopDefault + marginBottomDefault);
-  }
-  const ny = y4 ? isOrdinalScale(y4) ? y4.scale.domain().length : Math.max(7, 17 / nfy) : 1;
-  if (aspectRatio != null) {
-    aspectRatio = +aspectRatio;
-    if (!(isFinite(aspectRatio) && aspectRatio > 0))
-      throw new Error(`invalid aspectRatio: ${aspectRatio}`);
-    const ratio = aspectRatioLength("y", y4) / (aspectRatioLength("x", x4) * aspectRatio);
-    const fxb = fx ? fx.scale.bandwidth() : 1;
-    const fyb = fy ? fy.scale.bandwidth() : 1;
-    const w = fxb * (width - marginLeftDefault - marginRightDefault) - x4.insetLeft - x4.insetRight;
-    return (ratio * w + y4.insetTop + y4.insetBottom) / fyb + marginTopDefault + marginBottomDefault;
-  }
-  return !!(y4 || fy) * Math.max(1, Math.min(60, ny * nfy)) * 20 + !!fx * 30 + 60;
-}
-function aspectRatioLength(k2, scale3) {
-  if (!scale3)
-    throw new Error(`aspectRatio requires ${k2} scale`);
-  const { type: type2, domain } = scale3;
-  let transform2;
-  switch (type2) {
-    case "linear":
-    case "utc":
-    case "time":
-      transform2 = Number;
-      break;
-    case "pow": {
-      const exponent2 = scale3.scale.exponent();
-      transform2 = (x4) => Math.pow(x4, exponent2);
-      break;
-    }
-    case "log":
-      transform2 = Math.log;
-      break;
-    case "point":
-    case "band":
-      return domain.length;
-    default:
-      throw new Error(`unsupported ${k2} scale for aspectRatio: ${type2}`);
-  }
-  const [min4, max5] = extent(domain);
-  return Math.abs(transform2(max5) - transform2(min4));
-}
-
-// node_modules/@observablehq/plot/src/facet.js
-function createFacets(channelsByScale, options) {
-  const { fx, fy } = createScales(channelsByScale, options);
-  const fxDomain = fx?.scale.domain();
-  const fyDomain = fy?.scale.domain();
-  return fxDomain && fyDomain ? cross(fxDomain, fyDomain).map(([x4, y4], i) => ({ x: x4, y: y4, i })) : fxDomain ? fxDomain.map((x4, i) => ({ x: x4, i })) : fyDomain ? fyDomain.map((y4, i) => ({ y: y4, i })) : void 0;
-}
-function recreateFacets(facets, { x: X3, y: Y3 }) {
-  X3 &&= facetIndex(X3);
-  Y3 &&= facetIndex(Y3);
-  return facets.filter(
-    X3 && Y3 ? (f) => X3.has(f.x) && Y3.has(f.y) : X3 ? (f) => X3.has(f.x) : (f) => Y3.has(f.y)
-  ).sort(
-    X3 && Y3 ? (a4, b) => X3.get(a4.x) - X3.get(b.x) || Y3.get(a4.y) - Y3.get(b.y) : X3 ? (a4, b) => X3.get(a4.x) - X3.get(b.x) : (a4, b) => Y3.get(a4.y) - Y3.get(b.y)
-  );
-}
-function facetGroups(data, { fx, fy }) {
-  const I = range4(data);
-  const FX = fx?.value;
-  const FY = fy?.value;
-  return fx && fy ? rollup(
-    I,
-    (G) => (G.fx = FX[G[0]], G.fy = FY[G[0]], G),
-    (i) => FX[i],
-    (i) => FY[i]
-  ) : fx ? rollup(
-    I,
-    (G) => (G.fx = FX[G[0]], G),
-    (i) => FX[i]
-  ) : rollup(
-    I,
-    (G) => (G.fy = FY[G[0]], G),
-    (i) => FY[i]
-  );
-}
-function facetTranslator(fx, fy, { marginTop, marginLeft }) {
-  return fx && fy ? ({ x: x4, y: y4 }) => `translate(${fx(x4) - marginLeft},${fy(y4) - marginTop})` : fx ? ({ x: x4 }) => `translate(${fx(x4) - marginLeft},0)` : ({ y: y4 }) => `translate(0,${fy(y4) - marginTop})`;
-}
-function facetExclude(index3) {
-  const ex = [];
-  const e = new Uint32Array(sum(index3, (d) => d.length));
-  for (const i of index3) {
-    let n = 0;
-    for (const j of index3) {
-      if (i === j)
-        continue;
-      e.set(j, n);
-      n += j.length;
-    }
-    ex.push(e.slice(0, n));
-  }
-  return ex;
-}
-var facetAnchors = /* @__PURE__ */ new Map([
-  ["top", facetAnchorTop],
-  ["right", facetAnchorRight],
-  ["bottom", facetAnchorBottom],
-  ["left", facetAnchorLeft],
-  ["top-left", and(facetAnchorTop, facetAnchorLeft)],
-  ["top-right", and(facetAnchorTop, facetAnchorRight)],
-  ["bottom-left", and(facetAnchorBottom, facetAnchorLeft)],
-  ["bottom-right", and(facetAnchorBottom, facetAnchorRight)],
-  ["top-empty", facetAnchorTopEmpty],
-  ["right-empty", facetAnchorRightEmpty],
-  ["bottom-empty", facetAnchorBottomEmpty],
-  ["left-empty", facetAnchorLeftEmpty],
-  ["empty", facetAnchorEmpty]
-]);
-function maybeFacetAnchor(facetAnchor) {
-  if (facetAnchor == null)
-    return null;
-  const anchor = facetAnchors.get(`${facetAnchor}`.toLowerCase());
-  if (anchor)
-    return anchor;
-  throw new Error(`invalid facet anchor: ${facetAnchor}`);
-}
-var indexCache = /* @__PURE__ */ new WeakMap();
-function facetIndex(V) {
-  let I = indexCache.get(V);
-  if (!I)
-    indexCache.set(V, I = new InternMap(map4(V, (v2, i) => [v2, i])));
-  return I;
-}
-function facetIndexOf(V, v2) {
-  return facetIndex(V).get(v2);
-}
-function facetFind(facets, x4, y4) {
-  x4 = keyof2(x4);
-  y4 = keyof2(y4);
-  return facets.find((f) => Object.is(keyof2(f.x), x4) && Object.is(keyof2(f.y), y4));
-}
-function facetEmpty(facets, x4, y4) {
-  return facetFind(facets, x4, y4)?.empty;
-}
-function facetAnchorTop(facets, { y: Y3 }, { y: y4 }) {
-  return Y3 ? facetIndexOf(Y3, y4) === 0 : true;
-}
-function facetAnchorBottom(facets, { y: Y3 }, { y: y4 }) {
-  return Y3 ? facetIndexOf(Y3, y4) === Y3.length - 1 : true;
-}
-function facetAnchorLeft(facets, { x: X3 }, { x: x4 }) {
-  return X3 ? facetIndexOf(X3, x4) === 0 : true;
-}
-function facetAnchorRight(facets, { x: X3 }, { x: x4 }) {
-  return X3 ? facetIndexOf(X3, x4) === X3.length - 1 : true;
-}
-function facetAnchorTopEmpty(facets, { y: Y3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!Y3)
-    return;
-  const i = facetIndexOf(Y3, y4);
-  if (i > 0)
-    return facetEmpty(facets, x4, Y3[i - 1]);
-}
-function facetAnchorBottomEmpty(facets, { y: Y3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!Y3)
-    return;
-  const i = facetIndexOf(Y3, y4);
-  if (i < Y3.length - 1)
-    return facetEmpty(facets, x4, Y3[i + 1]);
-}
-function facetAnchorLeftEmpty(facets, { x: X3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!X3)
-    return;
-  const i = facetIndexOf(X3, x4);
-  if (i > 0)
-    return facetEmpty(facets, X3[i - 1], y4);
-}
-function facetAnchorRightEmpty(facets, { x: X3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!X3)
-    return;
-  const i = facetIndexOf(X3, x4);
-  if (i < X3.length - 1)
-    return facetEmpty(facets, X3[i + 1], y4);
-}
-function facetAnchorEmpty(facets, channels, { empty: empty4 }) {
-  return empty4;
-}
-function and(a4, b) {
-  return function() {
-    return a4.apply(null, arguments) && b.apply(null, arguments);
-  };
-}
-function facetFilter(facets, { channels: { fx, fy }, groups: groups2 }) {
-  return fx && fy ? facets.map(({ x: x4, y: y4 }) => groups2.get(x4)?.get(y4) ?? []) : fx ? facets.map(({ x: x4 }) => groups2.get(x4) ?? []) : facets.map(({ y: y4 }) => groups2.get(y4) ?? []);
-}
-
 // node_modules/@observablehq/plot/src/mark.js
 var Mark = class {
-  constructor(data, channels = {}, options = {}, defaults23) {
+  constructor(data, channels = {}, options = {}, defaults22) {
     const {
       facet = "auto",
       facetAnchor,
@@ -22303,7 +22312,8 @@ var Mark = class {
       marginRight = margin,
       marginBottom = margin,
       marginLeft = margin,
-      clip = defaults23?.clip,
+      className,
+      clip = defaults22?.clip,
       channels: extraChannels,
       tip: tip2,
       render: render2
@@ -22323,8 +22333,8 @@ var Mark = class {
     channels = maybeNamed(channels);
     if (extraChannels !== void 0)
       channels = { ...maybeChannels(extraChannels), ...channels };
-    if (defaults23 !== void 0)
-      channels = { ...styles(this, options, defaults23), ...channels };
+    if (defaults22 !== void 0)
+      channels = { ...styles(this, options, defaults22), ...channels };
     this.channels = Object.fromEntries(
       Object.entries(channels).map(([name, channel]) => {
         if (isOptions(channel.value)) {
@@ -22352,6 +22362,7 @@ var Mark = class {
     this.marginLeft = +marginLeft;
     this.clip = maybeClip(clip);
     this.tip = maybeTip(tip2);
+    this.className = className ? maybeClassName(className) : null;
     if (this.facet === "super") {
       if (fx || fy)
         throw new Error(`super-faceting cannot use fx or fy`);
@@ -22367,12 +22378,12 @@ var Mark = class {
     }
   }
   initialize(facets, facetChannels, plotOptions) {
-    let data = arrayify2(this.data);
+    let data = dataify(this.data);
     if (facets === void 0 && data != null)
       facets = [range4(data)];
     const originalFacets = facets;
     if (this.transform != null)
-      ({ facets, data } = this.transform(data, facets, plotOptions)), data = arrayify2(data);
+      ({ facets, data } = this.transform(data, facets, plotOptions)), data = dataify(data);
     if (facets !== void 0)
       facets.original = originalFacets;
     const channels = createChannels(this.channels, data);
@@ -22448,6 +22459,122 @@ function maybeTip(tip2) {
 }
 function withTip(options, pointer2) {
   return options?.tip === true ? { ...options, tip: pointer2 } : isObject(options?.tip) && options.tip.pointer === void 0 ? { ...options, tip: { ...options.tip, pointer: pointer2 } } : options;
+}
+
+// node_modules/@observablehq/plot/src/dimensions.js
+function createDimensions(scales, marks2, options = {}) {
+  let marginTopDefault = 0.5 - offset, marginRightDefault = 0.5 + offset, marginBottomDefault = 0.5 + offset, marginLeftDefault = 0.5 - offset;
+  for (const { marginTop: marginTop2, marginRight: marginRight2, marginBottom: marginBottom2, marginLeft: marginLeft2 } of marks2) {
+    if (marginTop2 > marginTopDefault)
+      marginTopDefault = marginTop2;
+    if (marginRight2 > marginRightDefault)
+      marginRightDefault = marginRight2;
+    if (marginBottom2 > marginBottomDefault)
+      marginBottomDefault = marginBottom2;
+    if (marginLeft2 > marginLeftDefault)
+      marginLeftDefault = marginLeft2;
+  }
+  let {
+    margin,
+    marginTop = margin !== void 0 ? margin : marginTopDefault,
+    marginRight = margin !== void 0 ? margin : marginRightDefault,
+    marginBottom = margin !== void 0 ? margin : marginBottomDefault,
+    marginLeft = margin !== void 0 ? margin : marginLeftDefault
+  } = options;
+  marginTop = +marginTop;
+  marginRight = +marginRight;
+  marginBottom = +marginBottom;
+  marginLeft = +marginLeft;
+  let {
+    width = 640,
+    height = autoHeight(scales, options, {
+      width,
+      marginTopDefault,
+      marginRightDefault,
+      marginBottomDefault,
+      marginLeftDefault
+    }) + Math.max(0, marginTop - marginTopDefault + marginBottom - marginBottomDefault)
+  } = options;
+  width = +width;
+  height = +height;
+  const dimensions = {
+    width,
+    height,
+    marginTop,
+    marginRight,
+    marginBottom,
+    marginLeft
+  };
+  if (scales.fx || scales.fy) {
+    let {
+      margin: facetMargin,
+      marginTop: facetMarginTop = facetMargin !== void 0 ? facetMargin : marginTop,
+      marginRight: facetMarginRight = facetMargin !== void 0 ? facetMargin : marginRight,
+      marginBottom: facetMarginBottom = facetMargin !== void 0 ? facetMargin : marginBottom,
+      marginLeft: facetMarginLeft = facetMargin !== void 0 ? facetMargin : marginLeft
+    } = options.facet ?? {};
+    facetMarginTop = +facetMarginTop;
+    facetMarginRight = +facetMarginRight;
+    facetMarginBottom = +facetMarginBottom;
+    facetMarginLeft = +facetMarginLeft;
+    dimensions.facet = {
+      marginTop: facetMarginTop,
+      marginRight: facetMarginRight,
+      marginBottom: facetMarginBottom,
+      marginLeft: facetMarginLeft
+    };
+  }
+  return dimensions;
+}
+function autoHeight({ x: x4, y: y4, fy, fx }, { projection: projection3, aspectRatio }, { width, marginTopDefault, marginRightDefault, marginBottomDefault, marginLeftDefault }) {
+  const nfy = fy ? fy.scale.domain().length || 1 : 1;
+  const ar = projectionAspectRatio(projection3);
+  if (ar) {
+    const nfx = fx ? fx.scale.domain().length : 1;
+    const far = (1.1 * nfy - 0.1) / (1.1 * nfx - 0.1) * ar;
+    const lar = Math.max(0.1, Math.min(10, far));
+    return Math.round((width - marginLeftDefault - marginRightDefault) * lar + marginTopDefault + marginBottomDefault);
+  }
+  const ny = y4 ? isOrdinalScale(y4) ? y4.scale.domain().length || 1 : Math.max(7, 17 / nfy) : 1;
+  if (aspectRatio != null) {
+    aspectRatio = +aspectRatio;
+    if (!(isFinite(aspectRatio) && aspectRatio > 0))
+      throw new Error(`invalid aspectRatio: ${aspectRatio}`);
+    const ratio = aspectRatioLength("y", y4) / (aspectRatioLength("x", x4) * aspectRatio);
+    const fxb = fx ? fx.scale.bandwidth() : 1;
+    const fyb = fy ? fy.scale.bandwidth() : 1;
+    const w = fxb * (width - marginLeftDefault - marginRightDefault) - x4.insetLeft - x4.insetRight;
+    return (ratio * w + y4.insetTop + y4.insetBottom) / fyb + marginTopDefault + marginBottomDefault;
+  }
+  return !!(y4 || fy) * Math.max(1, Math.min(60, ny * nfy)) * 20 + !!fx * 30 + 60;
+}
+function aspectRatioLength(k2, scale3) {
+  if (!scale3)
+    throw new Error(`aspectRatio requires ${k2} scale`);
+  const { type: type2, domain } = scale3;
+  let transform2;
+  switch (type2) {
+    case "linear":
+    case "utc":
+    case "time":
+      transform2 = Number;
+      break;
+    case "pow": {
+      const exponent2 = scale3.scale.exponent();
+      transform2 = (x4) => Math.pow(x4, exponent2);
+      break;
+    }
+    case "log":
+      transform2 = Math.log;
+      break;
+    case "point":
+    case "band":
+      return domain.length;
+    default:
+      throw new Error(`unsupported ${k2} scale for aspectRatio: ${type2}`);
+  }
+  const [min4, max5] = extent(domain);
+  return Math.abs(transform2(max5) - transform2(min4));
 }
 
 // node_modules/@observablehq/plot/src/interactions/pointer.js
@@ -22545,8 +22672,10 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
           g.replaceWith(r);
         }
         state.roots[renderIndex] = g = r;
-        if (!(i == null && facetState?.size > 1))
-          context.dispatchValue(i == null ? null : data[i]);
+        if (!(i == null && facetState?.size > 1)) {
+          const value = i == null ? null : isArray(data) ? data[i] : data.get(i);
+          context.dispatchValue(value);
+        }
         return r;
       }
       function pointermove(event) {
@@ -22762,15 +22891,44 @@ function markerTick(orient) {
 }
 var nextMarkerId = 0;
 function applyMarkers(path2, mark, { stroke: S }, context) {
-  return applyMarkersColor(path2, mark, S && ((i) => S[i]), context);
+  return applyMarkersColor(path2, mark, S && ((i) => S[i]), null, context);
 }
-function applyGroupedMarkers(path2, mark, { stroke: S }, context) {
-  return applyMarkersColor(path2, mark, S && (([i]) => S[i]), context);
+function applyGroupedMarkers(path2, mark, { stroke: S, z: Z }, context) {
+  return applyMarkersColor(path2, mark, S && (([i]) => S[i]), Z, context);
 }
-function applyMarkersColor(path2, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, context) {
+var START = 1;
+var END = 2;
+function getGroupedOrientation(path2, Z) {
+  const O = new Uint8Array(Z.length);
+  const D3 = path2.data().filter((I) => I.length > 1);
+  const n = D3.length;
+  for (let i = 0, z = unset; i < n; ++i) {
+    const I = D3[i];
+    if (I.length > 1) {
+      const i2 = I[0];
+      if (z !== (z = keyof2(Z[i2])))
+        O[i2] |= START;
+    }
+  }
+  for (let i = n - 1, z = unset; i >= 0; --i) {
+    const I = D3[i];
+    if (I.length > 1) {
+      const i2 = I[0];
+      if (z !== (z = keyof2(Z[i2])))
+        O[i2] |= END;
+    }
+  }
+  return ([i]) => O[i];
+}
+function applyMarkersColor(path2, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, Z, context) {
+  if (!markerStart && !markerMid && !markerEnd)
+    return;
   const iriByMarkerColor = /* @__PURE__ */ new Map();
-  function applyMarker(marker) {
+  const orient = Z && getGroupedOrientation(path2, Z);
+  function applyMarker(name, marker, filter4) {
     return function(i) {
+      if (filter4 && !filter4(i))
+        return;
       const color3 = strokeof(i);
       let iriByColor = iriByMarkerColor.get(marker);
       if (!iriByColor)
@@ -22782,15 +22940,17 @@ function applyMarkersColor(path2, { markerStart, markerMid, markerEnd, stroke },
         node.setAttribute("id", id2);
         iriByColor.set(color3, iri = `url(#${id2})`);
       }
-      return iri;
+      this.setAttribute(name, iri);
     };
   }
   if (markerStart)
-    path2.attr("marker-start", applyMarker(markerStart));
+    path2.each(applyMarker("marker-start", markerStart, orient && ((i) => orient(i) & START)));
+  if (markerMid && orient)
+    path2.each(applyMarker("marker-start", markerMid, (i) => !(orient(i) & START)));
   if (markerMid)
-    path2.attr("marker-mid", applyMarker(markerMid));
+    path2.each(applyMarker("marker-mid", markerMid));
   if (markerEnd)
-    path2.attr("marker-end", applyMarker(markerEnd));
+    path2.each(applyMarker("marker-end", markerEnd, orient && ((i) => orient(i) & END)));
 }
 
 // node_modules/@observablehq/plot/src/transforms/inset.js
@@ -24067,7 +24227,7 @@ function inferTextChannel(scale3, data, ticks2, tickFormat2, anchor) {
   return { value: inferTickFormat(scale3, data, ticks2, tickFormat2, anchor) };
 }
 function inferTickFormat(scale3, data, ticks2, tickFormat2, anchor) {
-  return typeof tickFormat2 === "function" ? tickFormat2 : tickFormat2 === void 0 && data && isTemporal(data) ? inferTimeFormat(scale3.type, data, anchor) ?? formatDefault : scale3.tickFormat ? scale3.tickFormat(typeof ticks2 === "number" ? ticks2 : null, tickFormat2) : tickFormat2 === void 0 ? formatDefault : typeof tickFormat2 === "string" ? (isTemporal(scale3.domain()) ? utcFormat : format)(tickFormat2) : constant2(tickFormat2);
+  return typeof tickFormat2 === "function" && !(scale3.type === "log" && scale3.tickFormat) ? tickFormat2 : tickFormat2 === void 0 && data && isTemporal(data) ? inferTimeFormat(scale3.type, data, anchor) ?? formatDefault : scale3.tickFormat ? scale3.tickFormat(typeof ticks2 === "number" ? ticks2 : null, tickFormat2) : tickFormat2 === void 0 ? formatDefault : typeof tickFormat2 === "string" ? (isTemporal(scale3.domain()) ? utcFormat : format)(tickFormat2) : constant2(tickFormat2);
 }
 function inclusiveRange(interval2, min4, max5) {
   return interval2.range(min4, interval2.offset(interval2.floor(max5)));
@@ -24273,13 +24433,13 @@ function legend(options = {}) {
   }
   throw new Error("unknown legend type; no scale found");
 }
-function exposeLegends(scales, context, defaults23 = {}) {
+function exposeLegends(scales, context, defaults22 = {}) {
   return (key, options) => {
     if (!legendRegistry.has(key))
       throw new Error(`unknown legend type: ${key}`);
     if (!(key in scales))
       return;
-    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults23[key], options), (key2) => scales[key2]);
+    return legendRegistry.get(key)(scales[key], legendOptions(context, defaults22[key], options), (key2) => scales[key2]);
   };
 }
 function legendOptions({ className, ...context }, { label, ticks: ticks2, tickFormat: tickFormat2 } = {}, options) {
@@ -24325,8 +24485,516 @@ function createLegends(scales, context, options) {
   return legends;
 }
 
-// node_modules/@observablehq/plot/src/marks/frame.js
+// node_modules/@observablehq/plot/src/transforms/identity.js
+function maybeIdentityX(options = {}) {
+  return hasX(options) ? options : { ...options, x: identity6 };
+}
+function maybeIdentityY(options = {}) {
+  return hasY(options) ? options : { ...options, y: identity6 };
+}
+
+// node_modules/@observablehq/plot/src/transforms/exclusiveFacets.js
+function exclusiveFacets(data, facets) {
+  if (facets.length === 1)
+    return { data, facets };
+  const n = lengthof(data);
+  const O = new Uint8Array(n);
+  let overlaps = 0;
+  for (const facet of facets) {
+    for (const i of facet) {
+      if (O[i])
+        ++overlaps;
+      O[i] = 1;
+    }
+  }
+  if (overlaps === 0)
+    return { data, facets };
+  data = slice5(data);
+  const R = data[reindex] = new Uint32Array(n + overlaps);
+  facets = facets.map((facet) => slice5(facet, Uint32Array));
+  let j = n;
+  O.fill(0);
+  for (const facet of facets) {
+    for (let k2 = 0, m3 = facet.length; k2 < m3; ++k2) {
+      const i = facet[k2];
+      if (O[i])
+        facet[k2] = j, data[j] = data[i], R[j] = i, ++j;
+      else
+        R[i] = i;
+      O[i] = 1;
+    }
+  }
+  return { data, facets };
+}
+
+// node_modules/@observablehq/plot/src/transforms/stack.js
+function stackX(stackOptions = {}, options = {}) {
+  if (arguments.length === 1)
+    [stackOptions, options] = mergeOptions(stackOptions);
+  const { y1: y12, y: y4 = y12, x: x4, ...rest } = options;
+  const [transform2, Y3, x12, x22] = stack(y4, x4, "y", "x", stackOptions, rest);
+  return { ...transform2, y1: y12, y: Y3, x1: x12, x2: x22, x: mid(x12, x22) };
+}
+function stackX1(stackOptions = {}, options = {}) {
+  if (arguments.length === 1)
+    [stackOptions, options] = mergeOptions(stackOptions);
+  const { y1: y12, y: y4 = y12, x: x4 } = options;
+  const [transform2, Y3, X3] = stack(y4, x4, "y", "x", stackOptions, options);
+  return { ...transform2, y1: y12, y: Y3, x: X3 };
+}
+function stackX2(stackOptions = {}, options = {}) {
+  if (arguments.length === 1)
+    [stackOptions, options] = mergeOptions(stackOptions);
+  const { y1: y12, y: y4 = y12, x: x4 } = options;
+  const [transform2, Y3, , X3] = stack(y4, x4, "y", "x", stackOptions, options);
+  return { ...transform2, y1: y12, y: Y3, x: X3 };
+}
+function stackY(stackOptions = {}, options = {}) {
+  if (arguments.length === 1)
+    [stackOptions, options] = mergeOptions(stackOptions);
+  const { x1: x12, x: x4 = x12, y: y4, ...rest } = options;
+  const [transform2, X3, y12, y22] = stack(x4, y4, "x", "y", stackOptions, rest);
+  return { ...transform2, x1: x12, x: X3, y1: y12, y2: y22, y: mid(y12, y22) };
+}
+function stackY1(stackOptions = {}, options = {}) {
+  if (arguments.length === 1)
+    [stackOptions, options] = mergeOptions(stackOptions);
+  const { x1: x12, x: x4 = x12, y: y4 } = options;
+  const [transform2, X3, Y3] = stack(x4, y4, "x", "y", stackOptions, options);
+  return { ...transform2, x1: x12, x: X3, y: Y3 };
+}
+function stackY2(stackOptions = {}, options = {}) {
+  if (arguments.length === 1)
+    [stackOptions, options] = mergeOptions(stackOptions);
+  const { x1: x12, x: x4 = x12, y: y4 } = options;
+  const [transform2, X3, , Y3] = stack(x4, y4, "x", "y", stackOptions, options);
+  return { ...transform2, x1: x12, x: X3, y: Y3 };
+}
+function maybeStackX({ x: x4, x1: x12, x2: x22, ...options } = {}) {
+  options = withTip(options, "y");
+  if (x12 === void 0 && x22 === void 0)
+    return stackX({ x: x4, ...options });
+  [x12, x22] = maybeZero(x4, x12, x22);
+  return { ...options, x1: x12, x2: x22 };
+}
+function maybeStackY({ y: y4, y1: y12, y2: y22, ...options } = {}) {
+  options = withTip(options, "x");
+  if (y12 === void 0 && y22 === void 0)
+    return stackY({ y: y4, ...options });
+  [y12, y22] = maybeZero(y4, y12, y22);
+  return { ...options, y1: y12, y2: y22 };
+}
+function mergeOptions(options) {
+  const { offset: offset2, order, reverse: reverse3, ...rest } = options;
+  return [{ offset: offset2, order, reverse: reverse3 }, rest];
+}
+var lengthy = { length: true };
+function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: reverse3 }, options) {
+  if (y4 === null)
+    throw new Error(`stack requires ${ky2}`);
+  const z = maybeZ(options);
+  const [X3, setX] = maybeColumn(x4);
+  const [Y13, setY1] = column(y4);
+  const [Y23, setY2] = column(y4);
+  Y13.hint = Y23.hint = lengthy;
+  offset2 = maybeOffset(offset2);
+  order = maybeOrder2(order, offset2, ky2);
+  return [
+    basic(options, (data, facets, plotOptions) => {
+      ({ data, facets } = exclusiveFacets(data, facets));
+      const X4 = x4 == null ? void 0 : setX(maybeApplyInterval(valueof(data, x4), plotOptions?.[kx2]));
+      const Y3 = valueof(data, y4, Float64Array);
+      const Z = valueof(data, z);
+      const compare = order && order(data, X4, Y3, Z);
+      const n = lengthof(data);
+      const Y14 = setY1(new Float64Array(n));
+      const Y24 = setY2(new Float64Array(n));
+      const facetstacks = [];
+      for (const facet of facets) {
+        const stacks = X4 ? Array.from(group(facet, (i) => X4[i]).values()) : [facet];
+        if (compare)
+          for (const stack2 of stacks)
+            stack2.sort(compare);
+        for (const stack2 of stacks) {
+          let yn = 0;
+          let yp = 0;
+          if (reverse3)
+            stack2.reverse();
+          for (const i of stack2) {
+            const y5 = Y3[i];
+            if (y5 < 0)
+              yn = Y24[i] = (Y14[i] = yn) + y5;
+            else if (y5 > 0)
+              yp = Y24[i] = (Y14[i] = yp) + y5;
+            else
+              Y24[i] = Y14[i] = yp;
+          }
+        }
+        facetstacks.push(stacks);
+      }
+      if (offset2)
+        offset2(facetstacks, Y14, Y24, Z);
+      return { data, facets };
+    }),
+    X3,
+    Y13,
+    Y23
+  ];
+}
+function maybeOffset(offset2) {
+  if (offset2 == null)
+    return;
+  if (typeof offset2 === "function")
+    return offset2;
+  switch (`${offset2}`.toLowerCase()) {
+    case "expand":
+    case "normalize":
+      return offsetExpand;
+    case "center":
+    case "silhouette":
+      return offsetCenter;
+    case "wiggle":
+      return offsetWiggle;
+  }
+  throw new Error(`unknown offset: ${offset2}`);
+}
+function extent2(stack2, Y23) {
+  let min4 = 0, max5 = 0;
+  for (const i of stack2) {
+    const y4 = Y23[i];
+    if (y4 < min4)
+      min4 = y4;
+    if (y4 > max5)
+      max5 = y4;
+  }
+  return [min4, max5];
+}
+function offsetExpand(facetstacks, Y13, Y23) {
+  for (const stacks of facetstacks) {
+    for (const stack2 of stacks) {
+      const [yn, yp] = extent2(stack2, Y23);
+      for (const i of stack2) {
+        const m3 = 1 / (yp - yn || 1);
+        Y13[i] = m3 * (Y13[i] - yn);
+        Y23[i] = m3 * (Y23[i] - yn);
+      }
+    }
+  }
+}
+function offsetCenter(facetstacks, Y13, Y23) {
+  for (const stacks of facetstacks) {
+    for (const stack2 of stacks) {
+      const [yn, yp] = extent2(stack2, Y23);
+      for (const i of stack2) {
+        const m3 = (yp + yn) / 2;
+        Y13[i] -= m3;
+        Y23[i] -= m3;
+      }
+    }
+    offsetZero(stacks, Y13, Y23);
+  }
+  offsetCenterFacets(facetstacks, Y13, Y23);
+}
+function offsetWiggle(facetstacks, Y13, Y23, Z) {
+  for (const stacks of facetstacks) {
+    const prev = new InternMap();
+    let y4 = 0;
+    for (const stack2 of stacks) {
+      let j = -1;
+      const Fi = stack2.map((i) => Math.abs(Y23[i] - Y13[i]));
+      const Df = stack2.map((i) => {
+        j = Z ? Z[i] : ++j;
+        const value = Y23[i] - Y13[i];
+        const diff = prev.has(j) ? value - prev.get(j) : 0;
+        prev.set(j, value);
+        return diff;
+      });
+      const Cf1 = [0, ...cumsum(Df)];
+      for (const i of stack2) {
+        Y13[i] += y4;
+        Y23[i] += y4;
+      }
+      const s1 = sum(Fi);
+      if (s1)
+        y4 -= sum(Fi, (d, i) => (Df[i] / 2 + Cf1[i]) * d) / s1;
+    }
+    offsetZero(stacks, Y13, Y23);
+  }
+  offsetCenterFacets(facetstacks, Y13, Y23);
+}
+function offsetZero(stacks, Y13, Y23) {
+  const m3 = min(stacks, (stack2) => min(stack2, (i) => Y13[i]));
+  for (const stack2 of stacks) {
+    for (const i of stack2) {
+      Y13[i] -= m3;
+      Y23[i] -= m3;
+    }
+  }
+}
+function offsetCenterFacets(facetstacks, Y13, Y23) {
+  const n = facetstacks.length;
+  if (n === 1)
+    return;
+  const facets = facetstacks.map((stacks) => stacks.flat());
+  const m3 = facets.map((I) => (min(I, (i) => Y13[i]) + max(I, (i) => Y23[i])) / 2);
+  const m0 = min(m3);
+  for (let j = 0; j < n; j++) {
+    const p = m0 - m3[j];
+    for (const i of facets[j]) {
+      Y13[i] += p;
+      Y23[i] += p;
+    }
+  }
+}
+function maybeOrder2(order, offset2, ky2) {
+  if (order === void 0 && offset2 === offsetWiggle)
+    return orderInsideOut(ascendingDefined2);
+  if (order == null)
+    return;
+  if (typeof order === "string") {
+    const negate2 = order.startsWith("-");
+    const compare = negate2 ? descendingDefined : ascendingDefined2;
+    switch ((negate2 ? order.slice(1) : order).toLowerCase()) {
+      case "value":
+      case ky2:
+        return orderY(compare);
+      case "z":
+        return orderZ(compare);
+      case "sum":
+        return orderSum(compare);
+      case "appearance":
+        return orderAppearance(compare);
+      case "inside-out":
+        return orderInsideOut(compare);
+    }
+    return orderAccessor(field(order));
+  }
+  if (typeof order === "function")
+    return (order.length === 1 ? orderAccessor : orderComparator)(order);
+  if (isArray(order))
+    return orderGiven(order);
+  throw new Error(`invalid order: ${order}`);
+}
+function orderY(compare) {
+  return (data, X3, Y3) => (i, j) => compare(Y3[i], Y3[j]);
+}
+function orderZ(compare) {
+  return (data, X3, Y3, Z) => (i, j) => compare(Z[i], Z[j]);
+}
+function orderSum(compare) {
+  return orderZDomain(
+    compare,
+    (data, X3, Y3, Z) => groupSort(
+      range4(data),
+      (I) => sum(I, (i) => Y3[i]),
+      (i) => Z[i]
+    )
+  );
+}
+function orderAppearance(compare) {
+  return orderZDomain(
+    compare,
+    (data, X3, Y3, Z) => groupSort(
+      range4(data),
+      (I) => X3[greatest(I, (i) => Y3[i])],
+      (i) => Z[i]
+    )
+  );
+}
+function orderInsideOut(compare) {
+  return orderZDomain(compare, (data, X3, Y3, Z) => {
+    const I = range4(data);
+    const K2 = groupSort(
+      I,
+      (I2) => X3[greatest(I2, (i) => Y3[i])],
+      (i) => Z[i]
+    );
+    const sums = rollup(
+      I,
+      (I2) => sum(I2, (i) => Y3[i]),
+      (i) => Z[i]
+    );
+    const Kp = [], Kn = [];
+    let s2 = 0;
+    for (const k2 of K2) {
+      if (s2 < 0) {
+        s2 += sums.get(k2);
+        Kp.push(k2);
+      } else {
+        s2 -= sums.get(k2);
+        Kn.push(k2);
+      }
+    }
+    return Kn.reverse().concat(Kp);
+  });
+}
+function orderAccessor(f) {
+  return (data) => {
+    const O = valueof(data, f);
+    return (i, j) => ascendingDefined2(O[i], O[j]);
+  };
+}
+function orderComparator(f) {
+  return (data) => {
+    return isArray(data) ? (i, j) => f(data[i], data[j]) : (i, j) => f(data.get(i), data.get(j));
+  };
+}
+function orderGiven(domain) {
+  return orderZDomain(ascendingDefined2, () => domain);
+}
+function orderZDomain(compare, domain) {
+  return (data, X3, Y3, Z) => {
+    if (!Z)
+      throw new Error("missing channel: z");
+    const map6 = new InternMap(domain(data, X3, Y3, Z).map((d, i) => [d, i]));
+    return (i, j) => compare(map6.get(Z[i]), map6.get(Z[j]));
+  };
+}
+
+// node_modules/@observablehq/plot/src/marks/rect.js
 var defaults4 = {
+  ariaLabel: "rect"
+};
+var Rect = class extends Mark {
+  constructor(data, options = {}) {
+    const { x1: x12, y1: y12, x2: x22, y2: y22 } = options;
+    super(
+      data,
+      {
+        x1: { value: x12, scale: "x", type: x12 != null && x22 == null ? "band" : void 0, optional: true },
+        y1: { value: y12, scale: "y", type: y12 != null && y22 == null ? "band" : void 0, optional: true },
+        x2: { value: x22, scale: "x", optional: true },
+        y2: { value: y22, scale: "y", optional: true }
+      },
+      options,
+      defaults4
+    );
+    rectInsets(this, options);
+    rectRadii(this, options);
+  }
+  render(index3, scales, channels, dimensions, context) {
+    const { x: x4, y: y4 } = scales;
+    let { x1: X13, y1: Y13, x2: X23, y2: Y23 } = channels;
+    const { marginTop, marginRight, marginBottom, marginLeft, width, height } = dimensions;
+    const { projection: projection3 } = context;
+    const { insetTop, insetRight, insetBottom, insetLeft } = this;
+    const { rx, ry, rx1y1, rx1y2, rx2y1, rx2y2 } = this;
+    if ((X13 || X23) && !projection3 && isCollapsed(x4))
+      X13 = X23 = null;
+    if ((Y13 || Y23) && !projection3 && isCollapsed(y4))
+      Y13 = Y23 = null;
+    const bx = x4?.bandwidth ? x4.bandwidth() : 0;
+    const by = y4?.bandwidth ? y4.bandwidth() : 0;
+    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, {}, 0, 0).call(
+      (g) => g.selectAll().data(index3).enter().call(
+        rx1y1 || rx1y2 || rx2y1 || rx2y2 ? (g2) => g2.append("path").call(applyDirectStyles, this).call(
+          applyRoundedRect,
+          X13 && X23 ? (i) => X13[i] + (X23[i] < X13[i] ? -insetRight : insetLeft) : X13 ? (i) => X13[i] + insetLeft : marginLeft + insetLeft,
+          Y13 && Y23 ? (i) => Y13[i] + (Y23[i] < Y13[i] ? -insetBottom : insetTop) : Y13 ? (i) => Y13[i] + insetTop : marginTop + insetTop,
+          X13 && X23 ? (i) => X23[i] - (X23[i] < X13[i] ? -insetLeft : insetRight) : X13 ? (i) => X13[i] + bx - insetRight : width - marginRight - insetRight,
+          Y13 && Y23 ? (i) => Y23[i] - (Y23[i] < Y13[i] ? -insetTop : insetBottom) : Y13 ? (i) => Y13[i] + by - insetBottom : height - marginBottom - insetBottom,
+          this
+        ).call(applyChannelStyles, this, channels) : (g2) => g2.append("rect").call(applyDirectStyles, this).attr(
+          "x",
+          X13 ? X23 ? (i) => Math.min(X13[i], X23[i]) + insetLeft : (i) => X13[i] + insetLeft : marginLeft + insetLeft
+        ).attr(
+          "y",
+          Y13 ? Y23 ? (i) => Math.min(Y13[i], Y23[i]) + insetTop : (i) => Y13[i] + insetTop : marginTop + insetTop
+        ).attr(
+          "width",
+          X13 ? X23 ? (i) => Math.max(0, Math.abs(X23[i] - X13[i]) + bx - insetLeft - insetRight) : bx - insetLeft - insetRight : width - marginRight - marginLeft - insetRight - insetLeft
+        ).attr(
+          "height",
+          Y13 ? Y23 ? (i) => Math.max(0, Math.abs(Y13[i] - Y23[i]) + by - insetTop - insetBottom) : by - insetTop - insetBottom : height - marginTop - marginBottom - insetTop - insetBottom
+        ).call(applyAttr, "rx", rx).call(applyAttr, "ry", ry).call(applyChannelStyles, this, channels)
+      )
+    ).node();
+  }
+};
+function rectInsets(mark, { inset = 0, insetTop = inset, insetRight = inset, insetBottom = inset, insetLeft = inset } = {}) {
+  mark.insetTop = number5(insetTop);
+  mark.insetRight = number5(insetRight);
+  mark.insetBottom = number5(insetBottom);
+  mark.insetLeft = number5(insetLeft);
+}
+function rectRadii(mark, {
+  r,
+  rx,
+  // for elliptic corners
+  ry,
+  // for elliptic corners
+  rx1 = r,
+  ry1 = r,
+  rx2 = r,
+  ry2 = r,
+  rx1y1 = rx1 !== void 0 ? +rx1 : ry1 !== void 0 ? +ry1 : 0,
+  rx1y2 = rx1 !== void 0 ? +rx1 : ry2 !== void 0 ? +ry2 : 0,
+  rx2y1 = rx2 !== void 0 ? +rx2 : ry1 !== void 0 ? +ry1 : 0,
+  rx2y2 = rx2 !== void 0 ? +rx2 : ry2 !== void 0 ? +ry2 : 0
+} = {}) {
+  if (rx1y1 || rx1y2 || rx2y1 || rx2y2) {
+    mark.rx1y1 = rx1y1;
+    mark.rx1y2 = rx1y2;
+    mark.rx2y1 = rx2y1;
+    mark.rx2y2 = rx2y2;
+  } else {
+    mark.rx = impliedString(rx, "auto");
+    mark.ry = impliedString(ry, "auto");
+  }
+}
+function applyRoundedRect(selection2, X13, Y13, X23, Y23, mark) {
+  const { rx1y1: r11, rx1y2: r12, rx2y1: r21, rx2y2: r22 } = mark;
+  if (typeof X13 !== "function")
+    X13 = constant2(X13);
+  if (typeof Y13 !== "function")
+    Y13 = constant2(Y13);
+  if (typeof X23 !== "function")
+    X23 = constant2(X23);
+  if (typeof Y23 !== "function")
+    Y23 = constant2(Y23);
+  const rx = Math.max(Math.abs(r11 + r21), Math.abs(r12 + r22));
+  const ry = Math.max(Math.abs(r11 + r12), Math.abs(r21 + r22));
+  selection2.attr("d", (i) => {
+    const x12 = X13(i);
+    const y12 = Y13(i);
+    const x22 = X23(i);
+    const y22 = Y23(i);
+    const ix = x12 > x22;
+    const iy = y12 > y22;
+    const l = ix ? x22 : x12;
+    const r = ix ? x12 : x22;
+    const t = iy ? y22 : y12;
+    const b = iy ? y12 : y22;
+    const k2 = Math.min(1, (r - l) / rx, (b - t) / ry);
+    const tl = k2 * (ix ? iy ? r22 : r21 : iy ? r12 : r11);
+    const tr = k2 * (ix ? iy ? r12 : r11 : iy ? r22 : r21);
+    const br = k2 * (ix ? iy ? r11 : r12 : iy ? r21 : r22);
+    const bl = k2 * (ix ? iy ? r21 : r22 : iy ? r11 : r12);
+    return `M${l},${t + biasY(tl, bl)}A${tl},${tl} 0 0 ${tl < 0 ? 0 : 1} ${l + biasX(tl, bl)},${t}H${r - biasX(tr, br)}A${tr},${tr} 0 0 ${tr < 0 ? 0 : 1} ${r},${t + biasY(tr, br)}V${b - biasY(br, tr)}A${br},${br} 0 0 ${br < 0 ? 0 : 1} ${r - biasX(br, tr)},${b}H${l + biasX(bl, tl)}A${bl},${bl} 0 0 ${bl < 0 ? 0 : 1} ${l},${b - biasY(bl, tl)}Z`;
+  });
+}
+function biasX(r1, r2) {
+  return r2 < 0 ? r1 : Math.abs(r1);
+}
+function biasY(r1, r2) {
+  return r2 < 0 ? Math.abs(r1) : r1;
+}
+function rect(data, options) {
+  return new Rect(data, maybeTrivialIntervalX(maybeTrivialIntervalY(options)));
+}
+function rectX(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, y: indexOf, x2: identity6, interval: 1 };
+  return new Rect(data, maybeStackX(maybeTrivialIntervalY(maybeIdentityX(options))));
+}
+function rectY(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, x: indexOf, y2: identity6, interval: 1 };
+  return new Rect(data, maybeStackY(maybeTrivialIntervalX(maybeIdentityY(options))));
+}
+
+// node_modules/@observablehq/plot/src/marks/frame.js
+var defaults5 = {
   ariaLabel: "frame",
   fill: "none",
   stroke: "currentColor",
@@ -24341,34 +25009,23 @@ var lineDefaults = {
 };
 var Frame = class extends Mark {
   constructor(options = {}) {
-    const {
-      anchor = null,
-      inset = 0,
-      insetTop = inset,
-      insetRight = inset,
-      insetBottom = inset,
-      insetLeft = inset,
-      rx,
-      ry
-    } = options;
-    super(singleton, void 0, options, anchor == null ? defaults4 : lineDefaults);
+    const { anchor = null } = options;
+    super(singleton, void 0, options, anchor == null ? defaults5 : lineDefaults);
     this.anchor = maybeKeyword(anchor, "anchor", ["top", "right", "bottom", "left"]);
-    this.insetTop = number5(insetTop);
-    this.insetRight = number5(insetRight);
-    this.insetBottom = number5(insetBottom);
-    this.insetLeft = number5(insetLeft);
-    this.rx = number5(rx);
-    this.ry = number5(ry);
+    rectInsets(this, options);
+    if (!anchor)
+      rectRadii(this, options);
   }
   render(index3, scales, channels, dimensions, context) {
     const { marginTop, marginRight, marginBottom, marginLeft, width, height } = dimensions;
-    const { anchor, insetTop, insetRight, insetBottom, insetLeft, rx, ry } = this;
+    const { anchor, insetTop, insetRight, insetBottom, insetLeft } = this;
+    const { rx, ry, rx1y1, rx1y2, rx2y1, rx2y2 } = this;
     const x12 = marginLeft + insetLeft;
     const x22 = width - marginRight - insetRight;
     const y12 = marginTop + insetTop;
     const y22 = height - marginBottom - insetBottom;
-    return create2(anchor ? "svg:line" : "svg:rect", context).datum(0).call(applyIndirectStyles, this, dimensions, context).call(applyDirectStyles, this).call(applyChannelStyles, this, channels).call(applyTransform, this, {}).call(
-      anchor === "left" ? (line2) => line2.attr("x1", x12).attr("x2", x12).attr("y1", y12).attr("y2", y22) : anchor === "right" ? (line2) => line2.attr("x1", x22).attr("x2", x22).attr("y1", y12).attr("y2", y22) : anchor === "top" ? (line2) => line2.attr("x1", x12).attr("x2", x22).attr("y1", y12).attr("y2", y12) : anchor === "bottom" ? (line2) => line2.attr("x1", x12).attr("x2", x22).attr("y1", y22).attr("y2", y22) : (rect2) => rect2.attr("x", x12).attr("y", y12).attr("width", x22 - x12).attr("height", y22 - y12).attr("rx", rx).attr("ry", ry)
+    return create2(anchor ? "svg:line" : rx1y1 || rx1y2 || rx2y1 || rx2y2 ? "svg:path" : "svg:rect", context).datum(0).call(applyIndirectStyles, this, dimensions, context).call(applyDirectStyles, this).call(applyChannelStyles, this, channels).call(applyTransform, this, {}).call(
+      anchor === "left" ? (line2) => line2.attr("x1", x12).attr("x2", x12).attr("y1", y12).attr("y2", y22) : anchor === "right" ? (line2) => line2.attr("x1", x22).attr("x2", x22).attr("y1", y12).attr("y2", y22) : anchor === "top" ? (line2) => line2.attr("x1", x12).attr("x2", x22).attr("y1", y12).attr("y2", y12) : anchor === "bottom" ? (line2) => line2.attr("x1", x12).attr("x2", x22).attr("y1", y22).attr("y2", y22) : rx1y1 || rx1y2 || rx2y1 || rx2y2 ? (path2) => path2.call(applyRoundedRect, x12, y12, x22, y22, this) : (rect2) => rect2.attr("x", x12).attr("y", y12).attr("width", x22 - x12).attr("height", y22 - y12).attr("rx", rx).attr("ry", ry)
     ).node();
   }
 };
@@ -24377,7 +25034,7 @@ function frame2(options) {
 }
 
 // node_modules/@observablehq/plot/src/marks/tip.js
-var defaults5 = {
+var defaults6 = {
   ariaLabel: "tip",
   fill: "var(--plot-background)",
   stroke: "currentColor"
@@ -24430,7 +25087,7 @@ var Tip = class extends Mark {
         // filter: defined
       },
       options,
-      defaults5
+      defaults6
     );
     this.anchor = maybeAnchor(anchor, "anchor");
     this.preferredAnchor = maybeAnchor(preferredAnchor, "preferredAnchor");
@@ -24448,12 +25105,12 @@ var Tip = class extends Mark {
     this.fontStyle = string(fontStyle);
     this.fontVariant = string(fontVariant);
     this.fontWeight = string(fontWeight);
-    for (const key in defaults5)
+    for (const key in defaults6)
       if (key in this.channels)
-        this[key] = defaults5[key];
+        this[key] = defaults6[key];
     this.splitLines = splitter2(this);
     this.clipLine = clipper(this);
-    this.format = { ...format3 };
+    this.format = typeof format3 === "string" || typeof format3 === "function" ? { title: format3 } : { ...format3 };
   }
   render(index3, scales, values2, dimensions, context) {
     const mark = this;
@@ -24472,10 +25129,10 @@ var Tip = class extends Mark {
     const ee = widthof(ellipsis);
     let sources, format3;
     if ("title" in values2) {
-      sources = values2.channels;
+      sources = getSourceChannels.call(this, { title: values2.channels.title }, scales);
       format3 = formatTitle;
     } else {
-      sources = getSourceChannels.call(this, values2, scales);
+      sources = getSourceChannels.call(this, values2.channels, scales);
       format3 = formatChannels;
     }
     const g = create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyIndirectTextStyles, this).call(applyTransform, this, { x: X3 && x4, y: Y3 && y4 }).call(
@@ -24623,7 +25280,7 @@ function getPath(anchor, m3, r, width, height) {
       return `M0,0l${m3 / 2},${-m3 / 2}v${m3 / 2 - h / 2}h${w}v${h}h${-w}v${m3 / 2 - h / 2}z`;
   }
 }
-function getSourceChannels({ channels }, scales) {
+function getSourceChannels(channels, scales) {
   const sources = {};
   let format3 = this.format;
   format3 = maybeExpandPairedFormat(format3, channels, "x");
@@ -24644,9 +25301,14 @@ function getSourceChannels({ channels }, scales) {
   for (const key in channels) {
     if (key in sources || key in format3 || ignoreChannels.has(key))
       continue;
+    if ((key === "x" || key === "y") && channels.geometry)
+      continue;
     const source = getSource(channels, key);
-    if (source)
+    if (source) {
+      if (source.scale == null && source.defaultScale === "color")
+        continue;
       sources[key] = source;
+    }
   }
   if (this.facet) {
     if (scales.fx && !("fx" in format3))
@@ -24679,7 +25341,7 @@ function maybeExpandPairedFormat(format3, channels, key) {
   return Object.fromEntries(entries);
 }
 function formatTitle(i, index3, { title }) {
-  return formatDefault(title.value[i], i);
+  return this.format.title(title.value[i], i);
 }
 function* formatChannels(i, index3, channels, scales, values2) {
   for (const key in channels) {
@@ -24951,6 +25613,8 @@ function plot(options = {}) {
     figure.append(...legends, svg2);
     if (caption != null)
       figure.append(createFigcaption(document2, caption));
+    if ("value" in svg2)
+      figure.value = svg2.value, delete svg2.value;
   }
   figure.scale = exposeScales(scales.scales);
   figure.legend = exposeLegends(scaleDescriptors, context, options);
@@ -24972,10 +25636,6 @@ function createFigcaption(document2, caption) {
   e.append(caption);
   return e;
 }
-function plotThis({ marks: marks2 = [], ...options } = {}) {
-  return plot({ ...options, marks: [...marks2, this] });
-}
-Mark.prototype.plot = plotThis;
 function flatMarks(marks2) {
   return marks2.flat(Infinity).filter((mark) => mark != null).map(markify);
 }
@@ -25005,7 +25665,7 @@ function applyScaleTransform(channel, options) {
     type: type2,
     percent,
     interval: interval2,
-    transform: transform2 = percent ? (x4) => x4 * 100 : maybeIntervalTransform(interval2, type2)
+    transform: transform2 = percent ? (x4) => x4 == null ? NaN : x4 * 100 : maybeIntervalTransform(interval2, type2)
   } = options[scale3] ?? {};
   if (transform2 == null)
     return;
@@ -25056,7 +25716,7 @@ function maybeTopFacet(facet, options) {
   const { x: x4, y: y4 } = facet;
   if (x4 == null && y4 == null)
     return;
-  const data = arrayify2(facet.data);
+  const data = dataify(facet.data);
   if (data == null)
     throw new Error("missing facet data");
   const channels = {};
@@ -25073,7 +25733,7 @@ function maybeMarkFacet(mark, topFacetState, options) {
     return;
   const { fx, fy } = mark;
   if (fx != null || fy != null) {
-    const data2 = arrayify2(mark.data ?? fx ?? fy);
+    const data2 = dataify(mark.data ?? fx ?? fy);
     if (data2 === void 0)
       throw new Error(`missing facet data in ${mark.ariaLabel}`);
     if (data2 === null)
@@ -25091,7 +25751,7 @@ function maybeMarkFacet(mark, topFacetState, options) {
   const { channels, groups: groups2, data } = topFacetState;
   if (mark.facet !== "auto" || mark.data === data)
     return { channels, groups: groups2 };
-  if (data.length > 0 && (groups2.size > 1 || groups2.size === 1 && channels.fx && channels.fy && [...groups2][0][1].size > 1) && arrayify2(mark.data)?.length === data.length) {
+  if (data.length > 0 && (groups2.size > 1 || groups2.size === 1 && channels.fx && channels.fy && [...groups2][0][1].size > 1) && lengthof(dataify(mark.data)) === lengthof(data)) {
     warn(
       `Warning: the ${mark.ariaLabel} mark appears to use faceted data, but isn\u2019t faceted. The mark data has the same length as the facet data and the mark facet option is "auto", but the mark data and facet data are distinct. If this mark should be faceted, set the mark facet option to true; otherwise, suppress this warning by setting the mark facet option to false.`
     );
@@ -25176,11 +25836,11 @@ function inferAxes(marks2, channelsByScale, options) {
   maybeAxis(axes, xAxis, axisX, "bottom", "top", options, x4);
   return axes;
 }
-function maybeAxis(axes, axis2, axisType, primary, secondary, defaults23, options) {
+function maybeAxis(axes, axis2, axisType, primary, secondary, defaults22, options) {
   if (!axis2)
     return;
   const both = isBoth(axis2);
-  options = axisOptions(both ? primary : axis2, defaults23, options);
+  options = axisOptions(both ? primary : axis2, defaults22, options);
   const { line: line2 } = options;
   if ((axisType === axisY || axisType === axisX) && line2 && !isNone(line2))
     axes.push(frame2(lineOptions(options)));
@@ -25196,8 +25856,8 @@ function maybeGrid(axes, grid, gridType, options) {
 function isBoth(value) {
   return /^\s*both\s*$/i.test(value);
 }
-function axisOptions(anchor, defaults23, {
-  line: line2 = defaults23.line,
+function axisOptions(anchor, defaults22, {
+  line: line2 = defaults22.line,
   ticks: ticks2,
   tickSize,
   tickSpacing,
@@ -25207,9 +25867,9 @@ function axisOptions(anchor, defaults23, {
   fontVariant,
   ariaLabel,
   ariaDescription,
-  label = defaults23.label,
+  label = defaults22.label,
   labelAnchor,
-  labelArrow = defaults23.labelArrow,
+  labelArrow = defaults22.labelArrow,
   labelOffset
 }) {
   return {
@@ -25306,6 +25966,8 @@ function actualDimensions({ fx, fy }, dimensions) {
 }
 function outerRange(scale3) {
   const domain = scale3.domain();
+  if (domain.length === 0)
+    return [0, scale3.bandwidth()];
   let x12 = scale3(domain[0]);
   let x22 = scale3(domain[domain.length - 1]);
   if (x22 < x12)
@@ -25362,17 +26024,17 @@ function curveAuto(context) {
 
 // node_modules/@observablehq/plot/src/transforms/bin.js
 function binX(outputs = { y: "count" }, options = {}) {
-  [outputs, options] = mergeOptions(outputs, options);
+  [outputs, options] = mergeOptions2(outputs, options);
   const { x: x4, y: y4 } = options;
   return binn(maybeBinValue(x4, options, identity6), null, null, y4, outputs, maybeInsetX(options));
 }
 function binY(outputs = { x: "count" }, options = {}) {
-  [outputs, options] = mergeOptions(outputs, options);
+  [outputs, options] = mergeOptions2(outputs, options);
   const { x: x4, y: y4 } = options;
   return binn(null, maybeBinValue(y4, options, identity6), x4, null, outputs, maybeInsetY(options));
 }
 function bin2(outputs = { fill: "count" }, options = {}) {
-  [outputs, options] = mergeOptions(outputs, options);
+  [outputs, options] = mergeOptions2(outputs, options);
   const { x: x4, y: y4 } = maybeBinValueTuple(options);
   return binn(x4, y4, null, null, outputs, maybeInsetX(maybeInsetY(options)));
 }
@@ -25519,7 +26181,7 @@ function binn(bx, by, gx, gy, {
     ...Object.fromEntries(outputs.map(({ name, output }) => [name, output]))
   };
 }
-function mergeOptions({ cumulative, domain, thresholds, interval: interval2, ...outputs }, options) {
+function mergeOptions2({ cumulative, domain, thresholds, interval: interval2, ...outputs }, options) {
   return [outputs, { cumulative, domain, thresholds, interval: interval2, ...options }];
 }
 function maybeBinValue(value, { cumulative, domain, thresholds, interval: interval2 }, defaultValue) {
@@ -25641,7 +26303,7 @@ function maybeThresholds(thresholds, interval2, defaultThresholds = thresholdAut
       case "auto":
         return thresholdAuto;
     }
-    return maybeUtcInterval(thresholds);
+    return utcInterval(thresholds);
   }
   return thresholds;
 }
@@ -25775,372 +26437,8 @@ var reduceY22 = {
   }
 };
 
-// node_modules/@observablehq/plot/src/transforms/identity.js
-function maybeIdentityX(options = {}) {
-  return hasX(options) ? options : { ...options, x: identity6 };
-}
-function maybeIdentityY(options = {}) {
-  return hasY(options) ? options : { ...options, y: identity6 };
-}
-
-// node_modules/@observablehq/plot/src/transforms/exclusiveFacets.js
-function exclusiveFacets(data, facets) {
-  if (facets.length === 1)
-    return { data, facets };
-  const n = data.length;
-  const O = new Uint8Array(n);
-  let overlaps = 0;
-  for (const facet of facets) {
-    for (const i of facet) {
-      if (O[i])
-        ++overlaps;
-      O[i] = 1;
-    }
-  }
-  if (overlaps === 0)
-    return { data, facets };
-  data = slice5(data);
-  const R = data[reindex] = new Uint32Array(n + overlaps);
-  facets = facets.map((facet) => slice5(facet, Uint32Array));
-  let j = n;
-  O.fill(0);
-  for (const facet of facets) {
-    for (let k2 = 0, m3 = facet.length; k2 < m3; ++k2) {
-      const i = facet[k2];
-      if (O[i])
-        facet[k2] = j, data[j] = data[i], R[j] = i, ++j;
-      else
-        R[i] = i;
-      O[i] = 1;
-    }
-  }
-  return { data, facets };
-}
-
-// node_modules/@observablehq/plot/src/transforms/stack.js
-function stackX(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions2(stackOptions);
-  const { y1: y12, y: y4 = y12, x: x4, ...rest } = options;
-  const [transform2, Y3, x12, x22] = stack(y4, x4, "y", "x", stackOptions, rest);
-  return { ...transform2, y1: y12, y: Y3, x1: x12, x2: x22, x: mid(x12, x22) };
-}
-function stackX1(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions2(stackOptions);
-  const { y1: y12, y: y4 = y12, x: x4 } = options;
-  const [transform2, Y3, X3] = stack(y4, x4, "y", "x", stackOptions, options);
-  return { ...transform2, y1: y12, y: Y3, x: X3 };
-}
-function stackX2(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions2(stackOptions);
-  const { y1: y12, y: y4 = y12, x: x4 } = options;
-  const [transform2, Y3, , X3] = stack(y4, x4, "y", "x", stackOptions, options);
-  return { ...transform2, y1: y12, y: Y3, x: X3 };
-}
-function stackY(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions2(stackOptions);
-  const { x1: x12, x: x4 = x12, y: y4, ...rest } = options;
-  const [transform2, X3, y12, y22] = stack(x4, y4, "x", "y", stackOptions, rest);
-  return { ...transform2, x1: x12, x: X3, y1: y12, y2: y22, y: mid(y12, y22) };
-}
-function stackY1(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions2(stackOptions);
-  const { x1: x12, x: x4 = x12, y: y4 } = options;
-  const [transform2, X3, Y3] = stack(x4, y4, "x", "y", stackOptions, options);
-  return { ...transform2, x1: x12, x: X3, y: Y3 };
-}
-function stackY2(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions2(stackOptions);
-  const { x1: x12, x: x4 = x12, y: y4 } = options;
-  const [transform2, X3, , Y3] = stack(x4, y4, "x", "y", stackOptions, options);
-  return { ...transform2, x1: x12, x: X3, y: Y3 };
-}
-function maybeStackX({ x: x4, x1: x12, x2: x22, ...options } = {}) {
-  options = withTip(options, "y");
-  if (x12 === void 0 && x22 === void 0)
-    return stackX({ x: x4, ...options });
-  [x12, x22] = maybeZero(x4, x12, x22);
-  return { ...options, x1: x12, x2: x22 };
-}
-function maybeStackY({ y: y4, y1: y12, y2: y22, ...options } = {}) {
-  options = withTip(options, "x");
-  if (y12 === void 0 && y22 === void 0)
-    return stackY({ y: y4, ...options });
-  [y12, y22] = maybeZero(y4, y12, y22);
-  return { ...options, y1: y12, y2: y22 };
-}
-function mergeOptions2(options) {
-  const { offset: offset2, order, reverse: reverse3, ...rest } = options;
-  return [{ offset: offset2, order, reverse: reverse3 }, rest];
-}
-var lengthy = { length: true };
-function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: reverse3 }, options) {
-  if (y4 === null)
-    throw new Error(`stack requires ${ky2}`);
-  const z = maybeZ(options);
-  const [X3, setX] = maybeColumn(x4);
-  const [Y13, setY1] = column(y4);
-  const [Y23, setY2] = column(y4);
-  Y13.hint = Y23.hint = lengthy;
-  offset2 = maybeOffset(offset2);
-  order = maybeOrder2(order, offset2, ky2);
-  return [
-    basic(options, (data, facets, plotOptions) => {
-      ({ data, facets } = exclusiveFacets(data, facets));
-      const X4 = x4 == null ? void 0 : setX(maybeApplyInterval(valueof(data, x4), plotOptions?.[kx2]));
-      const Y3 = valueof(data, y4, Float64Array);
-      const Z = valueof(data, z);
-      const compare = order && order(data, X4, Y3, Z);
-      const n = data.length;
-      const Y14 = setY1(new Float64Array(n));
-      const Y24 = setY2(new Float64Array(n));
-      const facetstacks = [];
-      for (const facet of facets) {
-        const stacks = X4 ? Array.from(group(facet, (i) => X4[i]).values()) : [facet];
-        if (compare)
-          for (const stack2 of stacks)
-            stack2.sort(compare);
-        for (const stack2 of stacks) {
-          let yn = 0;
-          let yp = 0;
-          if (reverse3)
-            stack2.reverse();
-          for (const i of stack2) {
-            const y5 = Y3[i];
-            if (y5 < 0)
-              yn = Y24[i] = (Y14[i] = yn) + y5;
-            else if (y5 > 0)
-              yp = Y24[i] = (Y14[i] = yp) + y5;
-            else
-              Y24[i] = Y14[i] = yp;
-          }
-        }
-        facetstacks.push(stacks);
-      }
-      if (offset2)
-        offset2(facetstacks, Y14, Y24, Z);
-      return { data, facets };
-    }),
-    X3,
-    Y13,
-    Y23
-  ];
-}
-function maybeOffset(offset2) {
-  if (offset2 == null)
-    return;
-  if (typeof offset2 === "function")
-    return offset2;
-  switch (`${offset2}`.toLowerCase()) {
-    case "expand":
-    case "normalize":
-      return offsetExpand;
-    case "center":
-    case "silhouette":
-      return offsetCenter;
-    case "wiggle":
-      return offsetWiggle;
-  }
-  throw new Error(`unknown offset: ${offset2}`);
-}
-function extent2(stack2, Y23) {
-  let min4 = 0, max5 = 0;
-  for (const i of stack2) {
-    const y4 = Y23[i];
-    if (y4 < min4)
-      min4 = y4;
-    if (y4 > max5)
-      max5 = y4;
-  }
-  return [min4, max5];
-}
-function offsetExpand(facetstacks, Y13, Y23) {
-  for (const stacks of facetstacks) {
-    for (const stack2 of stacks) {
-      const [yn, yp] = extent2(stack2, Y23);
-      for (const i of stack2) {
-        const m3 = 1 / (yp - yn || 1);
-        Y13[i] = m3 * (Y13[i] - yn);
-        Y23[i] = m3 * (Y23[i] - yn);
-      }
-    }
-  }
-}
-function offsetCenter(facetstacks, Y13, Y23) {
-  for (const stacks of facetstacks) {
-    for (const stack2 of stacks) {
-      const [yn, yp] = extent2(stack2, Y23);
-      for (const i of stack2) {
-        const m3 = (yp + yn) / 2;
-        Y13[i] -= m3;
-        Y23[i] -= m3;
-      }
-    }
-    offsetZero(stacks, Y13, Y23);
-  }
-  offsetCenterFacets(facetstacks, Y13, Y23);
-}
-function offsetWiggle(facetstacks, Y13, Y23, Z) {
-  for (const stacks of facetstacks) {
-    const prev = new InternMap();
-    let y4 = 0;
-    for (const stack2 of stacks) {
-      let j = -1;
-      const Fi = stack2.map((i) => Math.abs(Y23[i] - Y13[i]));
-      const Df = stack2.map((i) => {
-        j = Z ? Z[i] : ++j;
-        const value = Y23[i] - Y13[i];
-        const diff = prev.has(j) ? value - prev.get(j) : 0;
-        prev.set(j, value);
-        return diff;
-      });
-      const Cf1 = [0, ...cumsum(Df)];
-      for (const i of stack2) {
-        Y13[i] += y4;
-        Y23[i] += y4;
-      }
-      const s1 = sum(Fi);
-      if (s1)
-        y4 -= sum(Fi, (d, i) => (Df[i] / 2 + Cf1[i]) * d) / s1;
-    }
-    offsetZero(stacks, Y13, Y23);
-  }
-  offsetCenterFacets(facetstacks, Y13, Y23);
-}
-function offsetZero(stacks, Y13, Y23) {
-  const m3 = min(stacks, (stack2) => min(stack2, (i) => Y13[i]));
-  for (const stack2 of stacks) {
-    for (const i of stack2) {
-      Y13[i] -= m3;
-      Y23[i] -= m3;
-    }
-  }
-}
-function offsetCenterFacets(facetstacks, Y13, Y23) {
-  const n = facetstacks.length;
-  if (n === 1)
-    return;
-  const facets = facetstacks.map((stacks) => stacks.flat());
-  const m3 = facets.map((I) => (min(I, (i) => Y13[i]) + max(I, (i) => Y23[i])) / 2);
-  const m0 = min(m3);
-  for (let j = 0; j < n; j++) {
-    const p = m0 - m3[j];
-    for (const i of facets[j]) {
-      Y13[i] += p;
-      Y23[i] += p;
-    }
-  }
-}
-function maybeOrder2(order, offset2, ky2) {
-  if (order === void 0 && offset2 === offsetWiggle)
-    return orderInsideOut(ascendingDefined2);
-  if (order == null)
-    return;
-  if (typeof order === "string") {
-    const negate2 = order.startsWith("-");
-    const compare = negate2 ? descendingDefined : ascendingDefined2;
-    switch ((negate2 ? order.slice(1) : order).toLowerCase()) {
-      case "value":
-      case ky2:
-        return orderY(compare);
-      case "z":
-        return orderZ(compare);
-      case "sum":
-        return orderSum(compare);
-      case "appearance":
-        return orderAppearance(compare);
-      case "inside-out":
-        return orderInsideOut(compare);
-    }
-    return orderAccessor(field(order));
-  }
-  if (typeof order === "function")
-    return (order.length === 1 ? orderAccessor : orderComparator)(order);
-  if (Array.isArray(order))
-    return orderGiven(order);
-  throw new Error(`invalid order: ${order}`);
-}
-function orderY(compare) {
-  return (data, X3, Y3) => (i, j) => compare(Y3[i], Y3[j]);
-}
-function orderZ(compare) {
-  return (data, X3, Y3, Z) => (i, j) => compare(Z[i], Z[j]);
-}
-function orderSum(compare) {
-  return orderZDomain(
-    compare,
-    (data, X3, Y3, Z) => groupSort(
-      range4(data),
-      (I) => sum(I, (i) => Y3[i]),
-      (i) => Z[i]
-    )
-  );
-}
-function orderAppearance(compare) {
-  return orderZDomain(
-    compare,
-    (data, X3, Y3, Z) => groupSort(
-      range4(data),
-      (I) => X3[greatest(I, (i) => Y3[i])],
-      (i) => Z[i]
-    )
-  );
-}
-function orderInsideOut(compare) {
-  return orderZDomain(compare, (data, X3, Y3, Z) => {
-    const I = range4(data);
-    const K2 = groupSort(
-      I,
-      (I2) => X3[greatest(I2, (i) => Y3[i])],
-      (i) => Z[i]
-    );
-    const sums = rollup(
-      I,
-      (I2) => sum(I2, (i) => Y3[i]),
-      (i) => Z[i]
-    );
-    const Kp = [], Kn = [];
-    let s2 = 0;
-    for (const k2 of K2) {
-      if (s2 < 0) {
-        s2 += sums.get(k2);
-        Kp.push(k2);
-      } else {
-        s2 -= sums.get(k2);
-        Kn.push(k2);
-      }
-    }
-    return Kn.reverse().concat(Kp);
-  });
-}
-function orderAccessor(f) {
-  return (data) => {
-    const O = valueof(data, f);
-    return (i, j) => ascendingDefined2(O[i], O[j]);
-  };
-}
-function orderComparator(f) {
-  return (data) => (i, j) => f(data[i], data[j]);
-}
-function orderGiven(domain) {
-  return orderZDomain(ascendingDefined2, () => domain);
-}
-function orderZDomain(compare, domain) {
-  return (data, X3, Y3, Z) => {
-    if (!Z)
-      throw new Error("missing channel: z");
-    const map6 = new InternMap(domain(data, X3, Y3, Z).map((d, i) => [d, i]));
-    return (i, j) => compare(map6.get(Z[i]), map6.get(Z[j]));
-  };
-}
-
 // node_modules/@observablehq/plot/src/marks/area.js
-var defaults6 = {
+var defaults7 = {
   ariaLabel: "area",
   strokeWidth: 1,
   strokeLinecap: "round",
@@ -26160,7 +26458,7 @@ var Area = class extends Mark {
         z: { value: maybeZ(options), optional: true }
       },
       options,
-      defaults6
+      defaults7
     );
     this.z = z;
     this.curve = maybeCurve(curve, tension);
@@ -26193,7 +26491,7 @@ function areaY(data, options) {
 }
 
 // node_modules/@observablehq/plot/src/marks/link.js
-var defaults7 = {
+var defaults8 = {
   ariaLabel: "link",
   fill: "none",
   stroke: "currentColor",
@@ -26211,7 +26509,7 @@ var Link = class extends Mark {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults7
+      defaults8
     );
     this.curve = maybeCurveAuto(curve, tension);
     markers(this, options);
@@ -26277,7 +26575,7 @@ function maybeSameValue(x4, x12, x22) {
 }
 
 // node_modules/@observablehq/plot/src/marks/arrow.js
-var defaults8 = {
+var defaults9 = {
   ariaLabel: "arrow",
   fill: "none",
   stroke: "currentColor",
@@ -26310,7 +26608,7 @@ var Arrow = class extends Mark {
         y2: { value: y22, scale: "y", optional: true }
       },
       options,
-      defaults8
+      defaults9
     );
     this.bend = bend === true ? 22.5 : Math.max(-90, Math.min(90, bend));
     this.headAngle = +headAngle;
@@ -26403,21 +26701,25 @@ function arrow(data, { x: x4, x1: x12, x2: x22, y: y4, y1: y12, y2: y22, ...opti
 }
 
 // node_modules/@observablehq/plot/src/marks/bar.js
+var barDefaults = {
+  ariaLabel: "bar"
+};
 var AbstractBar = class extends Mark {
-  constructor(data, channels, options = {}, defaults23) {
-    super(data, channels, options, defaults23);
-    const { inset = 0, insetTop = inset, insetRight = inset, insetBottom = inset, insetLeft = inset, rx, ry } = options;
-    this.insetTop = number5(insetTop);
-    this.insetRight = number5(insetRight);
-    this.insetBottom = number5(insetBottom);
-    this.insetLeft = number5(insetLeft);
-    this.rx = impliedString(rx, "auto");
-    this.ry = impliedString(ry, "auto");
+  constructor(data, channels, options = {}, defaults22 = barDefaults) {
+    super(data, channels, options, defaults22);
+    rectInsets(this, options);
+    rectRadii(this, options);
   }
   render(index3, scales, channels, dimensions, context) {
-    const { rx, ry } = this;
+    const { rx, ry, rx1y1, rx1y2, rx2y1, rx2y2 } = this;
+    const x4 = this._x(scales, channels, dimensions);
+    const y4 = this._y(scales, channels, dimensions);
+    const w = this._width(scales, channels, dimensions);
+    const h = this._height(scales, channels, dimensions);
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(this._transform, this, scales).call(
-      (g) => g.selectAll().data(index3).enter().append("rect").call(applyDirectStyles, this).attr("x", this._x(scales, channels, dimensions)).attr("width", this._width(scales, channels, dimensions)).attr("y", this._y(scales, channels, dimensions)).attr("height", this._height(scales, channels, dimensions)).call(applyAttr, "rx", rx).call(applyAttr, "ry", ry).call(applyChannelStyles, this, channels)
+      (g) => g.selectAll().data(index3).enter().call(
+        rx1y1 || rx1y2 || rx2y1 || rx2y2 ? (g2) => g2.append("path").call(applyDirectStyles, this).call(applyRoundedRect, x4, y4, add2(x4, w), add2(y4, h), this).call(applyChannelStyles, this, channels) : (g2) => g2.append("rect").call(applyDirectStyles, this).attr("x", x4).attr("width", w).attr("y", y4).attr("height", h).call(applyAttr, "rx", rx).call(applyAttr, "ry", ry).call(applyChannelStyles, this, channels)
+      )
     ).node();
   }
   _x(scales, { x: X3 }, { marginLeft }) {
@@ -26439,11 +26741,11 @@ var AbstractBar = class extends Mark {
     return Math.max(0, bandwidth - insetTop - insetBottom);
   }
 };
-var defaults9 = {
-  ariaLabel: "bar"
-};
+function add2(a4, b) {
+  return typeof a4 === "function" && typeof b === "function" ? (i) => a4(i) + b(i) : typeof a4 === "function" ? (i) => a4(i) + b : typeof b === "function" ? (i) => a4 + b(i) : a4 + b;
+}
 var BarX = class extends AbstractBar {
-  constructor(data, options = {}) {
+  constructor(data, options = {}, defaults22) {
     const { x1: x12, x2: x22, y: y4 } = options;
     super(
       data,
@@ -26453,7 +26755,7 @@ var BarX = class extends AbstractBar {
         y: { value: y4, scale: "y", type: "band", optional: true }
       },
       options,
-      defaults9
+      defaults22
     );
   }
   _transform(selection2, mark, { x: x4 }) {
@@ -26469,7 +26771,7 @@ var BarX = class extends AbstractBar {
   }
 };
 var BarY = class extends AbstractBar {
-  constructor(data, options = {}) {
+  constructor(data, options = {}, defaults22) {
     const { x: x4, y1: y12, y2: y22 } = options;
     super(
       data,
@@ -26479,7 +26781,7 @@ var BarY = class extends AbstractBar {
         x: { value: x4, scale: "x", type: "band", optional: true }
       },
       options,
-      defaults9
+      defaults22
     );
   }
   _transform(selection2, mark, { y: y4 }) {
@@ -26715,82 +27017,6 @@ function lineX(data, { x: x4 = identity6, y: y4 = indexOf, ...options } = {}) {
 }
 function lineY(data, { x: x4 = indexOf, y: y4 = identity6, ...options } = {}) {
   return new Line(data, maybeDenseIntervalX({ ...options, x: x4, y: y4 }));
-}
-
-// node_modules/@observablehq/plot/src/marks/rect.js
-var defaults13 = {
-  ariaLabel: "rect"
-};
-var Rect = class extends Mark {
-  constructor(data, options = {}) {
-    const {
-      x1: x12,
-      y1: y12,
-      x2: x22,
-      y2: y22,
-      inset = 0,
-      insetTop = inset,
-      insetRight = inset,
-      insetBottom = inset,
-      insetLeft = inset,
-      rx,
-      ry
-    } = options;
-    super(
-      data,
-      {
-        x1: { value: x12, scale: "x", type: x12 != null && x22 == null ? "band" : void 0, optional: true },
-        y1: { value: y12, scale: "y", type: y12 != null && y22 == null ? "band" : void 0, optional: true },
-        x2: { value: x22, scale: "x", optional: true },
-        y2: { value: y22, scale: "y", optional: true }
-      },
-      options,
-      defaults13
-    );
-    this.insetTop = number5(insetTop);
-    this.insetRight = number5(insetRight);
-    this.insetBottom = number5(insetBottom);
-    this.insetLeft = number5(insetLeft);
-    this.rx = impliedString(rx, "auto");
-    this.ry = impliedString(ry, "auto");
-  }
-  render(index3, scales, channels, dimensions, context) {
-    const { x: x4, y: y4 } = scales;
-    const { x1: X13, y1: Y13, x2: X23, y2: Y23 } = channels;
-    const { marginTop, marginRight, marginBottom, marginLeft, width, height } = dimensions;
-    const { projection: projection3 } = context;
-    const { insetTop, insetRight, insetBottom, insetLeft, rx, ry } = this;
-    const bx = (x4?.bandwidth ? x4.bandwidth() : 0) - insetLeft - insetRight;
-    const by = (y4?.bandwidth ? y4.bandwidth() : 0) - insetTop - insetBottom;
-    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, {}, 0, 0).call(
-      (g) => g.selectAll().data(index3).enter().append("rect").call(applyDirectStyles, this).attr(
-        "x",
-        X13 && (projection3 || !isCollapsed(x4)) ? X23 ? (i) => Math.min(X13[i], X23[i]) + insetLeft : (i) => X13[i] + insetLeft : marginLeft + insetLeft
-      ).attr(
-        "y",
-        Y13 && (projection3 || !isCollapsed(y4)) ? Y23 ? (i) => Math.min(Y13[i], Y23[i]) + insetTop : (i) => Y13[i] + insetTop : marginTop + insetTop
-      ).attr(
-        "width",
-        X13 && (projection3 || !isCollapsed(x4)) ? X23 ? (i) => Math.max(0, Math.abs(X23[i] - X13[i]) + bx) : bx : width - marginRight - marginLeft - insetRight - insetLeft
-      ).attr(
-        "height",
-        Y13 && (projection3 || !isCollapsed(y4)) ? Y23 ? (i) => Math.max(0, Math.abs(Y13[i] - Y23[i]) + by) : by : height - marginTop - marginBottom - insetTop - insetBottom
-      ).call(applyAttr, "rx", rx).call(applyAttr, "ry", ry).call(applyChannelStyles, this, channels)
-    ).node();
-  }
-};
-function rect(data, options) {
-  return new Rect(data, maybeTrivialIntervalX(maybeTrivialIntervalY(options)));
-}
-function rectX(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, y: indexOf, x2: identity6, interval: 1 };
-  return new Rect(data, maybeStackX(maybeTrivialIntervalY(maybeIdentityX(options))));
-}
-function rectY(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, x: indexOf, y2: identity6, interval: 1 };
-  return new Rect(data, maybeStackY(maybeTrivialIntervalX(maybeIdentityY(options))));
 }
 
 // node_modules/@observablehq/plot/src/marks/auto.js
@@ -27460,7 +27686,7 @@ function reduceLast2(k2, s2, strict) {
 }
 
 // node_modules/@observablehq/plot/src/marks/bollinger.js
-var defaults14 = {
+var defaults13 = {
   n: 20,
   k: 2,
   color: "currentColor",
@@ -27471,9 +27697,9 @@ var defaults14 = {
 function bollingerX(data, {
   x: x4 = identity6,
   y: y4,
-  k: k2 = defaults14.k,
-  color: color3 = defaults14.color,
-  opacity: opacity2 = defaults14.opacity,
+  k: k2 = defaults13.k,
+  color: color3 = defaults13.color,
+  opacity: opacity2 = defaults13.opacity,
   fill = color3,
   fillOpacity = opacity2,
   stroke = color3,
@@ -27495,9 +27721,9 @@ function bollingerX(data, {
 function bollingerY(data, {
   x: x4,
   y: y4 = identity6,
-  k: k2 = defaults14.k,
-  color: color3 = defaults14.color,
-  opacity: opacity2 = defaults14.opacity,
+  k: k2 = defaults13.k,
+  color: color3 = defaults13.color,
+  opacity: opacity2 = defaults13.opacity,
   fill = color3,
   fillOpacity = opacity2,
   stroke = color3,
@@ -27516,19 +27742,19 @@ function bollingerY(data, {
     isNoneish(stroke) ? null : lineY(data, map5({ y: bollinger(options) }, { x: x4, y: y4, stroke, strokeOpacity, strokeWidth, ...options }))
   );
 }
-function bollinger({ n = defaults14.n, k: k2 = 0, strict = defaults14.strict, anchor = defaults14.anchor } = {}) {
+function bollinger({ n = defaults13.n, k: k2 = 0, strict = defaults13.strict, anchor = defaults13.anchor } = {}) {
   return window2({ k: n, reduce: (Y3) => mean(Y3) + k2 * (deviation(Y3) || 0), strict, anchor });
 }
 
 // node_modules/@observablehq/plot/src/marks/tick.js
-var defaults15 = {
+var defaults14 = {
   ariaLabel: "tick",
   fill: null,
   stroke: "currentColor"
 };
 var AbstractTick = class extends Mark {
   constructor(data, channels, options) {
-    super(data, channels, options, defaults15);
+    super(data, channels, options, defaults14);
     markers(this, options);
   }
   render(index3, scales, channels, dimensions, context) {
@@ -27612,6 +27838,7 @@ function tickY(data, { y: y4 = identity6, ...options } = {}) {
 function boxX(data, {
   x: x4 = identity6,
   y: y4 = null,
+  r,
   fill = "#ccc",
   fillOpacity,
   stroke = "currentColor",
@@ -27625,12 +27852,13 @@ function boxX(data, {
     ruleY(data, group3({ x1: loqr1, x2: hiqr2 }, { x: x4, y: y4, stroke, strokeOpacity, ...options })),
     barX(data, group3({ x1: "p25", x2: "p75" }, { x: x4, y: y4, fill, fillOpacity, ...options })),
     tickX(data, group3({ x: "p50" }, { x: x4, y: y4, stroke, strokeOpacity, strokeWidth, sort: sort3, ...options })),
-    dot(data, map5({ x: oqr }, { x: x4, y: y4, z: y4, stroke, strokeOpacity, ...options }))
+    dot(data, map5({ x: oqr }, { x: x4, y: y4, z: y4, r, stroke, strokeOpacity, ...options }))
   );
 }
 function boxY(data, {
   y: y4 = identity6,
   x: x4 = null,
+  r,
   fill = "#ccc",
   fillOpacity,
   stroke = "currentColor",
@@ -27644,7 +27872,7 @@ function boxY(data, {
     ruleX(data, group3({ y1: loqr1, y2: hiqr2 }, { x: x4, y: y4, stroke, strokeOpacity, ...options })),
     barY(data, group3({ y1: "p25", y2: "p75" }, { x: x4, y: y4, fill, fillOpacity, ...options })),
     tickY(data, group3({ y: "p50" }, { x: x4, y: y4, stroke, strokeOpacity, strokeWidth, sort: sort3, ...options })),
-    dot(data, map5({ y: oqr }, { x: x4, y: y4, z: x4, stroke, strokeOpacity, ...options }))
+    dot(data, map5({ y: oqr }, { x: x4, y: y4, z: x4, r, stroke, strokeOpacity, ...options }))
   );
 }
 function oqr(values2) {
@@ -27668,7 +27896,7 @@ function quartile3(values2) {
 }
 
 // node_modules/@observablehq/plot/src/marks/raster.js
-var defaults16 = {
+var defaults15 = {
   ariaLabel: "raster",
   stroke: null,
   pixelSize: 1
@@ -27686,7 +27914,7 @@ function integer(input, name) {
   return x4;
 }
 var AbstractRaster = class extends Mark {
-  constructor(data, channels, options = {}, defaults23) {
+  constructor(data, channels, options = {}, defaults22) {
     let {
       width,
       height,
@@ -27696,7 +27924,7 @@ var AbstractRaster = class extends Mark {
       y1: y12 = y4 == null ? 0 : void 0,
       x2: x22 = x4 == null ? width : void 0,
       y2: y22 = y4 == null ? height : void 0,
-      pixelSize = defaults23.pixelSize,
+      pixelSize = defaults22.pixelSize,
       blur: blur3 = 0,
       interpolate
     } = options;
@@ -27734,7 +27962,7 @@ var AbstractRaster = class extends Mark {
         ...channels
       },
       options,
-      defaults23
+      defaults22
     );
     this.width = width;
     this.height = height;
@@ -27753,7 +27981,7 @@ var Raster = class extends AbstractRaster {
       if (maybeColorChannel(fill)[0] !== void 0)
         options = sampler("fill", options);
     }
-    super(data, void 0, options, defaults16);
+    super(data, void 0, options, defaults15);
     this.imageRendering = impliedString(imageRendering, "auto");
   }
   // Ignore the color scale, so the fill channel is returned unscaled.
@@ -27945,17 +28173,18 @@ function interpolatorBarycentric({ random = lcg(42) } = {}) {
             continue;
           const xp = x4 + 0.5;
           const yp = y4 + 0.5;
-          const ga = ((By - Cy) * (xp - Cx) + (yp - Cy) * (Cx - Bx)) / z;
-          if (ga < 0)
+          const s2 = Math.sign(z);
+          const ga = (By - Cy) * (xp - Cx) + (yp - Cy) * (Cx - Bx);
+          if (ga * s2 < 0)
             continue;
-          const gb = ((Cy - Ay) * (xp - Cx) + (yp - Cy) * (Ax - Cx)) / z;
-          if (gb < 0)
+          const gb = (Cy - Ay) * (xp - Cx) + (yp - Cy) * (Ax - Cx);
+          if (gb * s2 < 0)
             continue;
-          const gc = 1 - ga - gb;
-          if (gc < 0)
+          const gc = z - (ga + gb);
+          if (gc * s2 < 0)
             continue;
           const i2 = x4 + width * y4;
-          W[i2] = mix(va, ga, vb, gb, vc, gc, x4, y4);
+          W[i2] = mix(va, ga / z, vb, gb / z, vc, gc / z, x4, y4);
           S[i2] = 1;
         }
       }
@@ -28118,7 +28347,7 @@ function denseY(y12, y22, width, height) {
 }
 
 // node_modules/@observablehq/plot/src/marks/contour.js
-var defaults17 = {
+var defaults16 = {
   ariaLabel: "contour",
   fill: "none",
   stroke: "currentColor",
@@ -28127,7 +28356,7 @@ var defaults17 = {
 };
 var Contour = class extends AbstractRaster {
   constructor(data, { smooth = true, value, ...options } = {}) {
-    const channels = styles({}, options, defaults17);
+    const channels = styles({}, options, defaults16);
     if (value === void 0) {
       for (const key in channels) {
         if (channels[key].value != null) {
@@ -28158,7 +28387,7 @@ var Contour = class extends AbstractRaster {
       if (interpolate === void 0)
         options.interpolate = "nearest";
     }
-    super(data, { value: { value, optional: true } }, contourGeometry(options), defaults17);
+    super(data, { value: { value, optional: true } }, contourGeometry(options), defaults16);
     const contourChannels = { geometry: { value: identity6 } };
     for (const key in this.channels) {
       const channel = this.channels[key];
@@ -28459,7 +28688,7 @@ var DelaunayLink = class extends Mark {
   }
 };
 var AbstractDelaunayMark = class extends Mark {
-  constructor(data, options = {}, defaults23, zof = ({ z }) => z) {
+  constructor(data, options = {}, defaults22, zof = ({ z }) => z) {
     const { x: x4, y: y4 } = options;
     super(
       data,
@@ -28469,7 +28698,7 @@ var AbstractDelaunayMark = class extends Mark {
         z: { value: zof(options), optional: true }
       },
       options,
-      defaults23
+      defaults22
     );
   }
   render(index3, scales, channels, dimensions, context) {
@@ -28515,25 +28744,38 @@ var Voronoi2 = class extends Mark {
         y: { value: y4, scale: "y", optional: true },
         z: { value: z, optional: true }
       },
-      options,
+      initializer(options, function(data2, facets, channels, scales, dimensions, context) {
+        let { x: X3, y: Y3, z: Z } = channels;
+        ({ x: X3, y: Y3 } = applyPosition(channels, scales, context));
+        Z = Z?.value;
+        const C3 = new Array((X3 ?? Y3).length).fill(null);
+        const [cx, cy] = applyFrameAnchor(this, dimensions);
+        const xi = X3 ? (i) => X3[i] : constant2(cx);
+        const yi = Y3 ? (i) => Y3[i] : constant2(cy);
+        for (let I of facets) {
+          if (X3)
+            I = I.filter((i) => defined(xi(i)));
+          if (Y3)
+            I = I.filter((i) => defined(yi(i)));
+          for (const [, J] of maybeGroup(I, Z)) {
+            const delaunay = Delaunay.from(J, xi, yi);
+            const voronoi2 = voronoiof(delaunay, dimensions);
+            for (let i = 0, n = J.length; i < n; ++i) {
+              C3[J[i]] = voronoi2.renderCell(i);
+            }
+          }
+        }
+        return { data: data2, facets, channels: { cells: { value: C3 } } };
+      }),
       voronoiDefaults
     );
   }
   render(index3, scales, channels, dimensions, context) {
     const { x: x4, y: y4 } = scales;
-    const { x: X3, y: Y3, z: Z } = channels;
-    const [cx, cy] = applyFrameAnchor(this, dimensions);
-    const xi = X3 ? (i) => X3[i] : constant2(cx);
-    const yi = Y3 ? (i) => Y3[i] : constant2(cy);
-    const mark = this;
-    function cells(index4) {
-      const delaunay = Delaunay.from(index4, xi, yi);
-      const voronoi2 = voronoiof(delaunay, dimensions);
-      select_default2(this).selectAll().data(index4).enter().append("path").call(applyDirectStyles, mark).attr("d", (_, i) => voronoi2.renderCell(i)).call(applyChannelStyles, mark, channels);
-    }
-    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, { x: X3 && x4, y: Y3 && y4 }).call(
-      Z ? (g) => g.selectAll().data(group(index3, (i) => Z[i]).values()).enter().append("g").each(cells) : (g) => g.datum(index3).each(cells)
-    ).node();
+    const { x: X3, y: Y3, cells: C3 } = channels;
+    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, { x: X3 && x4, y: Y3 && y4 }).call((g) => {
+      g.selectAll().data(index3).enter().append("path").call(applyDirectStyles, this).attr("d", (i) => C3[i]).call(applyChannelStyles, this, channels);
+    }).node();
   }
 };
 var VoronoiMesh = class extends AbstractDelaunayMark {
@@ -28562,15 +28804,15 @@ function delaunayMesh(data, options) {
 function hull(data, options) {
   return delaunayMark(Hull, data, options);
 }
-function voronoi(data, options) {
-  return delaunayMark(Voronoi2, data, options);
+function voronoi(data, { x: x4, y: y4, initializer: initializer2, ...options } = {}) {
+  return delaunayMark(Voronoi2, data, { ...basic({ ...options, x: x4, y: y4 }, exclusiveFacets), initializer: initializer2 });
 }
 function voronoiMesh(data, options) {
   return delaunayMark(VoronoiMesh, data, options);
 }
 
 // node_modules/@observablehq/plot/src/marks/density.js
-var defaults18 = {
+var defaults17 = {
   ariaLabel: "density",
   fill: "none",
   stroke: "currentColor",
@@ -28589,7 +28831,7 @@ var Density = class extends Mark {
         weight: { value: weight, optional: true }
       },
       densityInitializer({ ...options, fill, stroke }, fillDensity, strokeDensity),
-      defaults18
+      defaults17
     );
     if (fillDensity)
       this.fill = void 0;
@@ -28692,13 +28934,19 @@ function isDensity(value) {
 }
 
 // node_modules/@observablehq/plot/src/marks/difference.js
-function differenceY(data, {
+function differenceX(data, options) {
+  return differenceK("x", data, options);
+}
+function differenceY(data, options) {
+  return differenceK("y", data, options);
+}
+function differenceK(k2, data, {
   x1: x12,
   x2: x22,
   y1: y12,
   y2: y22,
-  x: x4 = x12 === void 0 && x22 === void 0 ? indexOf : void 0,
-  y: y4 = y12 === void 0 && y22 === void 0 ? identity6 : void 0,
+  x: x4 = x12 === void 0 && x22 === void 0 ? k2 === "y" ? indexOf : identity6 : void 0,
+  y: y4 = y12 === void 0 && y22 === void 0 ? k2 === "x" ? indexOf : identity6 : void 0,
   fill,
   // ignored
   positiveFill = "#3ca951",
@@ -28717,9 +28965,13 @@ function differenceY(data, {
 } = {}) {
   [x12, x22] = memoTuple(x4, x12, x22);
   [y12, y22] = memoTuple(y4, y12, y22);
-  if (x12 === x22 && y12 === y22)
-    y12 = memo(0);
-  ({ tip: tip2 } = withTip({ tip: tip2 }, "x"));
+  if (x12 === x22 && y12 === y22) {
+    if (k2 === "y")
+      y12 = memo(0);
+    else
+      x12 = memo(0);
+  }
+  ({ tip: tip2 } = withTip({ tip: tip2 }, k2 === "y" ? "x" : "y"));
   return marks(
     !isNoneish(positiveFill) ? Object.assign(
       area(data, {
@@ -28730,7 +28982,7 @@ function differenceY(data, {
         z,
         fill: positiveFill,
         fillOpacity: positiveFillOpacity,
-        render: composeRender(render2, clipDifferenceY(true)),
+        render: composeRender(render2, clipDifference(k2, true)),
         clip,
         ...options
       }),
@@ -28745,7 +28997,7 @@ function differenceY(data, {
         z,
         fill: negativeFill,
         fillOpacity: negativeFillOpacity,
-        render: composeRender(render2, clipDifferenceY(false)),
+        render: composeRender(render2, clipDifference(k2, false)),
         clip,
         ...options
       }),
@@ -28783,15 +29035,20 @@ function memo(v2) {
   const { value, label = labelof(value) } = maybeValue(v2);
   return { transform: (data) => V || (V = valueof(data, value)), label };
 }
-function clipDifferenceY(positive2) {
+function clipDifference(k2, positive2) {
+  const f = k2 === "x" ? "y" : "x";
+  const f1 = `${f}1`;
+  const f2 = `${f}2`;
+  const k1 = `${k2}1`;
+  const k22 = `${k2}2`;
   return (index3, scales, channels, dimensions, context, next) => {
-    const { x1: x12, x2: x22 } = channels;
-    const { height } = dimensions;
-    const y12 = new Float32Array(x12.length);
-    const y22 = new Float32Array(x22.length);
-    (positive2 === inferScaleOrder(scales.y) < 0 ? y12 : y22).fill(height);
-    const oc = next(index3, scales, { ...channels, x2: x12, y2: y22 }, dimensions, context);
-    const og = next(index3, scales, { ...channels, x1: x22, y1: y12 }, dimensions, context);
+    const { [f1]: F1, [f2]: F2 } = channels;
+    const K1 = new Float32Array(F1.length);
+    const K2 = new Float32Array(F2.length);
+    const m3 = dimensions[k2 === "y" ? "height" : "width"];
+    (positive2 === inferScaleOrder(scales[k2]) < 0 ? K1 : K2).fill(m3);
+    const oc = next(index3, scales, { ...channels, [f2]: F1, [k22]: K2 }, dimensions, context);
+    const og = next(index3, scales, { ...channels, [f1]: F2, [k1]: K1 }, dimensions, context);
     const c6 = oc.querySelector("g") ?? oc;
     const g = og.querySelector("g") ?? og;
     for (let i = 0; c6.firstChild; i += 2) {
@@ -28805,8 +29062,45 @@ function clipDifferenceY(positive2) {
   };
 }
 
+// node_modules/@observablehq/plot/src/transforms/centroid.js
+function centroid({ geometry = identity6, ...options } = {}) {
+  const getG = memoize1((data) => valueof(data, geometry));
+  return initializer(
+    // Suppress defaults for x and y since they will be computed by the initializer.
+    // Propagate the (memoized) geometry channel in case it’s still needed.
+    { ...options, x: null, y: null, geometry: { transform: getG } },
+    (data, facets, channels, scales, dimensions, { projection: projection3 }) => {
+      const G = getG(data);
+      const n = G.length;
+      const X3 = new Float64Array(n);
+      const Y3 = new Float64Array(n);
+      const path2 = path_default(projection3);
+      for (let i = 0; i < n; ++i)
+        [X3[i], Y3[i]] = path2.centroid(G[i]);
+      return {
+        data,
+        facets,
+        channels: {
+          x: { value: X3, scale: projection3 == null ? "x" : null, source: null },
+          y: { value: Y3, scale: projection3 == null ? "y" : null, source: null }
+        }
+      };
+    }
+  );
+}
+function geoCentroid({ geometry = identity6, ...options } = {}) {
+  const getG = memoize1((data) => valueof(data, geometry));
+  const getC = memoize1((data) => valueof(getG(data), centroid_default));
+  return {
+    ...options,
+    x: { transform: (data) => Float64Array.from(getC(data), ([x4]) => x4) },
+    y: { transform: (data) => Float64Array.from(getC(data), ([, y4]) => y4) },
+    geometry: { transform: getG }
+  };
+}
+
 // node_modules/@observablehq/plot/src/marks/geo.js
-var defaults19 = {
+var defaults18 = {
   ariaLabel: "geo",
   fill: "none",
   stroke: "currentColor",
@@ -28821,11 +29115,13 @@ var Geo = class extends Mark {
     super(
       data,
       {
-        geometry: { value: options.geometry, scale: "projection" },
-        r: { value: vr, scale: "r", filter: positive, optional: true }
+        x: { value: options.tip ? options.x : null, scale: "x", optional: true },
+        y: { value: options.tip ? options.y : null, scale: "y", optional: true },
+        r: { value: vr, scale: "r", filter: positive, optional: true },
+        geometry: { value: options.geometry, scale: "projection" }
       },
       withDefaultSort(options),
-      defaults19
+      defaults18
     );
     this.r = cr;
   }
@@ -28853,26 +29149,12 @@ function scaleProjection2({ x: X3, y: Y3 }) {
     });
   }
 }
-function geo(data, { geometry = identity6, ...options } = {}) {
-  switch (data?.type) {
-    case "FeatureCollection":
-      data = data.features;
-      break;
-    case "GeometryCollection":
-      data = data.geometries;
-      break;
-    case "Feature":
-    case "LineString":
-    case "MultiLineString":
-    case "MultiPoint":
-    case "MultiPolygon":
-    case "Point":
-    case "Polygon":
-    case "Sphere":
-      data = [data];
-      break;
-  }
-  return new Geo(data, { geometry, ...options });
+function geo(data, options = {}) {
+  if (options.tip && options.x === void 0 && options.y === void 0)
+    options = centroid(options);
+  else if (options.geometry === void 0)
+    options = { ...options, geometry: identity6 };
+  return new Geo(data, options);
 }
 function sphere({ strokeWidth = 1.5, ...options } = {}) {
   return geo({ type: "Sphere" }, { strokeWidth, ...options });
@@ -28988,7 +29270,7 @@ function hbin(data, I, X3, Y3, dx) {
 }
 
 // node_modules/@observablehq/plot/src/marks/hexgrid.js
-var defaults20 = {
+var defaults19 = {
   ariaLabel: "hexgrid",
   fill: "none",
   stroke: "currentColor",
@@ -28999,7 +29281,7 @@ function hexgrid(options) {
 }
 var Hexgrid = class extends Mark {
   constructor({ binWidth = 20, clip = true, ...options } = {}) {
-    super(singleton, void 0, { clip, ...options }, defaults20);
+    super(singleton, void 0, { clip, ...options }, defaults19);
     this.binWidth = number5(binWidth);
   }
   render(index3, scales, channels, dimensions, context) {
@@ -29020,7 +29302,7 @@ function round(x4) {
 }
 
 // node_modules/@observablehq/plot/src/marks/image.js
-var defaults21 = {
+var defaults20 = {
   ariaLabel: "image",
   fill: null,
   stroke: null
@@ -29062,7 +29344,7 @@ var Image2 = class extends Mark {
         src: { value: vs, optional: true }
       },
       withDefaultSort(options),
-      defaults21
+      defaults20
     );
     this.src = cs;
     this.width = cw;
@@ -29214,7 +29496,7 @@ function qt(p, dof) {
 }
 
 // node_modules/@observablehq/plot/src/marks/linearRegression.js
-var defaults22 = {
+var defaults21 = {
   ariaLabel: "linear-regression",
   fill: "currentColor",
   fillOpacity: 0.1,
@@ -29235,7 +29517,7 @@ var LinearRegression = class extends Mark {
         z: { value: maybeZ(options), optional: true }
       },
       options,
-      defaults22
+      defaults21
     );
     this.z = z;
     this.ci = +ci;
@@ -29373,6 +29655,7 @@ function treeNode({
       const treeData = [];
       const treeFacets = [];
       const rootof = stratify_default().path((i) => P[i]);
+      const setData = isArray(data) ? (node) => node.data = data[node.data] : (node) => node.data = data.get(node.data);
       const layout = treeLayout();
       if (layout.nodeSize)
         layout.nodeSize([1, 1]);
@@ -29382,7 +29665,7 @@ function treeNode({
         o[output_values] = o[output_setValues]([]);
       for (const facet of facets) {
         const treeFacet = [];
-        const root3 = rootof(facet.filter((i) => P[i] != null)).each((node) => node.data = data[node.data]);
+        const root3 = rootof(facet.filter((i) => P[i] != null)).each(setData);
         if (treeSort != null)
           root3.sort(treeSort);
         layout(root3);
@@ -29758,33 +30041,123 @@ function cluster(data, options) {
   return tree(data, { ...options, treeLayout: cluster_default });
 }
 
-// node_modules/@observablehq/plot/src/transforms/centroid.js
-function centroid({ geometry = identity6, ...options } = {}) {
-  return initializer({ ...options, x: null, y: null }, (data, facets, channels, scales, dimensions, { projection: projection3 }) => {
-    const G = valueof(data, geometry);
-    const n = G.length;
-    const X3 = new Float64Array(n);
-    const Y3 = new Float64Array(n);
-    const path2 = path_default(projection3);
-    for (let i = 0; i < n; ++i)
-      [X3[i], Y3[i]] = path2.centroid(G[i]);
-    return {
-      data,
-      facets,
-      channels: {
-        x: { value: X3, scale: projection3 == null ? "x" : null, source: null },
-        y: { value: Y3, scale: projection3 == null ? "y" : null, source: null }
-      }
-    };
-  });
-}
-function geoCentroid({ geometry = identity6, ...options } = {}) {
-  let C3;
-  return {
-    ...options,
-    x: { transform: (data) => Float64Array.from(C3 = valueof(valueof(data, geometry), centroid_default), ([x4]) => x4) },
-    y: { transform: () => Float64Array.from(C3, ([, y4]) => y4) }
+// node_modules/@observablehq/plot/src/marks/waffle.js
+var waffleDefaults = {
+  ariaLabel: "waffle"
+};
+var WaffleX = class extends BarX {
+  constructor(data, { unit: unit3 = 1, gap = 1, round: round2, render: render2, multiple, ...options } = {}) {
+    super(data, { ...options, render: composeRender(render2, waffleRender("x")) }, waffleDefaults);
+    this.unit = Math.max(0, unit3);
+    this.gap = +gap;
+    this.round = maybeRound2(round2);
+    this.multiple = maybeMultiple(multiple);
+  }
+};
+var WaffleY = class extends BarY {
+  constructor(data, { unit: unit3 = 1, gap = 1, round: round2, render: render2, multiple, ...options } = {}) {
+    super(data, { ...options, render: composeRender(render2, waffleRender("y")) }, waffleDefaults);
+    this.unit = Math.max(0, unit3);
+    this.gap = +gap;
+    this.round = maybeRound2(round2);
+    this.multiple = maybeMultiple(multiple);
+  }
+};
+function waffleRender(y4) {
+  return function(index3, scales, values2, dimensions, context) {
+    const { unit: unit3, gap, rx, ry, round: round2 } = this;
+    const { document: document2 } = context;
+    const Y13 = values2.channels[`${y4}1`].value;
+    const Y23 = values2.channels[`${y4}2`].value;
+    const barwidth = this[y4 === "y" ? "_width" : "_height"](scales, values2, dimensions);
+    const barx = this[y4 === "y" ? "_x" : "_y"](scales, values2, dimensions);
+    const scale3 = unit3 * scaleof(scales.scales[y4]);
+    const { multiple = Math.max(1, Math.floor(Math.sqrt(barwidth / scale3))) } = this;
+    const cx = Math.min(barwidth / multiple, scale3 * multiple);
+    const cy = scale3 * multiple;
+    const transform2 = y4 === "y" ? ([x4, y5]) => [x4 * cx, -y5 * cy] : ([x4, y5]) => [y5 * cy, x4 * cx];
+    const tx = (barwidth - multiple * cx) / 2;
+    const x06 = typeof barx === "function" ? (i) => barx(i) + tx : barx + tx;
+    const y06 = scales[y4](0);
+    const patternId = getPatternId();
+    const basePattern = document2.createElementNS(namespaces_default.svg, "pattern");
+    basePattern.setAttribute("width", y4 === "y" ? cx : cy);
+    basePattern.setAttribute("height", y4 === "y" ? cy : cx);
+    basePattern.setAttribute("patternUnits", "userSpaceOnUse");
+    const basePatternRect = basePattern.appendChild(document2.createElementNS(namespaces_default.svg, "rect"));
+    basePatternRect.setAttribute("x", gap / 2);
+    basePatternRect.setAttribute("y", gap / 2);
+    basePatternRect.setAttribute("width", (y4 === "y" ? cx : cy) - gap);
+    basePatternRect.setAttribute("height", (y4 === "y" ? cy : cx) - gap);
+    if (rx != null)
+      basePatternRect.setAttribute("rx", rx);
+    if (ry != null)
+      basePatternRect.setAttribute("ry", ry);
+    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(this._transform, this, scales).call(
+      (g) => g.selectAll().data(index3).enter().append(() => basePattern.cloneNode(true)).attr("id", (i) => `${patternId}-${i}`).select("rect").call(applyDirectStyles, this).call(applyChannelStyles, this, values2)
+    ).call(
+      (g) => g.selectAll().data(index3).enter().append("path").attr("transform", y4 === "y" ? template`translate(${x06},${y06})` : template`translate(${y06},${x06})`).attr(
+        "d",
+        (i) => `M${wafflePoints(round2(Y13[i] / unit3), round2(Y23[i] / unit3), multiple).map(transform2).join("L")}Z`
+      ).attr("fill", (i) => `url(#${patternId}-${i})`).attr("stroke", this.stroke == null ? null : (i) => `url(#${patternId}-${i})`)
+    ).node();
   };
+}
+function wafflePoints(i1, i2, columns) {
+  if (i1 < 0 || i2 < 0) {
+    const k2 = Math.ceil(-Math.min(i1, i2) / columns);
+    return wafflePoints(i1 + k2 * columns, i2 + k2 * columns, columns).map(([x4, y4]) => [x4, y4 - k2]);
+  }
+  if (i2 < i1) {
+    return wafflePoints(i2, i1, columns);
+  }
+  return [
+    [0, Math.ceil(i1 / columns)],
+    [Math.floor(i1 % columns), Math.ceil(i1 / columns)],
+    [Math.floor(i1 % columns), Math.floor(i1 / columns) + i1 % 1],
+    [Math.ceil(i1 % columns), Math.floor(i1 / columns) + i1 % 1],
+    ...i1 % columns > columns - 1 ? [] : [
+      [Math.ceil(i1 % columns), Math.floor(i1 / columns)],
+      [columns, Math.floor(i1 / columns)]
+    ],
+    [columns, Math.floor(i2 / columns)],
+    [Math.ceil(i2 % columns), Math.floor(i2 / columns)],
+    [Math.ceil(i2 % columns), Math.floor(i2 / columns) + i2 % 1],
+    [Math.floor(i2 % columns), Math.floor(i2 / columns) + i2 % 1],
+    ...i2 % columns < 1 ? [] : [
+      [Math.floor(i2 % columns), Math.ceil(i2 / columns)],
+      [0, Math.ceil(i2 / columns)]
+    ]
+  ];
+}
+function maybeRound2(round2) {
+  if (round2 === void 0 || round2 === false)
+    return Number;
+  if (round2 === true)
+    return Math.round;
+  if (typeof round2 !== "function")
+    throw new Error(`invalid round: ${round2}`);
+  return round2;
+}
+function maybeMultiple(multiple) {
+  return multiple === void 0 ? void 0 : Math.max(1, Math.floor(multiple));
+}
+function scaleof({ domain, range: range5 }) {
+  return spread(range5) / spread(domain);
+}
+function spread(domain) {
+  const [min4, max5] = extent(domain);
+  return max5 - min4;
+}
+function waffleX(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, y: indexOf, x2: identity6 };
+  return new WaffleX(data, maybeStackX(maybeIntervalX(maybeIdentityX(options))));
+}
+function waffleY(data, options = {}) {
+  if (!hasXY(options))
+    options = { ...options, x: indexOf, y2: identity6 };
+  return new WaffleY(data, maybeStackY(maybeIntervalY(maybeIdentityY(options))));
 }
 
 // node_modules/@observablehq/plot/src/transforms/dodge.js
@@ -30017,6 +30390,9 @@ var normalizeSum = normalizeAccessor(sum);
 function shiftX(interval2, options) {
   return shiftK("x", interval2, options);
 }
+function shiftY(interval2, options) {
+  return shiftK("y", interval2, options);
+}
 function shiftK(x4, interval2, options = {}) {
   let offset2;
   let k2 = 1;
@@ -30139,6 +30515,11 @@ function selectChannel(v2, selector, options) {
   });
 }
 
+// node_modules/@observablehq/plot/src/index.js
+Mark.prototype.plot = function({ marks: marks2 = [], ...options } = {}) {
+  return plot({ ...options, marks: [...marks2, this] });
+};
+
 // node_modules/apache-arrow/node_modules/tslib/tslib.es6.mjs
 function __rest(s2, e) {
   var t = {};
@@ -30200,16 +30581,24 @@ function __asyncGenerator(thisArg, _arguments, generator) {
   if (!Symbol.asyncIterator)
     throw new TypeError("Symbol.asyncIterator is not defined.");
   var g = generator.apply(thisArg, _arguments || []), i, q = [];
-  return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
+  return i = {}, verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function() {
     return this;
   }, i;
-  function verb(n) {
-    if (g[n])
+  function awaitReturn(f) {
+    return function(v2) {
+      return Promise.resolve(v2).then(f, reject);
+    };
+  }
+  function verb(n, f) {
+    if (g[n]) {
       i[n] = function(v2) {
         return new Promise(function(a4, b) {
           q.push([n, v2, a4, b]) > 1 || resume(n, v2);
         });
       };
+      if (f)
+        i[n] = f(i[n]);
+    }
   }
   function resume(n, v2) {
     try {
@@ -31536,9 +31925,22 @@ var Builder = class {
     this.addInt8(0);
     this.startVector(1, utf8.length, 1);
     this.bb.setPosition(this.space -= utf8.length);
-    for (let i = 0, offset2 = this.space, bytes = this.bb.bytes(); i < utf8.length; i++) {
-      bytes[offset2++] = utf8[i];
+    this.bb.bytes().set(utf8, this.space);
+    return this.endVector();
+  }
+  /**
+   * Create a byte vector.
+   *
+   * @param v The bytes to add
+   * @returns The offset in the buffer where the byte vector starts
+   */
+  createByteVector(v2) {
+    if (v2 === null || v2 === void 0) {
+      return 0;
     }
+    this.startVector(1, v2.length, 1);
+    this.bb.setPosition(this.space -= v2.length);
+    this.bb.bytes().set(v2, this.space);
     return this.endVector();
   }
   /**
@@ -33141,9 +33543,9 @@ var BufferType;
 // node_modules/apache-arrow/util/vector.mjs
 var vector_exports = {};
 __export(vector_exports, {
-  clampIndex: () => clampIndex,
   clampRange: () => clampRange,
-  createElementComparator: () => createElementComparator
+  createElementComparator: () => createElementComparator,
+  wrapIndex: () => wrapIndex
 });
 
 // node_modules/apache-arrow/util/pretty.mjs
@@ -33184,9 +33586,23 @@ var bn_exports = {};
 __export(bn_exports, {
   BN: () => BN,
   bigNumToBigInt: () => bigNumToBigInt,
+  bigNumToNumber: () => bigNumToNumber,
   bigNumToString: () => bigNumToString,
   isArrowBigNumSymbol: () => isArrowBigNumSymbol
 });
+
+// node_modules/apache-arrow/util/bigint.mjs
+function bigIntToNumber(number7) {
+  if (typeof number7 === "bigint" && (number7 < Number.MIN_SAFE_INTEGER || number7 > Number.MAX_SAFE_INTEGER)) {
+    throw new TypeError(`${number7} is not safe to convert to a number.`);
+  }
+  return Number(number7);
+}
+function divideBigInts(number7, divisor) {
+  return bigIntToNumber(number7 / divisor) + bigIntToNumber(number7 % divisor) / bigIntToNumber(divisor);
+}
+
+// node_modules/apache-arrow/util/bn.mjs
 var isArrowBigNumSymbol = Symbol.for("isArrowBigNum");
 function BigNum(x4, ...xs) {
   if (xs.length === 0) {
@@ -33198,8 +33614,8 @@ BigNum.prototype[isArrowBigNumSymbol] = true;
 BigNum.prototype.toJSON = function() {
   return `"${bigNumToString(this)}"`;
 };
-BigNum.prototype.valueOf = function() {
-  return bigNumToNumber(this);
+BigNum.prototype.valueOf = function(scale3) {
+  return bigNumToNumber(this, scale3);
 };
 BigNum.prototype.toString = function() {
   return bigNumToString(this);
@@ -33230,25 +33646,34 @@ Object.setPrototypeOf(DecimalBigNum.prototype, Object.create(Uint32Array.prototy
 Object.assign(SignedBigNum.prototype, BigNum.prototype, { "constructor": SignedBigNum, "signed": true, "TypedArray": Int32Array, "BigIntArray": BigInt64Array });
 Object.assign(UnsignedBigNum.prototype, BigNum.prototype, { "constructor": UnsignedBigNum, "signed": false, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
 Object.assign(DecimalBigNum.prototype, BigNum.prototype, { "constructor": DecimalBigNum, "signed": true, "TypedArray": Uint32Array, "BigIntArray": BigUint64Array });
-function bigNumToNumber(bn) {
-  const { buffer, byteOffset, length: length4, "signed": signed } = bn;
-  const words = new BigUint64Array(buffer, byteOffset, length4);
+var TWO_TO_THE_64 = BigInt(4294967296) * BigInt(4294967296);
+var TWO_TO_THE_64_MINUS_1 = TWO_TO_THE_64 - BigInt(1);
+function bigNumToNumber(bn, scale3) {
+  const { buffer, byteOffset, byteLength, "signed": signed } = bn;
+  const words = new BigUint64Array(buffer, byteOffset, byteLength / 8);
   const negative2 = signed && words.at(-1) & BigInt(1) << BigInt(63);
-  let number7 = negative2 ? BigInt(1) : BigInt(0);
-  let i = BigInt(0);
-  if (!negative2) {
+  let number7 = BigInt(0);
+  let i = 0;
+  if (negative2) {
     for (const word of words) {
-      number7 += word * (BigInt(1) << BigInt(32) * i++);
-    }
-  } else {
-    for (const word of words) {
-      number7 += ~word * (BigInt(1) << BigInt(32) * i++);
+      number7 |= (word ^ TWO_TO_THE_64_MINUS_1) * (BigInt(1) << BigInt(64 * i++));
     }
     number7 *= BigInt(-1);
+    number7 -= BigInt(1);
+  } else {
+    for (const word of words) {
+      number7 |= word * (BigInt(1) << BigInt(64 * i++));
+    }
   }
-  return number7;
+  if (typeof scale3 === "number") {
+    const denominator = BigInt(Math.pow(10, scale3));
+    const quotient = number7 / denominator;
+    const remainder = number7 % denominator;
+    return bigIntToNumber(quotient) + bigIntToNumber(remainder) / bigIntToNumber(denominator);
+  }
+  return bigIntToNumber(number7);
 }
-var bigNumToString = (a4) => {
+function bigNumToString(a4) {
   if (a4.byteLength === 8) {
     const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
     return `${bigIntArray[0]}`;
@@ -33271,15 +33696,15 @@ var bigNumToString = (a4) => {
   }
   const negated = unsignedBigNumToString(array4);
   return `-${negated}`;
-};
-var bigNumToBigInt = (a4) => {
+}
+function bigNumToBigInt(a4) {
   if (a4.byteLength === 8) {
     const bigIntArray = new a4["BigIntArray"](a4.buffer, a4.byteOffset, 1);
     return bigIntArray[0];
   } else {
     return bigNumToString(a4);
   }
-};
+}
 function unsignedBigNumToString(a4) {
   let digits = "";
   const base64 = new Uint32Array(2);
@@ -33335,14 +33760,6 @@ var BN = class {
     return BN.new(num, isSigned);
   }
 };
-
-// node_modules/apache-arrow/util/bigint.mjs
-function bigIntToNumber(number7) {
-  if (typeof number7 === "bigint" && (number7 < Number.MIN_SAFE_INTEGER || number7 > Number.MAX_SAFE_INTEGER)) {
-    throw new TypeError(`${number7} is not safe to convert to a number.`);
-  }
-  return Number(number7);
-}
 
 // node_modules/apache-arrow/type.mjs
 var _a;
@@ -33718,11 +34135,13 @@ var Date_ = class extends DataType {
   toString() {
     return `Date${(this.unit + 1) * 32}<${DateUnit[this.unit]}>`;
   }
+  get ArrayType() {
+    return this.unit === DateUnit.DAY ? Int32Array : BigInt64Array;
+  }
 };
 _l = Symbol.toStringTag;
 Date_[_l] = ((proto) => {
   proto.unit = null;
-  proto.ArrayType = Int32Array;
   return proto[Symbol.toStringTag] = "Date";
 })(Date_.prototype);
 var Time_ = class extends DataType {
@@ -33764,7 +34183,7 @@ _o = Symbol.toStringTag;
 Timestamp_[_o] = ((proto) => {
   proto.unit = null;
   proto.timezone = null;
-  proto.ArrayType = Int32Array;
+  proto.ArrayType = BigInt64Array;
   return proto[Symbol.toStringTag] = "Timestamp";
 })(Timestamp_.prototype);
 var Interval_ = class extends DataType {
@@ -33969,10 +34388,6 @@ function strideForType(type2) {
   switch (type2.typeId) {
     case Type2.Decimal:
       return type2.bitWidth / 32;
-    case Type2.Timestamp:
-      return 2;
-    case Type2.Date:
-      return 1 + t.unit;
     case Type2.Interval:
       return 1 + t.unit;
     case Type2.FixedSizeList:
@@ -34439,19 +34854,7 @@ function wrapSet(fn) {
   };
 }
 var setEpochMsToDays = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs / 864e5);
-};
-var setEpochMsToMillisecondsLong = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs % 4294967296);
-  data[index3 + 1] = Math.trunc(epochMs / 4294967296);
-};
-var setEpochMsToMicrosecondsLong = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs * 1e3 % 4294967296);
-  data[index3 + 1] = Math.trunc(epochMs * 1e3 / 4294967296);
-};
-var setEpochMsToNanosecondsLong = (data, index3, epochMs) => {
-  data[index3] = Math.trunc(epochMs * 1e6 % 4294967296);
-  data[index3 + 1] = Math.trunc(epochMs * 1e6 / 4294967296);
+  data[index3] = Math.floor(epochMs / 864e5);
 };
 var setVariableWidthBytes = (values2, valueOffsets, index3, value) => {
   if (index3 + 1 < valueOffsets.length) {
@@ -34486,7 +34889,7 @@ var setDateDay = ({ values: values2 }, index3, value) => {
   setEpochMsToDays(values2, index3, value.valueOf());
 };
 var setDateMillisecond = ({ values: values2 }, index3, value) => {
-  setEpochMsToMillisecondsLong(values2, index3 * 2, value.valueOf());
+  values2[index3] = BigInt(value);
 };
 var setFixedSizeBinary = ({ stride, values: values2 }, index3, value) => {
   values2.set(value.subarray(0, stride), stride * index3);
@@ -34496,10 +34899,18 @@ var setUtf8 = ({ values: values2, valueOffsets }, index3, value) => setVariableW
 var setDate = (data, index3, value) => {
   data.type.unit === DateUnit.DAY ? setDateDay(data, index3, value) : setDateMillisecond(data, index3, value);
 };
-var setTimestampSecond = ({ values: values2 }, index3, value) => setEpochMsToMillisecondsLong(values2, index3 * 2, value / 1e3);
-var setTimestampMillisecond = ({ values: values2 }, index3, value) => setEpochMsToMillisecondsLong(values2, index3 * 2, value);
-var setTimestampMicrosecond = ({ values: values2 }, index3, value) => setEpochMsToMicrosecondsLong(values2, index3 * 2, value);
-var setTimestampNanosecond = ({ values: values2 }, index3, value) => setEpochMsToNanosecondsLong(values2, index3 * 2, value);
+var setTimestampSecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = BigInt(value / 1e3);
+};
+var setTimestampMillisecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = BigInt(value);
+};
+var setTimestampMicrosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = BigInt(value * 1e3);
+};
+var setTimestampNanosecond = ({ values: values2 }, index3, value) => {
+  values2[index3] = BigInt(value * 1e6);
+};
 var setTimestamp = (data, index3, value) => {
   switch (data.type.unit) {
     case TimeUnit.SECOND:
@@ -34804,12 +35215,6 @@ function wrapGet(fn) {
   return (data, _1) => data.getValid(_1) ? fn(data, _1) : null;
 }
 var epochDaysToMs = (data, index3) => 864e5 * data[index3];
-var epochMillisecondsLongToMs = (data, index3) => 4294967296 * data[index3 + 1] + (data[index3] >>> 0);
-var epochMicrosecondsLongToMs = (data, index3) => 4294967296 * (data[index3 + 1] / 1e3) + (data[index3] >>> 0) / 1e3;
-var epochNanosecondsLongToMs = (data, index3) => 4294967296 * (data[index3 + 1] / 1e6) + (data[index3] >>> 0) / 1e6;
-var epochMillisecondsToDate = (epochMs) => new Date(epochMs);
-var epochDaysToDate = (data, index3) => epochMillisecondsToDate(epochDaysToMs(data, index3));
-var epochMillisecondsLongToDate = (data, index3) => epochMillisecondsToDate(epochMillisecondsLongToMs(data, index3));
 var getNull = (_data, _index) => null;
 var getVariableWidthBytes = (values2, valueOffsets, index3) => {
   if (index3 + 1 >= valueOffsets.length) {
@@ -34824,8 +35229,8 @@ var getBool = ({ offset: offset2, values: values2 }, index3) => {
   const byte = values2[idx >> 3];
   return (byte & 1 << idx % 8) !== 0;
 };
-var getDateDay = ({ values: values2 }, index3) => epochDaysToDate(values2, index3);
-var getDateMillisecond = ({ values: values2 }, index3) => epochMillisecondsLongToDate(values2, index3 * 2);
+var getDateDay = ({ values: values2 }, index3) => epochDaysToMs(values2, index3);
+var getDateMillisecond = ({ values: values2 }, index3) => bigIntToNumber(values2[index3]);
 var getNumeric = ({ stride, values: values2 }, index3) => values2[stride * index3];
 var getFloat16 = ({ stride, values: values2 }, index3) => uint16ToFloat64(values2[stride * index3]);
 var getBigInts = ({ values: values2 }, index3) => values2[index3];
@@ -34838,10 +35243,10 @@ var getUtf8 = ({ values: values2, valueOffsets }, index3) => {
 var getInt = ({ values: values2 }, index3) => values2[index3];
 var getFloat = ({ type: type2, values: values2 }, index3) => type2.precision !== Precision.HALF ? values2[index3] : uint16ToFloat64(values2[index3]);
 var getDate = (data, index3) => data.type.unit === DateUnit.DAY ? getDateDay(data, index3) : getDateMillisecond(data, index3);
-var getTimestampSecond = ({ values: values2 }, index3) => 1e3 * epochMillisecondsLongToMs(values2, index3 * 2);
-var getTimestampMillisecond = ({ values: values2 }, index3) => epochMillisecondsLongToMs(values2, index3 * 2);
-var getTimestampMicrosecond = ({ values: values2 }, index3) => epochMicrosecondsLongToMs(values2, index3 * 2);
-var getTimestampNanosecond = ({ values: values2 }, index3) => epochNanosecondsLongToMs(values2, index3 * 2);
+var getTimestampSecond = ({ values: values2 }, index3) => 1e3 * bigIntToNumber(values2[index3]);
+var getTimestampMillisecond = ({ values: values2 }, index3) => bigIntToNumber(values2[index3]);
+var getTimestampMicrosecond = ({ values: values2 }, index3) => divideBigInts(values2[index3], BigInt(1e3));
+var getTimestampNanosecond = ({ values: values2 }, index3) => divideBigInts(values2[index3], BigInt(1e6));
 var getTimestamp = (data, index3) => {
   switch (data.type.unit) {
     case TimeUnit.SECOND:
@@ -34990,11 +35395,17 @@ var instance2 = new GetVisitor();
 // node_modules/apache-arrow/row/map.mjs
 var kKeys = Symbol.for("keys");
 var kVals = Symbol.for("vals");
+var kKeysAsStrings = Symbol.for("kKeysAsStrings");
+var _kKeysAsStrings = Symbol.for("_kKeysAsStrings");
 var MapRow = class {
   constructor(slice6) {
     this[kKeys] = new Vector2([slice6.children[0]]).memoize();
     this[kVals] = slice6.children[1];
     return new Proxy(this, new MapRowProxyHandler());
+  }
+  /** @ignore */
+  get [kKeysAsStrings]() {
+    return this[_kKeysAsStrings] || (this[_kKeysAsStrings] = Array.from(this[kKeys].toArray(), String));
   }
   [Symbol.iterator]() {
     return new MapRowIterator(this[kKeys], this[kVals]);
@@ -35057,13 +35468,13 @@ var MapRowProxyHandler = class {
     return true;
   }
   ownKeys(row) {
-    return row[kKeys].toArray().map(String);
+    return row[kKeysAsStrings];
   }
   has(row, key) {
-    return row[kKeys].includes(key);
+    return row[kKeysAsStrings].includes(key);
   }
   getOwnPropertyDescriptor(row, key) {
-    const idx = row[kKeys].indexOf(key);
+    const idx = row[kKeysAsStrings].indexOf(key);
     if (idx !== -1) {
       return { writable: true, enumerable: true, configurable: true };
     }
@@ -35073,7 +35484,7 @@ var MapRowProxyHandler = class {
     if (Reflect.has(row, key)) {
       return row[key];
     }
-    const idx = row[kKeys].indexOf(key);
+    const idx = row[kKeysAsStrings].indexOf(key);
     if (idx !== -1) {
       const val = instance2.visit(Reflect.get(row, kVals), idx);
       Reflect.set(row, key, val);
@@ -35081,7 +35492,7 @@ var MapRowProxyHandler = class {
     }
   }
   set(row, key, val) {
-    const idx = row[kKeys].indexOf(key);
+    const idx = row[kKeysAsStrings].indexOf(key);
     if (idx !== -1) {
       instance.visit(Reflect.get(row, kVals), idx, val);
       return Reflect.set(row, key, val);
@@ -35094,15 +35505,11 @@ var MapRowProxyHandler = class {
 Object.defineProperties(MapRow.prototype, {
   [Symbol.toStringTag]: { enumerable: false, configurable: false, value: "Row" },
   [kKeys]: { writable: true, enumerable: false, configurable: false, value: null },
-  [kVals]: { writable: true, enumerable: false, configurable: false, value: null }
+  [kVals]: { writable: true, enumerable: false, configurable: false, value: null },
+  [_kKeysAsStrings]: { writable: true, enumerable: false, configurable: false, value: null }
 });
 
 // node_modules/apache-arrow/util/vector.mjs
-function clampIndex(source, index3, then) {
-  const length4 = source.length;
-  const adjust = index3 > -1 ? index3 : length4 + index3 % length4;
-  return then ? then(source, adjust) : adjust;
-}
 var tmp;
 function clampRange(source, begin, end, then) {
   const { length: len = 0 } = source;
@@ -35114,6 +35521,7 @@ function clampRange(source, begin, end, then) {
   rhs > len && (rhs = len);
   return then ? then(source, lhs, rhs) : [lhs, rhs];
 }
+var wrapIndex = (index3, len) => index3 < 0 ? len + index3 : index3;
 var isNaNFast = (value) => value !== value;
 function createElementComparator(search) {
   const typeofSearch = typeof search;
@@ -35402,7 +35810,10 @@ var Data = class {
     let nullCount = this._nullCount;
     let nullBitmap;
     if (nullCount <= kUnknownNullCount && (nullBitmap = this.nullBitmap)) {
-      this._nullCount = nullCount = this.length - popcnt_bit_range(nullBitmap, this.offset, this.offset + this.length);
+      this._nullCount = nullCount = nullBitmap.length === 0 ? (
+        // no null bitmap, so all values are valid
+        0
+      ) : this.length - popcnt_bit_range(nullBitmap, this.offset, this.offset + this.length);
     }
     return nullCount;
   }
@@ -35464,12 +35875,14 @@ var Data = class {
         nullBitmap = new Uint8Array((offset2 + length4 + 63 & ~63) >> 3).fill(255);
         if (this.nullCount > 0) {
           nullBitmap.set(truncateBitmap(offset2, length4, this.nullBitmap), 0);
+          Object.assign(this, { nullBitmap });
+        } else {
+          Object.assign(this, { nullBitmap, _nullCount: 0 });
         }
-        Object.assign(this, { nullBitmap, _nullCount: -1 });
       }
       const byte = nullBitmap[byteOffset];
       prev = (byte & mask) !== 0;
-      value ? nullBitmap[byteOffset] = byte | mask : nullBitmap[byteOffset] = byte & ~mask;
+      nullBitmap[byteOffset] = value ? byte | mask : byte & ~mask;
     }
     if (prev !== !!value) {
       this._nullCount = this.nullCount + (value ? -1 : 1);
@@ -35910,7 +36323,9 @@ var IteratorVisitor = class extends Visitor {
 };
 function vectorIterator(vector2) {
   const { type: type2 } = vector2;
-  if (vector2.nullCount === 0 && vector2.stride === 1 && (type2.typeId === Type2.Timestamp || type2 instanceof Int_ && type2.bitWidth !== 64 || type2 instanceof Time_ && type2.bitWidth !== 64 || type2 instanceof Float && type2.precision !== Precision.HALF)) {
+  if (vector2.nullCount === 0 && vector2.stride === 1 && // Don't defer to native iterator for timestamps since Numbers are expected
+  // (DataType.isTimestamp(type)) && type.unit === TimeUnit.MILLISECOND ||
+  (DataType.isInt(type2) && type2.bitWidth !== 64 || DataType.isTime(type2) && type2.bitWidth !== 64 || DataType.isFloat(type2) && type2.precision !== Precision.HALF)) {
     return new ChunkedIterator(vector2.data.length, (chunkIndex) => {
       const data = vector2.data[chunkIndex];
       return data.values.subarray(0, data.length)[Symbol.iterator]();
@@ -36083,6 +36498,13 @@ var Vector2 = class {
   // @ts-ignore
   get(index3) {
     return null;
+  }
+  /**
+   * Get an element value by position.
+   * @param index The index of the element to read. A negative index will count back from the last element.
+   */
+  at(index3) {
+    return this.get(wrapIndex(index3, this.length));
   }
   /**
    * Set an element value by position.
@@ -36861,7 +37283,7 @@ var Schema2 = class {
     this.fields = fields || [];
     this.metadata = metadata || /* @__PURE__ */ new Map();
     if (!dictionaries) {
-      dictionaries = generateDictionaryMap(fields);
+      dictionaries = generateDictionaryMap(this.fields);
     }
     this.dictionaries = dictionaries;
     this.metadataVersion = metadataVersion;
@@ -37363,8 +37785,8 @@ var AsyncByteStreamSource = class {
       return (yield this.next(size, "peek")).value;
     });
   }
-  next(size, cmd = "read") {
-    return __awaiter(this, void 0, void 0, function* () {
+  next(size_1) {
+    return __awaiter(this, arguments, void 0, function* (size, cmd = "read") {
       return yield this.source.next({ cmd, size });
     });
   }
@@ -38942,6 +39364,14 @@ var Table = class {
     return null;
   }
   /**
+    * Get an element value by position.
+    * @param index The index of the element to read. A negative index will count back from the last element.
+    */
+  // @ts-ignore
+  at(index3) {
+    return this.get(wrapIndex(index3, this.numRows));
+  }
+  /**
    * Set an element value by position.
    *
    * @param index The index of the element to write.
@@ -39178,7 +39608,7 @@ var RecordBatch2 = class {
     return this.data.nullCount;
   }
   /**
-   * Check whether an element is null.
+   * Check whether an row is null.
    * @param index The index at which to read the validity bitmap.
    */
   isValid(index3) {
@@ -39186,14 +39616,21 @@ var RecordBatch2 = class {
   }
   /**
    * Get a row by position.
-   * @param index The index of the element to read.
+   * @param index The index of the row to read.
    */
   get(index3) {
     return instance2.visit(this.data, index3);
   }
   /**
+    * Get a row value by position.
+    * @param index The index of the row to read. A negative index will count back from the last row.
+    */
+  at(index3) {
+    return this.get(wrapIndex(index3, this.numRows));
+  }
+  /**
    * Set a row by position.
-   * @param index The index of the element to write.
+   * @param index The index of the row to write.
    * @param value The value to set.
    */
   set(index3, value) {
@@ -39230,7 +39667,7 @@ var RecordBatch2 = class {
   /**
    * Return a zero-copy sub-section of this RecordBatch.
    * @param start The beginning of the specified portion of the RecordBatch.
-   * @param end The end of the specified portion of the RecordBatch. This is exclusive of the element at the index 'end'.
+   * @param end The end of the specified portion of the RecordBatch. This is exclusive of the row at the index 'end'.
    */
   slice(begin, end) {
     const [slice6] = new Vector2([this.data]).slice(begin, end).data;
@@ -40318,8 +40755,8 @@ var AsyncMessageReader = class {
       );
     });
   }
-  readSchema(throwIfNull = false) {
-    return __awaiter(this, void 0, void 0, function* () {
+  readSchema() {
+    return __awaiter(this, arguments, void 0, function* (throwIfNull = false) {
       const type2 = MessageHeader.Schema;
       const message = yield this.readMessage(type2);
       const schema = message === null || message === void 0 ? void 0 : message.header();
@@ -40567,8 +41004,8 @@ var AsyncRecordBatchStreamReader = class extends RecordBatchReader {
     this._impl = _impl;
   }
   readAll() {
-    var _a5, e_1, _b2, _c2;
     return __awaiter(this, void 0, void 0, function* () {
+      var _a5, e_1, _b2, _c2;
       const batches = new Array();
       try {
         for (var _d2 = true, _e2 = __asyncValues(this), _f2; _f2 = yield _e2.next(), _a5 = _f2.done, !_a5; _d2 = true) {
@@ -40652,12 +41089,9 @@ var RecordBatchReaderImpl = class {
     const { id: id2, isDelta } = header;
     const { dictionaries, schema } = this;
     const dictionary = dictionaries.get(id2);
-    if (isDelta || !dictionary) {
-      const type2 = schema.dictionaries.get(id2);
-      const data = this._loadVectors(header.data, body, [type2]);
-      return (dictionary && isDelta ? dictionary.concat(new Vector2(data)) : new Vector2(data)).memoize();
-    }
-    return dictionary.memoize();
+    const type2 = schema.dictionaries.get(id2);
+    const data = this._loadVectors(header.data, body, [type2]);
+    return (dictionary && isDelta ? dictionary.concat(new Vector2(data)) : new Vector2(data)).memoize();
   }
   _loadVectors(header, body, types) {
     return new VectorLoader(body, header.nodes, header.buffers, this.dictionaries, this.schema.metadataVersion).visitMany(types);
@@ -40943,8 +41377,8 @@ var AsyncRecordBatchFileReaderImpl = class extends AsyncRecordBatchStreamReaderI
     });
   }
   readRecordBatch(index3) {
-    var _a5;
     return __awaiter(this, void 0, void 0, function* () {
+      var _a5;
       if (this.closed) {
         return null;
       }
@@ -40965,8 +41399,8 @@ var AsyncRecordBatchFileReaderImpl = class extends AsyncRecordBatchStreamReaderI
     });
   }
   _readDictionaryBatch(index3) {
-    var _a5;
     return __awaiter(this, void 0, void 0, function* () {
+      var _a5;
       const block = (_a5 = this._footer) === null || _a5 === void 0 ? void 0 : _a5.getDictionaryBatch(index3);
       if (block && (yield this._handle.seek(block.offset))) {
         const message = yield this._reader.readMessage(MessageHeader.DictionaryBatch);
@@ -41241,6 +41675,7 @@ var RecordBatchWriter = class extends ReadableInterop {
     this._schema = null;
     this._dictionaryBlocks = [];
     this._recordBatchBlocks = [];
+    this._seenDictionaries = /* @__PURE__ */ new Map();
     this._dictionaryDeltaOffsets = /* @__PURE__ */ new Map();
     isObject2(options) || (options = { autoDestroy: true, writeLegacyIpcFormat: false });
     this._autoDestroy = typeof options.autoDestroy === "boolean" ? options.autoDestroy : true;
@@ -41299,6 +41734,7 @@ var RecordBatchWriter = class extends ReadableInterop {
     this._started = false;
     this._dictionaryBlocks = [];
     this._recordBatchBlocks = [];
+    this._seenDictionaries = /* @__PURE__ */ new Map();
     this._dictionaryDeltaOffsets = /* @__PURE__ */ new Map();
     if (!schema || !compareSchemas(schema, this._schema)) {
       if (schema == null) {
@@ -41390,7 +41826,6 @@ var RecordBatchWriter = class extends ReadableInterop {
     return this._writeDictionaries(batch)._writeMessage(message)._writeBodyBuffers(buffers);
   }
   _writeDictionaryBatch(dictionary, id2, isDelta = false) {
-    this._dictionaryDeltaOffsets.set(id2, dictionary.length + (this._dictionaryDeltaOffsets.get(id2) || 0));
     const { byteLength, nodes, bufferRegions, buffers } = VectorAssembler.assemble(new Vector2([dictionary]));
     const recordBatch = new RecordBatch3(dictionary.length, nodes, bufferRegions);
     const dictionaryBatch = new DictionaryBatch2(recordBatch, id2, isDelta);
@@ -41411,14 +41846,20 @@ var RecordBatchWriter = class extends ReadableInterop {
     return this;
   }
   _writeDictionaries(batch) {
-    for (let [id2, dictionary] of batch.dictionaries) {
-      let offset2 = this._dictionaryDeltaOffsets.get(id2) || 0;
-      if (offset2 === 0 || (dictionary = dictionary === null || dictionary === void 0 ? void 0 : dictionary.slice(offset2)).length > 0) {
-        for (const data of dictionary.data) {
-          this._writeDictionaryBatch(data, id2, offset2 > 0);
-          offset2 += data.length;
-        }
+    var _a5, _b2;
+    for (const [id2, dictionary] of batch.dictionaries) {
+      const chunks = (_a5 = dictionary === null || dictionary === void 0 ? void 0 : dictionary.data) !== null && _a5 !== void 0 ? _a5 : [];
+      const prevDictionary = this._seenDictionaries.get(id2);
+      const offset2 = (_b2 = this._dictionaryDeltaOffsets.get(id2)) !== null && _b2 !== void 0 ? _b2 : 0;
+      if (!prevDictionary || prevDictionary.data[0] !== chunks[0]) {
+        for (const [index3, chunk] of chunks.entries())
+          this._writeDictionaryBatch(chunk, id2, index3 > 0);
+      } else if (offset2 < chunks.length) {
+        for (const chunk of chunks.slice(offset2))
+          this._writeDictionaryBatch(chunk, id2, true);
       }
+      this._seenDictionaries.set(id2, dictionary);
+      this._dictionaryDeltaOffsets.set(id2, chunks.length);
     }
     return this;
   }
@@ -41454,6 +41895,12 @@ var RecordBatchFileWriter = class extends RecordBatchWriter {
   _writeSchema(schema) {
     return this._writeMagic()._writePadding(2);
   }
+  _writeDictionaryBatch(dictionary, id2, isDelta = false) {
+    if (!isDelta && this._seenDictionaries.has(id2)) {
+      throw new Error("The Arrow File format does not support replacement dictionaries. ");
+    }
+    return super._writeDictionaryBatch(dictionary, id2, isDelta);
+  }
   _writeFooter(schema) {
     const buffer = Footer_.encode(new Footer_(schema, MetadataVersion.V5, this._recordBatchBlocks, this._dictionaryBlocks));
     return super._writeFooter(schema)._write(buffer)._write(Int32Array.of(buffer.byteLength))._writeMagic();
@@ -41471,9 +41918,9 @@ function writeAll(writer, input) {
   return writer.finish();
 }
 function writeAllAsync(writer, batches) {
-  var _a5, batches_1, batches_1_1;
-  var _b2, e_1, _c2, _d2;
   return __awaiter(this, void 0, void 0, function* () {
+    var _a5, batches_1, batches_1_1;
+    var _b2, e_1, _c2, _d2;
     try {
       for (_a5 = true, batches_1 = __asyncValues(batches); batches_1_1 = yield batches_1.next(), _b2 = batches_1_1.done, !_b2; _a5 = true) {
         _d2 = batches_1_1.value;
@@ -41777,15 +42224,9 @@ function unserialize_data(data, renderer) {
       if (renderer == "jsdom") {
         value = Buffer.from(value, "base64");
       }
+      console.log(value);
       let table = tableFromIPC(value);
-      const date_columns = table.schema.fields.filter((d2) => d2.type.toString().startsWith("Timestamp")).map((d2) => d2.name);
-      table = Array.from(table);
-      table = table.map((d2) => {
-        for (let col of date_columns) {
-          d2[col] = new Date(d2[col]);
-        }
-        return d2;
-      });
+      console.log(table);
       result.push(table);
     } else {
       result.push(d);
