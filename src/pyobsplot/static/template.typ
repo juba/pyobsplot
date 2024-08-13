@@ -58,6 +58,9 @@
 
     let html = xml(file)
     let figure = html.first()
+    let bg_color = figure.attrs.typstbg
+    let fg_color = figure.attrs.typstfg
+    let caption_color = figure.attrs.typstcaption
     let title = find-child(figure, "h2")
     let subtitle = find-child(figure, "h3")
     let caption = find-child(figure, "figcaption")
@@ -74,11 +77,12 @@
     set page(
         width: 1in*figurewidth/dpi + 2*margin,
         height: auto,
-        margin: (x: margin, y: margin)
+        margin: (x: margin, y: margin),
+        fill: rgb(bg_color)
     )
 
-    show heading.where(level: 1): set text(size: (1in * 20/dpi), weight: 600)
-    show heading.where(level: 2): set text(size: (1in * 16/dpi), weight: 400)
+    show heading.where(level: 1): set text(size: (1in * 20/dpi), weight: 600, fill: rgb(fg_color))
+    show heading.where(level: 2): set text(size: (1in * 16/dpi), weight: 400, fill: rgb(fg_color))
 
     stack(
         dir: ttb,
@@ -95,7 +99,7 @@
         ..legends.map(svg => image.decode(encode-xml(svg), height: 1in * int(svg.attrs.height) / dpi)),
         image.decode(encode-xml(mainfigure), height: 1in * int(mainfigure.attrs.height) / dpi),
         if (caption != none) {
-            set text(size: 1in * 13/dpi, fill: rgb(85, 85, 85), weight: 500)
+            set text(size: 1in * 13/dpi, fill: rgb(caption_color), weight: 500)
             text(caption.children.first())
             v(1in * 4/dpi)
         }

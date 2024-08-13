@@ -26,9 +26,11 @@ function jsdom_plot(request) {
     let el = generate_plot(request["spec"], "jsdom");
 
     // foreground color
-    const bg = { light: "white", dark: "black", current: "transparent" };
+    const bg = { light: "#FFFFFF", dark: "#000000", current: "transparent" };
     // background color
-    const fg = { light: "black", dark: "white", current: "currentColor" };
+    const fg = { light: "#000000", dark: "#FFFFFF", current: "currentColor" };
+    // caption color
+    const caption = { light: "#777777", dark: "#888888", current: "currentColor" };
     const theme = request["theme"];
 
     for (const svg of el.tagName.toLowerCase() === "svg"
@@ -55,6 +57,10 @@ function jsdom_plot(request) {
         // theming
         figure.style.color ||= fg[theme];
         figure.style.backgroundColor ||= bg[theme];
+        // pass colors to typst via attributes
+        figure.setAttribute("typstbg", bg[theme]);
+        figure.setAttribute("typstfg", fg[theme]);
+        figure.setAttribute("typstcaption", caption[theme]);
         for (const h2 of figure.querySelectorAll("h2")) {
             h2.style.lineHeight = "28px";
             h2.style.fontSize = "20px";
@@ -71,7 +77,7 @@ function jsdom_plot(request) {
             figcaption.style.lineHeight = "20px";
             figcaption.style.fontSize = "12px";
             figcaption.style.fontWeight = "500";
-            figcaption.style.color = "#555555";
+            figcaption.style.color = caption[theme];
         }
     }
 
