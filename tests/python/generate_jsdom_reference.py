@@ -17,6 +17,7 @@ os.chdir(sys.path[0])
 specs = {}
 themes = {}
 defaults = {}
+skip = {}
 
 # Data ---
 
@@ -57,6 +58,19 @@ df = pd.DataFrame(
 )
 
 specs["simple_svg2"] = {"marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})]}
+
+
+# Titles and caption ---
+
+specs["titles_caption"] = {
+    "marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})],
+    "title": "This is a plot title",
+    "subtitle": "This is a plot subtitle",
+    "caption": (
+        "And here is a plot caption long enough to span"
+        " over several lines in the generated output."
+    ),
+}
 
 
 # Transforms ---
@@ -458,6 +472,7 @@ specs["themes_current"] = {
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
 themes["themes_current"] = "current"
+skip["themes_current"] = ["png", "pdf", "svg"]
 
 # Defaults ---
 
@@ -489,6 +504,8 @@ def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
     output_folder = output_folder / format
     output_folder.mkdir(exist_ok=True)
     for key in specs:
+        if key in skip and format in skip[key]:
+            continue
         path = output_folder / f"{key}.{format}"
         if not (path.exists()):
             print(f"Generating {key}.{format}")
