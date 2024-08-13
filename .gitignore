@@ -12,3 +12,4 @@ examples/test*
 *-snapshots/
 /.luarc.json
 /.venv/
+tests/python/jsdom_reference/
