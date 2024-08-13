@@ -166,6 +166,7 @@ stateage = (
     pl.read_csv("data/us-population-state-age.csv")
     .melt(id_vars="name", variable_name="age", value_name="population")
     .rename({"name": "state"})
+    .with_columns(pl.col("population").cast(pl.Int32))
 )
 # Compute list of age groups
 ages = stateage.get_column("age").unique(maintain_order=True).to_list()
