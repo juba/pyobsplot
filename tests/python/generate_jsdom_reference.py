@@ -38,6 +38,7 @@ vapor = (
     .transpose()
     .unpivot(variable_name="column", value_name="values")
 )
+vapor_values = vapor.get_column("values").to_list()
 
 
 # Simple examples ---
@@ -410,9 +411,9 @@ specs["geo_vapor"] = {
     },
     "marks": [
         Plot.contour(
-            vapor,
+            vapor_values,
             {
-                "fill": "values",
+                "fill": Plot.identity,
                 "width": 360,
                 "height": 180,
                 "x1": -180,

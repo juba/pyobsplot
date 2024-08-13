@@ -146,6 +146,7 @@ vapor = (
     .transpose()
     .melt(variable_name="column", value_name="values")
 )
+values = vapor.get_column("values").to_list()
 
 Plot.plot(
     {
@@ -160,9 +161,9 @@ Plot.plot(
         },
         "marks": [
             Plot.contour(
-                vapor,
+                values,
                 {
-                    "fill": "values",
+                    "fill": Plot.identity,
                     "width": 360,
                     "height": 180,
                     "x1": -180,
