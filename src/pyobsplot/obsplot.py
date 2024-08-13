@@ -360,6 +360,10 @@ class ObsplotJsdomCreator:
             msg = "Server has ended, please recreate your plot generator object."
             raise RuntimeError(msg)
 
+        if format in ["png", "pdf"] and theme == "current":
+            msg = f"'current' theme is not available for '{format}' format"
+            raise ValueError(msg)
+
         # Force output to HTML for formats that need it
         force_figure = "figure" not in spec and format in ["html", "png", "pdf"]
 
@@ -387,6 +391,12 @@ class ObsplotJsdomCreator:
                 RuntimeWarning,
                 stacklevel=1,
             )
+            if theme == "current":
+                msg = (
+                    "'current' theme is not available for 'svg' format"
+                    " with typst rendering"
+                )
+                raise ValueError(msg)
             res = self.typst_render(res, format, format_options)  # type: ignore
 
         # Save to file if path has been given
