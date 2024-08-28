@@ -108,9 +108,9 @@ uv run quarto render doc/
 ### Releases
 
 - If necessary release the npm package with `npm publish` in `packages/pyobsplot-js`
-- Check that the `min_npm_version` value in `.utils` is correct
+- Check that the `min_npm_version` value in `utils.py` is correct
 - Change version in `NEWS.md` and `pyproject.toml`
-- Build the Python package with `uvx --from build pyproject-build --installer uv`
+- Build the Python package with `npm run build`
 - Release the Python package with `uvx twine upload dist/pyobsplot-0.X.Y*`
 - Tag the version in git
 - Create a release on Github
