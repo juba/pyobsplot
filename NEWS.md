@@ -11,7 +11,7 @@
     This is done by converting figures using [typst](https://typst.app). Many thanks to
     @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.
 -   Update Observable Plot to 0.6.15
--   Migrate build system from hatch to rye
+-   Migrate project management from hatch to uv
 
 ## pyobsplot 0.4.2
 

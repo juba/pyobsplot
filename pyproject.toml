@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "pyobsplot"
 version = "0.5.0"
@@ -29,13 +33,7 @@ documentation = "https://juba.github.io/pyobsplot"
 repository = "https://github.com/juba/pyobsplot"
 changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.rye]
-managed = true
+[tool.uv]
 dev-dependencies = [
     "pytest>=8.2.1",
     "geopandas>=0.14.4",
@@ -44,14 +42,11 @@ dev-dependencies = [
     "playwright>=1.44.0",
 ]
 
-[tool.rye.scripts]
-test = "pytest"
-
-[tool.hatch.metadata]
-allow-direct-references = true
+#[tool.hatch.metadata]
+#allow-direct-references = true
 
 [tool.hatch.build.targets.sdist]
-exclude = [".github", "doc", ".vscode", "examples"]
+exclude = [".github", "doc", ".vscode", "examples", "tests", "utils"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pyobsplot"]
@@ -70,6 +65,8 @@ filterwarnings = "ignore::DeprecationWarning"
 [tool.ruff]
 exclude = ["__pycache__", "__pypackages__", ".git"]
 line-length = 88
+
+[tool.ruff.lint]
 select = [
     "A",
     "ARG",
@@ -122,10 +119,19 @@ unfixable = [
     "F401",
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["pyobsplot"]
 
-[tool.ruff.flake8-tidy-imports]
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 110
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.flake8-type-checking]
+strict = true
+
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
 [tool.ruff.per-file-ignores]

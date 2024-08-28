@@ -22,9 +22,9 @@ npm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'
 If you want to build `pyobsplot` from source, you'll have to follow these steps:
 
 - Install [node.js](https://nodejs.org/en)
-- Install [rye](https://rye.astral.sh/guide/installation/) dependency management system
+- Install [uv](https://docs.astral.sh/uv/getting-started/installation/) dependency management system
 - Clone the [pyobsplot](https://github.com/juba/pyobsplot) repository
-- Install Python dependencies with : `rye sync`
+- Install Python and Python dependencies with : `uv sync`
 - Install `pyobsplot-js` JavaScript dependencies with : `npm install --workspaces`
 - Install `pyobsplot` dependencies with : `npm install`
 
@@ -111,7 +111,8 @@ quarto render doc/
 - If necessary release the npm package with `npm publish` in `packages/pyobsplot-js`
 - Check that the `min_npm_version` value in `.utils` is correct
 - Change version in `NEWS.md` and `pyproject.toml`
-- Release the Python package with `rye build` and `rye publish` in `pyobsplot`
+- Build the Python package with `uvx --from build pyproject-build --installer uv`
+- Release the Python package with `uvx twine upload dist/pyobsplot-0.X.Y*`
 - Tag the version in git
 - Create a release on Github
 - Bump to dev version in `pyproject.toml` and `NEWS.md`

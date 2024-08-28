@@ -27,20 +27,11 @@ jobs:
             - name: Set up Quarto
               uses: quarto-dev/quarto-actions/setup@v2
 
-            #- name: Install Python
-            #  uses: actions/setup-python@v5
-            #  with:
-            #      python-version: "3.11"
-            #      cache: "pip"
+            - name: Install uv
+              run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-            - name: Install rye
-              uses: eifinger/setup-rye@v3
-              with:
-                  version: "latest"
-                  enable-cache: true
-
-            - name: Rye sync
-              run: rye sync
+            - name: uv sync
+              run: uv sync
 
             - name: Bundle
               run: npm run bundle
@@ -52,5 +43,4 @@ jobs:
               run: |
                   git config --global user.email "julien@nozav.org"
                   git config --global user.name "Julien Barnier"
-                  source .venv/bin/activate
-                  quarto publish gh-pages doc
+                  uv run quarto publish gh-pages doc
