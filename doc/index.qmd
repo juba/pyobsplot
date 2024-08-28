@@ -83,7 +83,7 @@ If you just want to try this package without installing it on your computer, you
 
 - Syntax as close as possible to the JavaScript one
 - Plots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)
-- Plots can be saved to SVG, HTML, PNG or PDF files
+- Plots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files
 - [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and better data type conversions
 - Works with Jupyter notebooks and Quarto documents
 - Works offline, no iframe or dependency to Observable runtime

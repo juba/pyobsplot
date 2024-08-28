@@ -7,10 +7,10 @@
 
 ### Other changes
 
--   Plots can now be generated in "png" and "pdf" formats when using the `jsdom` renderer.
+-   Plots can now be generated in "svg" and "png", and saved as "svg", "png" or "pdf".
     This is done by converting figures using [typst](https://typst.app). Many thanks to
     @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.
--   Update Observable Plot to 0.6.15
+-   Update Observable Plot to 0.6.16
 -   Migrate project management from hatch to uv
 
 ## pyobsplot 0.4.2
