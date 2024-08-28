@@ -8,7 +8,6 @@ from typing import Any
 
 import pandas as pd
 import polars as pl
-import pyarrow.feather as pf
 
 
 def serialize(data: Any, renderer: str) -> Any:
@@ -97,5 +96,6 @@ def pl_to_arrow(df: pl.DataFrame) -> bytes:
     df = df.with_columns(pl.col(pl.Date).cast(pl.Datetime("ms")))
 
     f = io.BytesIO()
-    pf.write_feather(df.to_arrow(), f, compression="uncompressed")
+    df_pd = df.to_pandas()
+    df_pd.to_feather(f, compression="uncompressed")
     return f.getvalue()
