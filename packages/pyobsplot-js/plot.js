@@ -22,6 +22,7 @@ export function generate_plot(spec, renderer) {
             out = Plot.plot(out);
         }
     } catch (error) {
+        console.error(error);
         // If an error occured, display it as output
         out = document.createElement("pre");
         out.style.color = "#DD3333";
