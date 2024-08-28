@@ -99,8 +99,7 @@ If using the `widget` renderer, debug output will be displayed in JavaScript con
 To generate the documentation with Quarto:
 
 ```sh
-source .venv/bin/activate
-quarto render doc/
+uv run quarto render doc/
 ```
 
 
