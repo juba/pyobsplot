@@ -283,7 +283,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="group-transform" class="level2">
 <h2 class="anchored" data-anchor-id="group-transform">Group transform</h2>
 <p><a href="https://observablehq.com/@observablehq/plot-group?collection=@observablehq/plot">Group transform</a> allows to compute summary values before plotting them. It is often used to make bar charts.</p>
-<div id="790085a6" class="cell" data-execution_count="2">
+<div id="a8fd8a4c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Plot, d3, Math, js</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -321,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="dodge-transform" class="level2">
 <h2 class="anchored" data-anchor-id="dodge-transform">Dodge transform</h2>
 <p>The <a href="https://observablehq.com/@observablehq/plot-dodge?collection=@observablehq/plot">Dodge transform</a> allows to pack marks without overlapping. The following chart shows data about IPO offerings in the US.</p>
-<div id="9da77e3a" class="cell" data-execution_count="3">
+<div id="f2522128" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ipos <span class="op">=</span> pl.read_csv(<span class="st">"data/ipos.csv"</span>, try_parse_dates<span class="op">=</span><span class="va">True</span>).<span class="bu">filter</span>(</span>
@@ -372,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="hexbin-transform" class="level2">
 <h2 class="anchored" data-anchor-id="hexbin-transform">Hexbin transform</h2>
 <p>The <a href="https://observablehq.com/@observablehq/plot-hexbin?collection=@observablehq/plot">Hexbin transform</a> aggregates two dimensional points into hexagonal bins.</p>
-<div id="57487c69" class="cell" data-execution_count="4">
+<div id="d00c32bd" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"inset"</span>: <span class="dv">10</span>,</span>
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="map-transform" class="level2">
 <h2 class="anchored" data-anchor-id="map-transform">Map transform</h2>
 <p><a href="https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot">Map transform</a> family can be used to normalize values.</p>
-<div id="a30ada2a" class="cell" data-execution_count="5">
+<div id="71576cbe" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stocks <span class="op">=</span> pl.read_csv(<span class="st">"data/stocks.csv"</span>, try_parse_dates<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
@@ -485,75 +485,77 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="transforms-composition" class="level2">
 <h2 class="anchored" data-anchor-id="transforms-composition">Transforms composition</h2>
 <p>Several group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the <a href="https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot">Map transform</a> notebook.</p>
-<div id="f042224a" class="cell" data-execution_count="6">
+<div id="551a58b9" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and prepare data</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>stateage <span class="op">=</span> (</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    pl.read_csv(<span class="st">"data/us-population-state-age.csv"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    .melt(id_vars<span class="op">=</span><span class="st">"name"</span>, variable_name<span class="op">=</span><span class="st">"age"</span>, value_name<span class="op">=</span><span class="st">"population"</span>)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    .rename({<span class="st">"name"</span>: <span class="st">"state"</span>})</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    .with_columns(pl.col(<span class="st">"population"</span>).cast(pl.Int32))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute list of age groups</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ages <span class="op">=</span> stateage.get_column(<span class="st">"age"</span>).unique(maintain_order<span class="op">=</span><span class="va">True</span>).to_list()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute list of states sorted by the proportion of age ≥80</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> (</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    stateage.with_columns(</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        (pl.col(<span class="st">"population"</span>) <span class="op">/</span> pl.col(<span class="st">"population"</span>).<span class="bu">sum</span>().over(<span class="st">"state"</span>)).alias(</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">"percent"</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"age"</span>) <span class="op">==</span> <span class="st">"≥80"</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    .sort(pl.col(<span class="st">"percent"</span>), descending<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    .get_column(<span class="st">"state"</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    .to_list()</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot.normalizeX default arguments</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>xy <span class="op">=</span> {<span class="st">"basis"</span>: <span class="st">"sum"</span>, <span class="st">"z"</span>: <span class="st">"state"</span>, <span class="st">"x"</span>: <span class="st">"population"</span>, <span class="st">"y"</span>: <span class="st">"state"</span>}</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot specification</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"height"</span>: <span class="dv">660</span>,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: {<span class="st">"axis"</span>: <span class="st">"top"</span>, <span class="st">"label"</span>: <span class="st">"Percent (%) →"</span>, <span class="st">"transform"</span>: js(<span class="st">"d =&gt; d * 100"</span>)},</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: {</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"domain"</span>: states,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"axis"</span>: <span class="va">None</span>,</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        },</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"color"</span>: {</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"scheme"</span>: <span class="st">"spectral"</span>,</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"domain"</span>: ages,</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"legend"</span>: <span class="va">True</span>,</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        },</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"marks"</span>: [</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>            Plot.ruleX([<span class="dv">0</span>]),</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY(</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>                stateage,</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>                Plot.groupY({<span class="st">"x1"</span>: <span class="st">"min"</span>, <span class="st">"x2"</span>: <span class="st">"max"</span>}, Plot.normalizeX(xy)),</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>            Plot.dot(</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>                stateage,</span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>                Plot.normalizeX({<span class="op">**</span>xy, <span class="st">"fill"</span>: <span class="st">"age"</span>}),</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>            Plot.text(</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>                stateage,</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>                Plot.selectMinX(</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>                    Plot.normalizeX(</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>                        {</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>                            <span class="op">**</span>xy,</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"textAnchor"</span>: <span class="st">"end"</span>,</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"dx"</span>: <span class="op">-</span><span class="dv">6</span>,</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"text"</span>: <span class="st">"state"</span>,</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>                        }</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>                    )</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>                ),</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: remove when Bigint error fixed upstream in Observable Plot</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>stateage <span class="op">=</span> stateage.with_columns(pl.col(<span class="st">"population"</span>).cast(pl.Int32))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute list of age groups</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ages <span class="op">=</span> stateage.get_column(<span class="st">"age"</span>).unique(maintain_order<span class="op">=</span><span class="va">True</span>).to_list()</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute list of states sorted by the proportion of age ≥80</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> (</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    stateage.with_columns(</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        (pl.col(<span class="st">"population"</span>) <span class="op">/</span> pl.col(<span class="st">"population"</span>).<span class="bu">sum</span>().over(<span class="st">"state"</span>)).alias(</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"percent"</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"age"</span>) <span class="op">==</span> <span class="st">"≥80"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    .sort(pl.col(<span class="st">"percent"</span>), descending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    .get_column(<span class="st">"state"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    .to_list()</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot.normalizeX default arguments</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>xy <span class="op">=</span> {<span class="st">"basis"</span>: <span class="st">"sum"</span>, <span class="st">"z"</span>: <span class="st">"state"</span>, <span class="st">"x"</span>: <span class="st">"population"</span>, <span class="st">"y"</span>: <span class="st">"state"</span>}</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot specification</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"height"</span>: <span class="dv">660</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: {<span class="st">"axis"</span>: <span class="st">"top"</span>, <span class="st">"label"</span>: <span class="st">"Percent (%) →"</span>, <span class="st">"transform"</span>: js(<span class="st">"d =&gt; d * 100"</span>)},</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: {</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"domain"</span>: states,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"axis"</span>: <span class="va">None</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"color"</span>: {</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"scheme"</span>: <span class="st">"spectral"</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">"domain"</span>: ages,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">"legend"</span>: <span class="va">True</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"marks"</span>: [</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>            Plot.ruleX([<span class="dv">0</span>]),</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>            Plot.ruleY(</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>                stateage,</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>                Plot.groupY({<span class="st">"x1"</span>: <span class="st">"min"</span>, <span class="st">"x2"</span>: <span class="st">"max"</span>}, Plot.normalizeX(xy)),</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>            Plot.dot(</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>                stateage,</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>                Plot.normalizeX({<span class="op">**</span>xy, <span class="st">"fill"</span>: <span class="st">"age"</span>}),</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>            Plot.text(</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>                stateage,</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>                Plot.selectMinX(</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>                    Plot.normalizeX(</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>                        {</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>                            <span class="op">**</span>xy,</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"textAnchor"</span>: <span class="st">"end"</span>,</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"dx"</span>: <span class="op">-</span><span class="dv">6</span>,</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"text"</span>: <span class="st">"state"</span>,</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>                        }</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>                ),</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_2586/3961366352.py:4: DeprecationWarning: `DataFrame.melt` is deprecated. Use `unpivot` instead, with `index` instead of `id_vars` and `on` instead of `value_vars`
+<pre><code>/tmp/ipykernel_2632/4276990166.py:4: DeprecationWarning: `DataFrame.melt` is deprecated. Use `unpivot` instead, with `index` instead of `id_vars` and `on` instead of `value_vars`
   .melt(id_vars="name", variable_name="age", value_name="population")</code></pre>
 </div>
 <div class="cell-output cell-output-display">
