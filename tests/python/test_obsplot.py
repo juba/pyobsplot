@@ -3,6 +3,7 @@ Tests for Obsplot main class.
 """
 
 import json
+import tempfile
 
 import pytest
 import requests
@@ -179,12 +180,13 @@ class TestInit:
             Obsplot(format="foo")  # type: ignore
 
     def test_path_format_override_warning(self, op):
+        file_path = tempfile.NamedTemporaryFile(suffix=".html")
         with pytest.warns():
-            Obsplot(format="png")({}, path="foo.html")
+            Obsplot(format="png")({}, path=file_path.name)
         with pytest.warns():
-            op({}, format="png", path="foo.html")
+            op({}, format="png", path=file_path.name)
         with pytest.warns():
-            Plot.plot({}, format="png", path="foo.html")
+            Plot.plot({}, format="png", path=file_path.name)
 
     def test_path_invalid_extension(self, op):
         with pytest.raises(ValueError):
@@ -205,7 +207,8 @@ class TestInit:
             "Exporting widget to HTML. If you want "
             "to output to a static HTML file, add format='html'"
         )
+        file_path = tempfile.NamedTemporaryFile(suffix=".html")
         with pytest.warns(match=html_warning):
-            op({}, path="foo.html")
+            op({}, path=file_path.name)
         with pytest.warns(match=html_warning):
-            Plot.plot({}, path="foo.html")
+            Plot.plot({}, path=file_path.name)
