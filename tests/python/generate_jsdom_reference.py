@@ -27,7 +27,9 @@ skip = {}
 
 penguins = pl.read_csv("../../doc/data/penguins.csv")
 stocks = pl.read_csv("../../doc/data/stocks.csv", try_parse_dates=True)
-simpsons = pl.read_csv("../../doc/data/simpsons.csv")
+simpsons = pl.read_csv("../../doc/data/simpsons.csv").filter(
+    pl.col("imdb_rating").is_not_null()
+)
 metros = pl.read_csv("../../doc/data/metros.csv")
 stateage = (
     pl.read_csv("../../doc/data/us-population-state-age.csv")

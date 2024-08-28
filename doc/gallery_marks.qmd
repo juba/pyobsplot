@@ -15,7 +15,7 @@ The following chart, taken from the [Cell Mark notebook](https://observablehq.co
 import polars as pl
 from pyobsplot import Plot, d3, Math, js
 
-simpsons = pl.read_csv("data/simpsons.csv")
+simpsons = pl.read_csv("data/simpsons.csv").filter(pl.col("imdb_rating").is_not_null())
 
 Plot.plot(
     {
