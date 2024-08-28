@@ -35,8 +35,7 @@ jobs:
 
             - name: Install Python dependencies
               run: |
-                  pip install -r requirements.lock
-                  pip install -r requirements-dev.lock
+                  pip install -r uv.lock
 
             - name: Run pytest
               run: pytest
