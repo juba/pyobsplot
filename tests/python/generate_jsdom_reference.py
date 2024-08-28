@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import os
 import pickle
 import sys
@@ -10,6 +11,9 @@ import polars as pl
 
 from pyobsplot import Obsplot, Plot, js
 from pyobsplot.utils import DEFAULT_THEME
+
+logger = logging.getLogger("generate-jsdom")
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(message)s")
 
 # Change working directory to script directory
 os.chdir(sys.path[0])
@@ -509,7 +513,7 @@ def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
             continue
         path = output_folder / f"{key}.{format}"
         if not (path.exists()):
-            print(f"Generating {key}.{format}")
+            logger.info(f"Generating {key}.{format}")
             if key in themes:
                 op.theme = themes[key]
             else:
@@ -521,7 +525,7 @@ def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
             format_value = None if format == "pdf" else format
             op(specs[key], format=format_value, path=path)  # type: ignore
         else:
-            print(f"{key}.{format} already exists")
+            logger.info(f"{key}.{format} already exists")
 
 
 if __name__ == "__main__":
