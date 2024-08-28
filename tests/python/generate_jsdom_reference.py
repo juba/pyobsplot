@@ -13,7 +13,7 @@ from pyobsplot import Obsplot, Plot, js
 from pyobsplot.utils import DEFAULT_THEME
 
 logger = logging.getLogger("generate-jsdom")
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(message)s")
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(message)s")
 
 # Change working directory to script directory
 os.chdir(sys.path[0])
