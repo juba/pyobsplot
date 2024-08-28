@@ -121,4 +121,4 @@ uv run quarto render doc/
 When a new Plot version is released:
 
 - update with `npm install @observablehq/plot d3 --workspaces --include-workspace-root`
-- run `utils/get_plot_methods.js` and update `utils.py` in `pyobsplot`
+- run `utils/get_plot_methods.js` to update Plot methods in `src/pyobsplot/js_modules.py`

@@ -112,7 +112,9 @@ ignore = [
     "S301",
     "S113",
     # Ignore datetime timezone
-    "DTZ001"
+    "DTZ001",
+    # Ignore Uppercase in method names
+    "N802"
 ]
 unfixable = [
     # Don't touch unused imports
