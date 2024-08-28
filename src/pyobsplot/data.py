@@ -59,6 +59,18 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
     bytes
         Arrow IPC bytes.
     """
+    # Convert dates to timestamps
+    for col in df.columns:
+        if df[col].dtype == "object":
+            try:
+                df[col] = pd.to_datetime(df[col])
+            except ValueError:
+                pass
+    # Convert timestamps to millisecond units so that
+    # Plot will detect them as datetimes
+    datetime_columns = df.select_dtypes(include=["datetime64"]).columns
+    df[datetime_columns] = df[datetime_columns].astype("datetime64[ms]")
+
     f = io.BytesIO()
     df.to_feather(f, compression="uncompressed")
     return f.getvalue()
@@ -78,6 +90,12 @@ def pl_to_arrow(df: pl.DataFrame) -> bytes:
     bytes
         Arrow IPC bytes.
     """
+
+    # Convert dates and datetimes to millisecond units so that
+    # Plot will detect them as datetimes
+    df = df.with_columns(pl.col(pl.Datetime).cast(pl.Datetime("ms")))
+    df = df.with_columns(pl.col(pl.Date).cast(pl.Datetime("ms")))
+
     f = io.BytesIO()
     pf.write_feather(df.to_arrow(), f, compression="uncompressed")
     return f.getvalue()
