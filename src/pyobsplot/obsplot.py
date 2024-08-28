@@ -288,7 +288,7 @@ class ObsplotJsdomCreator:
             raise RuntimeError(msg)
         # Run node script with JSON spec as input
         try:
-            p = Popen(
+            p = Popen(  # noqa: S603
                 ["npx", f"pyobsplot@{MIN_NPM_VERSION}"],  # noqa: S607
                 stdin=None,
                 stdout=PIPE,
@@ -296,7 +296,7 @@ class ObsplotJsdomCreator:
                 encoding="Utf8",
                 # Use shell=True if we are on Windows. Otherwise PATH
                 # is not parsed and npx is not found.
-                shell=os.name == "nt",  # noqa: S603
+                shell=os.name == "nt",
                 start_new_session=True,
             )
         except SubprocessError:
