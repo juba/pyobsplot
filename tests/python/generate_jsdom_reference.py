@@ -30,6 +30,7 @@ stateage = (
     .unpivot(index="name", variable_name="age", value_name="population")
     .rename({"name": "state"})
 )
+# TODO: remove when Bigint error fixed upstream in Observable Plot
 stateage = stateage.with_columns(pl.col("population").cast(pl.Int32))
 with open("../../doc/data/us_states.json") as f:
     us_states = json.load(f)

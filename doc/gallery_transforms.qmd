@@ -166,8 +166,10 @@ stateage = (
     pl.read_csv("data/us-population-state-age.csv")
     .melt(id_vars="name", variable_name="age", value_name="population")
     .rename({"name": "state"})
-    .with_columns(pl.col("population").cast(pl.Int32))
 )
+# TODO: remove when Bigint error fixed upstream in Observable Plot
+stateage = stateage.with_columns(pl.col("population").cast(pl.Int32))
+
 # Compute list of age groups
 ages = stateage.get_column("age").unique(maintain_order=True).to_list()
 # Compute list of states sorted by the proportion of age ≥80
