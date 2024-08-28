@@ -1,4 +1,4 @@
-## pyobsplot 0.5.0 (dev)
+## pyobsplot 0.5.0
 
 ### Breaking changes
 
