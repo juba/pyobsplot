@@ -27,24 +27,17 @@ jobs:
                   npm ci 
                   npm ci --workspaces
 
-            - name: Install Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ matrix.python-version }}
-                  cache: "pip"
-
             - name: Install uv
               run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-            - name: Generate pip lock file
-              run: uv pip compile pyproject.toml -o requirements.txt
+            - name: Set up Python ${{ matrix.python-version }}
+              run: uv python install ${{ matrix.python-version }}
 
             - name: Install Python dependencies
-              run: |
-                  pip install -r requirements.txt
+              run: uv sync
 
             - name: Run pytest
-              run: pytest
+              run: uv run pytest
 
     JS-tests:
         runs-on: ubuntu-latest
