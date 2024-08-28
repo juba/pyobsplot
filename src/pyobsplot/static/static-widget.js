@@ -42224,9 +42224,7 @@ function unserialize_data(data, renderer) {
       if (renderer == "jsdom") {
         value = Buffer.from(value, "base64");
       }
-      console.log(value);
       let table = tableFromIPC(value);
-      console.log(table);
       result.push(table);
     } else {
       result.push(d);
@@ -42312,6 +42310,9 @@ function generate_plot(spec, renderer) {
       out = plot(out);
     }
   } catch (error) {
+    if (renderer == "widget") {
+      console.error(error);
+    }
     out = document.createElement("pre");
     out.style.color = "#DD3333";
     out.style.padding = ".5em 1em";
