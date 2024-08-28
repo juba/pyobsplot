@@ -147,7 +147,7 @@ The following table lists the differences between the widget output and the othe
 <tr>
 <td>**Output**</td>
 <td>Jupyter Widget</td>
-<td>Staitc HTML, SVG, PNG. PDF is available when saving to a file.</td>
+<td>Static HTML, SVG, PNG. PDF is available when saving to a file.</td>
 </tr>
 <tr>
 <td>**Additional<br>installation**</td>
