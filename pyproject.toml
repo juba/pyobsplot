@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyobsplot"
-version = "0.5.0"
+version = "0.5.1"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
 authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
 license = {file = "LICENSE"}
