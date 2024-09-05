@@ -128,7 +128,7 @@ class SpecParser:
         if spec is None:
             return None
         # If list or tuple, recursively parse elements
-        if isinstance(spec, (list, tuple)):
+        if isinstance(spec, list | tuple):
             return [self.parse(s) for s in spec]
         # If Geojson as string, parse as dict and continue parsing
         if isinstance(spec, str) and spec[0:28] == '{"type": "FeatureCollection"':
@@ -180,10 +180,10 @@ class SpecParser:
         if isinstance(spec, pl.Series):
             return self.parse(pl.DataFrame(spec))
         # If date or datetime, add tupe and convert to isoformat.
-        if isinstance(spec, (datetime.date, datetime.datetime)):
+        if isinstance(spec, datetime.date | datetime.datetime):
             return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
         # Handling of JavaScript methods as objects, such as "Math.sin"
-        # Manually call the parsed result ans add a special "function-object" type
+        # Manually call the parsed result and add a special "function-object" type
         if (
             callable(spec)
             and isinstance(spec(), dict)
