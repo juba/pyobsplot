@@ -24,12 +24,16 @@ function python_method(name) {
         return method_to_spec("${name}", *args, **kwargs)`;
 }
 
+process.stdin.write("Importing methods...\n");
+
 let methods = Object.keys(Plot)
     .filter((d) => d[0] !== d[0].toUpperCase())
     .filter((d) => d != "plot")
     .map(python_method)
     .join("\n");
 
-replaceLines(parentDir + "/src/pyobsplot/js_modules.py", methods).catch(console.error);
+process.stdin.write("Inserting methods in plot.py...\n");
 
-//process.stdin.write(methods);
+replaceLines(parentDir + "/src/pyobsplot/plot.py", methods).catch(console.error);
+
+process.stdin.write("Done.");
