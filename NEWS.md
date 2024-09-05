@@ -1,5 +1,7 @@
 ## pyobsplot 0.5.1-dev
 
+-   New shortcut syntax `Plot.line(...).plot()` is now available (#18, thanks @harrylojames)
+
 ## pyobsplot 0.5.0
 
 ### Breaking changes

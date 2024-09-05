@@ -20,7 +20,7 @@ async function replaceLines(filePath, newContent) {
 function python_method(name) {
     return `
     @staticmethod
-    def ${name}(*args, **kwargs) -> dict: # noqa: ARG001, ARG004, RUF100
+    def ${name}(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("${name}", *args, **kwargs)`;
 }
 
