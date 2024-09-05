@@ -4,6 +4,7 @@ Functions for DataFrame objects conversion to Arrow IPC bytes.
 
 import base64
 import io
+from datetime import date
 from typing import Any
 
 import pandas as pd
@@ -59,10 +60,11 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
         Arrow IPC bytes.
     """
     # Convert dates to timestamps
-    for col in df.columns:
-        if df[col].dtype == "object":
+    for colname in df.columns:
+        col = df[colname].dropna()
+        if col is not None and isinstance(col[0], date):
             try:
-                df[col] = pd.to_datetime(df[col])
+                df[colname] = pd.to_datetime(df[colname])
             except ValueError:
                 pass
     # Convert timestamps to millisecond units so that
