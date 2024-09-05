@@ -60,7 +60,7 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
     """
     # Convert dates to timestamps
     for col in df.columns:
-        if df[col].dtype == "object":
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
             try:
                 df[col] = pd.to_datetime(df[col])
             except ValueError:
