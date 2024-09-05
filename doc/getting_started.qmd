@@ -94,8 +94,6 @@ By default, plots will be created as [Jupyter widgets](https://ipywidgets.readth
 
 The output format is configured by passing a `format` argument to `Plot.plot()`:
 
-It is also possible to specify a `format` or a `path` when using the `Plot.plot()` syntax:
-
 ```python
 # Display plot as PNG
 Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
