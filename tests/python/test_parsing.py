@@ -171,15 +171,13 @@ class TestParse:
             "pyobsplot-type": "datetime",
             "value": "2023-01-01",
         }
-        assert SpecParser().parse(
-            datetime.datetime(2023, 1, 1, 14, 25, 12)  # noqa: DTZ001
-        ) == {
+        assert SpecParser().parse(datetime.datetime(2023, 1, 1, 14, 25, 12)) == {
             "pyobsplot-type": "datetime",
             "value": "2023-01-01T14:25:12",
         }
 
     def test_parse_js(self):
-        assert SpecParser().parse(js_modules.Plot.dot()) == {  # type: ignore
+        assert SpecParser().parse(Plot.dot()) == {  # type: ignore
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "dot",
