@@ -1,97 +1,38 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "pyobsplot",
+    "objectID": "gallery_geo.html",
+    "href": "gallery_geo.html",
+    "title": "Mapping and spatial data",
     "section": "",
-    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+    "text": "The Geo mark allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.\nThis allows to create choropleth maps such as the following:\n\nfrom pyobsplot import Obsplot, Plot\nimport geopandas as gpd\nimport pandas as pd\n\n# Load US counties from TopoJson with geopandas\ncounties = gpd.read_file(\"data/us-counties-10m.json\", layer=\"counties\")\ncounties[\"id\"] = pd.to_numeric(counties[\"id\"])\n# Merge unemployment values\nunemployment = pd.read_csv(\"data/us-county-unemployment.csv\")\ncounties = pd.merge(counties, unemployment.loc[:, (\"id\", \"rate\")], on=\"id\", how=\"left\")\n\n# Convert geodataframe to GeoJson\ncounties = counties.to_json()\n\n# Map\nPlot.plot(\n    {\n        \"marks\": [Plot.geo(counties, {\"fill\": js(\"(d) =&gt; d.properties.rate\")})],\n        \"projection\": \"albers-usa\",\n        \"color\": {\n            \"type\": \"quantile\",\n            \"n\": 8,\n            \"scheme\": \"blues\",\n            \"label\": \"Unemployment (%)\",\n            \"legend\": True,\n        },\n    }\n)\n\n3.344.555.56.27.4Unemployment (%)\n\n\nOf course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the Mapping notebook.\n\n# Load US states from TopoJson with geopandas and convert to GeoJson\nstates = gpd.read_file(\"data/us-counties-10m.json\", layer=\"states\").to_json()\nnation = gpd.read_file(\"data/us-counties-10m.json\", layer=\"nation\").to_json()\n\nwalmarts = pd.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\nPlot.plot(\n    {\n        \"marks\": [\n            Plot.density(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"bandwidth\": 12, \"fill\": \"density\"},\n            ),\n            Plot.dot(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"r\": 1, \"fill\": \"currentColor\"},\n            ),\n            Plot.geo(states, {\"strokeOpacity\": 0.3}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n        \"color\": {\"scheme\": \"blues\"},\n    }\n)",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Mapping and spatial data"
+    ]
   },
   {
-    "objectID": "index.html#overview",
-    "href": "index.html#overview",
-    "title": "pyobsplot",
+    "objectID": "gallery_geo.html#geo-mark",
+    "href": "gallery_geo.html#geo-mark",
+    "title": "Mapping and spatial data",
     "section": "",
-    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
-  },
-  {
-    "objectID": "index.html#installation-and-usage",
-    "href": "index.html#installation-and-usage",
-    "title": "pyobsplot",
-    "section": "Installation and usage",
-    "text": "Installation and usage\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
-  },
-  {
-    "objectID": "index.html#features-and-limitations",
-    "href": "index.html#features-and-limitations",
-    "title": "pyobsplot",
-    "section": "Features and limitations",
-    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nPlots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)\nPlots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and better data type conversions\nWorks with Jupyter notebooks and Quarto documents\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\n\nLimitations:\n\nPlot interactions (tooltips, crosshair…) are only available with the “widget” format (#16).\nVery limited integration with IDE (documentation and autocompletion) for Plot methods (unlike in Observable notebooks) (#13)."
-  },
-  {
-    "objectID": "index.html#credits",
-    "href": "index.html#credits",
-    "title": "pyobsplot",
-    "section": "Credits",
-    "text": "Credits\n\nObservable Plot, developed by Mike Bostock and Philippe Rivière among others.\nThe widget is developed thanks to the anywidget framework.\ntypst is used to convert HTML figures to PNG, SVG or PDF.\nSome code from the jsdom renderer has been adapted from altair_saver.\nThis documentation website is generated by Quarto."
-  },
-  {
-    "objectID": "gallery_marks.html",
-    "href": "gallery_marks.html",
-    "title": "Marks",
-    "section": "",
-    "text": "Marks are the building blocks of Plot charts.",
+    "text": "The Geo mark allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.\nThis allows to create choropleth maps such as the following:\n\nfrom pyobsplot import Obsplot, Plot\nimport geopandas as gpd\nimport pandas as pd\n\n# Load US counties from TopoJson with geopandas\ncounties = gpd.read_file(\"data/us-counties-10m.json\", layer=\"counties\")\ncounties[\"id\"] = pd.to_numeric(counties[\"id\"])\n# Merge unemployment values\nunemployment = pd.read_csv(\"data/us-county-unemployment.csv\")\ncounties = pd.merge(counties, unemployment.loc[:, (\"id\", \"rate\")], on=\"id\", how=\"left\")\n\n# Convert geodataframe to GeoJson\ncounties = counties.to_json()\n\n# Map\nPlot.plot(\n    {\n        \"marks\": [Plot.geo(counties, {\"fill\": js(\"(d) =&gt; d.properties.rate\")})],\n        \"projection\": \"albers-usa\",\n        \"color\": {\n            \"type\": \"quantile\",\n            \"n\": 8,\n            \"scheme\": \"blues\",\n            \"label\": \"Unemployment (%)\",\n            \"legend\": True,\n        },\n    }\n)\n\n3.344.555.56.27.4Unemployment (%)\n\n\nOf course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the Mapping notebook.\n\n# Load US states from TopoJson with geopandas and convert to GeoJson\nstates = gpd.read_file(\"data/us-counties-10m.json\", layer=\"states\").to_json()\nnation = gpd.read_file(\"data/us-counties-10m.json\", layer=\"nation\").to_json()\n\nwalmarts = pd.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\nPlot.plot(\n    {\n        \"marks\": [\n            Plot.density(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"bandwidth\": 12, \"fill\": \"density\"},\n            ),\n            Plot.dot(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"r\": 1, \"fill\": \"currentColor\"},\n            ),\n            Plot.geo(states, {\"strokeOpacity\": 0.3}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n        \"color\": {\"scheme\": \"blues\"},\n    }\n)",
     "crumbs": [
       "Documentation",
       "Gallery",
-      "Marks"
+      "Mapping and spatial data"
     ]
   },
   {
-    "objectID": "gallery_marks.html#cell-mark",
-    "href": "gallery_marks.html#cell-mark",
-    "title": "Marks",
-    "section": "Cell mark",
-    "text": "Cell mark\nThe following chart, taken from the Cell Mark notebook, shows the rating of every episode of The Simpsons.\n\nimport polars as pl\nfrom pyobsplot import Plot, d3, Math, js\n\nsimpsons = pl.read_csv(\"data/simpsons.csv\")\n\nPlot.plot(\n    {\n        \"height\": 640,\n        \"padding\": 0.05,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Season\"},\n        \"y\": {\"label\": \"Episode\"},\n        \"color\": {\"type\": \"linear\", \"scheme\": \"PiYG\"},\n        \"marks\": [\n            Plot.cell(\n                simpsons,\n                {\"x\": \"season\", \"y\": \"number_in_season\", \"fill\": \"imdb_rating\"},\n            ),\n            Plot.text(\n                simpsons,\n                {\n                    \"x\": \"season\",\n                    \"y\": \"number_in_season\",\n                    \"text\": \"imdb_rating\",\n                    \"title\": \"title\",\n                },\n            ),\n        ],\n    }\n)\n\n12345678910111213141516171819202122232425Episode12345678910111213141516171819202122232425262728Season7.4Homer's Night Out8.3Krusty Gets Busted8.2Bart Gets an \"F\"8.1Two Cars in Every Garage and Three Eyes on Every Fish8Dead Putting Society8.4Bart the Daredevil7.8Bart Gets Hit by a Car8Homer vs. Lisa and the 8th Commandment8.2Oh Brother, Where Art Thou?7.6Old Money8.5Lisa's Substitute8Blood Feud7.7Mr. Lisa Goes to Washington8.7Bart the Murderer7.7Like Father, Like Clown7.9Saturdays of Thunder8.2Burns Verkaufen der Kraftwerk8.5Radio Bart8.3Bart the Lover8.2Separate Vocations7.9Colonel Homer7.8Bart's Friend Falls in Love8.4Kamp Krusty8.2Itchy & Scratchy: The Movie8.5Lisa's First Word8Selma's Choice7.9The Call of the Simpsons8.8One Fish, Two Fish, Blowfish, Blue Fish7.7Marge in Chains8.4Homer's Barbershop Quartet8.6Homer Goes to College8Marge on the Lam8.7Boy-Scoutz 'n the Hood8.2Homer the Vigilante8.1Bart Gets Famous8.2Lisa vs. Malibu Stacy7.9Bart Gets an Elephant7.5Lady Bouvier's Lover8.6Bart of Darkness8.5Itchy & Scratchy Land8.4Lisa on Ice7.8Fear of Flying8.5And Maggie Makes Three8.5Homie the Clown7.9Homer vs. Patty and Selma8.1Two Dozen and One Greyhounds8.3'Round Springfield8.6Lemon of Troy8.3Radioactive Man8.7Bart Sells His Soul8.5Treehouse of Horror VI8.3Marge Be Not Proud8.3Team Homer7.7Bart the Fink8.2New Kid on the Block8.822 Short Films About Springfield8Much Apu About Nothing8.3Summer of 4 Ft. 27.7Burns, Baby Burns7.8Lisa's Date with Density9The Springfield Files7.8The Twisted World of Marge Simpson7.9The Itchy & Scratchy & Poochie Show8.9Homer's Phobia8.7Homer vs. the Eighteenth Amendment7.7The Canine Mutiny8In Marge We Trust7.8The Secret War of Lisa Simpson7.4The Principal and the Pauper7.7Bart Star8Lisa the Skeptic5.1All Singing, All Dancing8.2The Joy of Sect7.8This Little Wiggy7.9The Trouble with Trillions8.5Trash of the Titans8.1Natural Born Kissers8.2The Wizard of Evergreen Terrace8Treehouse of Horror IX8.2Mayored to the Mob7.7Wild Barts Can't Be Broken7.5Make Room for Lisa7.6Mom and Pop Art7.2Monty Can't Buy Me Love7.9Thirty Minutes over Tokyo7.5Guess Who's Coming to Criticize Dinner?7.6E-I-E-I-(Annoyed Grunt)7.1Eight Misbehavin'7.3The Mansion Family7.9Alone Again, Natura-diddily7.3Pygmoelian6.6Kill the Alligator and Run7.3It's a Mad, Mad, Mad, Mad Marge7.6Treehouse of Horror XI7.1Insane Clown Poppy7.7The Computer Wore Menace Shoes7.3Pokey Mom7.2Day of the Jackanapes7.4Hungry, Hungry Homer6.9Simpson Safari7.3Children of a Lesser Clod7.5Treehouse of Horror XII7.2Homer the Moe7.7The Blunder Years7.5Half-Decent Proposal6.5The Lastest Gun in the West7Blame It on Lisa5.6Gump Roast8.7Homer's Triple Bypass7Bart vs. Lisa vs. the Third Grade7.3The Great Louse Detective7.3The Dad Who Knew Too Little6.8Pray Anything7.3C.E.D'oh7.2Three Gays of the Condo6.9Brake My Wife, Please7.7Moe Baby Blues7.3My Mother the Carjacker7.2The Fat and the Furriest7.2'Tis the Fifteenth Season7.3I, (Annoyed Grunt)-bot7.1Smart & Smarter6.9Co-Dependents' Day7Catch 'Em If You Can7.3The Way We Weren't7.2Fraudcast News7.1Sleeping with the Enemy7.1Fat Man and Little Boy7Mommie Beerest7.1There's Something About Marrying7Goo Goo Gai Pan6.9The Seven-Beer Snitch7.2The Heartbroke Kid7.3Thank God It's Doomsday6.3The Bonfire of the Manatees8.3Duffless6.7The Last of the Red Hat Mamas6.9Simpsons Christmas Stories6.4My Fair Laddy7Bart Has Two Mommies6.6Million-Dollar Abie6.7Regarding Margie7.5The Mook, the Chef, the Wife and Her Homer6.8Please Homer, Don't Hammer 'Em6.9G.I. (Annoyed Grunt)7Ice Cream of Margie (with the Light Blue Hair)6.4Kill Gil, Volumes I & II7Little Big Girl7.1Yokel Chords7.2Homerazzi7.1Crook and Ladder8.124 Minutes6.7The Homer of Seville6.7Little Orphan Millie7.1Funeral for a Fiend6.9E Pluribus Wiggum7.7The Debarted6.7Smoke on the Daughter6.9Apocalypse Cow7.1Mona Leaves-a6.9Lost Verizon7.1Treehouse of Horror XIX7.2So It's Come to This: A Simpsons Clip Show7.2Gone Maggie Gone7Father Knows Worst6.3Four Great Women and a Manicure7.1Homer the Whopper6.8Rednecks and Broomsticks6.8Thursdays with Abie7.1Million Dollar Maybe7.1Postcards from the Wedge5.7The Greatest Story Ever D'ohed6.9Moe Letter Blues6.6Judge Me Tender6.8Loan-a Lisa7.2Lisa Simpson, This Isn't Your Life6.9The Fight Before Christmas7Donnie Fatso7Homer the Father7.2Angry Dad: The Movie6.1A Midsummer's Nice Dream7The Great Simpsina7.3500 Keys7.2The Falcon and the D'ohman6.6Treehouse of Horror XXII7.2The Food Wife6.2The Ten-Per-Cent Solution6.1Politically Inept, with Homer Simpson5.7Moe Goes from Rags to Riches6.7Pranks and Greens8.5$pringfield (or, How I Learned to Stop Worrying and Love Legalized Gambling)7.1Beware My Cheating Bart6.9The Spy Who Learned Me4.5Lisa Goes Gaga6.3Penny-Wiseguys7.2To Cur with Love7A Test Before Trying6.5Love is a Many-Splintered Thing6.2Gorgeous Grampa6.5What Animated Women Want6.8Whiskey Business7Homerland6.7YOLO6.5The Kid Is All Right6.5White Christmas Blues7.2Specs and the City6.7The Man Who Grew Too Much7The War of Art6.5Luca$7.7Brick Like Me6.7The Yellow Badge of Cowardge6.9The Wreck of the Relationship6.3Opposites A-Frack6.9Blazed and Confused6.8The Man Who Came to Be Dinner5.8The Musk Who Fell to Earth6.7Peeping Mom7.5Life on the Fast Lane7.8The Crepes of Wrath7.9Some Enchanted Evening8.3Simpson and Delilah8.2Treehouse of Horror7.5Dancin' Homer7.7Bart vs. Thanksgiving8.1Itchy & Scratchy & Marge8.2The Way We Was7.5Principal Charming7.5Bart's Dog Gets an \"F\"7.9The War of the Simpsons6.8Bull-E6.7Cue Detective6.8Friend with Benefit8.4Barthood6.8Teenage Mutant Milk-Caused HurdlesFriends and Family\"[203]The Town\"[205]Treehouse of Horror XXVII\"[207]6.6Gal of Constant Sorrow7.3The Marge-ian Chronicles7.1Fland Canyon6.4Simprovised8.2Simpsons Roasting on an Open Fire7.8Bart the Genius7.8There's No Disgrace Like Home7.6Moaning Lisa7.7The Telltale Head8.4Three Men and a Comic Book8.6Stark Raving Dad8.2When Flanders Failed8.5Homer Defined8.1The Front8.1Brother from the Same Planet8.7Treehouse of Horror IV9Marge vs. the Monorail8.3I Love Lisa8.4The Last Temptation of Homer7.7Dog of Death8.2Treehouse of Horror II7.9Lisa's Pony7.8Marge Gets a Job8.2I Married Marge9Last Exit to Springfield8Lisa the Greek7.7The Otto Show8.9Rosebud8Homer Alone8.6Homer at the Bat8.1Whacking Day7.8Lisa the Beauty Queen8.2Krusty Gets Kancelled8.2Black Widower8.1A Streetcar Named Marge8.4Treehouse of Horror III8.8Mr. Plow8.3Homer and Apu8.5Homer Loves Flanders8.4Burns' Heir8Sideshow Bob's Last Gleaming8Grampa vs. Sexual Inadequacy8.2A Fish Called Selma8.6Bart's Comet8.3Home Sweet Homediddly-Dum-Doodily7.7Scenes from the Class Struggle in Springfield8.5Bart vs. Australia9King-Size Homer8Secrets of a Successful Marriage8.1Lisa's Rival8.5A Star Is Burns8.3Lisa's Wedding6Another Simpsons Clip Show8.5Lisa the Vegetarian8.1The PTA Disbands8.3Sideshow Bob Roberts8Bart's Girlfriend8.9Who Shot Mr. Burns? (Part Two)8.2The Springfield Connection8.9Homer the Smithers9Homer Badman8.9Homer the Great7.5The Simpsons 138th Episode Spectacular8.7Two Bad Neighbors8.1Lisa the Iconoclast8.5Mother Simpson8.3Raging Abe Simpson and His Grumbling Grandson in \"The Curse of the Flying Hellfish\"8Homerpalooza8.1Lisa's Sax7.7Simpsoncalifragilisticexpiala(Annoyed Grunt)cious8.3Treehouse of Horror VII8.2Brother from Another Series8The Homer They Fall8.2Bart After Dark7.7Lost Our Lisa7.9Girly Edition7.5Realty Bites7.9The Old Man and the Lisa8A Milhouse Divided8.1My Sister, My Sitter7.5The Last Temptation of Krust8.2The Cartridge Family8.2Grade School Confidential8.8Hurricane Neddy8.3Simpson Tide7.3The Simpsons Spin-Off Showcase9.1The City of New York vs. Homer Simpson7.6Miracle on Evergreen Terrace8.3King of the Hill8.1Das Bus7.6Lard of the Dance7.7Bart Carny8Lisa the Simpson8The Day the Violence Died7.3When You Dish Upon a Star8Lisa Gets an \"A\"7.3Homer Simpson in: \"Kidney Trouble\"7.2Lisa the Tree Hugger6.9Sunday, Cruddy Sunday7.6Maximum Homerdrive7.3Hello Gutter, Hello Fadder7.3Simpsons Bible Stories6.9Tennis the Menace7.8Viva Ned Flanders7.7Treehouse of Horror X7.2Last Tap Dance in Springfield7.5Brother's Little Helper7.3The Old Man and the \"C\" Student7Bart to the Future7.3Beyond Blunderdome7.3They Saved Lisa's Brain7.7Homer to the Max7.1Take My Wife, Sleaze7.3Little Big Mom6.9Faith Off7.5Worst Episode Ever6.6Saddlesore Galactica7.9Behind the Laughter7.3The Great Money Caper7.3Missionary: Impossible7.4Days of Wine and D'oh'ses8.6Bart on the Road6.5Bye, Bye, Nerdie7.3I'm Goin' to Praiseland7Simpsons Tall Tales7.7I Am Furious (Yellow)6.9The Sweetest Apu7The President Wore Pearls7.1The Parent Rap7.7Weekend at Burnsie's7.1Large Marge7.1The Bart Wants What It Wants6.9Mr. Spritz Goes to Washington7.2A Hunka Hunka Burns in Love7.3How I Spent My Strummer Vacation7.1She of Little Faith6.8Helter Shelter7.3Tales from the Public Domain6.9The Strong Arms of the Ma6.9Brawl in the Family7.3Jaws Wired Shut7.2Little Girl in the Big Ten6.8Old Yeller-Belly7.1Special Edna6.6Barting Over7Dude, Where's My Ranch?6.6The Bart of War7.4Treehouse of Horror XIV8.6Mountain of Madness6.6Today I Am a Clown6.7Marge vs. Singles, Seniors, Childless Couples and Teens and Gays7.3Diatribe of a Mad Housewife7All's Fair in Oven War6.2Bart-Mangled Banner6.8A Star Is Torn6.9See Homer Run7.3Milhouse Doesn't Live Here Anymore6.9The Ziff Who Came to Dinner6.4Homer and Ned's Hail Mary Pass6.9The Girl Who Slept Too Little6.9The Wandering Juvie7Milhouse of Sand and Fog7.3Treehouse of Horror XVI6.7Homer's Paternity Coot6.6She Used to Be My Girl6.7My Big Fat Geek Wedding7.3Future-Drama7The Italian Bob7.3Simple Simpson7We're on the Road to D'ohwhere6.9On a Clear Day I Can't See My Sister7.1Home Away from Homer7.4Treehouse of Horror XV7.3Midnight Rx6.8Pranksta Rap7.6Dumbbell Indemnity7.2Girls Just Want to Have Sums7.1The Monkey Suit6.3The Boys of Bummer7.1Treehouse of Horror XVIII6.3Rome-Old and Juli-Eh6.1Papa Don't Leech6.6Marge and Homer Turn a Couple Play6.6The Wife Aquatic7Double, Double, Boy in Trouble7.1Treehouse of Horror XVII6.3That '90s Show6.6The Burns and the Bees6.8Moe'N'a Lisa7.2The Haw-Hawed Couple7.1Husbands and Knives6.4All About Lisa7.3You Kent Always Say What You Want6.6Dangerous Curves7.3Springfield Up7Revenge Is a Dish Best Served Three Times7.3Marge Gamer7Stop! Or My Dog Will Shoot7.3Dial 'N' for Nerder6.6Love, Springfieldian Style7.1MyPods and Boomsticks7.2Sex, Pies and Idiot Scrapes7Any Given Sundance7.5Bart the Mother7Take My Life, Please7No Loan Again, Naturally6.3Elementary School Musical7.1Waverly Hills, 9-0-2-1-D'oh7.2The Bob Next Door7.2The Good, the Sad and the Drugly6.7Once Upon a Time in Springfield6.6Bart Gets a 'Z'7.2Eeny Teeny Maya Moe6.9Chief of Hearts6.3The Great Wife Hope7.2To Surveil with Love6.7The Scorpion's Tale6.9The Blue and the Gray6.6The Color Yellow6.5The Fool Monty7.2O Brother, Where Bart Thou?6.8Boy Meets Curl6.5Love Is a Many Strangled Thing6.7The Devil Wears Nada7.2Homer Scissorhands7Stealing First Base6.4How Munched is That Birdie in the Window?6.6The Real Housewives of Fat Tony6.3Moms I'd Like to Forget6.8MoneyBart6.9Flaming Moe7.3I'm with Cupid7Bart Stops to Smell the Roosevelts6.7Replaceable You7The D'oh-cial Network7.1Married to the Blob6.7Ned 'n Edna's Blend6.7Gone Abie Gone6.9Homer Goes to Prep School6.5Four Regrettings and a Funeral7Yellow Subterfuge7.4A Totally Fun Thing That Bart Will Never Do Again7.8The Book Job6.5The Daughter Also Rises7.6Steal This Episode6.9Exit Through the Kwik-E-Mart7Black Eyed, Please7.1Them, Robot7.1Treehouse of Horror XXIV6.5Pulpit Friction6.6The Changing of the Guardian6.4Moonshine River6.5A Tree Grows in Springfield7.3Treehouse of Horror XXIII7.2The Day the Earth Stood Cool7Hardly Kirk-ing6.3The Fabulous Faker Boy7.1Labor Pains7Dangers on a Train7.3Marge Simpson in: \"Screaming Yellow Honkers\"6.6The Winter of His Content5.8What to Expect When Bart's Expecting6.5Covercraft6.3Walking Big & Tall6.8Treehouse of Horror XXVI6.6The Girl Code6.7Pay Pal5.9Every Man's Dream6.2Let's Go Fly a Coot6.7Waiting for Duffman6.3Lisa with an 'S'7.3Bart's New Friend6.3Love Is in the N2-O2-Ar-CO2-Ne-He-CH46.9The Kids Are All Fight6.9Sky Police5.8Clown in the Dumps6.5Super Franchise Me6.7Much Apu About Something6.8I Won't Be Home for Christmas7.3Treehouse of Horror XXV6.7My Fare Lady6.5The Burns Cage6.9Mathlete's Feat6.3Lisa the Veterinarian7.1Paths of Glory7.2Puffless8Brush with Greatness8.8Flaming Moe's8.1Bart the General8.2Brother, Can You Spare Two Dimes?9Homer the Heretic9Cape Feare7.7Bart's Inner Child8.8Deep Space Homer8.4Sweet Seymour Skinner's Baadasssss Song8.2The Boy Who Knew Too Much9Treehouse of Horror V9.1Who Shot Mr. Burns? (Part One)9.2You Only Move Twice8.5El Viaje Misterioso de Nuestro Jomer (The Mysterious Voyage of Homer)9.2Homer's Enemy8.1Treehouse of Horror VIII7.7The Two Mrs. Nahasapeemapetilons7.6D'oh-in' in the Wind8Skinner's Sense of Snow8HOMR8.6Trilogy of Error8Poppa's Got a Brand New Badge7.6Treehouse of Horror XIII8.2Holidays of Future Passed7.9Simpsorama7.5Halloween of Horror6.7To Courier with Love7.5Homer's Odyssey7.3Grift of the Magi7.4A Tale of Two Springfields7.2Homer vs. Dignity6.5The Old Man and the Key7.1'Scuse Me While I Miss the Sky7.1Margical History Tour7Mobile Homer7.4Don't Fear the Roofer7.4The Seemingly Never-Ending Story6.5Homer Simpson, This Is Your Wife6.7The Wettest Stories Ever Told7.2Midnight Towboy7.1Homer and Lisa Exchange Cross Words7.2Coming to Homerica7.3Treehouse of Horror XX6.7American History X-cellent6.9The Squirt and the Whale7.1Treehouse of Horror XXI6.8The Man in the Blue Flannel Pants7.1Dark Knight Court7.2The Saga of Carl6.9You Don't Have to Live Like a Referee6.6The Princess Guide6.4How Lisa Got Her Marge Back6.9Orange Is the New Yellow6.6Monty Burns' Fleeing Circus7.2New Kids on the Blecch7Sweets and Sour Marge7.1The Frying Game7.3I'm Spelling As Fast As I Can7.1A Star Is Born-Again7.1The Regina Monologues7.2The Father, the Son, and the Holy Guest Star6.9Marge's Son Poisoning7.2Kiss Kiss, Bang Bangalore6.7Jazzy and the Pussycats6.7He Loves to Fly and He D'ohs6.9I Don't Wanna Know Why the Caged Bird Sings8.2Eternal Moonshine of the Simpson Mind5.9Lisa the Drama Queen7How the Test Was Won6.3In the Name of the Grandfather6.8Wedding for Disaster7The Ned-Liest Catch7At Long Last Leave7.3How I Wet Your Mother6.9Adventures in Baby-Getting6.4Diggs7Days of Future Future",
+    "objectID": "gallery_geo.html#raster-mark",
+    "href": "gallery_geo.html#raster-mark",
+    "title": "Mapping and spatial data",
+    "section": "Raster mark",
+    "text": "Raster mark\nThe Raster mark creates an image from spatial data.\nPlot allows to do different type of spatial interpolations, such as nearest, which draws voronoi cells around values:\n\nimport polars as pl\n\nca55 = pl.read_csv(\"data/ca55-south.csv\")\n\n\ndef flare_map(interpolation):\n    return Plot.plot(\n        {\n            \"x\": {\"axis\": None},\n            \"y\": {\"axis\": None},\n            \"inset\": 10,\n            \"marginBottom\": 2,\n            \"height\": 500,\n            \"color\": {\"type\": \"diverging\"},\n            \"marks\": [\n                Plot.raster(\n                    ca55,\n                    {\n                        \"x\": \"LONGITUDE\",\n                        \"y\": \"LATITUDE\",\n                        \"fill\": \"MAG_IGRF90\",\n                        \"interpolate\": interpolation,\n                    },\n                ),\n                Plot.frame(),\n            ],\n        }\n    )\n\n\nflare_map(\"nearest\")\n\n\n\n\nOr the more recent random walk interpolation:\n\nflare_map(\"random-walk\")",
     "crumbs": [
       "Documentation",
       "Gallery",
-      "Marks"
-    ]
-  },
-  {
-    "objectID": "gallery_marks.html#faceting",
-    "href": "gallery_marks.html#faceting",
-    "title": "Marks",
-    "section": "Faceting",
-    "text": "Faceting\nFaceting allows to easily produce multiple plots by partitioning data. The following facet plot is taken from the Facets notebook.\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"facet\": {\"marginRight\": 80},\n        \"marks\": [\n            Plot.frame({\"facet\": False}),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"r\": 1.5,\n                    \"fill\": \"#ccc\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                    \"facet\": \"exclude\",\n                },\n            ),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                },\n            ),\n        ],\n    }\n)\n\nAdelieChinstrapGentoospeciesFEMALEMALEsex354045505535404550553540455055↑ culmen_length_mm1520152015201520culmen_depth_mm →",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Marks"
-    ]
-  },
-  {
-    "objectID": "gallery_marks.html#arrow-mark",
-    "href": "gallery_marks.html#arrow-mark",
-    "title": "Marks",
-    "section": "Arrow mark",
-    "text": "Arrow mark\nSome marks allow for nice representation of complex data. The following plot, taken from the Arrow mark notebook, shows the evolution of inequality and population in various U.S. cities.\n\nmetros = pl.read_csv(\"data/metros.csv\")\n\nPlot.plot(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"inset\": 10,\n        \"x\": {\"type\": \"log\", \"label\": \"Population →\"},\n        \"y\": {\"label\": \"↑ Inequality\", \"ticks\": 4},\n        \"color\": {\n            \"type\": \"diverging\",\n            \"scheme\": \"burd\",\n            \"label\": \"Change in inequality from 1980 to 2015\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"tickFormat\": \"+f\",\n        },\n        \"marks\": [\n            Plot.arrow(\n                metros,\n                {\n                    \"x1\": \"POP_1980\",\n                    \"y1\": \"R90_10_1980\",\n                    \"x2\": \"POP_2015\",\n                    \"y2\": \"R90_10_2015\",\n                    \"bend\": True,\n                    \"stroke\": js(\"d =&gt; d.R90_10_2015 - d.R90_10_1980\"),\n                },\n            ),\n            Plot.text(\n                metros,\n                {\n                    \"x\": \"POP_2015\",\n                    \"y\": \"R90_10_2015\",\n                    \"filter\": \"highlight\",\n                    \"text\": \"nyt_display\",\n                    \"fill\": \"currentColor\",\n                    \"stroke\": \"white\",\n                    \"dy\": -6,\n                },\n            ),\n        ],\n    }\n)\n\n−3−2−1+0+1+2+3Change in inequality from 1980 to 201545678↑ Inequality200k300k1M2M3M10M20MPopulation →New YorkChicagoHoustonWashington, D.C.San FranciscoSan JoseFairfield, Conn.Binghamton, N.Y.",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Marks"
-    ]
-  },
-  {
-    "objectID": "gallery_marks.html#contour-mark",
-    "href": "gallery_marks.html#contour-mark",
-    "title": "Marks",
-    "section": "Contour mark",
-    "text": "Contour mark\nThe contour mark allows for nice representations of spatial data. The following example taken from the Contour mark notebook shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to pyobsplot specificities).\n\nvapor = (\n    pl.read_csv(\"data/vapor.csv\", has_header=False, null_values=\"99999.0\")\n    .transpose()\n    .melt(variable_name=\"column\", value_name=\"values\")\n)\nvalues = vapor.get_column(\"values\").to_list()\n\nPlot.plot(\n    {\n        \"width\": 850,\n        \"projection\": \"equal-earth\",\n        \"color\": {\n            \"scheme\": \"blues\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"nice\": True,\n            \"label\": \"Water vapor (cm)\",\n        },\n        \"marks\": [\n            Plot.contour(\n                values,\n                {\n                    \"fill\": Plot.identity,\n                    \"width\": 360,\n                    \"height\": 180,\n                    \"x1\": -180,\n                    \"y1\": 90,\n                    \"x2\": 180,\n                    \"y2\": -90,\n                    \"interval\": 0.25,\n                    \"blur\": 0.5,\n                    \"interpolate\": \"barycentric\",\n                    \"stroke\": \"currentColor\",\n                    \"strokeWidth\": 0.5,\n                    \"clip\": \"sphere\",\n                },\n            ),\n            Plot.sphere(),\n        ],\n    }\n)\n\n/tmp/ipykernel_2959/2088696249.py:4: DeprecationWarning: `DataFrame.melt` is deprecated. Use `unpivot` instead, with `index` instead of `id_vars` and `on` instead of `value_vars`\n  .melt(variable_name=\"column\", value_name=\"values\")\n\n\n0123456Water vapor (cm)",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Marks"
+      "Mapping and spatial data"
     ]
   },
   {
@@ -159,11 +100,118 @@
     "href": "gallery_transforms.html#transforms-composition",
     "title": "Transforms",
     "section": "Transforms composition",
-    "text": "Transforms composition\nSeveral group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the Map transform notebook.\n\n# Load and prepare data\nstateage = (\n    pl.read_csv(\"data/us-population-state-age.csv\")\n    .melt(id_vars=\"name\", variable_name=\"age\", value_name=\"population\")\n    .rename({\"name\": \"state\"})\n)\n# TODO: remove when Bigint error fixed upstream in Observable Plot\nstateage = stateage.with_columns(pl.col(\"population\").cast(pl.Int32))\n\n# Compute list of age groups\nages = stateage.get_column(\"age\").unique(maintain_order=True).to_list()\n# Compute list of states sorted by the proportion of age ≥80\nstates = (\n    stateage.with_columns(\n        (pl.col(\"population\") / pl.col(\"population\").sum().over(\"state\")).alias(\n            \"percent\"\n        )\n    )\n    .filter(pl.col(\"age\") == \"≥80\")\n    .sort(pl.col(\"percent\"), descending=True)\n    .get_column(\"state\")\n    .to_list()\n)\n\n# Plot.normalizeX default arguments\nxy = {\"basis\": \"sum\", \"z\": \"state\", \"x\": \"population\", \"y\": \"state\"}\n\n# Plot specification\nPlot.plot(\n    {\n        \"height\": 660,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Percent (%) →\", \"transform\": js(\"d =&gt; d * 100\")},\n        \"y\": {\n            \"domain\": states,\n            \"axis\": None,\n        },\n        \"color\": {\n            \"scheme\": \"spectral\",\n            \"domain\": ages,\n            \"legend\": True,\n        },\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.ruleY(\n                stateage,\n                Plot.groupY({\"x1\": \"min\", \"x2\": \"max\"}, Plot.normalizeX(xy)),\n            ),\n            Plot.dot(\n                stateage,\n                Plot.normalizeX({**xy, \"fill\": \"age\"}),\n            ),\n            Plot.text(\n                stateage,\n                Plot.selectMinX(\n                    Plot.normalizeX(\n                        {\n                            **xy,\n                            \"textAnchor\": \"end\",\n                            \"dx\": -6,\n                            \"text\": \"state\",\n                        }\n                    )\n                ),\n            ),\n        ],\n    }\n)\n\n/tmp/ipykernel_2667/4276990166.py:4: DeprecationWarning: `DataFrame.melt` is deprecated. Use `unpivot` instead, with `index` instead of `id_vars` and `on` instead of `value_vars`\n  .melt(id_vars=\"name\", variable_name=\"age\", value_name=\"population\")\n\n\n&lt;1010-1920-2930-3940-4950-5960-6970-79≥8002468101214161820Percent (%) →ALAKAZARCACOCTDEDCFLGAHIIDILINIAKSKYLAMEMDMAMIMNMSMOMTNENVNHNJNMNYNCNDOHOKORPARISCSDTNTXUTVTVAWAWVWIWYPR",
+    "text": "Transforms composition\nSeveral group and map transforms can be applied and composed to create complex representations, such as this distribution of group ages by US states adapted from the Map transform notebook.\n\n# Load and prepare data\nstateage = (\n    pl.read_csv(\"data/us-population-state-age.csv\")\n    .unpivot(index=\"name\", variable_name=\"age\", value_name=\"population\")\n    .rename({\"name\": \"state\"})\n)\n# TODO: remove when Bigint error fixed upstream in Observable Plot\nstateage = stateage.with_columns(pl.col(\"population\").cast(pl.Int32))\n\n# Compute list of age groups\nages = stateage.get_column(\"age\").unique(maintain_order=True).to_list()\n# Compute list of states sorted by the proportion of age ≥80\nstates = (\n    stateage.with_columns(\n        (pl.col(\"population\") / pl.col(\"population\").sum().over(\"state\")).alias(\n            \"percent\"\n        )\n    )\n    .filter(pl.col(\"age\") == \"≥80\")\n    .sort(pl.col(\"percent\"), descending=True)\n    .get_column(\"state\")\n    .to_list()\n)\n\n# Plot.normalizeX default arguments\nxy = {\"basis\": \"sum\", \"z\": \"state\", \"x\": \"population\", \"y\": \"state\"}\n\n# Plot specification\nPlot.plot(\n    {\n        \"height\": 660,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Percent (%) →\", \"transform\": js(\"d =&gt; d * 100\")},\n        \"y\": {\n            \"domain\": states,\n            \"axis\": None,\n        },\n        \"color\": {\n            \"scheme\": \"spectral\",\n            \"domain\": ages,\n            \"legend\": True,\n        },\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.ruleY(\n                stateage,\n                Plot.groupY({\"x1\": \"min\", \"x2\": \"max\"}, Plot.normalizeX(xy)),\n            ),\n            Plot.dot(\n                stateage,\n                Plot.normalizeX({**xy, \"fill\": \"age\"}),\n            ),\n            Plot.text(\n                stateage,\n                Plot.selectMinX(\n                    Plot.normalizeX(\n                        {\n                            **xy,\n                            \"textAnchor\": \"end\",\n                            \"dx\": -6,\n                            \"text\": \"state\",\n                        }\n                    )\n                ),\n            ),\n        ],\n    }\n)\n\n&lt;1010-1920-2930-3940-4950-5960-6970-79≥8002468101214161820Percent (%) →ALAKAZARCACOCTDEDCFLGAHIIDILINIAKSKYLAMEMDMAMIMNMSMOMTNENVNHNJNMNYNCNDOHOKORPARISCSDTNTXUTVTVAWAWVWIWYPR",
     "crumbs": [
       "Documentation",
       "Gallery",
       "Transforms"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "pyobsplot",
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "pyobsplot",
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "index.html#installation-and-usage",
+    "href": "index.html#installation-and-usage",
+    "title": "pyobsplot",
+    "section": "Installation and usage",
+    "text": "Installation and usage\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
+  },
+  {
+    "objectID": "index.html#features-and-limitations",
+    "href": "index.html#features-and-limitations",
+    "title": "pyobsplot",
+    "section": "Features and limitations",
+    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nPlots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)\nPlots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and better data type conversions\nWorks with Jupyter notebooks and Quarto documents\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\n\nLimitations:\n\nPlot interactions (tooltips, crosshair…) are only available with the “widget” format (#16).\nVery limited integration with IDE (documentation and autocompletion) for Plot methods (unlike in Observable notebooks) (#13)."
+  },
+  {
+    "objectID": "index.html#credits",
+    "href": "index.html#credits",
+    "title": "pyobsplot",
+    "section": "Credits",
+    "text": "Credits\n\nObservable Plot, developed by Mike Bostock and Philippe Rivière among others.\nThe widget is developed thanks to the anywidget framework.\ntypst is used to convert HTML figures to PNG, SVG or PDF.\nSome code from the jsdom renderer has been adapted from altair_saver.\nThis documentation website is generated by Quarto."
+  },
+  {
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#installation",
+    "href": "getting_started.html#installation",
+    "title": "Getting started",
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#creating-a-plot",
+    "href": "getting_started.html#creating-a-plot",
+    "title": "Getting started",
+    "section": "Creating a plot",
+    "text": "Creating a plot\nTo use pyobsplot, you must import its Plot class with:\n\nfrom pyobsplot import Plot\n\nTo create a plot, call the Plot.plot method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot.plot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\nThe syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript true is be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\nBiscoeDreamTorgersen3,0003,5004,0004,5005,0005,5006,000↑ body_mass_g180190200210220230flipper_length_mm →",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#output-formats",
+    "href": "getting_started.html#output-formats",
+    "title": "Getting started",
+    "section": "Output formats",
+    "text": "Output formats\nBy default, plots will be created as Jupyter widgets, but pyobsplot is also able to output plots in PNG, SVG or static HTML formats.\nThe output format is configured by passing a format argument to Plot.plot():\n# Display plot as PNG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")\nTo save the plot to a file, you can add a path argument. The file extension will determine the output type, which can be HTML, PNG, SVG or PDF:\n# Save plot as SVG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), path=\"plot.svg\")\n\n\n\n\n\n\nNote\n\n\n\nWith the “widget” format, export can only be done to HTML files.",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#plot-generator",
+    "href": "getting_started.html#plot-generator",
+    "title": "Getting started",
+    "section": "Plot generator",
+    "text": "Plot generator\nCalling Plot.plot() is the fastest way to generate a plot with the default settings, but for further customization and improved performance you can import the Obsplot class and create a plot generator:\n\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()\n\nBy default plot generators output plots as widget format, but you can specify another one:\n\nop = Obsplot(format=\"png\")\n\nYou can then create plots by calling this generator with your plot specification:\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\nFor the simplest cases, you can also create your plot directly by passing a Plot mark method to the generator:\n\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}))\n\n051015202530354045505560↑ Frequency170180190200210220230flipper_length_mm →\n\n\nYou can also override the default format output or save the plot to a file by adding a format or path argument when calling the generator:\n\n# Switch to SVG output for this plot\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"svg\")\n# Save widget to HTML file\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), path=\"plot.html\")",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#learn-more",
+    "href": "getting_started.html#learn-more",
+    "title": "Getting started",
+    "section": "Learn more",
+    "text": "Learn more\nTo go further, see the usage page.",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
     ]
   },
   {
@@ -215,51 +263,171 @@
     ]
   },
   {
-    "objectID": "gallery_themes.html",
-    "href": "gallery_themes.html",
-    "title": "Themes",
+    "objectID": "usage.html",
+    "href": "usage.html",
+    "title": "Usage",
     "section": "",
-    "text": "When using a plot generator object, it is possible to specify one of three output themes: light, dark and current.",
+    "text": "For a quick usage introduction, see getting started.\nTo create a plot we can either use Plot.plot() to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.\nSo we start by importing the needed classes and create a plot generator object:\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()",
     "crumbs": [
       "Documentation",
-      "Gallery",
-      "Themes"
+      "Usage",
+      "Usage"
     ]
   },
   {
-    "objectID": "gallery_themes.html#light-theme",
-    "href": "gallery_themes.html#light-theme",
-    "title": "Themes",
-    "section": "light theme",
-    "text": "light theme\nThe light theme produces plots with a white background and a black foreground color. This is the default theme:\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, js\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nop = Obsplot(theme=\"light\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)",
+    "objectID": "usage.html#plot-specification",
+    "href": "usage.html#plot-specification",
+    "title": "Usage",
+    "section": "Plot specification",
+    "text": "Plot specification\nConverting a plot specification from JavaScript to Python should be straightforward most of the time:\n\nall dictionary keys must be quoted (so x: becomes \"x\":)\nJavaScript true and false must be replaced by True and False\nJavaScript null must be replaced by None\n\nSo the following JavaScript code:\nPlot.plot(\n    {\n        color: {legend: true},\n        grid: false,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nBecomes:\n\nop({\n    \"color\": {\"legend\": True},\n    \"grid\": False,\n    \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n})\n\nIt is possible to replace JavaScript methods from the Plot, d3 and Math modules with Python methods, but you must first import the corresponding classes.\n\nfrom pyobsplot import Obsplot, Plot, d3\n\nop({\n    \"x\": {\n        \"axis\": None\n    },\n    \"marks\": [\n        Plot.ruleY([0], {\"stroke\": \"steelblue\"}),\n        Plot.lineY(d3.cumsum({ \"length\": 100 }, d3.randomNormal()))\n    ]\n})\n\n−11−10−9−8−7−6−5−4−3−2−10\n\n\nIf your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the js method (after importing it):\n\nfrom pyobsplot import Obsplot, Plot, d3, js\nimport polars as pl\n\ndata = pl.DataFrame({\n    \"x\": [1, 5, 2, 4, 6, 2, 4],\n    \"y\": [2, 1, 3, 4, 5, 1, 2],\n    \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n})\n\nop({\n    \"grid\": True,\n    \"marks\": [\n        Plot.dot(data, {\n            \"x\": \"x\", \"y\": \"y\", \"r\": 5,\n            \"stroke\": \"black\", \"fill\": \"steelblue\",\n            \"fillOpacity\": js(\"d =&gt; d.type == 'T1' ? 0.7 : 0.1\")\n        })\n    ]\n})\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\n\nAlternative syntax\nFor the simplest cases, you can also pass a mark method directly as plot specification. The JavaScript plot() method will be called automatically to display the plot:\n\nimport random\nop(\n    Plot.tickX(\n        [random.gauss(0,1) for i in range(1000)], \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    )\n)\n\n−2−10123",
     "crumbs": [
       "Documentation",
-      "Gallery",
-      "Themes"
+      "Usage",
+      "Usage"
     ]
   },
   {
-    "objectID": "gallery_themes.html#dark-theme",
-    "href": "gallery_themes.html#dark-theme",
-    "title": "Themes",
-    "section": "dark theme",
-    "text": "dark theme\nThe dark theme produces plots with a black background and a white foreground color.\n\nop = Obsplot(theme=\"dark\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)",
+    "objectID": "usage.html#output-formats",
+    "href": "usage.html#output-formats",
+    "title": "Usage",
+    "section": "Output formats",
+    "text": "Output formats\npyobsplot allows to output plots as Jupyter widgets, but also as static HTML, SVG or PNG.\nThe output format is determined by the format argument passed to a plot generator object or during plot creation.\n\n\n\n\nFormat value\n\n\nOutput type\n\n\nRenderer\n\n\n\n\n\n\n“widget” (default)\n\n\nJupyter Widget\n\n\nwidget\n\n\n\n\n“html”\n\n\nStatic HTML\n\n\njsdom\n\n\n\n\n“svg”\n\n\nSVG image\n\n\njsdom or jsdom+typst\n\n\n\n\n“png”\n\n\nPNG image\n\n\njsdom+typst\n\n\n\n\nThe following table lists the differences between the widget output and the other static formats (HTML, SVG and PNG).\n\n\n\n\n\n\n\nWidget output\n\n\nOther outputs\n\n\n\n\n\n\nOutput\n\n\nJupyter Widget\n\n\nStatic HTML, SVG, PNG. PDF is available when saving to a file.\n\n\n\n\nAdditionalinstallation\n\n\nNone\n\n\nNeeds a working node.js installation and an additional npm package\n\n\n\n\nQuarto\n\n\nSupported only in HTML format\n\n\nHTML output supported in HTML format, SVG and PNG outputs supported in other formats\n\n\n\n\nOutput size\n\n\nBig : includes the data and code needed to generate the plot\n\n\nModerate : size of the output file\n\n\n\n\nPlot interactions(tooltips…)\n\n\nSupported\n\n\nNot supported. Only static plots are produced.\n\n\n\n\nSave plot to file\n\n\nPlots can be saved as embeddable HTML file\n\n\nPlots can be saved to static HTML, SVG, PNG or PDF files.\n\n\n\n\nJupyterinteractivity\n\n\nBasic\n\n\nNone\n\n\n\n\nPersistencebetween sessions\n\n\nWidget state is not saved between sessions (for now)\n\n\nOutput is saved between sessions\n\n\n\n\nTo use a static output format like HTML, SVG or PNG, you need a working node.js installation and you must install the npm pyobsplot package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot\nAfter that, you can select which format to use when creating a plot generator object:\n\n# Generator with a widget output (default)\nopw = Obsplot(format=\"widget\")\n# Generator with a PNG output\nopj = Obsplot(format=\"png\")\n\nIt is also possible to specifiy a format when creating the plot by adding a format argument:\n\n# Generator with default widget output format\nop = Obsplot()\n# Switch to PNG output for this plot\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")\n# Specify format directly to Plot.plot()\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")",
     "crumbs": [
       "Documentation",
-      "Gallery",
-      "Themes"
+      "Usage",
+      "Usage"
     ]
   },
   {
-    "objectID": "gallery_themes.html#current-theme",
-    "href": "gallery_themes.html#current-theme",
-    "title": "Themes",
-    "section": "current theme",
-    "text": "current theme\n\nThe “current” theme uses a transparent background and a currentColor foreground, so it should keep the current color theme:\n\nop = Obsplot(theme=\"current\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)",
+    "objectID": "usage.html#saving-plots-to-file",
+    "href": "usage.html#saving-plots-to-file",
+    "title": "Usage",
+    "section": "Saving plots to file",
+    "text": "Saving plots to file\nPlots can be saved to a file. To do this, just add a path argument to your generator or Plot.plot call:\n\nop(Plot.lineY([1,2,3,2]), path=\"path_to/file.svg\")\nPlot.plot(Plot.lineY([1,2,3,2]), path=\"path_to/file.svg\")\n\n\nWidget format\nWhen using the widget format, plots can only be saved to HTML files. These files retain interactive features such as tooltips.\n\nopw = Obsplot()\nopw(Plot.lineY([1,2,3,2]), path=\"path_to/file.html\")\n\n\n\n\n\n\n\nTip\n\n\n\nTo embed widgets into an HTML website or document, Quarto documents can be more practical.\n\n\n\n\nOther output formats\nPlots can also be saved as SVG, PNG, PDF or static HTML files. The output format is determined by the path file extension.\n\nopw = Obsplot()\nopw(Plot.lineY([1,2,3,2]), path=\"path_to/file.png\")\n\n\n\n\n\n\n\nNote\n\n\n\nPDF format is only available when saving to a file, as PDF output cannot be embedded and displayed in a Jupyter notebook.\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen saving a plot to an HTML file, the result will depend on the format value. If format=\"widget\" (the default), the HTML file will be a Jupyter widget, but if format=\"html\", then a static HTML version will be saved.\n\n\n\n\n\n\n\n\nCaution\n\n\n\nPlot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a &lt;figure&gt; HTML tag. In this case, when saving to an SVG file, the plot will be converted using typst.",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#themes",
+    "href": "usage.html#themes",
+    "title": "Usage",
+    "section": "Themes",
+    "text": "Themes\nWhen using a plot generator object, it is possible to specify one of three color themes:\n\nlight theme (default) creates plots with a white background and a black foreground color\ndark theme creates plots with a black background and a white foreground\ncurrent theme creates plots with a transparent background and a currentColor foreground\n\nYou can specify a mode when creating the plot generator object by using the theme argument:\n\nop_dark = Obsplot(theme=\"dark\")\n\nYou can see output examples in the themes gallery\n\n\n\n\n\n\nNote\n\n\n\nThe current theme is not available when exporting to PNG, PDF, or SVG via typst.",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#default-specification-values",
+    "href": "usage.html#default-specification-values",
+    "title": "Usage",
+    "section": "Default specification values",
+    "text": "Default specification values\nWhen creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.\nOnly the top-level layout options can be specified as defaults. This can be useful to specify a default width, colors, margins or even style.\nThe complete list of available default attributes is :\n\n\n['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'margin', 'width', 'height', 'aspectRatio', 'style']\n\n\nSo to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :\n\nop_colors = Obsplot(\n    format = \"html\",\n    default={\n        \"width\": 400, \n        \"margin\": 50,\n        \"style\": {\"color\": \"white\", \"background-color\": \"#004\"}\n    }\n)\n\n\nop_colors(\n    Plot.dot(data, {\"x\": \"x\", \"y\": \"y\"})\n)\n\n1.01.52.02.53.03.54.04.55.0↑ y123456x →",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#data-handling",
+    "href": "usage.html#data-handling",
+    "title": "Usage",
+    "section": "Data handling",
+    "text": "Data handling\n\nDataFrames and Series\nPandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.\n\nimport polars as pl\nfrom datetime import date\n\ndf = pl.DataFrame({\n    \"Date\": [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3), date(2023, 1, 4)],\n    \"Value\": [4.2, 3.8, 4.5, 4.7]\n})\n\nop({\n    \"x\": {\"grid\": True},\n    \"y\": {\"domain\": [0, 5]},\n    \"marks\": [Plot.lineY(df, {\"x\": \"Date\", \"y\": \"Value\", \"stroke\": \"steelblue\"})]\n})\n\n0.00.51.01.52.02.53.03.54.04.55.0↑ Value12 AMJan 112 PM12 AMJan 212 PM12 AMJan 312 PM12 AMJan 4\n\n\nIf you pass a pandas or polars Series object, it will be automatically converted to a DataFrame with one column:\n\nvalue = df.get_column(\"Value\")\n\nop(\n    Plot.tickX(value, {\"x\": \"Value\", \"stroke\": \"darkviolet\"})\n)\n\n3.83.94.04.14.24.34.44.54.64.7Value →\n\n\npyobsplot implements a simple caching mechanism for some data objects (it currently works for DataFrames and for GeoJson data). Sometimes the same data object is used several times in a plot specification:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop({\n  \"height\": 600,\n  \"grid\": True,\n  \"facet\": {\n    \"marginRight\": 80\n  },\n  \"marks\": [\n    Plot.frame({\"facet\": False}),\n    Plot.dot(penguins, {\n      \"x\": \"culmen_depth_mm\",\n      \"y\": \"culmen_length_mm\",\n      \"r\": 1.5,\n      \"fill\": \"#ccc\",\n      \"facet\": \"exclude\",\n      \"fx\": \"sex\",\n      \"fy\": \"species\",\n    }),\n    Plot.dot(penguins, {\n       \"x\": \"culmen_depth_mm\",\n       \"y\": \"culmen_length_mm\",\n       \"fx\": \"sex\",\n       \"fy\": \"species\",\n    })\n  ]\n})\n\nAdelieChinstrapGentoospeciesFEMALEMALEsex354045505535404550553540455055↑ culmen_length_mm1520152015201520culmen_depth_mm →\n\n\nIn this case, caching ensures that the penguins DataFrame is only serialized and transmitted once instead of twice.\n\n\ndatetime objects\ndatetime.date and datetime.datetime Python objects are automatically serialized and converted to JavaScript Date objects.\nThat makes the following two specifications equivalent:\n\nop({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01')\"), js(\"new Date('2022-01-01')\")]}, \n    \"grid\": True\n})\n\nJan2021FebMarAprMayJunJulAugSepOctNovDecJan2022\n\n\n\nfrom datetime import date\nop({\n    \"x\": {\"domain\": [date(2021,1,1), date(2022,1,1)]}, \n    \"grid\": True\n})\n\nJan2021FebMarAprMayJunJulAugSepOctNovDecJan2022\n\n\nAs well as the two following ones, using datetime:\n\nop({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01T07:00:00')\"), js(\"new Date('2021-01-01T08:00:00')\")]}, \n    \"grid\": True\n})\n\n7:00AM7:057:107:157:207:257:307:357:407:457:507:558:00\n\n\n\nfrom datetime import datetime\nop({\n    \"x\": {\"domain\": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, \n    \"grid\": True\n})\n\n7:00AM7:057:107:157:207:257:307:357:407:457:507:558:00",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#quarto",
+    "href": "usage.html#quarto",
+    "title": "Usage",
+    "section": "Quarto",
+    "text": "Quarto\npyobsplot plots are compatible with quarto HTML formats. If you use static output formats such as SVG, PNG or PDF, they may work in PDF or docx documents as well.\nIf your source document is a jupyter notebook (and not a .qmd file), then you have to use the --execute argument to force plot computation and to make them visible in the output:\nquarto render test.ipynb --execute --to html",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "usage.html#jupyter-interactivity",
+    "href": "usage.html#jupyter-interactivity",
+    "title": "Usage",
+    "section": "Jupyter Interactivity",
+    "text": "Jupyter Interactivity\nWhen using the default widget format, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the spec attribute of an existing Obsplot to another plot specification and it will update it.\nThis allows to do things like the following, where a plot is updated depending on the value of a Jupyter IntSlider widget:\n\ndef generate_plot_spec(opacity):\n    return {\n      \"grid\": True,\n      \"marks\": [\n            Plot.rectY(penguins, Plot.binX({\"y\": \"count\"}, {\"x\": \"body_mass_g\", \"fill\": \"steelblue\", \"fillOpacity\": opacity})),\n            Plot.ruleY([0])\n            ]\n    }\n\nplot = op(generate_plot_spec(1))\n\ndef update_plot(change):\n    new = change['new']\n    plot.spec = generate_plot_spec(new / 100)\n\n\nw = IntSlider(value = 100, min = 0, max = 100)\nw.observe(update_plot, names='value')\n\ndisplay(w)\ndisplay(plot)\n\nYou can see a live version of this example in the following Colab notebook:",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Usage"
+    ]
+  },
+  {
+    "objectID": "gallery_marks.html",
+    "href": "gallery_marks.html",
+    "title": "Marks",
+    "section": "",
+    "text": "Marks are the building blocks of Plot charts.",
     "crumbs": [
       "Documentation",
       "Gallery",
-      "Themes"
+      "Marks"
+    ]
+  },
+  {
+    "objectID": "gallery_marks.html#cell-mark",
+    "href": "gallery_marks.html#cell-mark",
+    "title": "Marks",
+    "section": "Cell mark",
+    "text": "Cell mark\nThe following chart, taken from the Cell Mark notebook, shows the rating of every episode of The Simpsons.\n\nimport polars as pl\nfrom pyobsplot import Plot, d3, Math, js\n\nsimpsons = pl.read_csv(\"data/simpsons.csv\")\n\nPlot.plot(\n    {\n        \"height\": 640,\n        \"padding\": 0.05,\n        \"grid\": True,\n        \"x\": {\"axis\": \"top\", \"label\": \"Season\"},\n        \"y\": {\"label\": \"Episode\"},\n        \"color\": {\"type\": \"linear\", \"scheme\": \"PiYG\"},\n        \"marks\": [\n            Plot.cell(\n                simpsons,\n                {\"x\": \"season\", \"y\": \"number_in_season\", \"fill\": \"imdb_rating\"},\n            ),\n            Plot.text(\n                simpsons,\n                {\n                    \"x\": \"season\",\n                    \"y\": \"number_in_season\",\n                    \"text\": \"imdb_rating\",\n                    \"title\": \"title\",\n                },\n            ),\n        ],\n    }\n)\n\n12345678910111213141516171819202122232425Episode12345678910111213141516171819202122232425262728Season7.4Homer's Night Out8.3Krusty Gets Busted8.2Bart Gets an \"F\"8.1Two Cars in Every Garage and Three Eyes on Every Fish8Dead Putting Society8.4Bart the Daredevil7.8Bart Gets Hit by a Car8Homer vs. Lisa and the 8th Commandment8.2Oh Brother, Where Art Thou?7.6Old Money8.5Lisa's Substitute8Blood Feud7.7Mr. Lisa Goes to Washington8.7Bart the Murderer7.7Like Father, Like Clown7.9Saturdays of Thunder8.2Burns Verkaufen der Kraftwerk8.5Radio Bart8.3Bart the Lover8.2Separate Vocations7.9Colonel Homer7.8Bart's Friend Falls in Love8.4Kamp Krusty8.2Itchy & Scratchy: The Movie8.5Lisa's First Word8Selma's Choice7.9The Call of the Simpsons8.8One Fish, Two Fish, Blowfish, Blue Fish7.7Marge in Chains8.4Homer's Barbershop Quartet8.6Homer Goes to College8Marge on the Lam8.7Boy-Scoutz 'n the Hood8.2Homer the Vigilante8.1Bart Gets Famous8.2Lisa vs. Malibu Stacy7.9Bart Gets an Elephant7.5Lady Bouvier's Lover8.6Bart of Darkness8.5Itchy & Scratchy Land8.4Lisa on Ice7.8Fear of Flying8.5And Maggie Makes Three8.5Homie the Clown7.9Homer vs. Patty and Selma8.1Two Dozen and One Greyhounds8.3'Round Springfield8.6Lemon of Troy8.3Radioactive Man8.7Bart Sells His Soul8.5Treehouse of Horror VI8.3Marge Be Not Proud8.3Team Homer7.7Bart the Fink8.2New Kid on the Block8.822 Short Films About Springfield8Much Apu About Nothing8.3Summer of 4 Ft. 27.7Burns, Baby Burns7.8Lisa's Date with Density9The Springfield Files7.8The Twisted World of Marge Simpson7.9The Itchy & Scratchy & Poochie Show8.9Homer's Phobia8.7Homer vs. the Eighteenth Amendment7.7The Canine Mutiny8In Marge We Trust7.8The Secret War of Lisa Simpson7.4The Principal and the Pauper7.7Bart Star8Lisa the Skeptic5.1All Singing, All Dancing8.2The Joy of Sect7.8This Little Wiggy7.9The Trouble with Trillions8.5Trash of the Titans8.1Natural Born Kissers8.2The Wizard of Evergreen Terrace8Treehouse of Horror IX8.2Mayored to the Mob7.7Wild Barts Can't Be Broken7.5Make Room for Lisa7.6Mom and Pop Art7.2Monty Can't Buy Me Love7.9Thirty Minutes over Tokyo7.5Guess Who's Coming to Criticize Dinner?7.6E-I-E-I-(Annoyed Grunt)7.1Eight Misbehavin'7.3The Mansion Family7.9Alone Again, Natura-diddily7.3Pygmoelian6.6Kill the Alligator and Run7.3It's a Mad, Mad, Mad, Mad Marge7.6Treehouse of Horror XI7.1Insane Clown Poppy7.7The Computer Wore Menace Shoes7.3Pokey Mom7.2Day of the Jackanapes7.4Hungry, Hungry Homer6.9Simpson Safari7.3Children of a Lesser Clod7.5Treehouse of Horror XII7.2Homer the Moe7.7The Blunder Years7.5Half-Decent Proposal6.5The Lastest Gun in the West7Blame It on Lisa5.6Gump Roast8.7Homer's Triple Bypass7Bart vs. Lisa vs. the Third Grade7.3The Great Louse Detective7.3The Dad Who Knew Too Little6.8Pray Anything7.3C.E.D'oh7.2Three Gays of the Condo6.9Brake My Wife, Please7.7Moe Baby Blues7.3My Mother the Carjacker7.2The Fat and the Furriest7.2'Tis the Fifteenth Season7.3I, (Annoyed Grunt)-bot7.1Smart & Smarter6.9Co-Dependents' Day7Catch 'Em If You Can7.3The Way We Weren't7.2Fraudcast News7.1Sleeping with the Enemy7.1Fat Man and Little Boy7Mommie Beerest7.1There's Something About Marrying7Goo Goo Gai Pan6.9The Seven-Beer Snitch7.2The Heartbroke Kid7.3Thank God It's Doomsday6.3The Bonfire of the Manatees8.3Duffless6.7The Last of the Red Hat Mamas6.9Simpsons Christmas Stories6.4My Fair Laddy7Bart Has Two Mommies6.6Million-Dollar Abie6.7Regarding Margie7.5The Mook, the Chef, the Wife and Her Homer6.8Please Homer, Don't Hammer 'Em6.9G.I. (Annoyed Grunt)7Ice Cream of Margie (with the Light Blue Hair)6.4Kill Gil, Volumes I & II7Little Big Girl7.1Yokel Chords7.2Homerazzi7.1Crook and Ladder8.124 Minutes6.7The Homer of Seville6.7Little Orphan Millie7.1Funeral for a Fiend6.9E Pluribus Wiggum7.7The Debarted6.7Smoke on the Daughter6.9Apocalypse Cow7.1Mona Leaves-a6.9Lost Verizon7.1Treehouse of Horror XIX7.2So It's Come to This: A Simpsons Clip Show7.2Gone Maggie Gone7Father Knows Worst6.3Four Great Women and a Manicure7.1Homer the Whopper6.8Rednecks and Broomsticks6.8Thursdays with Abie7.1Million Dollar Maybe7.1Postcards from the Wedge5.7The Greatest Story Ever D'ohed6.9Moe Letter Blues6.6Judge Me Tender6.8Loan-a Lisa7.2Lisa Simpson, This Isn't Your Life6.9The Fight Before Christmas7Donnie Fatso7Homer the Father7.2Angry Dad: The Movie6.1A Midsummer's Nice Dream7The Great Simpsina7.3500 Keys7.2The Falcon and the D'ohman6.6Treehouse of Horror XXII7.2The Food Wife6.2The Ten-Per-Cent Solution6.1Politically Inept, with Homer Simpson5.7Moe Goes from Rags to Riches6.7Pranks and Greens8.5$pringfield (or, How I Learned to Stop Worrying and Love Legalized Gambling)7.1Beware My Cheating Bart6.9The Spy Who Learned Me4.5Lisa Goes Gaga6.3Penny-Wiseguys7.2To Cur with Love7A Test Before Trying6.5Love is a Many-Splintered Thing6.2Gorgeous Grampa6.5What Animated Women Want6.8Whiskey Business7Homerland6.7YOLO6.5The Kid Is All Right6.5White Christmas Blues7.2Specs and the City6.7The Man Who Grew Too Much7The War of Art6.5Luca$7.7Brick Like Me6.7The Yellow Badge of Cowardge6.9The Wreck of the Relationship6.3Opposites A-Frack6.9Blazed and Confused6.8The Man Who Came to Be Dinner5.8The Musk Who Fell to Earth6.7Peeping Mom7.5Life on the Fast Lane7.8The Crepes of Wrath7.9Some Enchanted Evening8.3Simpson and Delilah8.2Treehouse of Horror7.5Dancin' Homer7.7Bart vs. Thanksgiving8.1Itchy & Scratchy & Marge8.2The Way We Was7.5Principal Charming7.5Bart's Dog Gets an \"F\"7.9The War of the Simpsons6.8Bull-E6.7Cue Detective6.8Friend with Benefit8.4Barthood6.8Teenage Mutant Milk-Caused HurdlesFriends and Family\"[203]The Town\"[205]Treehouse of Horror XXVII\"[207]6.6Gal of Constant Sorrow7.3The Marge-ian Chronicles7.1Fland Canyon6.4Simprovised8.2Simpsons Roasting on an Open Fire7.8Bart the Genius7.8There's No Disgrace Like Home7.6Moaning Lisa7.7The Telltale Head8.4Three Men and a Comic Book8.6Stark Raving Dad8.2When Flanders Failed8.5Homer Defined8.1The Front8.1Brother from the Same Planet8.7Treehouse of Horror IV9Marge vs. the Monorail8.3I Love Lisa8.4The Last Temptation of Homer7.7Dog of Death8.2Treehouse of Horror II7.9Lisa's Pony7.8Marge Gets a Job8.2I Married Marge9Last Exit to Springfield8Lisa the Greek7.7The Otto Show8.9Rosebud8Homer Alone8.6Homer at the Bat8.1Whacking Day7.8Lisa the Beauty Queen8.2Krusty Gets Kancelled8.2Black Widower8.1A Streetcar Named Marge8.4Treehouse of Horror III8.8Mr. Plow8.3Homer and Apu8.5Homer Loves Flanders8.4Burns' Heir8Sideshow Bob's Last Gleaming8Grampa vs. Sexual Inadequacy8.2A Fish Called Selma8.6Bart's Comet8.3Home Sweet Homediddly-Dum-Doodily7.7Scenes from the Class Struggle in Springfield8.5Bart vs. Australia9King-Size Homer8Secrets of a Successful Marriage8.1Lisa's Rival8.5A Star Is Burns8.3Lisa's Wedding6Another Simpsons Clip Show8.5Lisa the Vegetarian8.1The PTA Disbands8.3Sideshow Bob Roberts8Bart's Girlfriend8.9Who Shot Mr. Burns? (Part Two)8.2The Springfield Connection8.9Homer the Smithers9Homer Badman8.9Homer the Great7.5The Simpsons 138th Episode Spectacular8.7Two Bad Neighbors8.1Lisa the Iconoclast8.5Mother Simpson8.3Raging Abe Simpson and His Grumbling Grandson in \"The Curse of the Flying Hellfish\"8Homerpalooza8.1Lisa's Sax7.7Simpsoncalifragilisticexpiala(Annoyed Grunt)cious8.3Treehouse of Horror VII8.2Brother from Another Series8The Homer They Fall8.2Bart After Dark7.7Lost Our Lisa7.9Girly Edition7.5Realty Bites7.9The Old Man and the Lisa8A Milhouse Divided8.1My Sister, My Sitter7.5The Last Temptation of Krust8.2The Cartridge Family8.2Grade School Confidential8.8Hurricane Neddy8.3Simpson Tide7.3The Simpsons Spin-Off Showcase9.1The City of New York vs. Homer Simpson7.6Miracle on Evergreen Terrace8.3King of the Hill8.1Das Bus7.6Lard of the Dance7.7Bart Carny8Lisa the Simpson8The Day the Violence Died7.3When You Dish Upon a Star8Lisa Gets an \"A\"7.3Homer Simpson in: \"Kidney Trouble\"7.2Lisa the Tree Hugger6.9Sunday, Cruddy Sunday7.6Maximum Homerdrive7.3Hello Gutter, Hello Fadder7.3Simpsons Bible Stories6.9Tennis the Menace7.8Viva Ned Flanders7.7Treehouse of Horror X7.2Last Tap Dance in Springfield7.5Brother's Little Helper7.3The Old Man and the \"C\" Student7Bart to the Future7.3Beyond Blunderdome7.3They Saved Lisa's Brain7.7Homer to the Max7.1Take My Wife, Sleaze7.3Little Big Mom6.9Faith Off7.5Worst Episode Ever6.6Saddlesore Galactica7.9Behind the Laughter7.3The Great Money Caper7.3Missionary: Impossible7.4Days of Wine and D'oh'ses8.6Bart on the Road6.5Bye, Bye, Nerdie7.3I'm Goin' to Praiseland7Simpsons Tall Tales7.7I Am Furious (Yellow)6.9The Sweetest Apu7The President Wore Pearls7.1The Parent Rap7.7Weekend at Burnsie's7.1Large Marge7.1The Bart Wants What It Wants6.9Mr. Spritz Goes to Washington7.2A Hunka Hunka Burns in Love7.3How I Spent My Strummer Vacation7.1She of Little Faith6.8Helter Shelter7.3Tales from the Public Domain6.9The Strong Arms of the Ma6.9Brawl in the Family7.3Jaws Wired Shut7.2Little Girl in the Big Ten6.8Old Yeller-Belly7.1Special Edna6.6Barting Over7Dude, Where's My Ranch?6.6The Bart of War7.4Treehouse of Horror XIV8.6Mountain of Madness6.6Today I Am a Clown6.7Marge vs. Singles, Seniors, Childless Couples and Teens and Gays7.3Diatribe of a Mad Housewife7All's Fair in Oven War6.2Bart-Mangled Banner6.8A Star Is Torn6.9See Homer Run7.3Milhouse Doesn't Live Here Anymore6.9The Ziff Who Came to Dinner6.4Homer and Ned's Hail Mary Pass6.9The Girl Who Slept Too Little6.9The Wandering Juvie7Milhouse of Sand and Fog7.3Treehouse of Horror XVI6.7Homer's Paternity Coot6.6She Used to Be My Girl6.7My Big Fat Geek Wedding7.3Future-Drama7The Italian Bob7.3Simple Simpson7We're on the Road to D'ohwhere6.9On a Clear Day I Can't See My Sister7.1Home Away from Homer7.4Treehouse of Horror XV7.3Midnight Rx6.8Pranksta Rap7.6Dumbbell Indemnity7.2Girls Just Want to Have Sums7.1The Monkey Suit6.3The Boys of Bummer7.1Treehouse of Horror XVIII6.3Rome-Old and Juli-Eh6.1Papa Don't Leech6.6Marge and Homer Turn a Couple Play6.6The Wife Aquatic7Double, Double, Boy in Trouble7.1Treehouse of Horror XVII6.3That '90s Show6.6The Burns and the Bees6.8Moe'N'a Lisa7.2The Haw-Hawed Couple7.1Husbands and Knives6.4All About Lisa7.3You Kent Always Say What You Want6.6Dangerous Curves7.3Springfield Up7Revenge Is a Dish Best Served Three Times7.3Marge Gamer7Stop! Or My Dog Will Shoot7.3Dial 'N' for Nerder6.6Love, Springfieldian Style7.1MyPods and Boomsticks7.2Sex, Pies and Idiot Scrapes7Any Given Sundance7.5Bart the Mother7Take My Life, Please7No Loan Again, Naturally6.3Elementary School Musical7.1Waverly Hills, 9-0-2-1-D'oh7.2The Bob Next Door7.2The Good, the Sad and the Drugly6.7Once Upon a Time in Springfield6.6Bart Gets a 'Z'7.2Eeny Teeny Maya Moe6.9Chief of Hearts6.3The Great Wife Hope7.2To Surveil with Love6.7The Scorpion's Tale6.9The Blue and the Gray6.6The Color Yellow6.5The Fool Monty7.2O Brother, Where Bart Thou?6.8Boy Meets Curl6.5Love Is a Many Strangled Thing6.7The Devil Wears Nada7.2Homer Scissorhands7Stealing First Base6.4How Munched is That Birdie in the Window?6.6The Real Housewives of Fat Tony6.3Moms I'd Like to Forget6.8MoneyBart6.9Flaming Moe7.3I'm with Cupid7Bart Stops to Smell the Roosevelts6.7Replaceable You7The D'oh-cial Network7.1Married to the Blob6.7Ned 'n Edna's Blend6.7Gone Abie Gone6.9Homer Goes to Prep School6.5Four Regrettings and a Funeral7Yellow Subterfuge7.4A Totally Fun Thing That Bart Will Never Do Again7.8The Book Job6.5The Daughter Also Rises7.6Steal This Episode6.9Exit Through the Kwik-E-Mart7Black Eyed, Please7.1Them, Robot7.1Treehouse of Horror XXIV6.5Pulpit Friction6.6The Changing of the Guardian6.4Moonshine River6.5A Tree Grows in Springfield7.3Treehouse of Horror XXIII7.2The Day the Earth Stood Cool7Hardly Kirk-ing6.3The Fabulous Faker Boy7.1Labor Pains7Dangers on a Train7.3Marge Simpson in: \"Screaming Yellow Honkers\"6.6The Winter of His Content5.8What to Expect When Bart's Expecting6.5Covercraft6.3Walking Big & Tall6.8Treehouse of Horror XXVI6.6The Girl Code6.7Pay Pal5.9Every Man's Dream6.2Let's Go Fly a Coot6.7Waiting for Duffman6.3Lisa with an 'S'7.3Bart's New Friend6.3Love Is in the N2-O2-Ar-CO2-Ne-He-CH46.9The Kids Are All Fight6.9Sky Police5.8Clown in the Dumps6.5Super Franchise Me6.7Much Apu About Something6.8I Won't Be Home for Christmas7.3Treehouse of Horror XXV6.7My Fare Lady6.5The Burns Cage6.9Mathlete's Feat6.3Lisa the Veterinarian7.1Paths of Glory7.2Puffless8Brush with Greatness8.8Flaming Moe's8.1Bart the General8.2Brother, Can You Spare Two Dimes?9Homer the Heretic9Cape Feare7.7Bart's Inner Child8.8Deep Space Homer8.4Sweet Seymour Skinner's Baadasssss Song8.2The Boy Who Knew Too Much9Treehouse of Horror V9.1Who Shot Mr. Burns? (Part One)9.2You Only Move Twice8.5El Viaje Misterioso de Nuestro Jomer (The Mysterious Voyage of Homer)9.2Homer's Enemy8.1Treehouse of Horror VIII7.7The Two Mrs. Nahasapeemapetilons7.6D'oh-in' in the Wind8Skinner's Sense of Snow8HOMR8.6Trilogy of Error8Poppa's Got a Brand New Badge7.6Treehouse of Horror XIII8.2Holidays of Future Passed7.9Simpsorama7.5Halloween of Horror6.7To Courier with Love7.5Homer's Odyssey7.3Grift of the Magi7.4A Tale of Two Springfields7.2Homer vs. Dignity6.5The Old Man and the Key7.1'Scuse Me While I Miss the Sky7.1Margical History Tour7Mobile Homer7.4Don't Fear the Roofer7.4The Seemingly Never-Ending Story6.5Homer Simpson, This Is Your Wife6.7The Wettest Stories Ever Told7.2Midnight Towboy7.1Homer and Lisa Exchange Cross Words7.2Coming to Homerica7.3Treehouse of Horror XX6.7American History X-cellent6.9The Squirt and the Whale7.1Treehouse of Horror XXI6.8The Man in the Blue Flannel Pants7.1Dark Knight Court7.2The Saga of Carl6.9You Don't Have to Live Like a Referee6.6The Princess Guide6.4How Lisa Got Her Marge Back6.9Orange Is the New Yellow6.6Monty Burns' Fleeing Circus7.2New Kids on the Blecch7Sweets and Sour Marge7.1The Frying Game7.3I'm Spelling As Fast As I Can7.1A Star Is Born-Again7.1The Regina Monologues7.2The Father, the Son, and the Holy Guest Star6.9Marge's Son Poisoning7.2Kiss Kiss, Bang Bangalore6.7Jazzy and the Pussycats6.7He Loves to Fly and He D'ohs6.9I Don't Wanna Know Why the Caged Bird Sings8.2Eternal Moonshine of the Simpson Mind5.9Lisa the Drama Queen7How the Test Was Won6.3In the Name of the Grandfather6.8Wedding for Disaster7The Ned-Liest Catch7At Long Last Leave7.3How I Wet Your Mother6.9Adventures in Baby-Getting6.4Diggs7Days of Future Future",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Marks"
+    ]
+  },
+  {
+    "objectID": "gallery_marks.html#faceting",
+    "href": "gallery_marks.html#faceting",
+    "title": "Marks",
+    "section": "Faceting",
+    "text": "Faceting\nFaceting allows to easily produce multiple plots by partitioning data. The following facet plot is taken from the Facets notebook.\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"facet\": {\"marginRight\": 80},\n        \"marks\": [\n            Plot.frame({\"facet\": False}),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"r\": 1.5,\n                    \"fill\": \"#ccc\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                    \"facet\": \"exclude\",\n                },\n            ),\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"culmen_depth_mm\",\n                    \"y\": \"culmen_length_mm\",\n                    \"fx\": \"sex\",\n                    \"fy\": \"species\",\n                },\n            ),\n        ],\n    }\n)\n\nAdelieChinstrapGentoospeciesFEMALEMALEsex354045505535404550553540455055↑ culmen_length_mm1520152015201520culmen_depth_mm →",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Marks"
+    ]
+  },
+  {
+    "objectID": "gallery_marks.html#arrow-mark",
+    "href": "gallery_marks.html#arrow-mark",
+    "title": "Marks",
+    "section": "Arrow mark",
+    "text": "Arrow mark\nSome marks allow for nice representation of complex data. The following plot, taken from the Arrow mark notebook, shows the evolution of inequality and population in various U.S. cities.\n\nmetros = pl.read_csv(\"data/metros.csv\")\n\nPlot.plot(\n    {\n        \"height\": 600,\n        \"grid\": True,\n        \"inset\": 10,\n        \"x\": {\"type\": \"log\", \"label\": \"Population →\"},\n        \"y\": {\"label\": \"↑ Inequality\", \"ticks\": 4},\n        \"color\": {\n            \"type\": \"diverging\",\n            \"scheme\": \"burd\",\n            \"label\": \"Change in inequality from 1980 to 2015\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"tickFormat\": \"+f\",\n        },\n        \"marks\": [\n            Plot.arrow(\n                metros,\n                {\n                    \"x1\": \"POP_1980\",\n                    \"y1\": \"R90_10_1980\",\n                    \"x2\": \"POP_2015\",\n                    \"y2\": \"R90_10_2015\",\n                    \"bend\": True,\n                    \"stroke\": js(\"d =&gt; d.R90_10_2015 - d.R90_10_1980\"),\n                },\n            ),\n            Plot.text(\n                metros,\n                {\n                    \"x\": \"POP_2015\",\n                    \"y\": \"R90_10_2015\",\n                    \"filter\": \"highlight\",\n                    \"text\": \"nyt_display\",\n                    \"fill\": \"currentColor\",\n                    \"stroke\": \"white\",\n                    \"dy\": -6,\n                },\n            ),\n        ],\n    }\n)\n\n−3−2−1+0+1+2+3Change in inequality from 1980 to 201545678↑ Inequality200k300k1M2M3M10M20MPopulation →New YorkChicagoHoustonWashington, D.C.San FranciscoSan JoseFairfield, Conn.Binghamton, N.Y.",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Marks"
+    ]
+  },
+  {
+    "objectID": "gallery_marks.html#contour-mark",
+    "href": "gallery_marks.html#contour-mark",
+    "title": "Marks",
+    "section": "Contour mark",
+    "text": "Contour mark\nThe contour mark allows for nice representations of spatial data. The following example taken from the Contour mark notebook shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to pyobsplot specificities).\n\nvapor = (\n    pl.read_csv(\"data/vapor.csv\", has_header=False, null_values=\"99999.0\")\n    .transpose()\n    .unpivot(variable_name=\"column\", value_name=\"values\")\n)\nvalues = vapor.get_column(\"values\").to_list()\n\nPlot.plot(\n    {\n        \"width\": 850,\n        \"projection\": \"equal-earth\",\n        \"color\": {\n            \"scheme\": \"blues\",\n            \"legend\": True,\n            \"ticks\": 6,\n            \"nice\": True,\n            \"label\": \"Water vapor (cm)\",\n        },\n        \"marks\": [\n            Plot.contour(\n                values,\n                {\n                    \"fill\": Plot.identity,\n                    \"width\": 360,\n                    \"height\": 180,\n                    \"x1\": -180,\n                    \"y1\": 90,\n                    \"x2\": 180,\n                    \"y2\": -90,\n                    \"interval\": 0.25,\n                    \"blur\": 0.5,\n                    \"interpolate\": \"barycentric\",\n                    \"stroke\": \"currentColor\",\n                    \"strokeWidth\": 0.5,\n                    \"clip\": \"sphere\",\n                },\n            ),\n            Plot.sphere(),\n        ],\n    }\n)\n\n0123456Water vapor (cm)",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Marks"
     ]
   },
   {
@@ -267,14 +435,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "The plot generator API has been changed. Generators are no more defined with a renderer argument, a format is specified instead. This format can either be widget, html, svg or png. So renderer=\"widget\" is replaced by format=\"widget\" (which is the default), whereas renderer=\"jsdom\" is replaced by format=\"html\" or one of the new format=\"svg\" and format=\"png\".\nThe “kwargs” alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a Plot.xxx method.\n\n\n\n\n\nPlots can now be generated in “svg” and “png”, and saved as “svg”, “png” or “pdf”. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.16\nMigrate project management from hatch to uv"
+    "text": "New shortcut syntax Plot.line(...).plot() is now available (#18, thanks @harrylojames)"
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.5.1-dev",
+    "href": "changelog.html#pyobsplot-0.5.1-dev",
+    "title": "Changelog",
+    "section": "",
+    "text": "New shortcut syntax Plot.line(...).plot() is now available (#18, thanks @harrylojames)"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.5.0",
     "href": "changelog.html#pyobsplot-0.5.0",
     "title": "Changelog",
-    "section": "",
-    "text": "The plot generator API has been changed. Generators are no more defined with a renderer argument, a format is specified instead. This format can either be widget, html, svg or png. So renderer=\"widget\" is replaced by format=\"widget\" (which is the default), whereas renderer=\"jsdom\" is replaced by format=\"html\" or one of the new format=\"svg\" and format=\"png\".\nThe “kwargs” alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a Plot.xxx method.\n\n\n\n\n\nPlots can now be generated in “svg” and “png”, and saved as “svg”, “png” or “pdf”. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.16\nMigrate project management from hatch to uv"
+    "section": "pyobsplot 0.5.0",
+    "text": "pyobsplot 0.5.0\n\nBreaking changes\n\nThe plot generator API has been changed. Generators are no more defined with a renderer argument, a format is specified instead. This format can either be widget, html, svg or png. So renderer=\"widget\" is replaced by format=\"widget\" (which is the default), whereas renderer=\"jsdom\" is replaced by format=\"html\" or one of the new format=\"svg\" and format=\"png\".\nThe “kwargs” alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a Plot.xxx method.\n\n\n\nOther changes\n\nPlots can now be generated in “svg” and “png”, and saved as “svg”, “png” or “pdf”. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.16\nMigrate project management from hatch to uv"
   },
   {
     "objectID": "changelog.html#pyobsplot-0.4.2",
@@ -389,222 +564,6 @@
     "text": "pyobsplot 0.1.3\n\nFirst released version."
   },
   {
-    "objectID": "gallery_geo.html",
-    "href": "gallery_geo.html",
-    "title": "Mapping and spatial data",
-    "section": "",
-    "text": "The Geo mark allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.\nThis allows to create choropleth maps such as the following:\n\nfrom pyobsplot import Obsplot, Plot\nimport geopandas as gpd\nimport pandas as pd\n\n# Load US counties from TopoJson with geopandas\ncounties = gpd.read_file(\"data/us-counties-10m.json\", layer=\"counties\")\ncounties[\"id\"] = pd.to_numeric(counties[\"id\"])\n# Merge unemployment values\nunemployment = pd.read_csv(\"data/us-county-unemployment.csv\")\ncounties = pd.merge(counties, unemployment.loc[:, (\"id\", \"rate\")], on=\"id\", how=\"left\")\n\n# Convert geodataframe to GeoJson\ncounties = counties.to_json()\n\n# Map\nPlot.plot(\n    {\n        \"marks\": [Plot.geo(counties, {\"fill\": js(\"(d) =&gt; d.properties.rate\")})],\n        \"projection\": \"albers-usa\",\n        \"color\": {\n            \"type\": \"quantile\",\n            \"n\": 8,\n            \"scheme\": \"blues\",\n            \"label\": \"Unemployment (%)\",\n            \"legend\": True,\n        },\n    }\n)\n\n3.344.555.56.27.4Unemployment (%)\n\n\nOf course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the Mapping notebook.\n\n# Load US states from TopoJson with geopandas and convert to GeoJson\nstates = gpd.read_file(\"data/us-counties-10m.json\", layer=\"states\").to_json()\nnation = gpd.read_file(\"data/us-counties-10m.json\", layer=\"nation\").to_json()\n\nwalmarts = pd.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\nPlot.plot(\n    {\n        \"marks\": [\n            Plot.density(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"bandwidth\": 12, \"fill\": \"density\"},\n            ),\n            Plot.dot(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"r\": 1, \"fill\": \"currentColor\"},\n            ),\n            Plot.geo(states, {\"strokeOpacity\": 0.3}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n        \"color\": {\"scheme\": \"blues\"},\n    }\n)",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Mapping and spatial data"
-    ]
-  },
-  {
-    "objectID": "gallery_geo.html#geo-mark",
-    "href": "gallery_geo.html#geo-mark",
-    "title": "Mapping and spatial data",
-    "section": "",
-    "text": "The Geo mark allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.\nThis allows to create choropleth maps such as the following:\n\nfrom pyobsplot import Obsplot, Plot\nimport geopandas as gpd\nimport pandas as pd\n\n# Load US counties from TopoJson with geopandas\ncounties = gpd.read_file(\"data/us-counties-10m.json\", layer=\"counties\")\ncounties[\"id\"] = pd.to_numeric(counties[\"id\"])\n# Merge unemployment values\nunemployment = pd.read_csv(\"data/us-county-unemployment.csv\")\ncounties = pd.merge(counties, unemployment.loc[:, (\"id\", \"rate\")], on=\"id\", how=\"left\")\n\n# Convert geodataframe to GeoJson\ncounties = counties.to_json()\n\n# Map\nPlot.plot(\n    {\n        \"marks\": [Plot.geo(counties, {\"fill\": js(\"(d) =&gt; d.properties.rate\")})],\n        \"projection\": \"albers-usa\",\n        \"color\": {\n            \"type\": \"quantile\",\n            \"n\": 8,\n            \"scheme\": \"blues\",\n            \"label\": \"Unemployment (%)\",\n            \"legend\": True,\n        },\n    }\n)\n\n3.344.555.56.27.4Unemployment (%)\n\n\nOf course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the Mapping notebook.\n\n# Load US states from TopoJson with geopandas and convert to GeoJson\nstates = gpd.read_file(\"data/us-counties-10m.json\", layer=\"states\").to_json()\nnation = gpd.read_file(\"data/us-counties-10m.json\", layer=\"nation\").to_json()\n\nwalmarts = pd.read_csv(\"data/walmarts.tsv\", sep=\"\\t\")\n\nPlot.plot(\n    {\n        \"marks\": [\n            Plot.density(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"bandwidth\": 12, \"fill\": \"density\"},\n            ),\n            Plot.dot(\n                walmarts,\n                {\"x\": \"longitude\", \"y\": \"latitude\", \"r\": 1, \"fill\": \"currentColor\"},\n            ),\n            Plot.geo(states, {\"strokeOpacity\": 0.3}),\n            Plot.geo(nation),\n        ],\n        \"projection\": \"albers\",\n        \"color\": {\"scheme\": \"blues\"},\n    }\n)",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Mapping and spatial data"
-    ]
-  },
-  {
-    "objectID": "gallery_geo.html#raster-mark",
-    "href": "gallery_geo.html#raster-mark",
-    "title": "Mapping and spatial data",
-    "section": "Raster mark",
-    "text": "Raster mark\nThe Raster mark creates an image from spatial data.\nPlot allows to do different type of spatial interpolations, such as nearest, which draws voronoi cells around values:\n\nimport polars as pl\n\nca55 = pl.read_csv(\"data/ca55-south.csv\")\n\n\ndef flare_map(interpolation):\n    return Plot.plot(\n        {\n            \"x\": {\"axis\": None},\n            \"y\": {\"axis\": None},\n            \"inset\": 10,\n            \"marginBottom\": 2,\n            \"height\": 500,\n            \"color\": {\"type\": \"diverging\"},\n            \"marks\": [\n                Plot.raster(\n                    ca55,\n                    {\n                        \"x\": \"LONGITUDE\",\n                        \"y\": \"LATITUDE\",\n                        \"fill\": \"MAG_IGRF90\",\n                        \"interpolate\": interpolation,\n                    },\n                ),\n                Plot.frame(),\n            ],\n        }\n    )\n\n\nflare_map(\"nearest\")\n\n\n\n\nOr the more recent random walk interpolation:\n\nflare_map(\"random-walk\")",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Mapping and spatial data"
-    ]
-  },
-  {
-    "objectID": "usage.html",
-    "href": "usage.html",
-    "title": "Usage",
-    "section": "",
-    "text": "For a quick usage introduction, see getting started.\nTo create a plot we can either use Plot.plot() to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.\nSo we start by importing the needed classes and create a plot generator object:\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#plot-specification",
-    "href": "usage.html#plot-specification",
-    "title": "Usage",
-    "section": "Plot specification",
-    "text": "Plot specification\nConverting a plot specification from JavaScript to Python should be straightforward most of the time:\n\nall dictionary keys must be quoted (so x: becomes \"x\":)\nJavaScript true and false must be replaced by True and False\nJavaScript null must be replaced by None\n\nSo the following JavaScript code:\nPlot.plot(\n    {\n        color: {legend: true},\n        grid: false,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nBecomes:\n\nop({\n    \"color\": {\"legend\": True},\n    \"grid\": False,\n    \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n})\n\nIt is possible to replace JavaScript methods from the Plot, d3 and Math modules with Python methods, but you must first import the corresponding classes.\n\nfrom pyobsplot import Obsplot, Plot, d3\n\nop({\n    \"x\": {\n        \"axis\": None\n    },\n    \"marks\": [\n        Plot.ruleY([0], {\"stroke\": \"steelblue\"}),\n        Plot.lineY(d3.cumsum({ \"length\": 100 }, d3.randomNormal()))\n    ]\n})\n\n−3−2−101234567\n\n\nIf your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the js method (after importing it):\n\nfrom pyobsplot import Obsplot, Plot, d3, js\nimport polars as pl\n\ndata = pl.DataFrame({\n    \"x\": [1, 5, 2, 4, 6, 2, 4],\n    \"y\": [2, 1, 3, 4, 5, 1, 2],\n    \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n})\n\nop({\n    \"grid\": True,\n    \"marks\": [\n        Plot.dot(data, {\n            \"x\": \"x\", \"y\": \"y\", \"r\": 5,\n            \"stroke\": \"black\", \"fill\": \"steelblue\",\n            \"fillOpacity\": js(\"d =&gt; d.type == 'T1' ? 0.7 : 0.1\")\n        })\n    ]\n})\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\n\nAlternative syntax\nFor the simplest cases, you can also pass a mark method directly as plot specification. The JavaScript plot() method will be called automatically to display the plot:\n\nimport random\nop(\n    Plot.tickX(\n        [random.gauss(0,1) for i in range(1000)], \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    )\n)\n\n−2−10123",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#output-formats",
-    "href": "usage.html#output-formats",
-    "title": "Usage",
-    "section": "Output formats",
-    "text": "Output formats\npyobsplot allows to output plots as Jupyter widgets, but also as static HTML, SVG or PNG.\nThe output format is determined by the format argument passed to a plot generator object or during plot creation.\n\n\n\n\nFormat value\n\n\nOutput type\n\n\nRenderer\n\n\n\n\n\n\n“widget” (default)\n\n\nJupyter Widget\n\n\nwidget\n\n\n\n\n“html”\n\n\nStatic HTML\n\n\njsdom\n\n\n\n\n“svg”\n\n\nSVG image\n\n\njsdom or jsdom+typst\n\n\n\n\n“png”\n\n\nPNG image\n\n\njsdom+typst\n\n\n\n\nThe following table lists the differences between the widget output and the other static formats (HTML, SVG and PNG).\n\n\n\n\n\n\n\nWidget output\n\n\nOther outputs\n\n\n\n\n\n\nOutput\n\n\nJupyter Widget\n\n\nStatic HTML, SVG, PNG. PDF is available when saving to a file.\n\n\n\n\nAdditionalinstallation\n\n\nNone\n\n\nNeeds a working node.js installation and an additional npm package\n\n\n\n\nQuarto\n\n\nSupported only in HTML format\n\n\nHTML output supported in HTML format, SVG and PNG outputs supported in other formats\n\n\n\n\nOutput size\n\n\nBig : includes the data and code needed to generate the plot\n\n\nModerate : size of the output file\n\n\n\n\nPlot interactions(tooltips…)\n\n\nSupported\n\n\nNot supported. Only static plots are produced.\n\n\n\n\nSave plot to file\n\n\nPlots can be saved as embeddable HTML file\n\n\nPlots can be saved to static HTML, SVG, PNG or PDF files.\n\n\n\n\nJupyterinteractivity\n\n\nBasic\n\n\nNone\n\n\n\n\nPersistencebetween sessions\n\n\nWidget state is not saved between sessions (for now)\n\n\nOutput is saved between sessions\n\n\n\n\nTo use a static output format like HTML, SVG or PNG, you need a working node.js installation and you must install the npm pyobsplot package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot\nAfter that, you can select which format to use when creating a plot generator object:\n\n# Generator with a widget output (default)\nopw = Obsplot(format=\"widget\")\n# Generator with a PNG output\nopj = Obsplot(format=\"png\")\n\nIt is also possible to specifiy a format when creating the plot by adding a format argument:\n\n# Generator with default widget output format\nop = Obsplot()\n# Switch to PNG output for this plot\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")\n# Specify format directly to Plot.plot()\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#saving-plots-to-file",
-    "href": "usage.html#saving-plots-to-file",
-    "title": "Usage",
-    "section": "Saving plots to file",
-    "text": "Saving plots to file\nPlots can be saved to a file. To do this, just add a path argument to your generator or Plot.plot call:\n\nop(Plot.lineY([1,2,3,2]), path=\"path_to/file.svg\")\nPlot.plot(Plot.lineY([1,2,3,2]), path=\"path_to/file.svg\")\n\n\nWidget format\nWhen using the widget format, plots can only be saved to HTML files. These files retain interactive features such as tooltips.\n\nopw = Obsplot()\nopw(Plot.lineY([1,2,3,2]), path=\"path_to/file.html\")\n\n\n\n\n\n\n\nTip\n\n\n\nTo embed widgets into an HTML website or document, Quarto documents can be more practical.\n\n\n\n\nOther output formats\nPlots can also be saved as SVG, PNG, PDF or static HTML files. The output format is determined by the path file extension.\n\nopw = Obsplot()\nopw(Plot.lineY([1,2,3,2]), path=\"path_to/file.png\")\n\n\n\n\n\n\n\nNote\n\n\n\nPDF format is only available when saving to a file, as PDF output cannot be embedded and displayed in a Jupyter notebook.\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen saving a plot to an HTML file, the result will depend on the format value. If format=\"widget\" (the default), the HTML file will be a Jupyter widget, but if format=\"html\", then a static HTML version will be saved.\n\n\n\n\n\n\n\n\nCaution\n\n\n\nPlot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a &lt;figure&gt; HTML tag. In this case, when saving to an SVG file, the plot will be converted using typst.",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#themes",
-    "href": "usage.html#themes",
-    "title": "Usage",
-    "section": "Themes",
-    "text": "Themes\nWhen using a plot generator object, it is possible to specify one of three color themes:\n\nlight theme (default) creates plots with a white background and a black foreground color\ndark theme creates plots with a black background and a white foreground\ncurrent theme creates plots with a transparent background and a currentColor foreground\n\nYou can specify a mode when creating the plot generator object by using the theme argument:\n\nop_dark = Obsplot(theme=\"dark\")\n\nYou can see output examples in the themes gallery\n\n\n\n\n\n\nNote\n\n\n\nThe current theme is not available when exporting to PNG, PDF, or SVG via typst.",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#default-specification-values",
-    "href": "usage.html#default-specification-values",
-    "title": "Usage",
-    "section": "Default specification values",
-    "text": "Default specification values\nWhen creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.\nOnly the top-level layout options can be specified as defaults. This can be useful to specify a default width, colors, margins or even style.\nThe complete list of available default attributes is :\n\n\n['marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'margin', 'width', 'height', 'aspectRatio', 'style']\n\n\nSo to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors, you could use :\n\nop_colors = Obsplot(\n    format = \"html\",\n    default={\n        \"width\": 400, \n        \"margin\": 50,\n        \"style\": {\"color\": \"white\", \"background-color\": \"#004\"}\n    }\n)\n\n\nop_colors(\n    Plot.dot(data, {\"x\": \"x\", \"y\": \"y\"})\n)\n\n1.01.52.02.53.03.54.04.55.0↑ y123456x →",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#data-handling",
-    "href": "usage.html#data-handling",
-    "title": "Usage",
-    "section": "Data handling",
-    "text": "Data handling\n\nDataFrames and Series\nPandas and polars DataFrames can be passed directly in a plot specification. They will be converted to JavaScript objects via Arrow IPC serialization, to ensure speed and data types conversion.\n\nimport polars as pl\nfrom datetime import date\n\ndf = pl.DataFrame({\n    \"Date\": [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3), date(2023, 1, 4)],\n    \"Value\": [4.2, 3.8, 4.5, 4.7]\n})\n\nop({\n    \"x\": {\"grid\": True},\n    \"y\": {\"domain\": [0, 5]},\n    \"marks\": [Plot.lineY(df, {\"x\": \"Date\", \"y\": \"Value\", \"stroke\": \"steelblue\"})]\n})\n\n0.00.51.01.52.02.53.03.54.04.55.0↑ Value12 AMJan 112 PM12 AMJan 212 PM12 AMJan 312 PM12 AMJan 4\n\n\nIf you pass a pandas or polars Series object, it will be automatically converted to a DataFrame with one column:\n\nvalue = df.get_column(\"Value\")\n\nop(\n    Plot.tickX(value, {\"x\": \"Value\", \"stroke\": \"darkviolet\"})\n)\n\n3.83.94.04.14.24.34.44.54.64.7Value →\n\n\npyobsplot implements a simple caching mechanism for some data objects (it currently works for DataFrames and for GeoJson data). Sometimes the same data object is used several times in a plot specification:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nop({\n  \"height\": 600,\n  \"grid\": True,\n  \"facet\": {\n    \"marginRight\": 80\n  },\n  \"marks\": [\n    Plot.frame({\"facet\": False}),\n    Plot.dot(penguins, {\n      \"x\": \"culmen_depth_mm\",\n      \"y\": \"culmen_length_mm\",\n      \"r\": 1.5,\n      \"fill\": \"#ccc\",\n      \"facet\": \"exclude\",\n      \"fx\": \"sex\",\n      \"fy\": \"species\",\n    }),\n    Plot.dot(penguins, {\n       \"x\": \"culmen_depth_mm\",\n       \"y\": \"culmen_length_mm\",\n       \"fx\": \"sex\",\n       \"fy\": \"species\",\n    })\n  ]\n})\n\nAdelieChinstrapGentoospeciesFEMALEMALEsex354045505535404550553540455055↑ culmen_length_mm1520152015201520culmen_depth_mm →\n\n\nIn this case, caching ensures that the penguins DataFrame is only serialized and transmitted once instead of twice.\n\n\ndatetime objects\ndatetime.date and datetime.datetime Python objects are automatically serialized and converted to JavaScript Date objects.\nThat makes the following two specifications equivalent:\n\nop({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01')\"), js(\"new Date('2022-01-01')\")]}, \n    \"grid\": True\n})\n\nJan2021FebMarAprMayJunJulAugSepOctNovDecJan2022\n\n\n\nfrom datetime import date\nop({\n    \"x\": {\"domain\": [date(2021,1,1), date(2022,1,1)]}, \n    \"grid\": True\n})\n\nJan2021FebMarAprMayJunJulAugSepOctNovDecJan2022\n\n\nAs well as the two following ones, using datetime:\n\nop({\n    \"x\": {\"domain\": [js(\"new Date('2021-01-01T07:00:00')\"), js(\"new Date('2021-01-01T08:00:00')\")]}, \n    \"grid\": True\n})\n\n7:00AM7:057:107:157:207:257:307:357:407:457:507:558:00\n\n\n\nfrom datetime import datetime\nop({\n    \"x\": {\"domain\": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, \n    \"grid\": True\n})\n\n7:00AM7:057:107:157:207:257:307:357:407:457:507:558:00",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#quarto",
-    "href": "usage.html#quarto",
-    "title": "Usage",
-    "section": "Quarto",
-    "text": "Quarto\npyobsplot plots are compatible with quarto HTML formats. If you use static output formats such as SVG, PNG or PDF, they may work in PDF or docx documents as well.\nIf your source document is a jupyter notebook (and not a .qmd file), then you have to use the --execute argument to force plot computation and to make them visible in the output:\nquarto render test.ipynb --execute --to html",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "usage.html#jupyter-interactivity",
-    "href": "usage.html#jupyter-interactivity",
-    "title": "Usage",
-    "section": "Jupyter Interactivity",
-    "text": "Jupyter Interactivity\nWhen using the default widget format, the fact that plots are generated as Jupyter widgets allow for basic interactivity. More specifically, you can set the spec attribute of an existing Obsplot to another plot specification and it will update it.\nThis allows to do things like the following, where a plot is updated depending on the value of a Jupyter IntSlider widget:\n\ndef generate_plot_spec(opacity):\n    return {\n      \"grid\": True,\n      \"marks\": [\n            Plot.rectY(penguins, Plot.binX({\"y\": \"count\"}, {\"x\": \"body_mass_g\", \"fill\": \"steelblue\", \"fillOpacity\": opacity})),\n            Plot.ruleY([0])\n            ]\n    }\n\nplot = op(generate_plot_spec(1))\n\ndef update_plot(change):\n    new = change['new']\n    plot.spec = generate_plot_spec(new / 100)\n\n\nw = IntSlider(value = 100, min = 0, max = 100)\nw.observe(update_plot, names='value')\n\ndisplay(w)\ndisplay(plot)\n\nYou can see a live version of this example in the following Colab notebook:",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Usage"
-    ]
-  },
-  {
-    "objectID": "getting_started.html",
-    "href": "getting_started.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#installation",
-    "href": "getting_started.html#installation",
-    "title": "Getting started",
-    "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#creating-a-plot",
-    "href": "getting_started.html#creating-a-plot",
-    "title": "Getting started",
-    "section": "Creating a plot",
-    "text": "Creating a plot\nTo use pyobsplot, you must import its Plot class with:\n\nfrom pyobsplot import Plot\n\nTo create a plot, call the Plot.plot method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot.plot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\nThe syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript true is be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\nBiscoeDreamTorgersen3,0003,5004,0004,5005,0005,5006,000↑ body_mass_g180190200210220230flipper_length_mm →",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#output-formats",
-    "href": "getting_started.html#output-formats",
-    "title": "Getting started",
-    "section": "Output formats",
-    "text": "Output formats\nBy default, plots will be created as Jupyter widgets, but pyobsplot is also able to output plots in PNG, SVG or static HTML formats.\nThe output format is configured by passing a format argument to Plot.plot():\nIt is also possible to specify a format or a path when using the Plot.plot() syntax:\n# Display plot as PNG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")\nTo save the plot to a file, you can add a path argument. The file extension will determine the output type, which can be HTML, PNG, SVG or PDF:\n# Save plot as SVG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), path=\"plot.svg\")\n\n\n\n\n\n\nNote\n\n\n\nWith the “widget” format, export can only be done to HTML files.",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#plot-generator",
-    "href": "getting_started.html#plot-generator",
-    "title": "Getting started",
-    "section": "Plot generator",
-    "text": "Plot generator\nCalling Plot.plot() is the fastest way to generate a plot with the default settings, but for further customization and improved performance you can import the Obsplot class and create a plot generator:\n\nfrom pyobsplot import Obsplot, Plot\n\nop = Obsplot()\n\nBy default plot generators output plots as widget format, but you can specify another one:\n\nop = Obsplot(format=\"png\")\n\nYou can then create plots by calling this generator with your plot specification:\n\nop(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\nFor the simplest cases, you can also create your plot directly by passing a Plot mark method to the generator:\n\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}))\n\n051015202530354045505560↑ Frequency170180190200210220230flipper_length_mm →\n\n\nYou can also override the default format output or save the plot to a file by adding a format or path argument when calling the generator:\n\n# Switch to SVG output for this plot\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"svg\")\n# Save widget to HTML file\nop(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), path=\"plot.html\")",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting_started.html#learn-more",
-    "href": "getting_started.html#learn-more",
-    "title": "Getting started",
-    "section": "Learn more",
-    "text": "Learn more\nTo go further, see the usage page.",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
-  },
-  {
     "objectID": "development.html",
     "href": "development.html",
     "title": "Development",
@@ -693,11 +652,59 @@
     "href": "development.html#maintenance-notes",
     "title": "Development",
     "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in utils.py is correct\nChange version in NEWS.md and pyproject.toml\nBuild the Python package with npm run build\nRelease the Python package with uvx twine upload dist/pyobsplot-0.X.Y*\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js to update Plot methods in src/pyobsplot/js_modules.py",
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in utils.py is correct\nChange version in NEWS.md and pyproject.toml\nBuild the Python package with npm run build\nRelease the Python package with uvx twine upload dist/pyobsplot-0.X.Y*\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js to update Plot methods in src/pyobsplot/plot.py",
     "crumbs": [
       "Documentation",
       "Development",
       "Development"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html",
+    "href": "gallery_themes.html",
+    "title": "Themes",
+    "section": "",
+    "text": "When using a plot generator object, it is possible to specify one of three output themes: light, dark and current.",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html#light-theme",
+    "href": "gallery_themes.html#light-theme",
+    "title": "Themes",
+    "section": "light theme",
+    "text": "light theme\nThe light theme produces plots with a white background and a black foreground color. This is the default theme:\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, js\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nop = Obsplot(theme=\"light\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html#dark-theme",
+    "href": "gallery_themes.html#dark-theme",
+    "title": "Themes",
+    "section": "dark theme",
+    "text": "dark theme\nThe dark theme produces plots with a black background and a white foreground color.\n\nop = Obsplot(theme=\"dark\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html#current-theme",
+    "href": "gallery_themes.html#current-theme",
+    "title": "Themes",
+    "section": "current theme",
+    "text": "current theme\n\nThe “current” theme uses a transparent background and a currentColor foreground, so it should keep the current color theme:\n\nop = Obsplot(theme=\"current\")\n\nop(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    }\n)",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
     ]
   }
 ]

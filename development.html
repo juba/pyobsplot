@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -331,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="debug-mode">Debug mode</h2>
 <p>“Debug mode” outputs the computed JavaScript plot structure (the one passed to <code>Plot.plot</code>).</p>
 <p>To activate it, add <code>debug=True</code> when creating your plot generator object:</p>
-<div id="6eb59a98" class="cell" data-execution_count="1">
+<div id="aacd38bf" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(debug<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If using the <code>widget</code> renderer, debug output will be displayed in JavaScript console. With the <code>jsdom</code> renderer, it will be displayed directly in the notebook.</p>
@@ -361,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>When a new Plot version is released:</p>
 <ul>
 <li>update with <code>npm install @observablehq/plot d3 --workspaces --include-workspace-root</code></li>
-<li>run <code>utils/get_plot_methods.js</code> to update Plot methods in <code>src/pyobsplot/js_modules.py</code></li>
+<li>run <code>utils/get_plot_methods.js</code> to update Plot methods in <code>src/pyobsplot/plot.py</code></li>
 </ul>
 
 
