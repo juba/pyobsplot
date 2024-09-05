@@ -164,7 +164,7 @@ Several group and map transforms can be applied and composed to create complex r
 # Load and prepare data
 stateage = (
     pl.read_csv("data/us-population-state-age.csv")
-    .melt(id_vars="name", variable_name="age", value_name="population")
+    .unpivot(id_vars="name", variable_name="age", value_name="population")
     .rename({"name": "state"})
 )
 # TODO: remove when Bigint error fixed upstream in Observable Plot

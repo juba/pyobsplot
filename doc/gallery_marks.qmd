@@ -144,7 +144,7 @@ The contour mark allows for nice representations of spatial data. The following 
 vapor = (
     pl.read_csv("data/vapor.csv", has_header=False, null_values="99999.0")
     .transpose()
-    .melt(variable_name="column", value_name="values")
+    .unpivot(variable_name="column", value_name="values")
 )
 values = vapor.get_column("values").to_list()
 
