@@ -3,7 +3,7 @@
 import pyobsplot
 from pyobsplot import Plot, Obsplot, d3, Math, js
 
-pyobsplot.js_modules._plot_format = "html"
+pyobsplot.plot._plot_format = "html"
 
 op = Obsplot(format="html")
 ```
