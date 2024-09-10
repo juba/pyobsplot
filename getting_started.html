@@ -251,7 +251,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#creating-a-plot" id="toc-creating-a-plot" class="nav-link" data-scroll-target="#creating-a-plot">Creating a plot</a></li>
   <li><a href="#output-formats" id="toc-output-formats" class="nav-link" data-scroll-target="#output-formats">Output formats</a></li>
-  <li><a href="#plot-generator" id="toc-plot-generator" class="nav-link" data-scroll-target="#plot-generator">Plot generator</a></li>
   <li><a href="#learn-more" id="toc-learn-more" class="nav-link" data-scroll-target="#learn-more">Learn more</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/juba/pyobsplot/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -290,13 +289,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="creating-a-plot" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-plot">Creating a plot</h2>
-<p>To use <code>pyobsplot</code>, you must import its <code>Plot</code> class with:</p>
-<div id="099fcfc2" class="cell" data-execution_count="2">
+<p>To use <code>pyobsplot</code>, you must import its <code>Plot</code> object with:</p>
+<div id="96f4b0cf" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To create a plot, call the <code>Plot.plot</code> method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.</p>
 <p>So, starting with a very simple DataFrame:</p>
-<div id="b09a1589" class="cell" data-execution_count="3">
+<div id="65d7cf23" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pl.DataFrame(</span>
@@ -315,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then you can reproduce the plot with:</p>
-<div id="c39082b4" class="cell" data-execution_count="4">
+<div id="65953fab" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
@@ -338,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript <code>true</code> is be replaced by Python <code>True</code>.</p>
 <p>You can use <a href="https://pandas.pydata.org">pandas</a> and <a href="https://pola.rs">polars</a> DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:</p>
-<div id="f2855fb4" class="cell" data-execution_count="5">
+<div id="6ad81c3c" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
@@ -408,52 +407,6 @@ Note
 <div class="callout-body-container callout-body">
 <p>With the “widget” format, export can only be done to HTML files.</p>
 </div>
-</div>
-</section>
-<section id="plot-generator" class="level2">
-<h2 class="anchored" data-anchor-id="plot-generator">Plot generator</h2>
-<p>Calling <code>Plot.plot()</code> is the fastest way to generate a plot with the default settings, but for further customization and improved performance you can import the <code>Obsplot</code> class and create a <em>plot generator</em>:</p>
-<div id="fb35d5ba" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>By default plot generators output plots as widget format, but you can specify another one:</p>
-<div id="c6cbf8c6" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(<span class="bu">format</span><span class="op">=</span><span class="st">"png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>You can then create plots by calling this generator with your plot specification:</p>
-<div id="17581cb9" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>op(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"marks"</span>: [Plot.dot(data, {<span class="st">"x"</span>: <span class="st">"x"</span>, <span class="st">"y"</span>: <span class="st">"y"</span>, <span class="st">"fill"</span>: <span class="st">"type"</span>, <span class="st">"r"</span>: <span class="dv">5</span>})],</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>For the simplest cases, you can also create your plot directly by passing a <code>Plot</code> mark method to the generator:</p>
-<div id="8dbf66df" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>op(Plot.auto(penguins, {<span class="st">"x"</span>: <span class="st">"flipper_length_mm"</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<figure class="plot-d6a7b5-figure figure" style="max-width: initial; padding: 0px 5px 5px 5px; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);" typstbg="#FFFFFF" typstfg="#000000" typstcaption="#777777"><svg class="plot-d6a7b5" fill="currentColor" font-family="system-ui, sans-serif" font-size="10" text-anchor="middle" width="640" height="400" viewbox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);"><style>:where(.plot-d6a7b5) {
-  --plot-background: white;
-  display: block;
-  height: auto;
-  height: intrinsic;
-  max-width: 100%;
-}
-:where(.plot-d6a7b5 text),
-:where(.plot-d6a7b5 tspan) {
-  white-space: pre;
-}</style><g aria-label="y-axis tick" aria-hidden="true" fill="none" stroke="currentColor"><path transform="translate(40,370)" d="M0,0L-6,0"></path><path transform="translate(40,341.7741935483871)" d="M0,0L-6,0"></path><path transform="translate(40,313.5483870967742)" d="M0,0L-6,0"></path><path transform="translate(40,285.3225806451613)" d="M0,0L-6,0"></path><path transform="translate(40,257.0967741935484)" d="M0,0L-6,0"></path><path transform="translate(40,228.8709677419355)" d="M0,0L-6,0"></path><path transform="translate(40,200.6451612903226)" d="M0,0L-6,0"></path><path transform="translate(40,172.41935483870964)" d="M0,0L-6,0"></path><path transform="translate(40,144.1935483870968)" d="M0,0L-6,0"></path><path transform="translate(40,115.96774193548386)" d="M0,0L-6,0"></path><path transform="translate(40,87.74193548387099)" d="M0,0L-6,0"></path><path transform="translate(40,59.51612903225807)" d="M0,0L-6,0"></path><path transform="translate(40,31.290322580645153)" d="M0,0L-6,0"></path></g><g aria-label="y-axis tick label" text-anchor="end" font-variant="tabular-nums" transform="translate(-9,0)"><text y="0.32em" transform="translate(40,370)">0</text><text y="0.32em" transform="translate(40,341.7741935483871)">5</text><text y="0.32em" transform="translate(40,313.5483870967742)">10</text><text y="0.32em" transform="translate(40,285.3225806451613)">15</text><text y="0.32em" transform="translate(40,257.0967741935484)">20</text><text y="0.32em" transform="translate(40,228.8709677419355)">25</text><text y="0.32em" transform="translate(40,200.6451612903226)">30</text><text y="0.32em" transform="translate(40,172.41935483870964)">35</text><text y="0.32em" transform="translate(40,144.1935483870968)">40</text><text y="0.32em" transform="translate(40,115.96774193548386)">45</text><text y="0.32em" transform="translate(40,87.74193548387099)">50</text><text y="0.32em" transform="translate(40,59.51612903225807)">55</text><text y="0.32em" transform="translate(40,31.290322580645153)">60</text></g><g aria-label="y-axis label" text-anchor="start" transform="translate(-37,-17)"><text y="0.71em" transform="translate(40,20)">↑ Frequency</text></g><g aria-label="x-axis tick" aria-hidden="true" fill="none" stroke="currentColor"><path transform="translate(40,370)" d="M0,0L0,6"></path><path transform="translate(129.23076923076923,370)" d="M0,0L0,6"></path><path transform="translate(218.46153846153845,370)" d="M0,0L0,6"></path><path transform="translate(307.69230769230774,370)" d="M0,0L0,6"></path><path transform="translate(396.9230769230769,370)" d="M0,0L0,6"></path><path transform="translate(486.1538461538462,370)" d="M0,0L0,6"></path><path transform="translate(575.3846153846155,370)" d="M0,0L0,6"></path></g><g aria-label="x-axis tick label" font-variant="tabular-nums" transform="translate(0,9)"><text y="0.71em" transform="translate(40,370)">170</text><text y="0.71em" transform="translate(129.23076923076923,370)">180</text><text y="0.71em" transform="translate(218.46153846153845,370)">190</text><text y="0.71em" transform="translate(307.69230769230774,370)">200</text><text y="0.71em" transform="translate(396.9230769230769,370)">210</text><text y="0.71em" transform="translate(486.1538461538462,370)">220</text><text y="0.71em" transform="translate(575.3846153846155,370)">230</text></g><g aria-label="x-axis label" text-anchor="end" transform="translate(17,27)"><text transform="translate(620,370)">flipper_length_mm →</text></g><g aria-label="rect"><rect x="40.5" y="358.7096774193548" width="43.61538461538461" height="11.290322580645181"></rect><rect x="85.11538461538461" y="336.1290322580645" width="43.61538461538461" height="33.87096774193549"></rect><rect x="129.73076923076923" y="234.51612903225808" width="43.61538461538464" height="135.48387096774192"></rect><rect x="174.34615384615387" y="115.96774193548386" width="43.615384615384585" height="254.03225806451616"></rect><rect x="218.96153846153845" y="20" width="43.61538461538464" height="350"></rect><rect x="263.5769230769231" y="82.09677419354837" width="43.61538461538464" height="287.90322580645164"></rect><rect x="308.19230769230774" y="262.741935483871" width="43.61538461538453" height="107.25806451612902"></rect><rect x="352.80769230769226" y="262.741935483871" width="43.61538461538464" height="107.25806451612902"></rect><rect x="397.4230769230769" y="172.41935483870964" width="43.61538461538464" height="197.58064516129036"></rect><rect x="442.03846153846155" y="166.7741935483871" width="43.61538461538464" height="203.2258064516129"></rect><rect x="486.6538461538462" y="234.51612903225808" width="43.61538461538464" height="135.48387096774192"></rect><rect x="531.2692307692308" y="307.9032258064516" width="43.61538461538464" height="62.09677419354841"></rect><rect x="575.8846153846155" y="324.83870967741933" width="43.61538461538453" height="45.16129032258067"></rect></g><g aria-label="rule" stroke="currentColor"><line x1="40" x2="620" y1="370" y2="370"></line></g><g aria-label="tip" fill="var(--plot-background)" stroke="currentColor" pointer-events="none" text-anchor="start"></g></svg></figure>
-</div>
-</div>
-<p>You can also override the default format output or save the plot to a file by adding a <code>format</code> or <code>path</code> argument when calling the generator:</p>
-<div id="57307516" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch to SVG output for this plot</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>op(Plot.auto(penguins, {<span class="st">"x"</span>: <span class="st">"flipper_length_mm"</span>}), <span class="bu">format</span><span class="op">=</span><span class="st">"svg"</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Save widget to HTML file</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>op(Plot.auto(penguins, {<span class="st">"x"</span>: <span class="st">"flipper_length_mm"</span>}), path<span class="op">=</span><span class="st">"plot.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="learn-more" class="level2">
