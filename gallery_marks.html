@@ -282,7 +282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="cell-mark" class="level2">
 <h2 class="anchored" data-anchor-id="cell-mark">Cell mark</h2>
 <p>The following chart, taken from the <a href="https://observablehq.com/@observablehq/plot-cell?collection=@observablehq/plot">Cell Mark notebook</a>, shows the rating of every episode of <em>The Simpsons</em>.</p>
-<div id="0d9d5bf5" class="cell" data-execution_count="2">
+<div id="1404ce30" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Plot, d3, Math, js</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -331,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="faceting" class="level2">
 <h2 class="anchored" data-anchor-id="faceting">Faceting</h2>
 <p><em>Faceting</em> allows to easily produce multiple plots by partitioning data. The following facet plot is taken from the <a href="https://observablehq.com/@observablehq/plot-facets?collection=@observablehq/plot">Facets notebook</a>.</p>
-<div id="840774c8" class="cell" data-execution_count="3">
+<div id="c23f8410" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
@@ -383,7 +383,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="arrow-mark" class="level2">
 <h2 class="anchored" data-anchor-id="arrow-mark">Arrow mark</h2>
 <p>Some marks allow for nice representation of complex data. The following plot, taken from the <a href="https://observablehq.com/@observablehq/plot-arrow?collection=@observablehq/plot">Arrow mark notebook</a>, shows the evolution of inequality and population in various U.S. cities.</p>
-<div id="70cbcbac" class="cell" data-execution_count="4">
+<div id="1789a8e7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>metros <span class="op">=</span> pl.read_csv(<span class="st">"data/metros.csv"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
@@ -455,7 +455,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="contour-mark" class="level2">
 <h2 class="anchored" data-anchor-id="contour-mark">Contour mark</h2>
 <p>The contour mark allows for nice representations of spatial data. The following example taken from the <a href="https://observablehq.com/@observablehq/plot-contour?collection=@observablehq/plot">Contour mark notebook</a> shows water vapor data from november 2022 (note that data processing and plot code are slightly modified to adapt to <code>pyobsplot</code> specificities).</p>
-<div id="537e47cd" class="cell" data-execution_count="5">
+<div id="4d416109" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>vapor <span class="op">=</span> (</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    pl.read_csv(<span class="st">"data/vapor.csv"</span>, has_header<span class="op">=</span><span class="va">False</span>, null_values<span class="op">=</span><span class="st">"99999.0"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    .transpose()</span>
