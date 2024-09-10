@@ -19,7 +19,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-    "anywidget[dev]>=0.9.11",
+    "anywidget[dev]>=0.9.13",
     "pandas>=2.0.0",
     "polars>=1.4.1",
     "requests",
