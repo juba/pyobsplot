@@ -19,6 +19,7 @@ ALLOWED_DEFAULTS = [
     "margin",
     "width",
     "height",
+    "grid",
     "aspectRatio",
     "style",
 ]
