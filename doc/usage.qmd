@@ -362,7 +362,7 @@ op_colors = Obsplot(
     default={
         "width": 400, 
         "margin": 50,
-        "style": {"color": "white", "background-color": "#004"}
+        "style": {"color": "#F98329"}
     }
 )
 ```
