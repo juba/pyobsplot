@@ -1,5 +1,6 @@
 ## pyobsplot 0.5.1-dev
 
+-   `Plot.plot()` performance should now be equivalent to the one of a generator object
 -   New shortcut syntax `Plot.line(...).plot()` is now available (#18, thanks @harrylojames)
 
 ## pyobsplot 0.5.0
