@@ -352,7 +352,7 @@ from pyobsplot.utils import ALLOWED_DEFAULTS
 print(ALLOWED_DEFAULTS)
 ```
 
-So to create a plot generator object that creates by default 400px wide plots with a 50px margin and white on blue colors with a dark theme, you could use :
+So to create a plot generator object that creates by default 400px wide plots with a 50px margin and a dark theme with blue color, you could use :
 
 
 ```{python}
@@ -362,7 +362,7 @@ op_colors = Obsplot(
     default={
         "width": 400, 
         "margin": 50,
-        "style": {"color": "#F98329"}
+        "style": {"color": "#54A4C4"}
     }
 )
 ```
