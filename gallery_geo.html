@@ -280,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="geo-mark">Geo mark</h2>
 <p>The <a href="https://observablehq.com/@observablehq/plot-geo?collection=@observablehq/plot">Geo mark</a> allows to draw geographic features such as points, lines and polygons. These marks data are passed as GeoJSON.</p>
 <p>This allows to create choropleth maps such as the following:</p>
-<div id="103cae07" class="cell" data-execution_count="2">
+<div id="6d192b03" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Obsplot, Plot</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -333,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Of course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the <a href="https://observablehq.com/@observablehq/plot-mapping?collection=@observablehq/plot">Mapping notebook</a>.</p>
-<div id="a8aab960" class="cell" data-execution_count="3">
+<div id="90eab8ab" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load US states from TopoJson with geopandas and convert to GeoJson</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> gpd.read_file(<span class="st">"data/us-counties-10m.json"</span>, layer<span class="op">=</span><span class="st">"states"</span>).to_json()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>nation <span class="op">=</span> gpd.read_file(<span class="st">"data/us-counties-10m.json"</span>, layer<span class="op">=</span><span class="st">"nation"</span>).to_json()</span>
@@ -377,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="raster-mark">Raster mark</h2>
 <p>The <a href="https://observablehq.com/@observablehq/plot-raster?collection=@observablehq/plot">Raster mark</a> creates an image from spatial data.</p>
 <p>Plot allows to do different type of spatial interpolations, such as <em>nearest</em>, which draws voronoi cells around values:</p>
-<div id="eab29e2d" class="cell" data-execution_count="4">
+<div id="cc2628c8" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ca55 <span class="op">=</span> pl.read_csv(<span class="st">"data/ca55-south.csv"</span>)</span>
@@ -424,7 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Or the more recent random walk interpolation:</p>
-<div id="60323d07" class="cell" data-execution_count="5">
+<div id="e25302ec" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>flare_map(<span class="st">"random-walk"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <figure class="plot-d6a7b5-figure figure" style="max-width: initial; padding: 0px 5px 5px 5px; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);" typstbg="#FFFFFF" typstfg="#000000" typstcaption="#777777"><svg class="plot-d6a7b5" fill="currentColor" font-family="system-ui, sans-serif" font-size="10" text-anchor="middle" width="640" height="500" viewbox="0 0 640 500" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);"><style>:where(.plot-d6a7b5) {
