@@ -1,6 +1,7 @@
 from typing import Literal
 
 from pyobsplot.obsplot import Obsplot
+from pyobsplot.utils import DEFAULT_THEME
 from pyobsplot.widget import ObsplotWidget
 
 # Default format for Plot.plot() calls.
@@ -52,8 +53,9 @@ class PlotClass:
         self,
         spec: dict,
         format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
-        path: str | None = None,
         format_options: dict | None = None,
+        theme: Literal["light", "dark", "current"] = DEFAULT_THEME,
+        path: str | None = None,
     ) -> ObsplotWidget | None:
         """
         Plot.plot static method. If called directly, create an ObsplotWidget
@@ -75,7 +77,11 @@ class PlotClass:
         """
         format_value = format or _plot_format
         return self.op(
-            spec, path=path, format=format_value, format_options=format_options
+            spec,
+            path=path,
+            format=format_value,
+            format_options=format_options,
+            theme=theme,
         )
 
     # ⚠️ WARNING ⚠️
