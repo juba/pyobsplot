@@ -155,6 +155,8 @@ class Obsplot:
         theme: Literal["light", "dark", "current"] | None = None,
         path: str | io.StringIO | Path | None = None,
         format_options: dict | None = None,
+        *,
+        debug: bool = False,
     ) -> ObsplotWidget | None:
         """
         Method called when an Obsplot instance is called directly.
@@ -175,13 +177,15 @@ class Obsplot:
             possible keys are 'font' (name of font family), 'scale' (font scaling),
             'margin' (margin around the plot, e.g. '1in' or '10pt') and 'legend-padding'
             (padding around the legend).
+        debug : bool, optional
+            activate debug mode, by default False
         """
 
         format_value = format or self.format
         format_options = format_options or self.format_options
         theme = theme or self.theme  # type: ignore
+        debug = debug or self.debug
         default = self.default
-        debug = self.debug
 
         # Default to widget format
         if format_value is None and path is None:
