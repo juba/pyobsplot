@@ -6,16 +6,8 @@ title: "Usage"
 
 For a quick usage introduction, see [getting started](getting_started.qmd).
 
-To create a plot we can either use `Plot.plot()` to generate plots with the default settings, or create a plot generator object to be able to customize things further. This is the way we will use here.
 
-So we start by importing the needed classes and create a plot generator object:
 
-```{python}
-#| eval: false
-from pyobsplot import Obsplot, Plot
-
-op = Obsplot()
-```
 
 
 ## Plot specification
@@ -52,9 +44,9 @@ op({
 It is possible to  replace JavaScript methods from the `Plot`, `d3` and `Math` modules with Python methods, but you must first import the corresponding classes.
 
 ```{python}
-from pyobsplot import Obsplot, Plot, d3
+from pyobsplot import Plot, d3
 
-op({
+Plot.plot({
     "x": {
         "axis": None
     },
@@ -68,7 +60,7 @@ op({
 If your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the `js` method (after importing it):
 
 ```{python}
-from pyobsplot import Obsplot, Plot, d3, js
+from pyobsplot import Plot, d3, js
 import polars as pl
 
 data = pl.DataFrame({
@@ -77,7 +69,7 @@ data = pl.DataFrame({
     "type": ["T1", "T2", "T1", "T2", "T1", "T1", "T2"],
 })
 
-op({
+Plot.plot({
     "grid": True,
     "marks": [
         Plot.dot(data, {
@@ -89,18 +81,31 @@ op({
 })
 ```
 
-### Alternative syntax
+### Alternative syntaxes
+
+
 
 For the simplest cases, you can also pass a mark method directly as plot specification. The JavaScript `plot()` method will be called automatically to display the plot:
 
 ```{python}
 import random
-op(
+v = [random.gauss(0,1) for i in range(1000)]
+
+Plot.plot(
     Plot.tickX(
-        [random.gauss(0,1) for i in range(1000)], 
+        v, 
         {"stroke": "steelblue", "opacity": 0.2}
     )
 )
+```
+
+You can call also call the `plot()` method directly on a Plot mark method:
+
+```{python}
+Plot.tickX(
+        v, 
+        {"stroke": "steelblue", "opacity": 0.2}
+    ).plot()
 ```
 
 
@@ -198,25 +203,11 @@ npm install pyobsplot
 npm install -g pyobsplot
 ```
 
-After that, you can select which format to use when creating a plot generator object:
+After that, you can specifiy a format when creating the plot by adding a `format` argument:
 
 ```{python}
 # | eval: false
-# Generator with a widget output (default)
-opw = Obsplot(format="widget")
-# Generator with a PNG output
-opj = Obsplot(format="png")
-```
-
-It is also possible to specifiy a format when creating the plot by adding a `format` argument:
-
-```{python}
-# | eval: false
-# Generator with default widget output format
-op = Obsplot()
-# Switch to PNG output for this plot
-op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
-# Specify format directly to Plot.plot()
+# Specify format to Plot.plot()
 Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
 ```
 
@@ -229,7 +220,6 @@ Plots can be saved to a file. To do this, just add a `path` argument to your gen
 ```{python}
 #| eval: false
 
-op(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 Plot.plot(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 ```
 
@@ -240,8 +230,7 @@ When using the `widget` format, plots can only be saved to HTML files. These fil
 
 ```{python}
 #| eval: false
-opw = Obsplot()
-opw(Plot.lineY([1,2,3,2]), path="path_to/file.html")
+Plot.plot(Plot.lineY([1,2,3,2]), path="path_to/file.html")
 ```
 
 ::: {.callout-tip}
@@ -254,8 +243,7 @@ Plots can also be saved as SVG, PNG, PDF or static HTML files. The output format
 
 ```{python}
 #| eval: false
-opw = Obsplot()
-opw(Plot.lineY([1,2,3,2]), path="path_to/file.png")
+Plot.plot(Plot.lineY([1,2,3,2]), path="path_to/file.png")
 ```
 
 ::: {.callout-note}
@@ -285,7 +273,7 @@ You can specify a mode when creating the plot generator object by using the `the
 
 ```{python}
 #| eval: false
-op_dark = Obsplot(theme="dark")
+Plot.plot(Plot.lineY([1,2,3,2]), theme="dark")
 ```
 
 You can see output examples in the [themes gallery](gallery_themes.qmd)
@@ -295,9 +283,64 @@ The `current` theme is not available when exporting to PNG, PDF, or SVG via typs
 :::
 
 
-## Default specification values
+## Plot generator
 
-When creating a plot generator objects, it is possible to specify default specification values that will be applied to every plot created with this generator.
+Calling `Plot.plot()` is the fastest way to generate a plot with the default settings, but for further customization you can import the `Obsplot` class and create a *plot generator*:
+
+```{python}
+from pyobsplot import Obsplot, Plot
+
+op = Obsplot()
+```
+
+```{python}
+# | include: false
+
+op = Obsplot(format="html")
+```
+
+By default plot generators output plots as widget format, but you can specify another one:
+
+```{python}
+#| eval: false
+op = Obsplot(format="png")
+```
+
+You can then create plots by calling this generator with your plot specification:
+
+```{python}
+# | eval: false
+
+op(
+    {
+        "grid": True,
+        "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
+    }
+)
+```
+
+For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to the generator:
+
+```{python}
+penguins = pl.read_csv("data/penguins.csv")
+
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
+```
+
+You can also override the default format output or save the plot to a file by adding a `format` or `path` argument when calling the generator:
+
+```{python}
+# | eval: false
+# Switch to SVG output for this plot
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="svg")
+# Save widget to HTML file
+op(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.html")
+```
+
+
+### Default specification values
+
+When creating a plot generator, it is possible to specify default specification values that will be applied to every plot created with this generator.
 
 Only the top-level layout options can be specified as defaults. This can be useful to specify a default `width`, colors, margins or even `style`.
 
@@ -344,7 +387,7 @@ df = pl.DataFrame({
     "Value": [4.2, 3.8, 4.5, 4.7]
 })
 
-op({
+Plot.plot({
     "x": {"grid": True},
     "y": {"domain": [0, 5]},
     "marks": [Plot.lineY(df, {"x": "Date", "y": "Value", "stroke": "steelblue"})]
@@ -356,7 +399,7 @@ If you pass a pandas or polars Series object, it will be automatically converted
 ```{python}
 value = df.get_column("Value")
 
-op(
+Plot.plot(
     Plot.tickX(value, {"x": "Value", "stroke": "darkviolet"})
 )
 ```
@@ -366,7 +409,7 @@ op(
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")
 
-op({
+Plot.plot({
   "height": 600,
   "grid": True,
   "facet": {
@@ -402,7 +445,7 @@ In this case, caching ensures that the `penguins` DataFrame is only serialized a
 That makes the following two specifications equivalent:
 
 ```{python}
-op({
+Plot.plot({
     "x": {"domain": [js("new Date('2021-01-01')"), js("new Date('2022-01-01')")]}, 
     "grid": True
 })
@@ -410,7 +453,7 @@ op({
 
 ```{python}
 from datetime import date
-op({
+Plot.plot({
     "x": {"domain": [date(2021,1,1), date(2022,1,1)]}, 
     "grid": True
 })
@@ -419,7 +462,7 @@ op({
 As well as the two following ones, using `datetime`:
 
 ```{python}
-op({
+Plot.plot({
     "x": {"domain": [js("new Date('2021-01-01T07:00:00')"), js("new Date('2021-01-01T08:00:00')")]}, 
     "grid": True
 })
@@ -427,7 +470,7 @@ op({
 
 ```{python}
 from datetime import datetime
-op({
+Plot.plot({
     "x": {"domain": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, 
     "grid": True
 })
@@ -463,7 +506,7 @@ def generate_plot_spec(opacity):
             ]
     }
 
-plot = op(generate_plot_spec(1))
+plot = Plot.plot(generate_plot_spec(1))
 
 def update_plot(change):
     new = change['new']

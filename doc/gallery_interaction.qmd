@@ -2,8 +2,6 @@
 title: "Interactions"
 ---
 
-{{< include _setup_widget.qmd >}}
-
 ::::{.callout-warning}
 Interactions are only supported by the `widget` format. When using another output format, only static plots can be produced.
 ::::

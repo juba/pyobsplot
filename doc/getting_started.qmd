@@ -23,7 +23,7 @@ npm install -g pyobsplot
 
 ## Creating a plot
 
-To use `pyobsplot`, you must import its `Plot` class with:
+To use `pyobsplot`, you must import its `Plot` object with:
 
 ```{python}
 from pyobsplot import Plot
@@ -109,61 +109,6 @@ Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.svg")
 ::: {.callout-note}
 With the "widget" format, export can only be done to HTML files.
 :::
-
-
-
-## Plot generator
-
-Calling `Plot.plot()` is the fastest way to generate a plot with the default settings, but for further customization and improved performance you can import the `Obsplot` class and create a *plot generator*:
-
-```{python}
-from pyobsplot import Obsplot, Plot
-
-op = Obsplot()
-```
-
-```{python}
-# | include: false
-
-op = Obsplot(format="html")
-```
-
-By default plot generators output plots as widget format, but you can specify another one:
-
-```{python}
-#| eval: false
-op = Obsplot(format="png")
-```
-
-You can then create plots by calling this generator with your plot specification:
-
-```{python}
-# | eval: false
-
-op(
-    {
-        "grid": True,
-        "marks": [Plot.dot(data, {"x": "x", "y": "y", "fill": "type", "r": 5})],
-    }
-)
-```
-
-For the simplest cases, you can also create your plot directly by passing a `Plot` mark method to the generator:
-
-```{python}
-op(Plot.auto(penguins, {"x": "flipper_length_mm"}))
-```
-
-You can also override the default format output or save the plot to a file by adding a `format` or `path` argument when calling the generator:
-
-```{python}
-# | eval: false
-# Switch to SVG output for this plot
-op(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="svg")
-# Save widget to HTML file
-op(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.html")
-```
-
 
 
 ## Learn more

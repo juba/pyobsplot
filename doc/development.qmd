@@ -85,7 +85,7 @@ npm run uitest
 
 "Debug mode" outputs the computed JavaScript plot structure (the one passed to `Plot.plot`).
 
-To activate it, add `debug=True` when creating your plot generator object:
+To activate it, add `debug=True` when using `Plot.plot()` or when creating your plot generator object:
 
 ```{python}
 # | eval: false

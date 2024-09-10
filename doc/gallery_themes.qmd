@@ -17,9 +17,7 @@ from pyobsplot import Obsplot, Plot, d3, js
 
 stocks = pl.read_csv("data/stocks.csv", try_parse_dates=True)
 
-op = Obsplot(theme="light")
-
-op(
+Plot.plot(
     {
         "y": {"grid": True},
         "color": {"legend": True},
@@ -28,7 +26,8 @@ op(
                 stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
             )
         ],
-    }
+    },
+    theme="light"
 )
 ```
 
@@ -37,9 +36,7 @@ op(
 The dark theme produces plots with a black background and a white foreground color.
 
 ```{python}
-op = Obsplot(theme="dark")
-
-op(
+Plot.plot(
     {
         "y": {"grid": True},
         "color": {"legend": True},
@@ -48,7 +45,8 @@ op(
                 stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
             )
         ],
-    }
+    },
+    theme="dark"
 )
 ```
 
@@ -59,9 +57,7 @@ op(
 The "current" theme uses a transparent background and a `currentColor` foreground, so it should keep the current color theme:
 
 ```{python}
-op = Obsplot(theme="current")
-
-op(
+Plot.plot(
     {
         "y": {"grid": True},
         "color": {"legend": True},
@@ -70,7 +66,8 @@ op(
                 stocks, {"x": "Date", "y": "Close", "stroke": "Symbol", "tip": True}
             )
         ],
-    }
+    },
+    theme="current"
 )
 ```
 
