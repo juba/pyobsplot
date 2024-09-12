@@ -2,6 +2,7 @@
 
 -   `Plot.plot()` performance should now be equivalent to the one of a generator object
 -   New shortcut syntax `Plot.line(...).plot()` is now available (#18, thanks @harrylojames)
+-   Bugfix: typst error with certain decimal padding values.
 
 ## pyobsplot 0.5.0
 

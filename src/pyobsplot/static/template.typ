@@ -41,8 +41,8 @@
             spacing: .2em, 
             image.decode(
                 encode-xml(elem.children.first()), 
-                width: 1in * int(elem.children.first().attrs.width) / dpi, 
-                height: 1in * int(elem.children.first().attrs.width) /dpi
+                width: 1in * float(elem.children.first().attrs.width) / dpi, 
+                height: 1in * float(elem.children.first().attrs.width) /dpi
             ),
             text(elem.children.last(), size: 1in * 10/dpi)
         )
@@ -68,11 +68,11 @@
     let legends = figuresvgs
     .filter(svg => "ramp" in svg.attrs.class)
     .map(svg => (..svg, attrs: (..svg.attrs,
-                                 width: str(int(svg.attrs.width) + 2*legend-padding), 
-                                 viewbox: "-"+str(legend-padding)+" 0 "+str(int(svg.attrs.width)+legend-padding)+" "+str(int(svg.attrs.height)))
+                                 width: str(float(svg.attrs.width) + 2*legend-padding), 
+                                 viewbox: "-"+str(legend-padding)+" 0 "+str(float(svg.attrs.width)+legend-padding)+" "+str(float(svg.attrs.height)))
                                 ))
     let mainfigure = figuresvgs.find(svg => "ramp" not in svg.attrs.class)
-    let figurewidth = calc.max(..figuresvgs.map(svg => int(svg.attrs.width)))
+    let figurewidth = calc.max(..figuresvgs.map(svg => float(svg.attrs.width)))
 
     set page(
         width: 1in*figurewidth/dpi + 2*margin,
@@ -96,8 +96,8 @@
             v(1in * 8/dpi)
         },
         ..figure.children.filter(e => e.tag == "div").map(swatch),
-        ..legends.map(svg => image.decode(encode-xml(svg), height: 1in * int(svg.attrs.height) / dpi)),
-        image.decode(encode-xml(mainfigure), height: 1in * int(mainfigure.attrs.height) / dpi),
+        ..legends.map(svg => image.decode(encode-xml(svg), height: 1in * float(svg.attrs.height) / dpi)),
+        image.decode(encode-xml(mainfigure), height: 1in * float(mainfigure.attrs.height) / dpi),
         if (caption != none) {
             set text(size: 1in * 13/dpi, fill: rgb(caption_color), weight: 500)
             text(caption.children.first())
