@@ -1276,7 +1276,7 @@ name = "pyobsplot"
 version = "0.5.2"
 source = { editable = "." }
 dependencies = [
-    { name = "anywidget", extra = ["dev"] },
+    { name = "anywidget" },
     { name = "pandas" },
     { name = "polars" },
     { name = "pyarrow" },
@@ -1290,6 +1290,7 @@ typst = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "anywidget", extra = ["dev"] },
     { name = "geopandas" },
     { name = "ipykernel" },
     { name = "jupyterlab" },
@@ -1299,7 +1300,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anywidget", extras = ["dev"], specifier = ">=0.9.13" },
+    { name = "anywidget", specifier = ">=0.9.13" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "polars", specifier = ">=1.4.1" },
     { name = "pyarrow", specifier = ">=17.0.0" },
@@ -1309,6 +1310,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "anywidget", extras = ["dev"], specifier = ">=0.9.13" },
     { name = "geopandas", specifier = ">=0.14.4" },
     { name = "ipykernel", specifier = ">=6.29.4" },
     { name = "jupyterlab", specifier = ">=4.2.1" },
