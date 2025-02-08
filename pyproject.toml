@@ -19,7 +19,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-    "anywidget[dev]>=0.9.13",
+    "anywidget>=0.9.13",
     "pandas>=2.0.0",
     "polars>=1.4.1",
     "requests",
@@ -35,6 +35,7 @@ changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
 [tool.uv]
 dev-dependencies = [
+    "anywidget[dev]>=0.9.13",    
     "pytest>=8.2.1",
     "geopandas>=0.14.4",
     "jupyterlab>=4.2.1",
