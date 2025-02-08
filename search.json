@@ -1,5 +1,244 @@
 [
   {
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#installation",
+    "href": "getting_started.html#installation",
+    "title": "Getting started",
+    "section": "",
+    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#creating-a-plot",
+    "href": "getting_started.html#creating-a-plot",
+    "title": "Getting started",
+    "section": "Creating a plot",
+    "text": "Creating a plot\nTo use pyobsplot, you must import its Plot object with:\n\nfrom pyobsplot import Plot\n\nTo create a plot, call the Plot.plot method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot.plot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\nThe syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript true is be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\nBiscoeDreamTorgersen3,0003,5004,0004,5005,0005,5006,000↑ body_mass_g180190200210220230flipper_length_mm →",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#output-formats",
+    "href": "getting_started.html#output-formats",
+    "title": "Getting started",
+    "section": "Output formats",
+    "text": "Output formats\nBy default, plots will be created as Jupyter widgets, but pyobsplot is also able to output plots in PNG, SVG or static HTML formats.\nThe output format is configured by passing a format argument to Plot.plot():\n# Display plot as PNG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")\nTo save the plot to a file, you can add a path argument. The file extension will determine the output type, which can be HTML, PNG, SVG or PDF:\n# Save plot as SVG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), path=\"plot.svg\")\n\n\n\n\n\n\nNote\n\n\n\nWith the “widget” format, export can only be done to HTML files.",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting_started.html#learn-more",
+    "href": "getting_started.html#learn-more",
+    "title": "Getting started",
+    "section": "Learn more",
+    "text": "Learn more\nTo go further, see the usage page.",
+    "crumbs": [
+      "Documentation",
+      "Usage",
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html",
+    "href": "gallery_themes.html",
+    "title": "Themes",
+    "section": "",
+    "text": "When using a plot generator object, it is possible to specify one of three output themes: light, dark and current.",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html#light-theme",
+    "href": "gallery_themes.html#light-theme",
+    "title": "Themes",
+    "section": "light theme",
+    "text": "light theme\nThe light theme produces plots with a white background and a black foreground color. This is the default theme:\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, js\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nPlot.plot(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    },\n    theme=\"light\"\n)\n\nAAPLAMZNGOOGIBM2004006008001,0001,2001,4001,600↑ Close20142015201620172018",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html#dark-theme",
+    "href": "gallery_themes.html#dark-theme",
+    "title": "Themes",
+    "section": "dark theme",
+    "text": "dark theme\nThe dark theme produces plots with a black background and a white foreground color.\n\nPlot.plot(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    },\n    theme=\"dark\"\n)\n\nAAPLAMZNGOOGIBM2004006008001,0001,2001,4001,600↑ Close20142015201620172018",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "gallery_themes.html#current-theme",
+    "href": "gallery_themes.html#current-theme",
+    "title": "Themes",
+    "section": "current theme",
+    "text": "current theme\n\nThe “current” theme uses a transparent background and a currentColor foreground, so it should keep the current color theme:\n\nPlot.plot(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    },\n    theme=\"current\"\n)\n\nAAPLAMZNGOOGIBM2004006008001,0001,2001,4001,600↑ Close20142015201620172018",
+    "crumbs": [
+      "Documentation",
+      "Gallery",
+      "Themes"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "pyobsplot",
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "pyobsplot",
+    "section": "",
+    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+  },
+  {
+    "objectID": "index.html#installation-and-usage",
+    "href": "index.html#installation-and-usage",
+    "title": "pyobsplot",
+    "section": "Installation and usage",
+    "text": "Installation and usage\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
+  },
+  {
+    "objectID": "index.html#features-and-limitations",
+    "href": "index.html#features-and-limitations",
+    "title": "pyobsplot",
+    "section": "Features and limitations",
+    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nPlots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)\nPlots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and better data type conversions\nWorks with Jupyter notebooks and Quarto documents\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\n\nLimitations:\n\nPlot interactions (tooltips, crosshair…) are only available with the “widget” format (#16).\nVery limited integration with IDE (documentation and autocompletion) for Plot methods (unlike in Observable notebooks) (#13)."
+  },
+  {
+    "objectID": "index.html#credits",
+    "href": "index.html#credits",
+    "title": "pyobsplot",
+    "section": "Credits",
+    "text": "Credits\n\nObservable Plot, developed by Mike Bostock and Philippe Rivière among others.\nThe widget is developed thanks to the anywidget framework.\ntypst is used to convert HTML figures to PNG, SVG or PDF.\nSome code from the jsdom renderer has been adapted from altair_saver.\nThis documentation website is generated by Quarto."
+  },
+  {
+    "objectID": "development.html",
+    "href": "development.html",
+    "title": "Development",
+    "section": "",
+    "text": "To install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#install-from-git",
+    "href": "development.html#install-from-git",
+    "title": "Development",
+    "section": "",
+    "text": "To install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#install-fom-source",
+    "href": "development.html#install-fom-source",
+    "title": "Development",
+    "section": "Install fom source",
+    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall uv dependency management system\nClone the pyobsplot repository\nInstall Python and Python dependencies with : uv sync\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code are in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py.",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#widget-javascript-modification-and-bundling",
+    "href": "development.html#widget-javascript-modification-and-bundling",
+    "title": "Development",
+    "section": "Widget JavaScript modification and bundling",
+    "text": "Widget JavaScript modification and bundling\nEach time the widget JavaScript or CSS code is modified in the js/ or css/ directories, it must be bundled with one of the following commands in pyobsplot:\n# Bundle only once\nnpm run bundle\n# Bundle and watch for code change\nnpm run watch\nThe result is put into src/pyobsplot/static.",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#tests",
+    "href": "development.html#tests",
+    "title": "Development",
+    "section": "Tests",
+    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\nTo run Python tests, use:\nnpm run test\nTo run JavaScript tests, use:\nnpm run test --workspaces\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#debug-mode",
+    "href": "development.html#debug-mode",
+    "title": "Development",
+    "section": "Debug mode",
+    "text": "Debug mode\n“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot).\nTo activate it, add debug=True when using Plot.plot() or when creating your plot generator object:\n\nop = Obsplot(debug=True)\n\nIf using the widget renderer, debug output will be displayed in JavaScript console. With the jsdom renderer, it will be displayed directly in the notebook.",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#documentation",
+    "href": "development.html#documentation",
+    "title": "Development",
+    "section": "Documentation",
+    "text": "Documentation\nTo generate the documentation with Quarto:\nuv run quarto render doc/",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#maintenance-notes",
+    "href": "development.html#maintenance-notes",
+    "title": "Development",
+    "section": "Maintenance notes",
+    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in utils.py is correct\nChange version in NEWS.md and pyproject.toml\nBuild the Python package with npm run build\nRelease the Python package with uvx twine upload dist/pyobsplot-0.X.Y*\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js to update Plot methods in src/pyobsplot/plot.py",
+    "crumbs": [
+      "Documentation",
+      "Development",
+      "Development"
+    ]
+  },
+  {
     "objectID": "gallery_geo.html",
     "href": "gallery_geo.html",
     "title": "Mapping and spatial data",
@@ -108,99 +347,130 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "pyobsplot",
-    "section": "",
-    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+    "objectID": "changelog.html#pyobsplot-0.5.1",
+    "href": "changelog.html#pyobsplot-0.5.1",
+    "title": "Changelog",
+    "section": "pyobsplot 0.5.1",
+    "text": "pyobsplot 0.5.1\n\nPlot.plot() performance should now be equivalent to the one of a generator object\nNew shortcut syntax Plot.line(...).plot() is now available (#18, thanks @harrylojames)\nBugfix: typst error with certain decimal padding values."
   },
   {
-    "objectID": "index.html#overview",
-    "href": "index.html#overview",
-    "title": "pyobsplot",
-    "section": "",
-    "text": "pyobsplot allows to use Observable Plot to create charts in Jupyter notebooks, VSCode notebooks, Google Colab and Quarto documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.\n\nimport polars as pl\nfrom pyobsplot import Plot\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\n                    \"x\": \"flipper_length_mm\",\n                    \"y\": \"body_mass_g\",\n                    \"fill\": \"sex\",\n                    \"tip\": True,\n                },\n            )\n        ],\n    }\n)\n\n\n\n\nOr, for a bit more complex example:\n\nPlot.plot(\n    {\n        \"marginLeft\": 75,\n        \"marginRight\": 70,\n        \"x\": {\"insetRight\": 10},\n        \"y\": {\"grid\": True},\n        \"facet\": {\"marginRight\": 70},\n        \"marks\": [\n            Plot.ruleX([0]),\n            Plot.barX(\n                penguins,\n                Plot.groupY(\n                    {\"x\": \"count\"}, {\"fy\": \"island\", \"y\": \"species\", \"fill\": \"sex\"}\n                ),\n            ),\n            Plot.text(\n                [\"The Adelie species is the only one on Torgersen Island.\"],\n                {\n                    \"fy\": [\"Torgersen\"],\n                    \"frameAnchor\": \"right\",\n                    \"lineWidth\": 16,\n                    \"dx\": -4,\n                },\n            ),\n        ],\n    }\n)"
+    "objectID": "changelog.html#pyobsplot-0.5.0",
+    "href": "changelog.html#pyobsplot-0.5.0",
+    "title": "Changelog",
+    "section": "pyobsplot 0.5.0",
+    "text": "pyobsplot 0.5.0\n\nBreaking changes\n\nThe plot generator API has been changed. Generators are no more defined with a renderer argument, a format is specified instead. This format can either be widget, html, svg or png. So renderer=\"widget\" is replaced by format=\"widget\" (which is the default), whereas renderer=\"jsdom\" is replaced by format=\"html\" or one of the new format=\"svg\" and format=\"png\".\nThe “kwargs” alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a Plot.xxx method.\n\n\n\nOther changes\n\nPlots can now be generated in “svg” and “png”, and saved as “svg”, “png” or “pdf”. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.16\nMigrate project management from hatch to uv"
   },
   {
-    "objectID": "index.html#installation-and-usage",
-    "href": "index.html#installation-and-usage",
-    "title": "pyobsplot",
-    "section": "Installation and usage",
-    "text": "Installation and usage\nGetting started gives installation instructions and a quick usage overview.\nUsage gives more detailed usage instructions.\nIf you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:"
+    "objectID": "changelog.html#pyobsplot-0.4.2",
+    "href": "changelog.html#pyobsplot-0.4.2",
+    "title": "Changelog",
+    "section": "pyobsplot 0.4.2",
+    "text": "pyobsplot 0.4.2\n\nFix jsdom renderer file saving encoding (#22, @harrylojames)\nUpdate Observable Plot to 0.6.13\nMigrate build system from poetry to hatch\nUpdate pyarrow and apache-arrow to 15.0.0 and remove data frame conversion to 32bits data types before serialization"
   },
   {
-    "objectID": "index.html#features-and-limitations",
-    "href": "index.html#features-and-limitations",
-    "title": "pyobsplot",
-    "section": "Features and limitations",
-    "text": "Features and limitations\nFeatures:\n\nSyntax as close as possible to the JavaScript one\nPlots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)\nPlots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files\nPandas and polars DataFrame and Series objects are serialized using Arrow IPC format for improved speed and better data type conversions\nWorks with Jupyter notebooks and Quarto documents\nWorks offline, no iframe or dependency to Observable runtime\nCaching mechanism of data objects if they are used several times in the same plot\nCustom JavaScript code can be passed as strings with the js method\nPython date and datetime objects are automatically converted to JavaScript Date objects\n\nLimitations:\n\nPlot interactions (tooltips, crosshair…) are only available with the “widget” format (#16).\nVery limited integration with IDE (documentation and autocompletion) for Plot methods (unlike in Observable notebooks) (#13)."
+    "objectID": "changelog.html#pyobsplot-0.4.1",
+    "href": "changelog.html#pyobsplot-0.4.1",
+    "title": "Changelog",
+    "section": "pyobsplot 0.4.1",
+    "text": "pyobsplot 0.4.1\n\nPlots generated by the widget renderer can now be saved to HTML files\nMove required Python version to 3.9\nUpdate pyarrow to 13.0.0"
   },
   {
-    "objectID": "index.html#credits",
-    "href": "index.html#credits",
-    "title": "pyobsplot",
-    "section": "Credits",
-    "text": "Credits\n\nObservable Plot, developed by Mike Bostock and Philippe Rivière among others.\nThe widget is developed thanks to the anywidget framework.\ntypst is used to convert HTML figures to PNG, SVG or PDF.\nSome code from the jsdom renderer has been adapted from altair_saver.\nThis documentation website is generated by Quarto."
+    "objectID": "changelog.html#pyobsplot-0.4.0",
+    "href": "changelog.html#pyobsplot-0.4.0",
+    "title": "Changelog",
+    "section": "pyobsplot 0.4.0",
+    "text": "pyobsplot 0.4.0\n\nPlots generated by the jsdom renderer can now be saved to HTML or SVG files\nUpdate Observable Plot to 0.6.11\nUpdate anywidget to 0.6.5"
   },
   {
-    "objectID": "getting_started.html",
-    "href": "getting_started.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
+    "objectID": "changelog.html#pyobsplot-0.3.8",
+    "href": "changelog.html#pyobsplot-0.3.8",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.8",
+    "text": "pyobsplot 0.3.8\n\nUpdate Observable Plot to 0.6.10\nAdd styling for titles, subtitles and captions\nUpdate anywidget to 0.6.3"
   },
   {
-    "objectID": "getting_started.html#installation",
-    "href": "getting_started.html#installation",
-    "title": "Getting started",
-    "section": "",
-    "text": "pyobsplot can be installed with pip:\npip install pyobsplot\nIf you want to use output formats like PNG or SVG, you must have a working installation of node.js and you must install the pyobsplot npm package globally or locally:\n# Install locally\nnpm install pyobsplot\n# Install globally\nnpm install -g pyobsplot",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
+    "objectID": "changelog.html#pyobsplot-0.3.7",
+    "href": "changelog.html#pyobsplot-0.3.7",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.7",
+    "text": "pyobsplot 0.3.7\n\nUpdate Observable Plot to 0.6.9\nUpdate anywidget to 0.6.1"
   },
   {
-    "objectID": "getting_started.html#creating-a-plot",
-    "href": "getting_started.html#creating-a-plot",
-    "title": "Getting started",
-    "section": "Creating a plot",
-    "text": "Creating a plot\nTo use pyobsplot, you must import its Plot object with:\n\nfrom pyobsplot import Plot\n\nTo create a plot, call the Plot.plot method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.\nSo, starting with a very simple DataFrame:\n\nimport polars as pl\n\ndata = pl.DataFrame(\n    {\n        \"x\": [1, 5, 2, 4, 6, 2, 4],\n        \"y\": [2, 1, 3, 4, 5, 1, 2],\n        \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n    }\n)\n\nIf your JavaScript plot function looks like this:\nPlot.plot(\n    {\n        grid: true,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nThen you can reproduce the plot with:\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n    }\n)\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\nThe syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript true is be replaced by Python True.\nYou can use pandas and polars DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:\n\npenguins = pl.read_csv(\"data/penguins.csv\")\n\nPlot.plot(\n    {\n        \"grid\": True,\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.dot(\n                penguins,\n                {\"x\": \"flipper_length_mm\", \"y\": \"body_mass_g\", \"fill\": \"island\"},\n            )\n        ],\n    }\n)\n\nBiscoeDreamTorgersen3,0003,5004,0004,5005,0005,5006,000↑ body_mass_g180190200210220230flipper_length_mm →",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
+    "objectID": "changelog.html#pyobsplot-0.3.6",
+    "href": "changelog.html#pyobsplot-0.3.6",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.6",
+    "text": "pyobsplot 0.3.6\n\nFix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
   },
   {
-    "objectID": "getting_started.html#output-formats",
-    "href": "getting_started.html#output-formats",
-    "title": "Getting started",
-    "section": "Output formats",
-    "text": "Output formats\nBy default, plots will be created as Jupyter widgets, but pyobsplot is also able to output plots in PNG, SVG or static HTML formats.\nThe output format is configured by passing a format argument to Plot.plot():\n# Display plot as PNG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), format=\"png\")\nTo save the plot to a file, you can add a path argument. The file extension will determine the output type, which can be HTML, PNG, SVG or PDF:\n# Save plot as SVG\nPlot.plot(Plot.auto(penguins, {\"x\": \"flipper_length_mm\"}), path=\"plot.svg\")\n\n\n\n\n\n\nNote\n\n\n\nWith the “widget” format, export can only be done to HTML files.",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
+    "objectID": "changelog.html#pyobsplot-0.3.5",
+    "href": "changelog.html#pyobsplot-0.3.5",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.5",
+    "text": "pyobsplot 0.3.5\n\nUpdate Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
   },
   {
-    "objectID": "getting_started.html#learn-more",
-    "href": "getting_started.html#learn-more",
-    "title": "Getting started",
-    "section": "Learn more",
-    "text": "Learn more\nTo go further, see the usage page.",
-    "crumbs": [
-      "Documentation",
-      "Usage",
-      "Getting started"
-    ]
+    "objectID": "changelog.html#pyobsplot-0.3.4",
+    "href": "changelog.html#pyobsplot-0.3.4",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.4",
+    "text": "pyobsplot 0.3.4\n\nAdd small padding around figure outputs for jsdom renderer to improve presentation over non-white backgrounds.\nUpdate Observable Plot to 0.6.6."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.3",
+    "href": "changelog.html#pyobsplot-0.3.3",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.3",
+    "text": "pyobsplot 0.3.3\n\njsdom renderer now uses a local http server instead of calling a script at each invocation, greatly improving rendering speed.\nAutocompletion of Plot methods should now be working in IDEs.\nEnsure that the needed version of the npm package is run if jsdom renderer is used.\nDebug mode also works with jsdom renderer.\nPlot generator objects now have correct __repr__ methods.\nUpdate anywidget to 0.2.3.\nFix: “Exception not rethrown” errors in pytest."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.2",
+    "href": "changelog.html#pyobsplot-0.3.2",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.2",
+    "text": "pyobsplot 0.3.2\n\nAdd ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if these styles are already present.\nFix: jsdom renderer not working on Windows."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.1",
+    "href": "changelog.html#pyobsplot-0.3.1",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.1",
+    "text": "pyobsplot 0.3.1\n\nIt is now possible to use Plot.plot() directly when creating a plot with default settings.Thanks to @fil for the idea.\nGeoJson data passed as string instead of dict is serialized correctly.\nAdd debug mode to output."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.3.0",
+    "href": "changelog.html#pyobsplot-0.3.0",
+    "title": "Changelog",
+    "section": "pyobsplot 0.3.0",
+    "text": "pyobsplot 0.3.0\n\nBreaking change: new API, plots are now generated with a plot generator object created by calling Obsplot(). Thanks to @fil for the idea.\nFix: wrong __version__ value."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.2.2",
+    "href": "changelog.html#pyobsplot-0.2.2",
+    "title": "Changelog",
+    "section": "pyobsplot 0.2.2",
+    "text": "pyobsplot 0.2.2\n\nFix: plot not recreated correctly on widget value change.\nFix: add watchfiles to dependencies to prevent error in Colab."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.2.1",
+    "href": "changelog.html#pyobsplot-0.2.1",
+    "title": "Changelog",
+    "section": "pyobsplot 0.2.1",
+    "text": "pyobsplot 0.2.1\n\nFix: mixing renderers in Jupyter lab moves all outputs to widgets.\nCompatibility with Python 3.8."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.2.0",
+    "href": "changelog.html#pyobsplot-0.2.0",
+    "title": "Changelog",
+    "section": "pyobsplot 0.2.0",
+    "text": "pyobsplot 0.2.0\n\nNew jsdom renderer which allows to generate plots as SVG or HTML instead of widgets.\nUpdate Observable Plot to 0.6.5."
+  },
+  {
+    "objectID": "changelog.html#pyobsplot-0.1.3",
+    "href": "changelog.html#pyobsplot-0.1.3",
+    "title": "Changelog",
+    "section": "pyobsplot 0.1.3",
+    "text": "pyobsplot 0.1.3\n\nFirst released version."
   },
   {
     "objectID": "gallery_interaction.html",
@@ -267,7 +537,7 @@
     "href": "usage.html#plot-specification",
     "title": "Usage",
     "section": "Plot specification",
-    "text": "Plot specification\nConverting a plot specification from JavaScript to Python should be straightforward most of the time:\n\nall dictionary keys must be quoted (so x: becomes \"x\":)\nJavaScript true and false must be replaced by True and False\nJavaScript null must be replaced by None\n\nSo the following JavaScript code:\nPlot.plot(\n    {\n        color: {legend: true},\n        grid: false,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nBecomes:\n\nop({\n    \"color\": {\"legend\": True},\n    \"grid\": False,\n    \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n})\n\nIt is possible to replace JavaScript methods from the Plot, d3 and Math modules with Python methods, but you must first import the corresponding classes.\n\nfrom pyobsplot import Plot, d3\n\nPlot.plot({\n    \"x\": {\n        \"axis\": None\n    },\n    \"marks\": [\n        Plot.ruleY([0], {\"stroke\": \"steelblue\"}),\n        Plot.lineY(d3.cumsum({ \"length\": 100 }, d3.randomNormal()))\n    ]\n})\n\n−4−2024681012141618\n\n\nIf your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the js method (after importing it):\n\nfrom pyobsplot import Plot, d3, js\nimport polars as pl\n\ndata = pl.DataFrame({\n    \"x\": [1, 5, 2, 4, 6, 2, 4],\n    \"y\": [2, 1, 3, 4, 5, 1, 2],\n    \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n})\n\nPlot.plot({\n    \"grid\": True,\n    \"marks\": [\n        Plot.dot(data, {\n            \"x\": \"x\", \"y\": \"y\", \"r\": 5,\n            \"stroke\": \"black\", \"fill\": \"steelblue\",\n            \"fillOpacity\": js(\"d =&gt; d.type == 'T1' ? 0.7 : 0.1\")\n        })\n    ]\n})\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\n\nAlternative syntaxes\nFor the simplest cases, you can also pass a mark method directly as plot specification. The JavaScript plot() method will be called automatically to display the plot:\n\nimport random\nv = [random.gauss(0,1) for i in range(1000)]\n\nPlot.plot(\n    Plot.tickX(\n        v, \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    )\n)\n\n−3−2−10123\n\n\nYou can call also call the plot() method directly on a Plot mark method:\n\nPlot.tickX(\n        v, \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    ).plot()\n\n−3−2−10123",
+    "text": "Plot specification\nConverting a plot specification from JavaScript to Python should be straightforward most of the time:\n\nall dictionary keys must be quoted (so x: becomes \"x\":)\nJavaScript true and false must be replaced by True and False\nJavaScript null must be replaced by None\n\nSo the following JavaScript code:\nPlot.plot(\n    {\n        color: {legend: true},\n        grid: false,\n        marks: [Plot.dot(data, {x: \"x\", y: \"y\", fill: \"type\", r: 5})]\n    }\n)\nBecomes:\n\nop({\n    \"color\": {\"legend\": True},\n    \"grid\": False,\n    \"marks\": [Plot.dot(data, {\"x\": \"x\", \"y\": \"y\", \"fill\": \"type\", \"r\": 5})],\n})\n\nIt is possible to replace JavaScript methods from the Plot, d3 and Math modules with Python methods, but you must first import the corresponding classes.\n\nfrom pyobsplot import Plot, d3\n\nPlot.plot({\n    \"x\": {\n        \"axis\": None\n    },\n    \"marks\": [\n        Plot.ruleY([0], {\"stroke\": \"steelblue\"}),\n        Plot.lineY(d3.cumsum({ \"length\": 100 }, d3.randomNormal()))\n    ]\n})\n\n−2−1012345678\n\n\nIf your specification includes JavaScript code (such as anonymous functions), you can pass it as a string by using the js method (after importing it):\n\nfrom pyobsplot import Plot, d3, js\nimport polars as pl\n\ndata = pl.DataFrame({\n    \"x\": [1, 5, 2, 4, 6, 2, 4],\n    \"y\": [2, 1, 3, 4, 5, 1, 2],\n    \"type\": [\"T1\", \"T2\", \"T1\", \"T2\", \"T1\", \"T1\", \"T2\"],\n})\n\nPlot.plot({\n    \"grid\": True,\n    \"marks\": [\n        Plot.dot(data, {\n            \"x\": \"x\", \"y\": \"y\", \"r\": 5,\n            \"stroke\": \"black\", \"fill\": \"steelblue\",\n            \"fillOpacity\": js(\"d =&gt; d.type == 'T1' ? 0.7 : 0.1\")\n        })\n    ]\n})\n\n1.01.52.02.53.03.54.04.55.0↑ y1.01.52.02.53.03.54.04.55.05.56.0x →\n\n\n\nAlternative syntaxes\nFor the simplest cases, you can also pass a mark method directly as plot specification. The JavaScript plot() method will be called automatically to display the plot:\n\nimport random\nv = [random.gauss(0,1) for i in range(1000)]\n\nPlot.plot(\n    Plot.tickX(\n        v, \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    )\n)\n\n−3−2−1012\n\n\nYou can call also call the plot() method directly on a Plot mark method:\n\nPlot.tickX(\n        v, \n        {\"stroke\": \"steelblue\", \"opacity\": 0.2}\n    ).plot()\n\n−3−2−1012",
     "crumbs": [
       "Documentation",
       "Usage",
@@ -416,276 +686,6 @@
       "Documentation",
       "Gallery",
       "Marks"
-    ]
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.5.1",
-    "href": "changelog.html#pyobsplot-0.5.1",
-    "title": "Changelog",
-    "section": "pyobsplot 0.5.1",
-    "text": "pyobsplot 0.5.1\n\nPlot.plot() performance should now be equivalent to the one of a generator object\nNew shortcut syntax Plot.line(...).plot() is now available (#18, thanks @harrylojames)\nBugfix: typst error with certain decimal padding values."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.5.0",
-    "href": "changelog.html#pyobsplot-0.5.0",
-    "title": "Changelog",
-    "section": "pyobsplot 0.5.0",
-    "text": "pyobsplot 0.5.0\n\nBreaking changes\n\nThe plot generator API has been changed. Generators are no more defined with a renderer argument, a format is specified instead. This format can either be widget, html, svg or png. So renderer=\"widget\" is replaced by format=\"widget\" (which is the default), whereas renderer=\"jsdom\" is replaced by format=\"html\" or one of the new format=\"svg\" and format=\"png\".\nThe “kwargs” alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a Plot.xxx method.\n\n\n\nOther changes\n\nPlots can now be generated in “svg” and “png”, and saved as “svg”, “png” or “pdf”. This is done by converting figures using typst. Many thanks to @wirhabenzeit and @harrylojames for the idea, the underlying code and the feedback.\nUpdate Observable Plot to 0.6.16\nMigrate project management from hatch to uv"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.4.2",
-    "href": "changelog.html#pyobsplot-0.4.2",
-    "title": "Changelog",
-    "section": "pyobsplot 0.4.2",
-    "text": "pyobsplot 0.4.2\n\nFix jsdom renderer file saving encoding (#22, @harrylojames)\nUpdate Observable Plot to 0.6.13\nMigrate build system from poetry to hatch\nUpdate pyarrow and apache-arrow to 15.0.0 and remove data frame conversion to 32bits data types before serialization"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.4.1",
-    "href": "changelog.html#pyobsplot-0.4.1",
-    "title": "Changelog",
-    "section": "pyobsplot 0.4.1",
-    "text": "pyobsplot 0.4.1\n\nPlots generated by the widget renderer can now be saved to HTML files\nMove required Python version to 3.9\nUpdate pyarrow to 13.0.0"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.4.0",
-    "href": "changelog.html#pyobsplot-0.4.0",
-    "title": "Changelog",
-    "section": "pyobsplot 0.4.0",
-    "text": "pyobsplot 0.4.0\n\nPlots generated by the jsdom renderer can now be saved to HTML or SVG files\nUpdate Observable Plot to 0.6.11\nUpdate anywidget to 0.6.5"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.8",
-    "href": "changelog.html#pyobsplot-0.3.8",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.8",
-    "text": "pyobsplot 0.3.8\n\nUpdate Observable Plot to 0.6.10\nAdd styling for titles, subtitles and captions\nUpdate anywidget to 0.6.3"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.7",
-    "href": "changelog.html#pyobsplot-0.3.7",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.7",
-    "text": "pyobsplot 0.3.7\n\nUpdate Observable Plot to 0.6.9\nUpdate anywidget to 0.6.1"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.6",
-    "href": "changelog.html#pyobsplot-0.3.6",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.6",
-    "text": "pyobsplot 0.3.6\n\nFix UnicodeDecodeError with widget renderer on Windows (#17, thanks @harrylojames)\nTimestamp and datetime dataframe columns are now converted to JavaScript Date (#19, thanks @harrylojames)\nUpdate anywidget to 0.4.3"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.5",
-    "href": "changelog.html#pyobsplot-0.3.5",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.5",
-    "text": "pyobsplot 0.3.5\n\nUpdate Observable Plot to 0.6.8 (tooltips and interactions in widget renderer)\nAdd light/dark/current modes\nUpdate apache-arrow to 12.0.0\nUpdate anywidget to 0.4.2"
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.4",
-    "href": "changelog.html#pyobsplot-0.3.4",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.4",
-    "text": "pyobsplot 0.3.4\n\nAdd small padding around figure outputs for jsdom renderer to improve presentation over non-white backgrounds.\nUpdate Observable Plot to 0.6.6."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.3",
-    "href": "changelog.html#pyobsplot-0.3.3",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.3",
-    "text": "pyobsplot 0.3.3\n\njsdom renderer now uses a local http server instead of calling a script at each invocation, greatly improving rendering speed.\nAutocompletion of Plot methods should now be working in IDEs.\nEnsure that the needed version of the npm package is run if jsdom renderer is used.\nDebug mode also works with jsdom renderer.\nPlot generator objects now have correct __repr__ methods.\nUpdate anywidget to 0.2.3.\nFix: “Exception not rethrown” errors in pytest."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.2",
-    "href": "changelog.html#pyobsplot-0.3.2",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.2",
-    "text": "pyobsplot 0.3.2\n\nAdd ability to specify some default spec values to plot generator objects.\nrange objects are correctly serialized as lists for jsdom renderer.\nFix: don’t add styles to svg or html output if these styles are already present.\nFix: jsdom renderer not working on Windows."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.1",
-    "href": "changelog.html#pyobsplot-0.3.1",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.1",
-    "text": "pyobsplot 0.3.1\n\nIt is now possible to use Plot.plot() directly when creating a plot with default settings.Thanks to @fil for the idea.\nGeoJson data passed as string instead of dict is serialized correctly.\nAdd debug mode to output."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.3.0",
-    "href": "changelog.html#pyobsplot-0.3.0",
-    "title": "Changelog",
-    "section": "pyobsplot 0.3.0",
-    "text": "pyobsplot 0.3.0\n\nBreaking change: new API, plots are now generated with a plot generator object created by calling Obsplot(). Thanks to @fil for the idea.\nFix: wrong __version__ value."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.2.2",
-    "href": "changelog.html#pyobsplot-0.2.2",
-    "title": "Changelog",
-    "section": "pyobsplot 0.2.2",
-    "text": "pyobsplot 0.2.2\n\nFix: plot not recreated correctly on widget value change.\nFix: add watchfiles to dependencies to prevent error in Colab."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.2.1",
-    "href": "changelog.html#pyobsplot-0.2.1",
-    "title": "Changelog",
-    "section": "pyobsplot 0.2.1",
-    "text": "pyobsplot 0.2.1\n\nFix: mixing renderers in Jupyter lab moves all outputs to widgets.\nCompatibility with Python 3.8."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.2.0",
-    "href": "changelog.html#pyobsplot-0.2.0",
-    "title": "Changelog",
-    "section": "pyobsplot 0.2.0",
-    "text": "pyobsplot 0.2.0\n\nNew jsdom renderer which allows to generate plots as SVG or HTML instead of widgets.\nUpdate Observable Plot to 0.6.5."
-  },
-  {
-    "objectID": "changelog.html#pyobsplot-0.1.3",
-    "href": "changelog.html#pyobsplot-0.1.3",
-    "title": "Changelog",
-    "section": "pyobsplot 0.1.3",
-    "text": "pyobsplot 0.1.3\n\nFirst released version."
-  },
-  {
-    "objectID": "development.html",
-    "href": "development.html",
-    "title": "Development",
-    "section": "",
-    "text": "To install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#install-from-git",
-    "href": "development.html#install-from-git",
-    "title": "Development",
-    "section": "",
-    "text": "To install pyobsplot from git:\npip install git+https://github.com/juba/pyobsplot.git\nTo install pyobsplot npm package from git:\nnpm install 'https://gitpkg.now.sh/juba/pyobsplot/packages/pyobsplot-js?main'",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#install-fom-source",
-    "href": "development.html#install-fom-source",
-    "title": "Development",
-    "section": "Install fom source",
-    "text": "Install fom source\nIf you want to build pyobsplot from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall uv dependency management system\nClone the pyobsplot repository\nInstall Python and Python dependencies with : uv sync\nInstall pyobsplot-js JavaScript dependencies with : npm install --workspaces\nInstall pyobsplot dependencies with : npm install\n\nThe widget renderer uses the anywidget Jupyter widget framework. Python source code is in src/pyobsplot/widget.py. JavaScript and CSS source code are in js/ and css/.\nThe jsdom renderer is provided by the pyobsplot-js npm package whose source is in packages/pyobsplot-js. Python source code is in src/pyobsplot/jsdom.py.",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#widget-javascript-modification-and-bundling",
-    "href": "development.html#widget-javascript-modification-and-bundling",
-    "title": "Development",
-    "section": "Widget JavaScript modification and bundling",
-    "text": "Widget JavaScript modification and bundling\nEach time the widget JavaScript or CSS code is modified in the js/ or css/ directories, it must be bundled with one of the following commands in pyobsplot:\n# Bundle only once\nnpm run bundle\n# Bundle and watch for code change\nnpm run watch\nThe result is put into src/pyobsplot/static.",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#tests",
-    "href": "development.html#tests",
-    "title": "Development",
-    "section": "Tests",
-    "text": "Tests\npyobsplot comes with three types of tests : Python test, JavaScript tests and Visual regression tests.\nTo run Python tests, use:\nnpm run test\nTo run JavaScript tests, use:\nnpm run test --workspaces\nVisual regression tests allow to test if generated plots stay the same. They use the galata framework. To run them you first have to start a specific Jupyter instance with:\nnpm run uistart\nIf you use visual regression tests for the first time, you have to generate reference images with:\n# Create / update reference images\nnpm run uitest:update\nAfter that, you can test that currently generated images are the same as the reference one with:\n# Compare with reference images\nnpm run uitest",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#debug-mode",
-    "href": "development.html#debug-mode",
-    "title": "Development",
-    "section": "Debug mode",
-    "text": "Debug mode\n“Debug mode” outputs the computed JavaScript plot structure (the one passed to Plot.plot).\nTo activate it, add debug=True when using Plot.plot() or when creating your plot generator object:\n\nop = Obsplot(debug=True)\n\nIf using the widget renderer, debug output will be displayed in JavaScript console. With the jsdom renderer, it will be displayed directly in the notebook.",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#documentation",
-    "href": "development.html#documentation",
-    "title": "Development",
-    "section": "Documentation",
-    "text": "Documentation\nTo generate the documentation with Quarto:\nuv run quarto render doc/",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#maintenance-notes",
-    "href": "development.html#maintenance-notes",
-    "title": "Development",
-    "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nIf necessary release the npm package with npm publish in packages/pyobsplot-js\nCheck that the min_npm_version value in utils.py is correct\nChange version in NEWS.md and pyproject.toml\nBuild the Python package with npm run build\nRelease the Python package with uvx twine upload dist/pyobsplot-0.X.Y*\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md\n\n\n\nNew Plot versions\nWhen a new Plot version is released:\n\nupdate with npm install @observablehq/plot d3 --workspaces --include-workspace-root\nrun utils/get_plot_methods.js to update Plot methods in src/pyobsplot/plot.py",
-    "crumbs": [
-      "Documentation",
-      "Development",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "gallery_themes.html",
-    "href": "gallery_themes.html",
-    "title": "Themes",
-    "section": "",
-    "text": "When using a plot generator object, it is possible to specify one of three output themes: light, dark and current.",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Themes"
-    ]
-  },
-  {
-    "objectID": "gallery_themes.html#light-theme",
-    "href": "gallery_themes.html#light-theme",
-    "title": "Themes",
-    "section": "light theme",
-    "text": "light theme\nThe light theme produces plots with a white background and a black foreground color. This is the default theme:\n\nimport polars as pl\nfrom pyobsplot import Obsplot, Plot, d3, js\n\nstocks = pl.read_csv(\"data/stocks.csv\", try_parse_dates=True)\n\nPlot.plot(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    },\n    theme=\"light\"\n)\n\nAAPLAMZNGOOGIBM2004006008001,0001,2001,4001,600↑ Close20142015201620172018",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Themes"
-    ]
-  },
-  {
-    "objectID": "gallery_themes.html#dark-theme",
-    "href": "gallery_themes.html#dark-theme",
-    "title": "Themes",
-    "section": "dark theme",
-    "text": "dark theme\nThe dark theme produces plots with a black background and a white foreground color.\n\nPlot.plot(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    },\n    theme=\"dark\"\n)\n\nAAPLAMZNGOOGIBM2004006008001,0001,2001,4001,600↑ Close20142015201620172018",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Themes"
-    ]
-  },
-  {
-    "objectID": "gallery_themes.html#current-theme",
-    "href": "gallery_themes.html#current-theme",
-    "title": "Themes",
-    "section": "current theme",
-    "text": "current theme\n\nThe “current” theme uses a transparent background and a currentColor foreground, so it should keep the current color theme:\n\nPlot.plot(\n    {\n        \"y\": {\"grid\": True},\n        \"color\": {\"legend\": True},\n        \"marks\": [\n            Plot.lineY(\n                stocks, {\"x\": \"Date\", \"y\": \"Close\", \"stroke\": \"Symbol\", \"tip\": True}\n            )\n        ],\n    },\n    theme=\"current\"\n)\n\nAAPLAMZNGOOGIBM2004006008001,0001,2001,4001,600↑ Close20142015201620172018",
-    "crumbs": [
-      "Documentation",
-      "Gallery",
-      "Themes"
     ]
   }
 ]
