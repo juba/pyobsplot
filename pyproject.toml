@@ -23,9 +23,11 @@ dependencies = [
     "pandas>=2.0.0",
     "polars>=1.4.1",
     "requests",
-    "typst>=0.11.1",
     "pyarrow>=17.0.0",
 ]
+
+[project.optional-dependencies]
+typst = ["typst>=0.12.3"]
 
 [project.urls]
 homepage = "https://github.com/juba/pyobsplot"

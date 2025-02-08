@@ -14,7 +14,12 @@ from pathlib import Path
 from subprocess import PIPE, Popen, SubprocessError
 from typing import Literal
 
-import typst
+try:
+    import typst
+
+    _TYPST_AVAILABLE = True
+except ImportError:
+    _TYPST_AVAILABLE = False
 from IPython.display import HTML, SVG, Image, display
 from ipywidgets.embed import embed_minimal_html
 
@@ -48,7 +53,6 @@ def check_format_value(format: str | None) -> None:  # noqa: A002
 
 
 class Obsplot:
-
     def __init__(
         self,
         format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
@@ -234,7 +238,10 @@ class Obsplot:
         # Render widget
         if format_value == "widget":
             res = ObsplotWidget(
-                spec=spec, theme=theme, default=default, debug=debug  # type: ignore
+                spec=spec,
+                theme=theme,
+                default=default,
+                debug=debug,  # type: ignore
             )  # type: ignore
             if path is not None:
                 embed_minimal_html(path, views=[res], drop_defaults=False)
@@ -270,7 +277,6 @@ class Obsplot:
 
 
 class ObsplotJsdomCreator:
-
     def __init__(
         self,
     ) -> None:
@@ -433,6 +439,9 @@ class ObsplotJsdomCreator:
             Conversion result.
 
         """
+
+        if not _TYPST_AVAILABLE:
+            raise RuntimeError("typst dependency package must be installed.")
 
         if options is None:
             options = {}
