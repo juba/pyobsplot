@@ -1,4 +1,8 @@
-## pyobsplot 0.5.2-dev
+## pyobsplot 0.5.3-dev
+
+## pyobsplot 0.5.2
+
+-   Update Observable Plot to 0.6.17
 
 ## pyobsplot 0.5.1
 
