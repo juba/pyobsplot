@@ -8,7 +8,7 @@
     "scripts": {
         "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] src/js/widget.js src/js/styles.css",
         "dev": "npm run bundle -- --watch",
-        "build": "npm run bundle && uvx --from build pyproject-build --installer uv",
+        "build": "npm run bundle && uv build",
         "test": "uv run pytest",
         "uistart": "uv run -- jupyter lab --config tests/ui/jupyter_server_config.py",
         "uitest": "npx playwright test --workers=1 --config tests/ui/playwright.config.cjs",
