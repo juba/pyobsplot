@@ -622,7 +622,7 @@ __export(src_exports2, {
   shiftY: () => shiftY,
   shuffle: () => shuffle2,
   sort: () => sort2,
-  sphere: () => sphere,
+  sphere: () => sphere2,
   spike: () => spike,
   stackX: () => stackX,
   stackX1: () => stackX1,
@@ -1261,28 +1261,22 @@ function bisector(f) {
   }
   function left2(a4, x4, lo = 0, hi = a4.length) {
     if (lo < hi) {
-      if (compare1(x4, x4) !== 0)
-        return hi;
+      if (compare1(x4, x4) !== 0) return hi;
       do {
         const mid2 = lo + hi >>> 1;
-        if (compare2(a4[mid2], x4) < 0)
-          lo = mid2 + 1;
-        else
-          hi = mid2;
+        if (compare2(a4[mid2], x4) < 0) lo = mid2 + 1;
+        else hi = mid2;
       } while (lo < hi);
     }
     return lo;
   }
   function right2(a4, x4, lo = 0, hi = a4.length) {
     if (lo < hi) {
-      if (compare1(x4, x4) !== 0)
-        return hi;
+      if (compare1(x4, x4) !== 0) return hi;
       do {
         const mid2 = lo + hi >>> 1;
-        if (compare2(a4[mid2], x4) <= 0)
-          lo = mid2 + 1;
-        else
-          hi = mid2;
+        if (compare2(a4[mid2], x4) <= 0) lo = mid2 + 1;
+        else hi = mid2;
       } while (lo < hi);
     }
     return lo;
@@ -1327,13 +1321,10 @@ var bisect_default = bisectRight;
 
 // node_modules/d3-array/src/blur.js
 function blur(values2, r) {
-  if (!((r = +r) >= 0))
-    throw new RangeError("invalid r");
+  if (!((r = +r) >= 0)) throw new RangeError("invalid r");
   let length4 = values2.length;
-  if (!((length4 = Math.floor(length4)) >= 0))
-    throw new RangeError("invalid length");
-  if (!length4 || !r)
-    return values2;
+  if (!((length4 = Math.floor(length4)) >= 0)) throw new RangeError("invalid length");
+  if (!length4 || !r) return values2;
   const blur3 = blurf(r);
   const temp = values2.slice();
   blur3(values2, temp, 0, length4, 1);
@@ -1345,17 +1336,12 @@ var blur2 = Blur2(blurf);
 var blurImage = Blur2(blurfImage);
 function Blur2(blur3) {
   return function(data, rx, ry = rx) {
-    if (!((rx = +rx) >= 0))
-      throw new RangeError("invalid rx");
-    if (!((ry = +ry) >= 0))
-      throw new RangeError("invalid ry");
+    if (!((rx = +rx) >= 0)) throw new RangeError("invalid rx");
+    if (!((ry = +ry) >= 0)) throw new RangeError("invalid ry");
     let { data: values2, width, height } = data;
-    if (!((width = Math.floor(width)) >= 0))
-      throw new RangeError("invalid width");
-    if (!((height = Math.floor(height !== void 0 ? height : values2.length / width)) >= 0))
-      throw new RangeError("invalid height");
-    if (!width || !height || !rx && !ry)
-      return data;
+    if (!((width = Math.floor(width)) >= 0)) throw new RangeError("invalid width");
+    if (!((height = Math.floor(height !== void 0 ? height : values2.length / width)) >= 0)) throw new RangeError("invalid height");
+    if (!width || !height || !rx && !ry) return data;
     const blurx = rx && blur3(rx);
     const blury = ry && blur3(ry);
     const temp = values2.slice();
@@ -1400,13 +1386,11 @@ function blurfImage(radius2) {
 }
 function blurf(radius2) {
   const radius0 = Math.floor(radius2);
-  if (radius0 === radius2)
-    return bluri(radius2);
+  if (radius0 === radius2) return bluri(radius2);
   const t = radius2 - radius0;
   const w = 2 * radius2 + 1;
   return (T, S, start2, stop, step) => {
-    if (!((stop -= step) >= start2))
-      return;
+    if (!((stop -= step) >= start2)) return;
     let sum4 = radius0 * S[start2];
     const s0 = step * radius0;
     const s1 = s0 + step;
@@ -1423,8 +1407,7 @@ function blurf(radius2) {
 function bluri(radius2) {
   const w = 2 * radius2 + 1;
   return (T, S, start2, stop, step) => {
-    if (!((stop -= step) >= start2))
-      return;
+    if (!((stop -= step) >= start2)) return;
     let sum4 = radius2 * S[start2];
     const s2 = step * radius2;
     for (let i = start2, j = start2 + s2; i < j; i += step) {
@@ -1478,14 +1461,12 @@ function cross(...values2) {
   const j = values2.length - 1;
   const index3 = new Array(j + 1).fill(0);
   const product = [];
-  if (j < 0 || lengths.some(empty))
-    return product;
+  if (j < 0 || lengths.some(empty)) return product;
   while (true) {
     product.push(index3.map((j2, i2) => values2[i2][j2]));
     let i = j;
     while (++index3[i] === lengths[i]) {
-      if (i === 0)
-        return reduce2 ? product.map(reduce2) : product;
+      if (i === 0) return reduce2 ? product.map(reduce2) : product;
       index3[i--] = 0;
     }
   }
@@ -1521,8 +1502,7 @@ function variance(values2, valueof2) {
       }
     }
   }
-  if (count3 > 1)
-    return sum4 / (count3 - 1);
+  if (count3 > 1) return sum4 / (count3 - 1);
 }
 
 // node_modules/d3-array/src/deviation.js
@@ -1539,13 +1519,10 @@ function extent(values2, valueof2) {
     for (const value of values2) {
       if (value != null) {
         if (min4 === void 0) {
-          if (value >= value)
-            min4 = max5 = value;
+          if (value >= value) min4 = max5 = value;
         } else {
-          if (min4 > value)
-            min4 = value;
-          if (max5 < value)
-            max5 = value;
+          if (min4 > value) min4 = value;
+          if (max5 < value) max5 = value;
         }
       }
     }
@@ -1554,13 +1531,10 @@ function extent(values2, valueof2) {
     for (let value of values2) {
       if ((value = valueof2(value, ++index3, values2)) != null) {
         if (min4 === void 0) {
-          if (value >= value)
-            min4 = max5 = value;
+          if (value >= value) min4 = max5 = value;
         } else {
-          if (min4 > value)
-            min4 = value;
-          if (max5 < value)
-            max5 = value;
+          if (min4 > value) min4 = value;
+          if (max5 < value) max5 = value;
         }
       }
     }
@@ -1579,8 +1553,7 @@ var Adder = class {
     let i = 0;
     for (let j = 0; j < this._n && j < 32; j++) {
       const y4 = p[j], hi = x4 + y4, lo = Math.abs(x4) < Math.abs(y4) ? x4 - (hi - y4) : y4 - (hi - x4);
-      if (lo)
-        p[i++] = lo;
+      if (lo) p[i++] = lo;
       x4 = hi;
     }
     p[i] = x4;
@@ -1597,14 +1570,12 @@ var Adder = class {
         y4 = p[--n];
         hi = x4 + y4;
         lo = y4 - (hi - x4);
-        if (lo)
-          break;
+        if (lo) break;
       }
       if (n > 0 && (lo < 0 && p[n - 1] < 0 || lo > 0 && p[n - 1] > 0)) {
         y4 = lo * 2;
         x4 = hi + y4;
-        if (y4 == x4 - hi)
-          hi = x4;
+        if (y4 == x4 - hi) hi = x4;
       }
     }
     return hi;
@@ -1642,9 +1613,7 @@ var InternMap = class extends Map {
   constructor(entries, key = keyof) {
     super();
     Object.defineProperties(this, { _intern: { value: /* @__PURE__ */ new Map() }, _key: { value: key } });
-    if (entries != null)
-      for (const [key2, value] of entries)
-        this.set(key2, value);
+    if (entries != null) for (const [key2, value] of entries) this.set(key2, value);
   }
   get(key) {
     return super.get(intern_get(this, key));
@@ -1663,9 +1632,7 @@ var InternSet = class extends Set {
   constructor(values2, key = keyof) {
     super();
     Object.defineProperties(this, { _intern: { value: /* @__PURE__ */ new Map() }, _key: { value: key } });
-    if (values2 != null)
-      for (const value of values2)
-        this.add(value);
+    if (values2 != null) for (const value of values2) this.add(value);
   }
   has(value) {
     return super.has(intern_get(this, value));
@@ -1683,8 +1650,7 @@ function intern_get({ _intern, _key }, value) {
 }
 function intern_set({ _intern, _key }, value) {
   const key = _key(value);
-  if (_intern.has(key))
-    return _intern.get(key);
+  if (_intern.has(key)) return _intern.get(key);
   _intern.set(key, value);
   return value;
 }
@@ -1737,24 +1703,20 @@ function indexes(values2, ...keys) {
   return nest(values2, Array.from, unique, keys);
 }
 function unique(values2) {
-  if (values2.length !== 1)
-    throw new Error("duplicate key");
+  if (values2.length !== 1) throw new Error("duplicate key");
   return values2[0];
 }
 function nest(values2, map6, reduce2, keys) {
   return function regroup(values3, i) {
-    if (i >= keys.length)
-      return reduce2(values3);
+    if (i >= keys.length) return reduce2(values3);
     const groups2 = new InternMap();
     const keyof3 = keys[i++];
     let index3 = -1;
     for (const value of values3) {
       const key = keyof3(value, ++index3, values3);
       const group3 = groups2.get(key);
-      if (group3)
-        group3.push(value);
-      else
-        groups2.set(key, [value]);
+      if (group3) group3.push(value);
+      else groups2.set(key, [value]);
     }
     for (const [key, values4] of groups2) {
       groups2.set(key, regroup(values4, i));
@@ -1770,8 +1732,7 @@ function permute(source, keys) {
 
 // node_modules/d3-array/src/sort.js
 function sort(values2, ...F) {
-  if (typeof values2[Symbol.iterator] !== "function")
-    throw new TypeError("values is not iterable");
+  if (typeof values2[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
   values2 = Array.from(values2);
   let [f] = F;
   if (f && f.length !== 2 || F.length > 1) {
@@ -1781,8 +1742,7 @@ function sort(values2, ...F) {
       index3.sort((i, j) => {
         for (const f2 of F) {
           const c6 = ascendingDefined(f2[i], f2[j]);
-          if (c6)
-            return c6;
+          if (c6) return c6;
         }
       });
     } else {
@@ -1794,14 +1754,11 @@ function sort(values2, ...F) {
   return values2.sort(compareDefined(f));
 }
 function compareDefined(compare = ascending) {
-  if (compare === ascending)
-    return ascendingDefined;
-  if (typeof compare !== "function")
-    throw new TypeError("compare is not a function");
+  if (compare === ascending) return ascendingDefined;
+  if (typeof compare !== "function") throw new TypeError("compare is not a function");
   return (a4, b) => {
     const x4 = compare(a4, b);
-    if (x4 || x4 === 0)
-      return x4;
+    if (x4 || x4 === 0) return x4;
     return (compare(b, b) === 0) - (compare(a4, a4) === 0);
   };
 }
@@ -1835,48 +1792,32 @@ function tickSpec(start2, stop, count3) {
     inc2 = Math.pow(10, -power) / factor;
     i1 = Math.round(start2 * inc2);
     i2 = Math.round(stop * inc2);
-    if (i1 / inc2 < start2)
-      ++i1;
-    if (i2 / inc2 > stop)
-      --i2;
+    if (i1 / inc2 < start2) ++i1;
+    if (i2 / inc2 > stop) --i2;
     inc2 = -inc2;
   } else {
     inc2 = Math.pow(10, power) * factor;
     i1 = Math.round(start2 / inc2);
     i2 = Math.round(stop / inc2);
-    if (i1 * inc2 < start2)
-      ++i1;
-    if (i2 * inc2 > stop)
-      --i2;
+    if (i1 * inc2 < start2) ++i1;
+    if (i2 * inc2 > stop) --i2;
   }
-  if (i2 < i1 && 0.5 <= count3 && count3 < 2)
-    return tickSpec(start2, stop, count3 * 2);
+  if (i2 < i1 && 0.5 <= count3 && count3 < 2) return tickSpec(start2, stop, count3 * 2);
   return [i1, i2, inc2];
 }
 function ticks(start2, stop, count3) {
   stop = +stop, start2 = +start2, count3 = +count3;
-  if (!(count3 > 0))
-    return [];
-  if (start2 === stop)
-    return [start2];
+  if (!(count3 > 0)) return [];
+  if (start2 === stop) return [start2];
   const reverse3 = stop < start2, [i1, i2, inc2] = reverse3 ? tickSpec(stop, start2, count3) : tickSpec(start2, stop, count3);
-  if (!(i2 >= i1))
-    return [];
+  if (!(i2 >= i1)) return [];
   const n = i2 - i1 + 1, ticks2 = new Array(n);
   if (reverse3) {
-    if (inc2 < 0)
-      for (let i = 0; i < n; ++i)
-        ticks2[i] = (i2 - i) / -inc2;
-    else
-      for (let i = 0; i < n; ++i)
-        ticks2[i] = (i2 - i) * inc2;
+    if (inc2 < 0) for (let i = 0; i < n; ++i) ticks2[i] = (i2 - i) / -inc2;
+    else for (let i = 0; i < n; ++i) ticks2[i] = (i2 - i) * inc2;
   } else {
-    if (inc2 < 0)
-      for (let i = 0; i < n; ++i)
-        ticks2[i] = (i1 + i) / -inc2;
-    else
-      for (let i = 0; i < n; ++i)
-        ticks2[i] = (i1 + i) * inc2;
+    if (inc2 < 0) for (let i = 0; i < n; ++i) ticks2[i] = (i1 + i) / -inc2;
+    else for (let i = 0; i < n; ++i) ticks2[i] = (i1 + i) * inc2;
   }
   return ticks2;
 }
@@ -1917,8 +1858,7 @@ function thresholdSturges(values2) {
 function bin() {
   var value = identity, domain = extent, threshold2 = thresholdSturges;
   function histogram(data) {
-    if (!Array.isArray(data))
-      data = Array.from(data);
+    if (!Array.isArray(data)) data = Array.from(data);
     var i, n = data.length, x4, step, values2 = new Array(n);
     for (i = 0; i < n; ++i) {
       values2[i] = value(data[i], i, data);
@@ -1926,11 +1866,9 @@ function bin() {
     var xz = domain(values2), x06 = xz[0], x12 = xz[1], tz = threshold2(values2, x06, x12);
     if (!Array.isArray(tz)) {
       const max5 = x12, tn = +tz;
-      if (domain === extent)
-        [x06, x12] = nice(x06, x12, tn);
+      if (domain === extent) [x06, x12] = nice(x06, x12, tn);
       tz = ticks(x06, x12, tn);
-      if (tz[0] <= x06)
-        step = tickIncrement(x06, x12, tn);
+      if (tz[0] <= x06) step = tickIncrement(x06, x12, tn);
       if (tz[tz.length - 1] >= x12) {
         if (max5 >= x12 && domain === extent) {
           const step2 = tickIncrement(x06, x12, tn);
@@ -1947,12 +1885,9 @@ function bin() {
       }
     }
     var m3 = tz.length, a4 = 0, b = m3;
-    while (tz[a4] <= x06)
-      ++a4;
-    while (tz[b - 1] > x12)
-      --b;
-    if (a4 || b < m3)
-      tz = tz.slice(a4, b), m3 = b - a4;
+    while (tz[a4] <= x06) ++a4;
+    while (tz[b - 1] > x12) --b;
+    if (a4 || b < m3) tz = tz.slice(a4, b), m3 = b - a4;
     var bins = new Array(m3 + 1), bin3;
     for (i = 0; i <= m3; ++i) {
       bin3 = bins[i] = [];
@@ -2084,8 +2019,7 @@ function quickselect(array4, k2, left2 = 0, right2 = Infinity, compare) {
   k2 = Math.floor(k2);
   left2 = Math.floor(Math.max(0, left2));
   right2 = Math.floor(Math.min(array4.length - 1, right2));
-  if (!(left2 <= k2 && k2 <= right2))
-    return array4;
+  if (!(left2 <= k2 && k2 <= right2)) return array4;
   compare = compare === void 0 ? ascendingDefined : compareDefined(compare);
   while (right2 > left2) {
     if (right2 - left2 > 600) {
@@ -2102,23 +2036,16 @@ function quickselect(array4, k2, left2 = 0, right2 = Infinity, compare) {
     let i = left2;
     let j = right2;
     swap(array4, left2, k2);
-    if (compare(array4[right2], t) > 0)
-      swap(array4, left2, right2);
+    if (compare(array4[right2], t) > 0) swap(array4, left2, right2);
     while (i < j) {
       swap(array4, i, j), ++i, --j;
-      while (compare(array4[i], t) < 0)
-        ++i;
-      while (compare(array4[j], t) > 0)
-        --j;
+      while (compare(array4[i], t) < 0) ++i;
+      while (compare(array4[j], t) > 0) --j;
     }
-    if (compare(array4[left2], t) === 0)
-      swap(array4, left2, j);
-    else
-      ++j, swap(array4, j, right2);
-    if (j <= k2)
-      left2 = j + 1;
-    if (k2 <= j)
-      right2 = j - 1;
+    if (compare(array4[left2], t) === 0) swap(array4, left2, j);
+    else ++j, swap(array4, j, right2);
+    if (j <= k2) left2 = j + 1;
+    if (k2 <= j) right2 = j - 1;
   }
   return array4;
 }
@@ -2156,33 +2083,24 @@ function greatest(values2, compare = ascending) {
 // node_modules/d3-array/src/quantile.js
 function quantile(values2, p, valueof2) {
   values2 = Float64Array.from(numbers(values2, valueof2));
-  if (!(n = values2.length) || isNaN(p = +p))
-    return;
-  if (p <= 0 || n < 2)
-    return min(values2);
-  if (p >= 1)
-    return max(values2);
+  if (!(n = values2.length) || isNaN(p = +p)) return;
+  if (p <= 0 || n < 2) return min(values2);
+  if (p >= 1) return max(values2);
   var n, i = (n - 1) * p, i0 = Math.floor(i), value0 = max(quickselect(values2, i0).subarray(0, i0 + 1)), value1 = min(values2.subarray(i0 + 1));
   return value0 + (value1 - value0) * (i - i0);
 }
 function quantileSorted(values2, p, valueof2 = number) {
-  if (!(n = values2.length) || isNaN(p = +p))
-    return;
-  if (p <= 0 || n < 2)
-    return +valueof2(values2[0], 0, values2);
-  if (p >= 1)
-    return +valueof2(values2[n - 1], n - 1, values2);
+  if (!(n = values2.length) || isNaN(p = +p)) return;
+  if (p <= 0 || n < 2) return +valueof2(values2[0], 0, values2);
+  if (p >= 1) return +valueof2(values2[n - 1], n - 1, values2);
   var n, i = (n - 1) * p, i0 = Math.floor(i), value0 = +valueof2(values2[i0], i0, values2), value1 = +valueof2(values2[i0 + 1], i0 + 1, values2);
   return value0 + (value1 - value0) * (i - i0);
 }
 function quantileIndex(values2, p, valueof2 = number) {
-  if (isNaN(p = +p))
-    return;
+  if (isNaN(p = +p)) return;
   numbers2 = Float64Array.from(values2, (_, i2) => number(valueof2(values2[i2], i2, values2)));
-  if (p <= 0)
-    return minIndex(numbers2);
-  if (p >= 1)
-    return maxIndex(numbers2);
+  if (p <= 0) return minIndex(numbers2);
+  if (p >= 1) return maxIndex(numbers2);
   var numbers2, index3 = Uint32Array.from(values2, (_, i2) => i2), j = numbers2.length - 1, i = Math.floor(j * p);
   quickselect(index3, i, 0, j, (i2, j2) => ascendingDefined(numbers2[i2], numbers2[j2]));
   i = greatest(index3.subarray(0, i + 1), (i2) => numbers2[i2]);
@@ -2219,8 +2137,7 @@ function mean(values2, valueof2) {
       }
     }
   }
-  if (count3)
-    return sum4 / count3;
+  if (count3) return sum4 / count3;
 }
 
 // node_modules/d3-array/src/median.js
@@ -2275,8 +2192,7 @@ function pairs(values2, pairof = pair) {
   let previous;
   let first2 = false;
   for (const value of values2) {
-    if (first2)
-      pairs2.push(pairof(previous, value));
+    if (first2) pairs2.push(pairof(previous, value));
     previous = value;
     first2 = true;
   }
@@ -2298,12 +2214,10 @@ function range(start2, stop, step) {
 
 // node_modules/d3-array/src/rank.js
 function rank(values2, valueof2 = ascending) {
-  if (typeof values2[Symbol.iterator] !== "function")
-    throw new TypeError("values is not iterable");
+  if (typeof values2[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
   let V = Array.from(values2);
   const R = new Float64Array(V.length);
-  if (valueof2.length !== 2)
-    V = V.map(valueof2), valueof2 = ascending;
+  if (valueof2.length !== 2) V = V.map(valueof2), valueof2 = ascending;
   const compareIndex = (i, j) => valueof2(V[i], V[j]);
   let k2, r;
   values2 = Uint32Array.from(V, (_, i) => i);
@@ -2311,8 +2225,7 @@ function rank(values2, valueof2 = ascending) {
   values2.forEach((j, i) => {
     const c6 = compareIndex(j, k2 === void 0 ? j : k2);
     if (c6 >= 0) {
-      if (k2 === void 0 || c6 > 0)
-        k2 = j, r = i;
+      if (k2 === void 0 || c6 > 0) k2 = j, r = i;
       R[j] = r;
     } else {
       R[j] = NaN;
@@ -2348,8 +2261,7 @@ function least(values2, compare = ascending) {
 
 // node_modules/d3-array/src/leastIndex.js
 function leastIndex(values2, compare = ascending) {
-  if (compare.length === 1)
-    return minIndex(values2, compare);
+  if (compare.length === 1) return minIndex(values2, compare);
   let minValue;
   let min4 = -1;
   let index3 = -1;
@@ -2365,8 +2277,7 @@ function leastIndex(values2, compare = ascending) {
 
 // node_modules/d3-array/src/greatestIndex.js
 function greatestIndex(values2, compare = ascending) {
-  if (compare.length === 1)
-    return maxIndex(values2, compare);
+  if (compare.length === 1) return maxIndex(values2, compare);
   let maxValue;
   let max5 = -1;
   let index3 = -1;
@@ -2422,8 +2333,7 @@ function sum(values2, valueof2) {
 
 // node_modules/d3-array/src/transpose.js
 function transpose(matrix) {
-  if (!(n = matrix.length))
-    return [];
+  if (!(n = matrix.length)) return [];
   for (var i = -1, m3 = min(matrix, length2), transpose2 = new Array(m3); ++i < m3; ) {
     for (var j = -1, n, row = transpose2[i] = new Array(n); ++j < n; ) {
       row[j] = matrix[j][i];
@@ -2442,8 +2352,7 @@ function zip() {
 
 // node_modules/d3-array/src/every.js
 function every(values2, test) {
-  if (typeof test !== "function")
-    throw new TypeError("test is not a function");
+  if (typeof test !== "function") throw new TypeError("test is not a function");
   let index3 = -1;
   for (const value of values2) {
     if (!test(value, ++index3, values2)) {
@@ -2455,8 +2364,7 @@ function every(values2, test) {
 
 // node_modules/d3-array/src/some.js
 function some(values2, test) {
-  if (typeof test !== "function")
-    throw new TypeError("test is not a function");
+  if (typeof test !== "function") throw new TypeError("test is not a function");
   let index3 = -1;
   for (const value of values2) {
     if (test(value, ++index3, values2)) {
@@ -2468,8 +2376,7 @@ function some(values2, test) {
 
 // node_modules/d3-array/src/filter.js
 function filter(values2, test) {
-  if (typeof test !== "function")
-    throw new TypeError("test is not a function");
+  if (typeof test !== "function") throw new TypeError("test is not a function");
   const array4 = [];
   let index3 = -1;
   for (const value of values2) {
@@ -2482,23 +2389,19 @@ function filter(values2, test) {
 
 // node_modules/d3-array/src/map.js
 function map2(values2, mapper) {
-  if (typeof values2[Symbol.iterator] !== "function")
-    throw new TypeError("values is not iterable");
-  if (typeof mapper !== "function")
-    throw new TypeError("mapper is not a function");
+  if (typeof values2[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
+  if (typeof mapper !== "function") throw new TypeError("mapper is not a function");
   return Array.from(values2, (value, index3) => mapper(value, index3, values2));
 }
 
 // node_modules/d3-array/src/reduce.js
 function reduce(values2, reducer2, value) {
-  if (typeof reducer2 !== "function")
-    throw new TypeError("reducer is not a function");
+  if (typeof reducer2 !== "function") throw new TypeError("reducer is not a function");
   const iterator = values2[Symbol.iterator]();
   let done, next, index3 = -1;
   if (arguments.length < 3) {
     ({ done, value } = iterator.next());
-    if (done)
-      return;
+    if (done) return;
     ++index3;
   }
   while ({ done, value: next } = iterator.next(), !done) {
@@ -2509,8 +2412,7 @@ function reduce(values2, reducer2, value) {
 
 // node_modules/d3-array/src/reverse.js
 function reverse(values2) {
-  if (typeof values2[Symbol.iterator] !== "function")
-    throw new TypeError("values is not iterable");
+  if (typeof values2[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
   return Array.from(values2).reverse();
 }
 
@@ -2529,14 +2431,11 @@ function difference(values2, ...others) {
 function disjoint(values2, other) {
   const iterator = other[Symbol.iterator](), set4 = new InternSet();
   for (const v2 of values2) {
-    if (set4.has(v2))
-      return false;
+    if (set4.has(v2)) return false;
     let value, done;
     while ({ value, done } = iterator.next()) {
-      if (done)
-        break;
-      if (Object.is(v2, value))
-        return false;
+      if (done) break;
+      if (Object.is(v2, value)) return false;
       set4.add(value);
     }
   }
@@ -2547,15 +2446,14 @@ function disjoint(values2, other) {
 function intersection(values2, ...others) {
   values2 = new InternSet(values2);
   others = others.map(set);
-  out:
-    for (const value of values2) {
-      for (const other of others) {
-        if (!other.has(value)) {
-          values2.delete(value);
-          continue out;
-        }
+  out: for (const value of values2) {
+    for (const other of others) {
+      if (!other.has(value)) {
+        values2.delete(value);
+        continue out;
       }
     }
+  }
   return values2;
 }
 function set(values2) {
@@ -2567,16 +2465,13 @@ function superset(values2, other) {
   const iterator = values2[Symbol.iterator](), set4 = /* @__PURE__ */ new Set();
   for (const o of other) {
     const io = intern(o);
-    if (set4.has(io))
-      continue;
+    if (set4.has(io)) continue;
     let value, done;
     while ({ value, done } = iterator.next()) {
-      if (done)
-        return false;
+      if (done) return false;
       const ivalue = intern(value);
       set4.add(ivalue);
-      if (Object.is(io, ivalue))
-        break;
+      if (Object.is(io, ivalue)) break;
     }
   }
   return true;
@@ -2623,8 +2518,7 @@ function number2(scale3) {
 }
 function center(scale3, offset2) {
   offset2 = Math.max(0, scale3.bandwidth() - offset2 * 2) / 2;
-  if (scale3.round())
-    offset2 = Math.round(offset2);
+  if (scale3.round()) offset2 = Math.round(offset2);
   return (d) => +scale3(d) + offset2;
 }
 function entering() {
@@ -2713,8 +2607,7 @@ var noop = { value: () => {
 } };
 function dispatch() {
   for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
-    if (!(t = arguments[i] + "") || t in _ || /[\s.]/.test(t))
-      throw new Error("illegal type: " + t);
+    if (!(t = arguments[i] + "") || t in _ || /[\s.]/.test(t)) throw new Error("illegal type: " + t);
     _[t] = [];
   }
   return new Dispatch(_);
@@ -2725,10 +2618,8 @@ function Dispatch(_) {
 function parseTypenames(typenames, types) {
   return typenames.trim().split(/^|\s+/).map(function(t) {
     var name = "", i = t.indexOf(".");
-    if (i >= 0)
-      name = t.slice(i + 1), t = t.slice(0, i);
-    if (t && !types.hasOwnProperty(t))
-      throw new Error("unknown type: " + t);
+    if (i >= 0) name = t.slice(i + 1), t = t.slice(0, i);
+    if (t && !types.hasOwnProperty(t)) throw new Error("unknown type: " + t);
     return { type: t, name };
   });
 }
@@ -2737,42 +2628,29 @@ Dispatch.prototype = dispatch.prototype = {
   on: function(typename, callback) {
     var _ = this._, T = parseTypenames(typename + "", _), t, i = -1, n = T.length;
     if (arguments.length < 2) {
-      while (++i < n)
-        if ((t = (typename = T[i]).type) && (t = get(_[t], typename.name)))
-          return t;
+      while (++i < n) if ((t = (typename = T[i]).type) && (t = get(_[t], typename.name))) return t;
       return;
     }
-    if (callback != null && typeof callback !== "function")
-      throw new Error("invalid callback: " + callback);
+    if (callback != null && typeof callback !== "function") throw new Error("invalid callback: " + callback);
     while (++i < n) {
-      if (t = (typename = T[i]).type)
-        _[t] = set2(_[t], typename.name, callback);
-      else if (callback == null)
-        for (t in _)
-          _[t] = set2(_[t], typename.name, null);
+      if (t = (typename = T[i]).type) _[t] = set2(_[t], typename.name, callback);
+      else if (callback == null) for (t in _) _[t] = set2(_[t], typename.name, null);
     }
     return this;
   },
   copy: function() {
     var copy3 = {}, _ = this._;
-    for (var t in _)
-      copy3[t] = _[t].slice();
+    for (var t in _) copy3[t] = _[t].slice();
     return new Dispatch(copy3);
   },
   call: function(type2, that) {
-    if ((n = arguments.length - 2) > 0)
-      for (var args = new Array(n), i = 0, n, t; i < n; ++i)
-        args[i] = arguments[i + 2];
-    if (!this._.hasOwnProperty(type2))
-      throw new Error("unknown type: " + type2);
-    for (t = this._[type2], i = 0, n = t.length; i < n; ++i)
-      t[i].value.apply(that, args);
+    if ((n = arguments.length - 2) > 0) for (var args = new Array(n), i = 0, n, t; i < n; ++i) args[i] = arguments[i + 2];
+    if (!this._.hasOwnProperty(type2)) throw new Error("unknown type: " + type2);
+    for (t = this._[type2], i = 0, n = t.length; i < n; ++i) t[i].value.apply(that, args);
   },
   apply: function(type2, that, args) {
-    if (!this._.hasOwnProperty(type2))
-      throw new Error("unknown type: " + type2);
-    for (var t = this._[type2], i = 0, n = t.length; i < n; ++i)
-      t[i].value.apply(that, args);
+    if (!this._.hasOwnProperty(type2)) throw new Error("unknown type: " + type2);
+    for (var t = this._[type2], i = 0, n = t.length; i < n; ++i) t[i].value.apply(that, args);
   }
 };
 function get(type2, name) {
@@ -2789,8 +2667,7 @@ function set2(type2, name, callback) {
       break;
     }
   }
-  if (callback != null)
-    type2.push({ name, value: callback });
+  if (callback != null) type2.push({ name, value: callback });
   return type2;
 }
 var dispatch_default = dispatch;
@@ -2808,8 +2685,7 @@ var namespaces_default = {
 // node_modules/d3-selection/src/namespace.js
 function namespace_default(name) {
   var prefix = name += "", i = prefix.indexOf(":");
-  if (i >= 0 && (prefix = name.slice(0, i)) !== "xmlns")
-    name = name.slice(i + 1);
+  if (i >= 0 && (prefix = name.slice(0, i)) !== "xmlns") name = name.slice(i + 1);
   return namespaces_default.hasOwnProperty(prefix) ? { space: namespaces_default[prefix], local: name } : name;
 }
 
@@ -2841,13 +2717,11 @@ function selector_default(selector) {
 
 // node_modules/d3-selection/src/selection/select.js
 function select_default(select2) {
-  if (typeof select2 !== "function")
-    select2 = selector_default(select2);
+  if (typeof select2 !== "function") select2 = selector_default(select2);
   for (var groups2 = this._groups, m3 = groups2.length, subgroups = new Array(m3), j = 0; j < m3; ++j) {
     for (var group3 = groups2[j], n = group3.length, subgroup = subgroups[j] = new Array(n), node, subnode, i = 0; i < n; ++i) {
       if ((node = group3[i]) && (subnode = select2.call(node, node.__data__, i, group3))) {
-        if ("__data__" in node)
-          subnode.__data__ = node.__data__;
+        if ("__data__" in node) subnode.__data__ = node.__data__;
         subgroup[i] = subnode;
       }
     }
@@ -2877,10 +2751,8 @@ function arrayAll(select2) {
   };
 }
 function selectAll_default(select2) {
-  if (typeof select2 === "function")
-    select2 = arrayAll(select2);
-  else
-    select2 = selectorAll_default(select2);
+  if (typeof select2 === "function") select2 = arrayAll(select2);
+  else select2 = selectorAll_default(select2);
   for (var groups2 = this._groups, m3 = groups2.length, subgroups = [], parents = [], j = 0; j < m3; ++j) {
     for (var group3 = groups2[j], n = group3.length, node, i = 0; i < n; ++i) {
       if (node = group3[i]) {
@@ -2934,8 +2806,7 @@ function selectChildren_default(match) {
 
 // node_modules/d3-selection/src/selection/filter.js
 function filter_default(match) {
-  if (typeof match !== "function")
-    match = matcher_default(match);
+  if (typeof match !== "function") match = matcher_default(match);
   for (var groups2 = this._groups, m3 = groups2.length, subgroups = new Array(m3), j = 0; j < m3; ++j) {
     for (var group3 = groups2[j], n = group3.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) {
       if ((node = group3[i]) && match.call(node, node.__data__, i, group3)) {
@@ -3034,20 +2905,16 @@ function datum(node) {
   return node.__data__;
 }
 function data_default(value, key) {
-  if (!arguments.length)
-    return Array.from(this, datum);
+  if (!arguments.length) return Array.from(this, datum);
   var bind = key ? bindKey : bindIndex, parents = this._parents, groups2 = this._groups;
-  if (typeof value !== "function")
-    value = constant_default(value);
+  if (typeof value !== "function") value = constant_default(value);
   for (var m3 = groups2.length, update = new Array(m3), enter = new Array(m3), exit = new Array(m3), j = 0; j < m3; ++j) {
     var parent = parents[j], group3 = groups2[j], groupLength = group3.length, data = arraylike(value.call(parent, parent && parent.__data__, j, parents)), dataLength = data.length, enterGroup = enter[j] = new Array(dataLength), updateGroup = update[j] = new Array(dataLength), exitGroup = exit[j] = new Array(groupLength);
     bind(parent, group3, enterGroup, updateGroup, exitGroup, data, key);
     for (var i0 = 0, i1 = 0, previous, next; i0 < dataLength; ++i0) {
       if (previous = enterGroup[i0]) {
-        if (i0 >= i1)
-          i1 = i0 + 1;
-        while (!(next = updateGroup[i1]) && ++i1 < dataLength)
-          ;
+        if (i0 >= i1) i1 = i0 + 1;
+        while (!(next = updateGroup[i1]) && ++i1 < dataLength) ;
         previous._next = next || null;
       }
     }
@@ -3071,20 +2938,16 @@ function join_default(onenter, onupdate, onexit) {
   var enter = this.enter(), update = this, exit = this.exit();
   if (typeof onenter === "function") {
     enter = onenter(enter);
-    if (enter)
-      enter = enter.selection();
+    if (enter) enter = enter.selection();
   } else {
     enter = enter.append(onenter + "");
   }
   if (onupdate != null) {
     update = onupdate(update);
-    if (update)
-      update = update.selection();
+    if (update) update = update.selection();
   }
-  if (onexit == null)
-    exit.remove();
-  else
-    onexit(exit);
+  if (onexit == null) exit.remove();
+  else onexit(exit);
   return enter && update ? enter.merge(update).order() : update;
 }
 
@@ -3109,8 +2972,7 @@ function order_default() {
   for (var groups2 = this._groups, j = -1, m3 = groups2.length; ++j < m3; ) {
     for (var group3 = groups2[j], i = group3.length - 1, next = group3[i], node; --i >= 0; ) {
       if (node = group3[i]) {
-        if (next && node.compareDocumentPosition(next) ^ 4)
-          next.parentNode.insertBefore(node, next);
+        if (next && node.compareDocumentPosition(next) ^ 4) next.parentNode.insertBefore(node, next);
         next = node;
       }
     }
@@ -3120,8 +2982,7 @@ function order_default() {
 
 // node_modules/d3-selection/src/selection/sort.js
 function sort_default(compare) {
-  if (!compare)
-    compare = ascending2;
+  if (!compare) compare = ascending2;
   function compareNode(a4, b) {
     return a4 && b ? compare(a4.__data__, b.__data__) : !a4 - !b;
   }
@@ -3157,8 +3018,7 @@ function node_default() {
   for (var groups2 = this._groups, j = 0, m3 = groups2.length; j < m3; ++j) {
     for (var group3 = groups2[j], i = 0, n = group3.length; i < n; ++i) {
       var node = group3[i];
-      if (node)
-        return node;
+      if (node) return node;
     }
   }
   return null;
@@ -3167,8 +3027,7 @@ function node_default() {
 // node_modules/d3-selection/src/selection/size.js
 function size_default() {
   let size = 0;
-  for (const node of this)
-    ++size;
+  for (const node of this) ++size;
   return size;
 }
 
@@ -3181,8 +3040,7 @@ function empty_default() {
 function each_default(callback) {
   for (var groups2 = this._groups, j = 0, m3 = groups2.length; j < m3; ++j) {
     for (var group3 = groups2[j], i = 0, n = group3.length, node; i < n; ++i) {
-      if (node = group3[i])
-        callback.call(node, node.__data__, i, group3);
+      if (node = group3[i]) callback.call(node, node.__data__, i, group3);
     }
   }
   return this;
@@ -3212,19 +3070,15 @@ function attrConstantNS(fullname, value) {
 function attrFunction(name, value) {
   return function() {
     var v2 = value.apply(this, arguments);
-    if (v2 == null)
-      this.removeAttribute(name);
-    else
-      this.setAttribute(name, v2);
+    if (v2 == null) this.removeAttribute(name);
+    else this.setAttribute(name, v2);
   };
 }
 function attrFunctionNS(fullname, value) {
   return function() {
     var v2 = value.apply(this, arguments);
-    if (v2 == null)
-      this.removeAttributeNS(fullname.space, fullname.local);
-    else
-      this.setAttributeNS(fullname.space, fullname.local, v2);
+    if (v2 == null) this.removeAttributeNS(fullname.space, fullname.local);
+    else this.setAttributeNS(fullname.space, fullname.local, v2);
   };
 }
 function attr_default(name, value) {
@@ -3255,10 +3109,8 @@ function styleConstant(name, value, priority) {
 function styleFunction(name, value, priority) {
   return function() {
     var v2 = value.apply(this, arguments);
-    if (v2 == null)
-      this.style.removeProperty(name);
-    else
-      this.style.setProperty(name, v2, priority);
+    if (v2 == null) this.style.removeProperty(name);
+    else this.style.setProperty(name, v2, priority);
   };
 }
 function style_default(name, value, priority) {
@@ -3282,10 +3134,8 @@ function propertyConstant(name, value) {
 function propertyFunction(name, value) {
   return function() {
     var v2 = value.apply(this, arguments);
-    if (v2 == null)
-      delete this[name];
-    else
-      this[name] = v2;
+    if (v2 == null) delete this[name];
+    else this[name] = v2;
   };
 }
 function property_default(name, value) {
@@ -3324,13 +3174,11 @@ ClassList.prototype = {
 };
 function classedAdd(node, names) {
   var list = classList(node), i = -1, n = names.length;
-  while (++i < n)
-    list.add(names[i]);
+  while (++i < n) list.add(names[i]);
 }
 function classedRemove(node, names) {
   var list = classList(node), i = -1, n = names.length;
-  while (++i < n)
-    list.remove(names[i]);
+  while (++i < n) list.remove(names[i]);
 }
 function classedTrue(names) {
   return function() {
@@ -3351,9 +3199,7 @@ function classed_default(name, value) {
   var names = classArray(name + "");
   if (arguments.length < 2) {
     var list = classList(this.node()), i = -1, n = names.length;
-    while (++i < n)
-      if (!list.contains(names[i]))
-        return false;
+    while (++i < n) if (!list.contains(names[i])) return false;
     return true;
   }
   return this.each((typeof value === "function" ? classedFunction : value ? classedTrue : classedFalse)(names, value));
@@ -3399,8 +3245,7 @@ function html_default(value) {
 
 // node_modules/d3-selection/src/selection/raise.js
 function raise() {
-  if (this.nextSibling)
-    this.parentNode.appendChild(this);
+  if (this.nextSibling) this.parentNode.appendChild(this);
 }
 function raise_default() {
   return this.each(raise);
@@ -3408,8 +3253,7 @@ function raise_default() {
 
 // node_modules/d3-selection/src/selection/lower.js
 function lower() {
-  if (this.previousSibling)
-    this.parentNode.insertBefore(this, this.parentNode.firstChild);
+  if (this.previousSibling) this.parentNode.insertBefore(this, this.parentNode.firstChild);
 }
 function lower_default() {
   return this.each(lower);
@@ -3437,8 +3281,7 @@ function insert_default(name, before) {
 // node_modules/d3-selection/src/selection/remove.js
 function remove() {
   var parent = this.parentNode;
-  if (parent)
-    parent.removeChild(this);
+  if (parent) parent.removeChild(this);
 }
 function remove_default() {
   return this.each(remove);
@@ -3471,16 +3314,14 @@ function contextListener(listener) {
 function parseTypenames2(typenames) {
   return typenames.trim().split(/^|\s+/).map(function(t) {
     var name = "", i = t.indexOf(".");
-    if (i >= 0)
-      name = t.slice(i + 1), t = t.slice(0, i);
+    if (i >= 0) name = t.slice(i + 1), t = t.slice(0, i);
     return { type: t, name };
   });
 }
 function onRemove(typename) {
   return function() {
     var on = this.__on;
-    if (!on)
-      return;
+    if (!on) return;
     for (var j = 0, i = -1, m3 = on.length, o; j < m3; ++j) {
       if (o = on[j], (!typename.type || o.type === typename.type) && o.name === typename.name) {
         this.removeEventListener(o.type, o.listener, o.options);
@@ -3488,49 +3329,42 @@ function onRemove(typename) {
         on[++i] = o;
       }
     }
-    if (++i)
-      on.length = i;
-    else
-      delete this.__on;
+    if (++i) on.length = i;
+    else delete this.__on;
   };
 }
 function onAdd(typename, value, options) {
   return function() {
     var on = this.__on, o, listener = contextListener(value);
-    if (on)
-      for (var j = 0, m3 = on.length; j < m3; ++j) {
-        if ((o = on[j]).type === typename.type && o.name === typename.name) {
-          this.removeEventListener(o.type, o.listener, o.options);
-          this.addEventListener(o.type, o.listener = listener, o.options = options);
-          o.value = value;
-          return;
-        }
+    if (on) for (var j = 0, m3 = on.length; j < m3; ++j) {
+      if ((o = on[j]).type === typename.type && o.name === typename.name) {
+        this.removeEventListener(o.type, o.listener, o.options);
+        this.addEventListener(o.type, o.listener = listener, o.options = options);
+        o.value = value;
+        return;
       }
+    }
     this.addEventListener(typename.type, listener, options);
     o = { type: typename.type, name: typename.name, value, listener, options };
-    if (!on)
-      this.__on = [o];
-    else
-      on.push(o);
+    if (!on) this.__on = [o];
+    else on.push(o);
   };
 }
 function on_default(typename, value, options) {
   var typenames = parseTypenames2(typename + ""), i, n = typenames.length, t;
   if (arguments.length < 2) {
     var on = this.node().__on;
-    if (on)
-      for (var j = 0, m3 = on.length, o; j < m3; ++j) {
-        for (i = 0, o = on[j]; i < n; ++i) {
-          if ((t = typenames[i]).type === o.type && t.name === o.name) {
-            return o.value;
-          }
+    if (on) for (var j = 0, m3 = on.length, o; j < m3; ++j) {
+      for (i = 0, o = on[j]; i < n; ++i) {
+        if ((t = typenames[i]).type === o.type && t.name === o.name) {
+          return o.value;
         }
       }
+    }
     return;
   }
   on = value ? onAdd : onRemove;
-  for (i = 0; i < n; ++i)
-    this.each(on(typenames[i], value, options));
+  for (i = 0; i < n; ++i) this.each(on(typenames[i], value, options));
   return this;
 }
 
@@ -3541,10 +3375,8 @@ function dispatchEvent(node, type2, params) {
     event = new event(type2, params);
   } else {
     event = window3.document.createEvent("Event");
-    if (params)
-      event.initEvent(type2, params.bubbles, params.cancelable), event.detail = params.detail;
-    else
-      event.initEvent(type2, false, false);
+    if (params) event.initEvent(type2, params.bubbles, params.cancelable), event.detail = params.detail;
+    else event.initEvent(type2, false, false);
   }
   node.dispatchEvent(event);
 }
@@ -3566,8 +3398,7 @@ function dispatch_default2(type2, params) {
 function* iterator_default() {
   for (var groups2 = this._groups, j = 0, m3 = groups2.length; j < m3; ++j) {
     for (var group3 = groups2[j], i = 0, n = group3.length, node; i < n; ++i) {
-      if (node = group3[i])
-        yield node;
+      if (node = group3[i]) yield node;
     }
   }
 }
@@ -3646,9 +3477,7 @@ Local.prototype = local.prototype = {
   constructor: Local,
   get: function(node) {
     var id2 = this._;
-    while (!(id2 in node))
-      if (!(node = node.parentNode))
-        return;
+    while (!(id2 in node)) if (!(node = node.parentNode)) return;
     return node[id2];
   },
   set: function(node, value) {
@@ -3665,16 +3494,14 @@ Local.prototype = local.prototype = {
 // node_modules/d3-selection/src/sourceEvent.js
 function sourceEvent_default(event) {
   let sourceEvent;
-  while (sourceEvent = event.sourceEvent)
-    event = sourceEvent;
+  while (sourceEvent = event.sourceEvent) event = sourceEvent;
   return event;
 }
 
 // node_modules/d3-selection/src/pointer.js
 function pointer_default(event, node) {
   event = sourceEvent_default(event);
-  if (node === void 0)
-    node = event.currentTarget;
+  if (node === void 0) node = event.currentTarget;
   if (node) {
     var svg2 = node.ownerSVGElement || node;
     if (svg2.createSVGPoint) {
@@ -3695,8 +3522,7 @@ function pointer_default(event, node) {
 function pointers_default(events, node) {
   if (events.target) {
     events = sourceEvent_default(events);
-    if (node === void 0)
-      node = events.currentTarget;
+    if (node === void 0) node = events.currentTarget;
     events = events.touches || [events];
   }
   return Array.from(events, (event) => pointer_default(event, node));
@@ -3798,11 +3624,9 @@ function drag_default() {
     selection2.on("mousedown.drag", mousedowned).filter(touchable).on("touchstart.drag", touchstarted).on("touchmove.drag", touchmoved, nonpassive).on("touchend.drag touchcancel.drag", touchended).style("touch-action", "none").style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
   }
   function mousedowned(event, d) {
-    if (touchending || !filter4.call(this, event, d))
-      return;
+    if (touchending || !filter4.call(this, event, d)) return;
     var gesture = beforestart(this, container.call(this, event, d), event, d, "mouse");
-    if (!gesture)
-      return;
+    if (!gesture) return;
     select_default2(event.view).on("mousemove.drag", mousemoved, nonpassivecapture).on("mouseup.drag", mouseupped, nonpassivecapture);
     nodrag_default(event.view);
     nopropagation(event);
@@ -3826,8 +3650,7 @@ function drag_default() {
     gestures.mouse("end", event);
   }
   function touchstarted(event, d) {
-    if (!filter4.call(this, event, d))
-      return;
+    if (!filter4.call(this, event, d)) return;
     var touches = event.changedTouches, c6 = container.call(this, event, d), n = touches.length, i, gesture;
     for (i = 0; i < n; ++i) {
       if (gesture = beforestart(this, c6, event, d, touches[i].identifier, touches[i])) {
@@ -3847,8 +3670,7 @@ function drag_default() {
   }
   function touchended(event) {
     var touches = event.changedTouches, n = touches.length, i, gesture;
-    if (touchending)
-      clearTimeout(touchending);
+    if (touchending) clearTimeout(touchending);
     touchending = setTimeout(function() {
       touchending = null;
     }, 500);
@@ -3871,8 +3693,7 @@ function drag_default() {
       dx: 0,
       dy: 0,
       dispatch: dispatch2
-    }), d)) == null)
-      return;
+    }), d)) == null) return;
     dx = s2.x - p[0] || 0;
     dy = s2.y - p[1] || 0;
     return function gesture(type2, event2, touch2) {
@@ -3883,6 +3704,7 @@ function drag_default() {
           break;
         case "end":
           delete gestures[identifier], --active;
+        // falls through
         case "drag":
           p = pointer_default(touch2 || event2, container2), n = active;
           break;
@@ -3935,8 +3757,7 @@ function define_default(constructor, factory, prototype) {
 }
 function extend(parent, definition) {
   var prototype = Object.create(parent.prototype);
-  for (var key in definition)
-    prototype[key] = definition[key];
+  for (var key in definition) prototype[key] = definition[key];
   return prototype;
 }
 
@@ -4141,15 +3962,12 @@ function rgbn(n) {
   return new Rgb(n >> 16 & 255, n >> 8 & 255, n & 255, 1);
 }
 function rgba(r, g, b, a4) {
-  if (a4 <= 0)
-    r = g = b = NaN;
+  if (a4 <= 0) r = g = b = NaN;
   return new Rgb(r, g, b, a4);
 }
 function rgbConvert(o) {
-  if (!(o instanceof Color))
-    o = color(o);
-  if (!o)
-    return new Rgb();
+  if (!(o instanceof Color)) o = color(o);
+  if (!o) return new Rgb();
   o = o.rgb();
   return new Rgb(o.r, o.g, o.b, o.opacity);
 }
@@ -4208,32 +4026,22 @@ function hex(value) {
   return (value < 16 ? "0" : "") + value.toString(16);
 }
 function hsla(h, s2, l, a4) {
-  if (a4 <= 0)
-    h = s2 = l = NaN;
-  else if (l <= 0 || l >= 1)
-    h = s2 = NaN;
-  else if (s2 <= 0)
-    h = NaN;
+  if (a4 <= 0) h = s2 = l = NaN;
+  else if (l <= 0 || l >= 1) h = s2 = NaN;
+  else if (s2 <= 0) h = NaN;
   return new Hsl(h, s2, l, a4);
 }
 function hslConvert(o) {
-  if (o instanceof Hsl)
-    return new Hsl(o.h, o.s, o.l, o.opacity);
-  if (!(o instanceof Color))
-    o = color(o);
-  if (!o)
-    return new Hsl();
-  if (o instanceof Hsl)
-    return o;
+  if (o instanceof Hsl) return new Hsl(o.h, o.s, o.l, o.opacity);
+  if (!(o instanceof Color)) o = color(o);
+  if (!o) return new Hsl();
+  if (o instanceof Hsl) return o;
   o = o.rgb();
   var r = o.r / 255, g = o.g / 255, b = o.b / 255, min4 = Math.min(r, g, b), max5 = Math.max(r, g, b), h = NaN, s2 = max5 - min4, l = (max5 + min4) / 2;
   if (s2) {
-    if (r === max5)
-      h = (g - b) / s2 + (g < b) * 6;
-    else if (g === max5)
-      h = (b - r) / s2 + 2;
-    else
-      h = (r - g) / s2 + 4;
+    if (r === max5) h = (g - b) / s2 + (g < b) * 6;
+    else if (g === max5) h = (b - r) / s2 + 2;
+    else h = (r - g) / s2 + 4;
     s2 /= l < 0.5 ? max5 + min4 : 2 - max5 - min4;
     h *= 60;
   } else {
@@ -4304,15 +4112,11 @@ var t1 = 6 / 29;
 var t2 = 3 * t1 * t1;
 var t3 = t1 * t1 * t1;
 function labConvert(o) {
-  if (o instanceof Lab)
-    return new Lab(o.l, o.a, o.b, o.opacity);
-  if (o instanceof Hcl)
-    return hcl2lab(o);
-  if (!(o instanceof Rgb))
-    o = rgbConvert(o);
+  if (o instanceof Lab) return new Lab(o.l, o.a, o.b, o.opacity);
+  if (o instanceof Hcl) return hcl2lab(o);
+  if (!(o instanceof Rgb)) o = rgbConvert(o);
   var r = rgb2lrgb(o.r), g = rgb2lrgb(o.g), b = rgb2lrgb(o.b), y4 = xyz2lab((0.2225045 * r + 0.7168786 * g + 0.0606169 * b) / Yn), x4, z;
-  if (r === g && g === b)
-    x4 = z = y4;
+  if (r === g && g === b) x4 = z = y4;
   else {
     x4 = xyz2lab((0.4360747 * r + 0.3850649 * g + 0.1430804 * b) / Xn);
     z = xyz2lab((0.0139322 * r + 0.0971045 * g + 0.7141733 * b) / Zn);
@@ -4364,12 +4168,9 @@ function rgb2lrgb(x4) {
   return (x4 /= 255) <= 0.04045 ? x4 / 12.92 : Math.pow((x4 + 0.055) / 1.055, 2.4);
 }
 function hclConvert(o) {
-  if (o instanceof Hcl)
-    return new Hcl(o.h, o.c, o.l, o.opacity);
-  if (!(o instanceof Lab))
-    o = labConvert(o);
-  if (o.a === 0 && o.b === 0)
-    return new Hcl(NaN, 0 < o.l && o.l < 100 ? 0 : NaN, o.l, o.opacity);
+  if (o instanceof Hcl) return new Hcl(o.h, o.c, o.l, o.opacity);
+  if (!(o instanceof Lab)) o = labConvert(o);
+  if (o.a === 0 && o.b === 0) return new Hcl(NaN, 0 < o.l && o.l < 100 ? 0 : NaN, o.l, o.opacity);
   var h = Math.atan2(o.b, o.a) * degrees;
   return new Hcl(h < 0 ? h + 360 : h, Math.sqrt(o.a * o.a + o.b * o.b), o.l, o.opacity);
 }
@@ -4386,8 +4187,7 @@ function Hcl(h, c6, l, opacity2) {
   this.opacity = +opacity2;
 }
 function hcl2lab(o) {
-  if (isNaN(o.h))
-    return new Lab(o.l, 0, 0, o.opacity);
+  if (isNaN(o.h)) return new Lab(o.l, 0, 0, o.opacity);
   var h = o.h * radians;
   return new Lab(o.l, Math.cos(h) * o.c, Math.sin(h) * o.c, o.opacity);
 }
@@ -4413,10 +4213,8 @@ var ED = E * D;
 var EB = E * B;
 var BC_DA = B * C - D * A;
 function cubehelixConvert(o) {
-  if (o instanceof Cubehelix)
-    return new Cubehelix(o.h, o.s, o.l, o.opacity);
-  if (!(o instanceof Rgb))
-    o = rgbConvert(o);
+  if (o instanceof Cubehelix) return new Cubehelix(o.h, o.s, o.l, o.opacity);
+  if (!(o instanceof Rgb)) o = rgbConvert(o);
   var r = o.r / 255, g = o.g / 255, b = o.b / 255, l = (BC_DA * b + ED * r - EB * g) / (BC_DA + ED - EB), bl = b - l, k2 = (E * (g - l) - C * bl) / D, s2 = Math.sqrt(k2 * k2 + bl * bl) / (E * l * (1 - l)), h = s2 ? Math.atan2(k2, bl) * degrees - 120 : NaN;
   return new Cubehelix(h < 0 ? h + 360 : h, s2, l, o.opacity);
 }
@@ -4541,12 +4339,10 @@ var rgbBasisClosed = rgbSpline(basisClosed_default);
 
 // node_modules/d3-interpolate/src/numberArray.js
 function numberArray_default(a4, b) {
-  if (!b)
-    b = [];
+  if (!b) b = [];
   var n = a4 ? Math.min(b.length, a4.length) : 0, c6 = b.slice(), i;
   return function(t) {
-    for (i = 0; i < n; ++i)
-      c6[i] = a4[i] * (1 - t) + b[i] * t;
+    for (i = 0; i < n; ++i) c6[i] = a4[i] * (1 - t) + b[i] * t;
     return c6;
   };
 }
@@ -4560,13 +4356,10 @@ function array_default(a4, b) {
 }
 function genericArray(a4, b) {
   var nb = b ? b.length : 0, na = a4 ? Math.min(nb, a4.length) : 0, x4 = new Array(na), c6 = new Array(nb), i;
-  for (i = 0; i < na; ++i)
-    x4[i] = value_default(a4[i], b[i]);
-  for (; i < nb; ++i)
-    c6[i] = b[i];
+  for (i = 0; i < na; ++i) x4[i] = value_default(a4[i], b[i]);
+  for (; i < nb; ++i) c6[i] = b[i];
   return function(t) {
-    for (i = 0; i < na; ++i)
-      c6[i] = x4[i](t);
+    for (i = 0; i < na; ++i) c6[i] = x4[i](t);
     return c6;
   };
 }
@@ -4589,10 +4382,8 @@ function number_default(a4, b) {
 // node_modules/d3-interpolate/src/object.js
 function object_default(a4, b) {
   var i = {}, c6 = {}, k2;
-  if (a4 === null || typeof a4 !== "object")
-    a4 = {};
-  if (b === null || typeof b !== "object")
-    b = {};
+  if (a4 === null || typeof a4 !== "object") a4 = {};
+  if (b === null || typeof b !== "object") b = {};
   for (k2 in b) {
     if (k2 in a4) {
       i[k2] = value_default(a4[k2], b[k2]);
@@ -4601,8 +4392,7 @@ function object_default(a4, b) {
     }
   }
   return function(t) {
-    for (k2 in i)
-      c6[k2] = i[k2](t);
+    for (k2 in i) c6[k2] = i[k2](t);
     return c6;
   };
 }
@@ -4626,16 +4416,12 @@ function string_default(a4, b) {
   while ((am = reA.exec(a4)) && (bm = reB.exec(b))) {
     if ((bs = bm.index) > bi) {
       bs = b.slice(bi, bs);
-      if (s2[i])
-        s2[i] += bs;
-      else
-        s2[++i] = bs;
+      if (s2[i]) s2[i] += bs;
+      else s2[++i] = bs;
     }
     if ((am = am[0]) === (bm = bm[0])) {
-      if (s2[i])
-        s2[i] += bm;
-      else
-        s2[++i] = bm;
+      if (s2[i]) s2[i] += bm;
+      else s2[++i] = bm;
     } else {
       s2[++i] = null;
       q.push({ i, x: number_default(am, bm) });
@@ -4644,14 +4430,11 @@ function string_default(a4, b) {
   }
   if (bi < b.length) {
     bs = b.slice(bi);
-    if (s2[i])
-      s2[i] += bs;
-    else
-      s2[++i] = bs;
+    if (s2[i]) s2[i] += bs;
+    else s2[++i] = bs;
   }
   return s2.length < 2 ? q[0] ? one(q[0].x) : zero2(b) : (b = q.length, function(t) {
-    for (var i2 = 0, o; i2 < b; ++i2)
-      s2[(o = q[i2]).i] = o.x(t);
+    for (var i2 = 0, o; i2 < b; ++i2) s2[(o = q[i2]).i] = o.x(t);
     return s2.join("");
   });
 }
@@ -4698,14 +4481,10 @@ var identity2 = {
 };
 function decompose_default(a4, b, c6, d, e, f) {
   var scaleX, scaleY, skewX;
-  if (scaleX = Math.sqrt(a4 * a4 + b * b))
-    a4 /= scaleX, b /= scaleX;
-  if (skewX = a4 * c6 + b * d)
-    c6 -= a4 * skewX, d -= b * skewX;
-  if (scaleY = Math.sqrt(c6 * c6 + d * d))
-    c6 /= scaleY, d /= scaleY, skewX /= scaleY;
-  if (a4 * d < b * c6)
-    a4 = -a4, b = -b, skewX = -skewX, scaleX = -scaleX;
+  if (scaleX = Math.sqrt(a4 * a4 + b * b)) a4 /= scaleX, b /= scaleX;
+  if (skewX = a4 * c6 + b * d) c6 -= a4 * skewX, d -= b * skewX;
+  if (scaleY = Math.sqrt(c6 * c6 + d * d)) c6 /= scaleY, d /= scaleY, skewX /= scaleY;
+  if (a4 * d < b * c6) a4 = -a4, b = -b, skewX = -skewX, scaleX = -scaleX;
   return {
     translateX: e,
     translateY: f,
@@ -4723,13 +4502,10 @@ function parseCss(value) {
   return m3.isIdentity ? identity2 : decompose_default(m3.a, m3.b, m3.c, m3.d, m3.e, m3.f);
 }
 function parseSvg(value) {
-  if (value == null)
-    return identity2;
-  if (!svgNode)
-    svgNode = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  if (value == null) return identity2;
+  if (!svgNode) svgNode = document.createElementNS("http://www.w3.org/2000/svg", "g");
   svgNode.setAttribute("transform", value);
-  if (!(value = svgNode.transform.baseVal.consolidate()))
-    return identity2;
+  if (!(value = svgNode.transform.baseVal.consolidate())) return identity2;
   value = value.matrix;
   return decompose_default(value.a, value.b, value.c, value.d, value.e, value.f);
 }
@@ -4749,10 +4525,8 @@ function interpolateTransform(parse2, pxComma, pxParen, degParen) {
   }
   function rotate(a4, b, s2, q) {
     if (a4 !== b) {
-      if (a4 - b > 180)
-        b += 360;
-      else if (b - a4 > 180)
-        a4 += 360;
+      if (a4 - b > 180) b += 360;
+      else if (b - a4 > 180) a4 += 360;
       q.push({ i: s2.push(pop(s2) + "rotate(", null, degParen) - 2, x: number_default(a4, b) });
     } else if (b) {
       s2.push(pop(s2) + "rotate(" + b + degParen);
@@ -4783,8 +4557,7 @@ function interpolateTransform(parse2, pxComma, pxParen, degParen) {
     a4 = b = null;
     return function(t) {
       var i = -1, n = q.length, o;
-      while (++i < n)
-        s2[(o = q[i]).i] = o.x(t);
+      while (++i < n) s2[(o = q[i]).i] = o.x(t);
       return s2.join("");
     };
   };
@@ -4904,11 +4677,9 @@ var cubehelixLong = cubehelix2(nogamma);
 
 // node_modules/d3-interpolate/src/piecewise.js
 function piecewise(interpolate, values2) {
-  if (values2 === void 0)
-    values2 = interpolate, interpolate = value_default;
+  if (values2 === void 0) values2 = interpolate, interpolate = value_default;
   var i = 0, n = values2.length - 1, v2 = values2[0], I = new Array(n < 0 ? 0 : n);
-  while (i < n)
-    I[i] = interpolate(v2, v2 = values2[++i]);
+  while (i < n) I[i] = interpolate(v2, v2 = values2[++i]);
   return function(t) {
     var i2 = Math.max(0, Math.min(n - 1, Math.floor(t *= n)));
     return I[i2](t - i2);
@@ -4918,8 +4689,7 @@ function piecewise(interpolate, values2) {
 // node_modules/d3-interpolate/src/quantize.js
 function quantize_default(interpolator, n) {
   var samples = new Array(n);
-  for (var i = 0; i < n; ++i)
-    samples[i] = interpolator(i / (n - 1));
+  for (var i = 0; i < n; ++i) samples[i] = interpolator(i / (n - 1));
   return samples;
 }
 
@@ -4949,14 +4719,11 @@ function Timer() {
 Timer.prototype = timer.prototype = {
   constructor: Timer,
   restart: function(callback, delay, time2) {
-    if (typeof callback !== "function")
-      throw new TypeError("callback is not a function");
+    if (typeof callback !== "function") throw new TypeError("callback is not a function");
     time2 = (time2 == null ? now() : +time2) + (delay == null ? 0 : +delay);
     if (!this._next && taskTail !== this) {
-      if (taskTail)
-        taskTail._next = this;
-      else
-        taskHead = this;
+      if (taskTail) taskTail._next = this;
+      else taskHead = this;
       taskTail = this;
     }
     this._call = callback;
@@ -4981,8 +4748,7 @@ function timerFlush() {
   ++frame;
   var t = taskHead, e;
   while (t) {
-    if ((e = clockNow - t._time) >= 0)
-      t._call.call(void 0, e);
+    if ((e = clockNow - t._time) >= 0) t._call.call(void 0, e);
     t = t._next;
   }
   --frame;
@@ -5000,15 +4766,13 @@ function wake() {
 }
 function poke() {
   var now2 = clock.now(), delay = now2 - clockLast;
-  if (delay > pokeDelay)
-    clockSkew -= delay, clockLast = now2;
+  if (delay > pokeDelay) clockSkew -= delay, clockLast = now2;
 }
 function nap() {
   var t03, t13 = taskHead, t22, time2 = Infinity;
   while (t13) {
     if (t13._call) {
-      if (time2 > t13._time)
-        time2 = t13._time;
+      if (time2 > t13._time) time2 = t13._time;
       t03 = t13, t13 = t13._next;
     } else {
       t22 = t13._next, t13._next = null;
@@ -5019,19 +4783,14 @@ function nap() {
   sleep(time2);
 }
 function sleep(time2) {
-  if (frame)
-    return;
-  if (timeout)
-    timeout = clearTimeout(timeout);
+  if (frame) return;
+  if (timeout) timeout = clearTimeout(timeout);
   var delay = time2 - clockNow;
   if (delay > 24) {
-    if (time2 < Infinity)
-      timeout = setTimeout(wake, time2 - clock.now() - clockSkew);
-    if (interval)
-      interval = clearInterval(interval);
+    if (time2 < Infinity) timeout = setTimeout(wake, time2 - clock.now() - clockSkew);
+    if (interval) interval = clearInterval(interval);
   } else {
-    if (!interval)
-      clockLast = clock.now(), interval = setInterval(poke, pokeDelay);
+    if (!interval) clockLast = clock.now(), interval = setInterval(poke, pokeDelay);
     frame = 1, setFrame(wake);
   }
 }
@@ -5050,8 +4809,7 @@ function timeout_default(callback, delay, time2) {
 // node_modules/d3-timer/src/interval.js
 function interval_default(callback, delay, time2) {
   var t = new Timer(), total = delay;
-  if (delay == null)
-    return t.restart(callback, delay, time2), t;
+  if (delay == null) return t.restart(callback, delay, time2), t;
   t._restart = t.restart;
   t.restart = function(callback2, delay2, time3) {
     delay2 = +delay2, time3 = time3 == null ? now() : +time3;
@@ -5077,10 +4835,8 @@ var ENDING = 5;
 var ENDED = 6;
 function schedule_default(node, name, id2, index3, group3, timing) {
   var schedules = node.__transition;
-  if (!schedules)
-    node.__transition = {};
-  else if (id2 in schedules)
-    return;
+  if (!schedules) node.__transition = {};
+  else if (id2 in schedules) return;
   create(node, id2, {
     name,
     index: index3,
@@ -5099,20 +4855,17 @@ function schedule_default(node, name, id2, index3, group3, timing) {
 }
 function init(node, id2) {
   var schedule = get2(node, id2);
-  if (schedule.state > CREATED)
-    throw new Error("too late; already scheduled");
+  if (schedule.state > CREATED) throw new Error("too late; already scheduled");
   return schedule;
 }
 function set3(node, id2) {
   var schedule = get2(node, id2);
-  if (schedule.state > STARTED)
-    throw new Error("too late; already running");
+  if (schedule.state > STARTED) throw new Error("too late; already running");
   return schedule;
 }
 function get2(node, id2) {
   var schedule = node.__transition;
-  if (!schedule || !(schedule = schedule[id2]))
-    throw new Error("transition not found");
+  if (!schedule || !(schedule = schedule[id2])) throw new Error("transition not found");
   return schedule;
 }
 function create(node, id2, self) {
@@ -5122,19 +4875,15 @@ function create(node, id2, self) {
   function schedule(elapsed) {
     self.state = SCHEDULED;
     self.timer.restart(start2, self.delay, self.time);
-    if (self.delay <= elapsed)
-      start2(elapsed - self.delay);
+    if (self.delay <= elapsed) start2(elapsed - self.delay);
   }
   function start2(elapsed) {
     var i, j, n, o;
-    if (self.state !== SCHEDULED)
-      return stop();
+    if (self.state !== SCHEDULED) return stop();
     for (i in schedules) {
       o = schedules[i];
-      if (o.name !== self.name)
-        continue;
-      if (o.state === STARTED)
-        return timeout_default(start2);
+      if (o.name !== self.name) continue;
+      if (o.state === STARTED) return timeout_default(start2);
       if (o.state === RUNNING) {
         o.state = ENDED;
         o.timer.stop();
@@ -5156,8 +4905,7 @@ function create(node, id2, self) {
     });
     self.state = STARTING;
     self.on.call("start", node, node.__data__, self.index, self.group);
-    if (self.state !== STARTING)
-      return;
+    if (self.state !== STARTING) return;
     self.state = STARTED;
     tween = new Array(n = self.tween.length);
     for (i = 0, j = -1; i < n; ++i) {
@@ -5181,8 +4929,7 @@ function create(node, id2, self) {
     self.state = ENDED;
     self.timer.stop();
     delete schedules[id2];
-    for (var i in schedules)
-      return;
+    for (var i in schedules) return;
     delete node.__transition;
   }
 }
@@ -5190,8 +4937,7 @@ function create(node, id2, self) {
 // node_modules/d3-transition/src/interrupt.js
 function interrupt_default(node, name) {
   var schedules = node.__transition, schedule, active, empty4 = true, i;
-  if (!schedules)
-    return;
+  if (!schedules) return;
   name = name == null ? null : name + "";
   for (i in schedules) {
     if ((schedule = schedules[i]).name !== name) {
@@ -5204,8 +4950,7 @@ function interrupt_default(node, name) {
     schedule.on.call(active ? "interrupt" : "cancel", node, node.__data__, schedule.index, schedule.group);
     delete schedules[i];
   }
-  if (empty4)
-    delete node.__transition;
+  if (empty4) delete node.__transition;
 }
 
 // node_modules/d3-transition/src/selection/interrupt.js
@@ -5235,8 +4980,7 @@ function tweenRemove(id2, name) {
 }
 function tweenFunction(id2, name, value) {
   var tween0, tween1;
-  if (typeof value !== "function")
-    throw new Error();
+  if (typeof value !== "function") throw new Error();
   return function() {
     var schedule = set3(this, id2), tween = schedule.tween;
     if (tween !== tween0) {
@@ -5247,8 +4991,7 @@ function tweenFunction(id2, name, value) {
           break;
         }
       }
-      if (i === n)
-        tween1.push(t);
+      if (i === n) tween1.push(t);
     }
     schedule.tween = tween1;
   };
@@ -5313,8 +5056,7 @@ function attrFunction2(name, interpolate, value) {
   var string00, string10, interpolate0;
   return function() {
     var string0, value1 = value(this), string1;
-    if (value1 == null)
-      return void this.removeAttribute(name);
+    if (value1 == null) return void this.removeAttribute(name);
     string0 = this.getAttribute(name);
     string1 = value1 + "";
     return string0 === string1 ? null : string0 === string00 && string1 === string10 ? interpolate0 : (string10 = string1, interpolate0 = interpolate(string00 = string0, value1));
@@ -5324,8 +5066,7 @@ function attrFunctionNS2(fullname, interpolate, value) {
   var string00, string10, interpolate0;
   return function() {
     var string0, value1 = value(this), string1;
-    if (value1 == null)
-      return void this.removeAttributeNS(fullname.space, fullname.local);
+    if (value1 == null) return void this.removeAttributeNS(fullname.space, fullname.local);
     string0 = this.getAttributeNS(fullname.space, fullname.local);
     string1 = value1 + "";
     return string0 === string1 ? null : string0 === string00 && string1 === string10 ? interpolate0 : (string10 = string1, interpolate0 = interpolate(string00 = string0, value1));
@@ -5351,8 +5092,7 @@ function attrTweenNS(fullname, value) {
   var t03, i0;
   function tween() {
     var i = value.apply(this, arguments);
-    if (i !== i0)
-      t03 = (i0 = i) && attrInterpolateNS(fullname, i);
+    if (i !== i0) t03 = (i0 = i) && attrInterpolateNS(fullname, i);
     return t03;
   }
   tween._value = value;
@@ -5362,8 +5102,7 @@ function attrTween(name, value) {
   var t03, i0;
   function tween() {
     var i = value.apply(this, arguments);
-    if (i !== i0)
-      t03 = (i0 = i) && attrInterpolate(name, i);
+    if (i !== i0) t03 = (i0 = i) && attrInterpolate(name, i);
     return t03;
   }
   tween._value = value;
@@ -5371,12 +5110,9 @@ function attrTween(name, value) {
 }
 function attrTween_default(name, value) {
   var key = "attr." + name;
-  if (arguments.length < 2)
-    return (key = this.tween(key)) && key._value;
-  if (value == null)
-    return this.tween(key, null);
-  if (typeof value !== "function")
-    throw new Error();
+  if (arguments.length < 2) return (key = this.tween(key)) && key._value;
+  if (value == null) return this.tween(key, null);
+  if (typeof value !== "function") throw new Error();
   var fullname = namespace_default(name);
   return this.tween(key, (fullname.local ? attrTweenNS : attrTween)(fullname, value));
 }
@@ -5415,8 +5151,7 @@ function duration_default(value) {
 
 // node_modules/d3-transition/src/transition/ease.js
 function easeConstant(id2, value) {
-  if (typeof value !== "function")
-    throw new Error();
+  if (typeof value !== "function") throw new Error();
   return function() {
     set3(this, id2).ease = value;
   };
@@ -5430,21 +5165,18 @@ function ease_default(value) {
 function easeVarying(id2, value) {
   return function() {
     var v2 = value.apply(this, arguments);
-    if (typeof v2 !== "function")
-      throw new Error();
+    if (typeof v2 !== "function") throw new Error();
     set3(this, id2).ease = v2;
   };
 }
 function easeVarying_default(value) {
-  if (typeof value !== "function")
-    throw new Error();
+  if (typeof value !== "function") throw new Error();
   return this.each(easeVarying(this._id, value));
 }
 
 // node_modules/d3-transition/src/transition/filter.js
 function filter_default2(match) {
-  if (typeof match !== "function")
-    match = matcher_default(match);
+  if (typeof match !== "function") match = matcher_default(match);
   for (var groups2 = this._groups, m3 = groups2.length, subgroups = new Array(m3), j = 0; j < m3; ++j) {
     for (var group3 = groups2[j], n = group3.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) {
       if ((node = group3[i]) && match.call(node, node.__data__, i, group3)) {
@@ -5457,8 +5189,7 @@ function filter_default2(match) {
 
 // node_modules/d3-transition/src/transition/merge.js
 function merge_default2(transition2) {
-  if (transition2._id !== this._id)
-    throw new Error();
+  if (transition2._id !== this._id) throw new Error();
   for (var groups0 = this._groups, groups1 = transition2._groups, m0 = groups0.length, m1 = groups1.length, m3 = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m3; ++j) {
     for (var group0 = groups0[j], group1 = groups1[j], n = group0.length, merge2 = merges[j] = new Array(n), node, i = 0; i < n; ++i) {
       if (node = group0[i] || group1[i]) {
@@ -5476,8 +5207,7 @@ function merge_default2(transition2) {
 function start(name) {
   return (name + "").trim().split(/^|\s+/).every(function(t) {
     var i = t.indexOf(".");
-    if (i >= 0)
-      t = t.slice(0, i);
+    if (i >= 0) t = t.slice(0, i);
     return !t || t === "start";
   });
 }
@@ -5485,8 +5215,7 @@ function onFunction(id2, name, listener) {
   var on0, on1, sit = start(name) ? init : set3;
   return function() {
     var schedule = sit(this, id2), on = schedule.on;
-    if (on !== on0)
-      (on1 = (on0 = on).copy()).on(name, listener);
+    if (on !== on0) (on1 = (on0 = on).copy()).on(name, listener);
     schedule.on = on1;
   };
 }
@@ -5499,11 +5228,8 @@ function on_default2(name, listener) {
 function removeFunction(id2) {
   return function() {
     var parent = this.parentNode;
-    for (var i in this.__transition)
-      if (+i !== id2)
-        return;
-    if (parent)
-      parent.removeChild(this);
+    for (var i in this.__transition) if (+i !== id2) return;
+    if (parent) parent.removeChild(this);
   };
 }
 function remove_default2() {
@@ -5513,13 +5239,11 @@ function remove_default2() {
 // node_modules/d3-transition/src/transition/select.js
 function select_default3(select2) {
   var name = this._name, id2 = this._id;
-  if (typeof select2 !== "function")
-    select2 = selector_default(select2);
+  if (typeof select2 !== "function") select2 = selector_default(select2);
   for (var groups2 = this._groups, m3 = groups2.length, subgroups = new Array(m3), j = 0; j < m3; ++j) {
     for (var group3 = groups2[j], n = group3.length, subgroup = subgroups[j] = new Array(n), node, subnode, i = 0; i < n; ++i) {
       if ((node = group3[i]) && (subnode = select2.call(node, node.__data__, i, group3))) {
-        if ("__data__" in node)
-          subnode.__data__ = node.__data__;
+        if ("__data__" in node) subnode.__data__ = node.__data__;
         subgroup[i] = subnode;
         schedule_default(subgroup[i], name, id2, i, subgroup, get2(node, id2));
       }
@@ -5531,8 +5255,7 @@ function select_default3(select2) {
 // node_modules/d3-transition/src/transition/selectAll.js
 function selectAll_default3(select2) {
   var name = this._name, id2 = this._id;
-  if (typeof select2 !== "function")
-    select2 = selectorAll_default(select2);
+  if (typeof select2 !== "function") select2 = selectorAll_default(select2);
   for (var groups2 = this._groups, m3 = groups2.length, subgroups = [], parents = [], j = 0; j < m3; ++j) {
     for (var group3 = groups2[j], n = group3.length, node, i = 0; i < n; ++i) {
       if (node = group3[i]) {
@@ -5579,8 +5302,7 @@ function styleFunction2(name, interpolate, value) {
   var string00, string10, interpolate0;
   return function() {
     var string0 = styleValue(this, name), value1 = value(this), string1 = value1 + "";
-    if (value1 == null)
-      string1 = value1 = (this.style.removeProperty(name), styleValue(this, name));
+    if (value1 == null) string1 = value1 = (this.style.removeProperty(name), styleValue(this, name));
     return string0 === string1 ? null : string0 === string00 && string1 === string10 ? interpolate0 : (string10 = string1, interpolate0 = interpolate(string00 = string0, value1));
   };
 }
@@ -5588,8 +5310,7 @@ function styleMaybeRemove(id2, name) {
   var on0, on1, listener0, key = "style." + name, event = "end." + key, remove2;
   return function() {
     var schedule = set3(this, id2), on = schedule.on, listener = schedule.value[key] == null ? remove2 || (remove2 = styleRemove2(name)) : void 0;
-    if (on !== on0 || listener0 !== listener)
-      (on1 = (on0 = on).copy()).on(event, listener0 = listener);
+    if (on !== on0 || listener0 !== listener) (on1 = (on0 = on).copy()).on(event, listener0 = listener);
     schedule.on = on1;
   };
 }
@@ -5608,8 +5329,7 @@ function styleTween(name, value, priority) {
   var t, i0;
   function tween() {
     var i = value.apply(this, arguments);
-    if (i !== i0)
-      t = (i0 = i) && styleInterpolate(name, i, priority);
+    if (i !== i0) t = (i0 = i) && styleInterpolate(name, i, priority);
     return t;
   }
   tween._value = value;
@@ -5617,12 +5337,9 @@ function styleTween(name, value, priority) {
 }
 function styleTween_default(name, value, priority) {
   var key = "style." + (name += "");
-  if (arguments.length < 2)
-    return (key = this.tween(key)) && key._value;
-  if (value == null)
-    return this.tween(key, null);
-  if (typeof value !== "function")
-    throw new Error();
+  if (arguments.length < 2) return (key = this.tween(key)) && key._value;
+  if (value == null) return this.tween(key, null);
+  if (typeof value !== "function") throw new Error();
   return this.tween(key, styleTween(name, value, priority == null ? "" : priority));
 }
 
@@ -5652,8 +5369,7 @@ function textTween(value) {
   var t03, i0;
   function tween() {
     var i = value.apply(this, arguments);
-    if (i !== i0)
-      t03 = (i0 = i) && textInterpolate(i);
+    if (i !== i0) t03 = (i0 = i) && textInterpolate(i);
     return t03;
   }
   tween._value = value;
@@ -5661,12 +5377,9 @@ function textTween(value) {
 }
 function textTween_default(value) {
   var key = "text";
-  if (arguments.length < 1)
-    return (key = this.tween(key)) && key._value;
-  if (value == null)
-    return this.tween(key, null);
-  if (typeof value !== "function")
-    throw new Error();
+  if (arguments.length < 1) return (key = this.tween(key)) && key._value;
+  if (value == null) return this.tween(key, null);
+  if (typeof value !== "function") throw new Error();
   return this.tween(key, textTween(value));
 }
 
@@ -5694,8 +5407,7 @@ function end_default() {
   var on0, on1, that = this, id2 = that._id, size = that.size();
   return new Promise(function(resolve, reject) {
     var cancel = { value: reject }, end = { value: function() {
-      if (--size === 0)
-        resolve();
+      if (--size === 0) resolve();
     } };
     that.each(function() {
       var schedule = set3(this, id2), on = schedule.on;
@@ -5707,8 +5419,7 @@ function end_default() {
       }
       schedule.on = on1;
     });
-    if (size === 0)
-      resolve();
+    if (size === 0) resolve();
   });
 }
 
@@ -6139,9 +5850,7 @@ function defaultTouchable2() {
   return navigator.maxTouchPoints || "ontouchstart" in this;
 }
 function local2(node) {
-  while (!node.__brush)
-    if (!(node = node.parentNode))
-      return;
+  while (!node.__brush) if (!(node = node.parentNode)) return;
   return node.__brush;
 }
 function empty3(extent3) {
@@ -6238,15 +5947,12 @@ function brush(dim) {
   }
   Emitter.prototype = {
     beforestart: function() {
-      if (++this.active === 1)
-        this.state.emitter = this, this.starting = true;
+      if (++this.active === 1) this.state.emitter = this, this.starting = true;
       return this;
     },
     start: function(event, mode2) {
-      if (this.starting)
-        this.starting = false, this.emit("start", event, mode2);
-      else
-        this.emit("brush", event);
+      if (this.starting) this.starting = false, this.emit("start", event, mode2);
+      else this.emit("brush", event);
       return this;
     },
     brush: function(event, mode2) {
@@ -6254,8 +5960,7 @@ function brush(dim) {
       return this;
     },
     end: function(event, mode2) {
-      if (--this.active === 0)
-        delete this.state.emitter, this.emit("end", event, mode2);
+      if (--this.active === 0) delete this.state.emitter, this.emit("end", event, mode2);
       return this;
     },
     emit: function(type2, event, mode2) {
@@ -6275,10 +5980,8 @@ function brush(dim) {
     }
   };
   function started(event) {
-    if (touchending && !event.touches)
-      return;
-    if (!filter4.apply(this, arguments))
-      return;
+    if (touchending && !event.touches) return;
+    if (!filter4.apply(this, arguments)) return;
     var that = this, type2 = event.target.__data__.type, mode2 = (keys && event.metaKey ? type2 = "overlay" : type2) === "selection" ? MODE_DRAG : keys && event.altKey ? MODE_CENTER : MODE_HANDLE, signX = dim === Y ? null : signsX[type2], signY = dim === X ? null : signsY[type2], state = local2(that), extent4 = state.extent, selection2 = state.selection, W = extent4[0][0], w0, w1, N = extent4[0][1], n0, n1, E2 = extent4[1][0], e0, e1, S = extent4[1][1], s0, s1, dx = 0, dy = 0, moving, shifting = signX && signY && keys && event.shiftKey, lockX, lockY, points = Array.from(event.touches || [event], (t) => {
       const i = t.identifier;
       t = pointer_default(t, that);
@@ -6289,8 +5992,7 @@ function brush(dim) {
     interrupt_default(that);
     var emit = emitter(that, arguments, true).beforestart();
     if (type2 === "overlay") {
-      if (selection2)
-        moving = true;
+      if (selection2) moving = true;
       const pts = [points[0], points[1] || points[0]];
       state.selection = selection2 = [[
         w0 = dim === Y ? W : min2(pts[0][0], pts[1][0]),
@@ -6299,8 +6001,7 @@ function brush(dim) {
         e0 = dim === Y ? E2 : max2(pts[0][0], pts[1][0]),
         s0 = dim === X ? S : max2(pts[0][1], pts[1][1])
       ]];
-      if (points.length > 1)
-        move(event);
+      if (points.length > 1) move(event);
     } else {
       w0 = selection2[0][0];
       n0 = selection2[0][1];
@@ -6318,8 +6019,7 @@ function brush(dim) {
       emit.ended = ended;
     } else {
       var view = select_default2(event.view).on("mousemove.brush", moved, true).on("mouseup.brush", ended, true);
-      if (keys)
-        view.on("keydown.brush", keydowned, true).on("keyup.brush", keyupped, true);
+      if (keys) view.on("keydown.brush", keydowned, true).on("keyup.brush", keyupped, true);
       nodrag_default(event.view);
     }
     redraw.call(that);
@@ -6327,8 +6027,7 @@ function brush(dim) {
     function moved(event2) {
       for (const p of event2.changedTouches || [event2]) {
         for (const d of points)
-          if (d.identifier === p.identifier)
-            d.cur = pointer_default(p, that);
+          if (d.identifier === p.identifier) d.cur = pointer_default(p, that);
       }
       if (shifting && !lockX && !lockY && points.length === 1) {
         const point6 = points[0];
@@ -6338,8 +6037,7 @@ function brush(dim) {
           lockX = true;
       }
       for (const point6 of points)
-        if (point6.cur)
-          point6[0] = point6.cur[0], point6[1] = point6.cur[1];
+        if (point6.cur) point6[0] = point6.cur[0], point6[1] = point6.cur[1];
       moving = true;
       noevent_default2(event2);
       move(event2);
@@ -6352,35 +6050,25 @@ function brush(dim) {
       switch (mode2) {
         case MODE_SPACE:
         case MODE_DRAG: {
-          if (signX)
-            dx = max2(W - w0, min2(E2 - e0, dx)), w1 = w0 + dx, e1 = e0 + dx;
-          if (signY)
-            dy = max2(N - n0, min2(S - s0, dy)), n1 = n0 + dy, s1 = s0 + dy;
+          if (signX) dx = max2(W - w0, min2(E2 - e0, dx)), w1 = w0 + dx, e1 = e0 + dx;
+          if (signY) dy = max2(N - n0, min2(S - s0, dy)), n1 = n0 + dy, s1 = s0 + dy;
           break;
         }
         case MODE_HANDLE: {
           if (points[1]) {
-            if (signX)
-              w1 = max2(W, min2(E2, points[0][0])), e1 = max2(W, min2(E2, points[1][0])), signX = 1;
-            if (signY)
-              n1 = max2(N, min2(S, points[0][1])), s1 = max2(N, min2(S, points[1][1])), signY = 1;
+            if (signX) w1 = max2(W, min2(E2, points[0][0])), e1 = max2(W, min2(E2, points[1][0])), signX = 1;
+            if (signY) n1 = max2(N, min2(S, points[0][1])), s1 = max2(N, min2(S, points[1][1])), signY = 1;
           } else {
-            if (signX < 0)
-              dx = max2(W - w0, min2(E2 - w0, dx)), w1 = w0 + dx, e1 = e0;
-            else if (signX > 0)
-              dx = max2(W - e0, min2(E2 - e0, dx)), w1 = w0, e1 = e0 + dx;
-            if (signY < 0)
-              dy = max2(N - n0, min2(S - n0, dy)), n1 = n0 + dy, s1 = s0;
-            else if (signY > 0)
-              dy = max2(N - s0, min2(S - s0, dy)), n1 = n0, s1 = s0 + dy;
+            if (signX < 0) dx = max2(W - w0, min2(E2 - w0, dx)), w1 = w0 + dx, e1 = e0;
+            else if (signX > 0) dx = max2(W - e0, min2(E2 - e0, dx)), w1 = w0, e1 = e0 + dx;
+            if (signY < 0) dy = max2(N - n0, min2(S - n0, dy)), n1 = n0 + dy, s1 = s0;
+            else if (signY > 0) dy = max2(N - s0, min2(S - s0, dy)), n1 = n0, s1 = s0 + dy;
           }
           break;
         }
         case MODE_CENTER: {
-          if (signX)
-            w1 = max2(W, min2(E2, w0 - dx * signX)), e1 = max2(W, min2(E2, e0 + dx * signX));
-          if (signY)
-            n1 = max2(N, min2(S, n0 - dy * signY)), s1 = max2(N, min2(S, s0 + dy * signY));
+          if (signX) w1 = max2(W, min2(E2, w0 - dx * signX)), e1 = max2(W, min2(E2, e0 + dx * signX));
+          if (signY) n1 = max2(N, min2(S, n0 - dy * signY)), s1 = max2(N, min2(S, s0 + dy * signY));
           break;
         }
       }
@@ -6388,22 +6076,17 @@ function brush(dim) {
         signX *= -1;
         t = w0, w0 = e0, e0 = t;
         t = w1, w1 = e1, e1 = t;
-        if (type2 in flipX)
-          overlay.attr("cursor", cursors[type2 = flipX[type2]]);
+        if (type2 in flipX) overlay.attr("cursor", cursors[type2 = flipX[type2]]);
       }
       if (s1 < n1) {
         signY *= -1;
         t = n0, n0 = s0, s0 = t;
         t = n1, n1 = s1, s1 = t;
-        if (type2 in flipY)
-          overlay.attr("cursor", cursors[type2 = flipY[type2]]);
+        if (type2 in flipY) overlay.attr("cursor", cursors[type2 = flipY[type2]]);
       }
-      if (state.selection)
-        selection2 = state.selection;
-      if (lockX)
-        w1 = selection2[0][0], e1 = selection2[1][0];
-      if (lockY)
-        n1 = selection2[0][1], s1 = selection2[1][1];
+      if (state.selection) selection2 = state.selection;
+      if (lockX) w1 = selection2[0][0], e1 = selection2[1][0];
+      if (lockY) n1 = selection2[0][1], s1 = selection2[1][1];
       if (selection2[0][0] !== w1 || selection2[0][1] !== n1 || selection2[1][0] !== e1 || selection2[1][1] !== s1) {
         state.selection = [[w1, n1], [e1, s1]];
         redraw.call(that);
@@ -6413,10 +6096,8 @@ function brush(dim) {
     function ended(event2) {
       nopropagation2(event2);
       if (event2.touches) {
-        if (event2.touches.length)
-          return;
-        if (touchending)
-          clearTimeout(touchending);
+        if (event2.touches.length) return;
+        if (touchending) clearTimeout(touchending);
         touchending = setTimeout(function() {
           touchending = null;
         }, 500);
@@ -6426,10 +6107,8 @@ function brush(dim) {
       }
       group3.attr("pointer-events", "all");
       overlay.attr("cursor", cursors.overlay);
-      if (state.selection)
-        selection2 = state.selection;
-      if (empty3(selection2))
-        state.selection = null, redraw.call(that);
+      if (state.selection) selection2 = state.selection;
+      if (empty3(selection2)) state.selection = null, redraw.call(that);
       emit.end(event2, mode2.name);
     }
     function keydowned(event2) {
@@ -6440,10 +6119,8 @@ function brush(dim) {
         }
         case 18: {
           if (mode2 === MODE_HANDLE) {
-            if (signX)
-              e0 = e1 - dx * signX, w0 = w1 + dx * signX;
-            if (signY)
-              s0 = s1 - dy * signY, n0 = n1 + dy * signY;
+            if (signX) e0 = e1 - dx * signX, w0 = w1 + dx * signX;
+            if (signY) s0 = s1 - dy * signY, n0 = n1 + dy * signY;
             mode2 = MODE_CENTER;
             move(event2);
           }
@@ -6451,14 +6128,10 @@ function brush(dim) {
         }
         case 32: {
           if (mode2 === MODE_HANDLE || mode2 === MODE_CENTER) {
-            if (signX < 0)
-              e0 = e1 - dx;
-            else if (signX > 0)
-              w0 = w1 - dx;
-            if (signY < 0)
-              s0 = s1 - dy;
-            else if (signY > 0)
-              n0 = n1 - dy;
+            if (signX < 0) e0 = e1 - dx;
+            else if (signX > 0) w0 = w1 - dx;
+            if (signY < 0) s0 = s1 - dy;
+            else if (signY > 0) n0 = n1 - dy;
             mode2 = MODE_SPACE;
             overlay.attr("cursor", cursors.selection);
             move(event2);
@@ -6481,14 +6154,10 @@ function brush(dim) {
         }
         case 18: {
           if (mode2 === MODE_CENTER) {
-            if (signX < 0)
-              e0 = e1;
-            else if (signX > 0)
-              w0 = w1;
-            if (signY < 0)
-              s0 = s1;
-            else if (signY > 0)
-              n0 = n1;
+            if (signX < 0) e0 = e1;
+            else if (signX > 0) w0 = w1;
+            if (signY < 0) s0 = s1;
+            else if (signY > 0) n0 = n1;
             mode2 = MODE_HANDLE;
             move(event2);
           }
@@ -6497,20 +6166,14 @@ function brush(dim) {
         case 32: {
           if (mode2 === MODE_SPACE) {
             if (event2.altKey) {
-              if (signX)
-                e0 = e1 - dx * signX, w0 = w1 + dx * signX;
-              if (signY)
-                s0 = s1 - dy * signY, n0 = n1 + dy * signY;
+              if (signX) e0 = e1 - dx * signX, w0 = w1 + dx * signX;
+              if (signY) s0 = s1 - dy * signY, n0 = n1 + dy * signY;
               mode2 = MODE_CENTER;
             } else {
-              if (signX < 0)
-                e0 = e1;
-              else if (signX > 0)
-                w0 = w1;
-              if (signY < 0)
-                s0 = s1;
-              else if (signY > 0)
-                n0 = n1;
+              if (signX < 0) e0 = e1;
+              else if (signX > 0) w0 = w1;
+              if (signY < 0) s0 = s1;
+              else if (signY > 0) n0 = n1;
               mode2 = MODE_HANDLE;
             }
             overlay.attr("cursor", cursors[type2]);
@@ -6596,22 +6259,19 @@ function chord(directed, transpose2) {
     matrix = Float64Array.from({ length: n * n }, transpose2 ? (_, i) => matrix[i % n][i / n | 0] : (_, i) => matrix[i / n | 0][i % n]);
     for (let i = 0; i < n; ++i) {
       let x4 = 0;
-      for (let j = 0; j < n; ++j)
-        x4 += matrix[i * n + j] + directed * matrix[j * n + i];
+      for (let j = 0; j < n; ++j) x4 += matrix[i * n + j] + directed * matrix[j * n + i];
       k2 += groupSums[i] = x4;
     }
     k2 = max3(0, tau2 - padAngle * n) / k2;
     dx = k2 ? padAngle : tau2 / n;
     {
       let x4 = 0;
-      if (sortGroups)
-        groupIndex2.sort((a4, b) => sortGroups(groupSums[a4], groupSums[b]));
+      if (sortGroups) groupIndex2.sort((a4, b) => sortGroups(groupSums[a4], groupSums[b]));
       for (const i of groupIndex2) {
         const x06 = x4;
         if (directed) {
           const subgroupIndex = range2(~n + 1, n).filter((j) => j < 0 ? matrix[~j * n + i] : matrix[i * n + j]);
-          if (sortSubgroups)
-            subgroupIndex.sort((a4, b) => sortSubgroups(a4 < 0 ? -matrix[~a4 * n + i] : matrix[i * n + a4], b < 0 ? -matrix[~b * n + i] : matrix[i * n + b]));
+          if (sortSubgroups) subgroupIndex.sort((a4, b) => sortSubgroups(a4 < 0 ? -matrix[~a4 * n + i] : matrix[i * n + a4], b < 0 ? -matrix[~b * n + i] : matrix[i * n + b]));
           for (const j of subgroupIndex) {
             if (j < 0) {
               const chord3 = chords[~j * n + i] || (chords[~j * n + i] = { source: null, target: null });
@@ -6624,8 +6284,7 @@ function chord(directed, transpose2) {
           groups2[i] = { index: i, startAngle: x06, endAngle: x4, value: groupSums[i] };
         } else {
           const subgroupIndex = range2(0, n).filter((j) => matrix[i * n + j] || matrix[j * n + i]);
-          if (sortSubgroups)
-            subgroupIndex.sort((a4, b) => sortSubgroups(matrix[i * n + a4], matrix[i * n + b]));
+          if (sortSubgroups) subgroupIndex.sort((a4, b) => sortSubgroups(matrix[i * n + a4], matrix[i * n + b]));
           for (const j of subgroupIndex) {
             let chord3;
             if (i < j) {
@@ -6634,8 +6293,7 @@ function chord(directed, transpose2) {
             } else {
               chord3 = chords[j * n + i] || (chords[j * n + i] = { source: null, target: null });
               chord3.target = { index: i, startAngle: x4, endAngle: x4 += matrix[i * n + j] * k2, value: matrix[i * n + j] };
-              if (i === j)
-                chord3.source = chord3.target;
+              if (i === j) chord3.source = chord3.target;
             }
             if (chord3.source && chord3.target && chord3.source.value < chord3.target.value) {
               const source = chord3.source;
@@ -6680,10 +6338,8 @@ function append(strings) {
 }
 function appendRound(digits) {
   let d = Math.floor(digits);
-  if (!(d >= 0))
-    throw new Error(`invalid digits: ${digits}`);
-  if (d > 15)
-    return append;
+  if (!(d >= 0)) throw new Error(`invalid digits: ${digits}`);
+  if (d > 15) return append;
   const k2 = 10 ** d;
   return function(strings) {
     this._ += strings[0];
@@ -6719,13 +6375,11 @@ var Path = class {
   }
   arcTo(x12, y12, x22, y22, r) {
     x12 = +x12, y12 = +y12, x22 = +x22, y22 = +y22, r = +r;
-    if (r < 0)
-      throw new Error(`negative radius: ${r}`);
+    if (r < 0) throw new Error(`negative radius: ${r}`);
     let x06 = this._x1, y06 = this._y1, x21 = x22 - x12, y21 = y22 - y12, x01 = x06 - x12, y01 = y06 - y12, l01_2 = x01 * x01 + y01 * y01;
     if (this._x1 === null) {
       this._append`M${this._x1 = x12},${this._y1 = y12}`;
-    } else if (!(l01_2 > epsilon4))
-      ;
+    } else if (!(l01_2 > epsilon4)) ;
     else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon4) || !r) {
       this._append`L${this._x1 = x12},${this._y1 = y12}`;
     } else {
@@ -6738,18 +6392,15 @@ var Path = class {
   }
   arc(x4, y4, r, a0, a1, ccw) {
     x4 = +x4, y4 = +y4, r = +r, ccw = !!ccw;
-    if (r < 0)
-      throw new Error(`negative radius: ${r}`);
+    if (r < 0) throw new Error(`negative radius: ${r}`);
     let dx = r * Math.cos(a0), dy = r * Math.sin(a0), x06 = x4 + dx, y06 = y4 + dy, cw = 1 ^ ccw, da2 = ccw ? a0 - a1 : a1 - a0;
     if (this._x1 === null) {
       this._append`M${x06},${y06}`;
     } else if (Math.abs(this._x1 - x06) > epsilon4 || Math.abs(this._y1 - y06) > epsilon4) {
       this._append`L${x06},${y06}`;
     }
-    if (!r)
-      return;
-    if (da2 < 0)
-      da2 = da2 % tau3 + tau3;
+    if (!r) return;
+    if (da2 < 0) da2 = da2 % tau3 + tau3;
     if (da2 > tauEpsilon) {
       this._append`A${r},${r},0,1,${cw},${x4 - dx},${y4 - dy}A${r},${r},0,1,${cw},${this._x1 = x06},${this._y1 = y06}`;
     } else if (da2 > epsilon4) {
@@ -6807,17 +6458,12 @@ function ribbon(headRadius) {
   var source = defaultSource, target = defaultTarget, sourceRadius = defaultRadius, targetRadius = defaultRadius, startAngle = defaultStartAngle, endAngle = defaultEndAngle, padAngle = defaultPadAngle, context = null;
   function ribbon2() {
     var buffer, s2 = source.apply(this, arguments), t = target.apply(this, arguments), ap = padAngle.apply(this, arguments) / 2, argv = slice2.call(arguments), sr = +sourceRadius.apply(this, (argv[0] = s2, argv)), sa0 = startAngle.apply(this, argv) - halfPi2, sa1 = endAngle.apply(this, argv) - halfPi2, tr = +targetRadius.apply(this, (argv[0] = t, argv)), ta0 = startAngle.apply(this, argv) - halfPi2, ta1 = endAngle.apply(this, argv) - halfPi2;
-    if (!context)
-      context = buffer = path();
+    if (!context) context = buffer = path();
     if (ap > epsilon3) {
-      if (abs2(sa1 - sa0) > ap * 2 + epsilon3)
-        sa1 > sa0 ? (sa0 += ap, sa1 -= ap) : (sa0 -= ap, sa1 += ap);
-      else
-        sa0 = sa1 = (sa0 + sa1) / 2;
-      if (abs2(ta1 - ta0) > ap * 2 + epsilon3)
-        ta1 > ta0 ? (ta0 += ap, ta1 -= ap) : (ta0 -= ap, ta1 += ap);
-      else
-        ta0 = ta1 = (ta0 + ta1) / 2;
+      if (abs2(sa1 - sa0) > ap * 2 + epsilon3) sa1 > sa0 ? (sa0 += ap, sa1 -= ap) : (sa0 -= ap, sa1 += ap);
+      else sa0 = sa1 = (sa0 + sa1) / 2;
+      if (abs2(ta1 - ta0) > ap * 2 + epsilon3) ta1 > ta0 ? (ta0 += ap, ta1 -= ap) : (ta0 -= ap, ta1 += ap);
+      else ta0 = ta1 = (ta0 + ta1) / 2;
     }
     context.moveTo(sr * cos(sa0), sr * sin(sa0));
     context.arc(0, 0, sr, sa0, sa1);
@@ -6834,13 +6480,11 @@ function ribbon(headRadius) {
     }
     context.quadraticCurveTo(0, 0, sr * cos(sa0), sr * sin(sa0));
     context.closePath();
-    if (buffer)
-      return context = null, buffer + "" || null;
+    if (buffer) return context = null, buffer + "" || null;
   }
-  if (headRadius)
-    ribbon2.headRadius = function(_) {
-      return arguments.length ? (headRadius = typeof _ === "function" ? _ : constant_default5(+_), ribbon2) : headRadius;
-    };
+  if (headRadius) ribbon2.headRadius = function(_) {
+    return arguments.length ? (headRadius = typeof _ === "function" ? _ : constant_default5(+_), ribbon2) : headRadius;
+  };
   ribbon2.radius = function(_) {
     return arguments.length ? (sourceRadius = targetRadius = typeof _ === "function" ? _ : constant_default5(+_), ribbon2) : sourceRadius;
   };
@@ -6889,8 +6533,7 @@ function ascending_default(a4, b) {
 // node_modules/d3-contour/src/area.js
 function area_default(ring) {
   var i = 0, n = ring.length, area2 = ring[n - 1][1] * ring[0][0] - ring[n - 1][0] * ring[0][1];
-  while (++i < n)
-    area2 += ring[i - 1][1] * ring[i][0] - ring[i - 1][0] * ring[i][1];
+  while (++i < n) area2 += ring[i - 1][1] * ring[i][0] - ring[i - 1][0] * ring[i][1];
   return area2;
 }
 
@@ -6900,19 +6543,15 @@ var constant_default6 = (x4) => () => x4;
 // node_modules/d3-contour/src/contains.js
 function contains_default(ring, hole) {
   var i = -1, n = hole.length, c6;
-  while (++i < n)
-    if (c6 = ringContains(ring, hole[i]))
-      return c6;
+  while (++i < n) if (c6 = ringContains(ring, hole[i])) return c6;
   return 0;
 }
 function ringContains(ring, point6) {
   var x4 = point6[0], y4 = point6[1], contains = -1;
   for (var i = 0, n = ring.length, j = n - 1; i < n; j = i++) {
     var pi7 = ring[i], xi = pi7[0], yi = pi7[1], pj = ring[j], xj = pj[0], yj = pj[1];
-    if (segmentContains(pi7, pj, point6))
-      return 0;
-    if (yi > y4 !== yj > y4 && x4 < (xj - xi) * (y4 - yi) / (yj - yi) + xi)
-      contains = -contains;
+    if (segmentContains(pi7, pj, point6)) return 0;
+    if (yi > y4 !== yj > y4 && x4 < (xj - xi) * (y4 - yi) / (yj - yi) + xi) contains = -contains;
   }
   return contains;
 }
@@ -6957,10 +6596,8 @@ function contours_default() {
     if (!Array.isArray(tz)) {
       const e = extent(values2, finite);
       tz = ticks(...nice(e[0], e[1], tz), tz);
-      while (tz[tz.length - 1] >= e[1])
-        tz.pop();
-      while (tz[1] < e[0])
-        tz.shift();
+      while (tz[tz.length - 1] >= e[1]) tz.pop();
+      while (tz[1] < e[0]) tz.shift();
     } else {
       tz = tz.slice().sort(ascending_default);
     }
@@ -6968,15 +6605,12 @@ function contours_default() {
   }
   function contour2(values2, value) {
     const v2 = value == null ? NaN : +value;
-    if (isNaN(v2))
-      throw new Error(`invalid value: ${value}`);
+    if (isNaN(v2)) throw new Error(`invalid value: ${value}`);
     var polygons = [], holes = [];
     isorings(values2, v2, function(ring) {
       smooth(ring, values2, v2);
-      if (area_default(ring) > 0)
-        polygons.push([ring]);
-      else
-        holes.push(ring);
+      if (area_default(ring) > 0) polygons.push([ring]);
+      else holes.push(ring);
     });
     holes.forEach(function(hole) {
       for (var i = 0, n = polygons.length, polygon; i < n; ++i) {
@@ -7075,11 +6709,9 @@ function contours_default() {
   }
   contours.contour = contour2;
   contours.size = function(_) {
-    if (!arguments.length)
-      return [dx, dy];
+    if (!arguments.length) return [dx, dy];
     var _0 = Math.floor(_[0]), _1 = Math.floor(_[1]);
-    if (!(_0 >= 0 && _1 >= 0))
-      throw new Error("invalid size");
+    if (!(_0 >= 0 && _1 >= 0)) throw new Error("invalid size");
     return dx = _0, dy = _1, contours;
   };
   contours.thresholds = function(_) {
@@ -7180,28 +6812,22 @@ function density_default() {
     return arguments.length ? (weight = typeof _ === "function" ? _ : constant_default6(+_), density2) : weight;
   };
   density2.size = function(_) {
-    if (!arguments.length)
-      return [dx, dy];
+    if (!arguments.length) return [dx, dy];
     var _0 = +_[0], _1 = +_[1];
-    if (!(_0 >= 0 && _1 >= 0))
-      throw new Error("invalid size");
+    if (!(_0 >= 0 && _1 >= 0)) throw new Error("invalid size");
     return dx = _0, dy = _1, resize();
   };
   density2.cellSize = function(_) {
-    if (!arguments.length)
-      return 1 << k2;
-    if (!((_ = +_) >= 1))
-      throw new Error("invalid cell size");
+    if (!arguments.length) return 1 << k2;
+    if (!((_ = +_) >= 1)) throw new Error("invalid cell size");
     return k2 = Math.floor(Math.log(_) / Math.LN2), resize();
   };
   density2.thresholds = function(_) {
     return arguments.length ? (threshold2 = typeof _ === "function" ? _ : Array.isArray(_) ? constant_default6(slice3.call(_)) : constant_default6(_), density2) : threshold2;
   };
   density2.bandwidth = function(_) {
-    if (!arguments.length)
-      return Math.sqrt(r * (r + 1));
-    if (!((_ = +_) >= 0))
-      throw new Error("invalid bandwidth");
+    if (!arguments.length) return Math.sqrt(r * (r + 1));
+    if (!((_ = +_) >= 0)) throw new Error("invalid bandwidth");
     return r = (Math.sqrt(4 * _ * _ + 1) - 1) / 2, resize();
   };
   return density2;
@@ -7284,8 +6910,7 @@ function sum2(elen, e, flen, f, h) {
 }
 function estimate(elen, e) {
   let Q = e[0];
-  for (let i = 1; i < elen; i++)
-    Q += e[i];
+  for (let i = 1; i < elen; i++) Q += e[i];
   return Q;
 }
 function vec(n) {
@@ -7355,8 +6980,7 @@ function orient2dadapt(ax, ay, bx, by, cx, cy, detsum) {
   }
   errbound = ccwerrboundC * detsum + resulterrbound * Math.abs(det);
   det += acx * bcytail + bcy * acxtail - (acy * bcxtail + bcx * acytail);
-  if (det >= errbound || -det >= errbound)
-    return det;
+  if (det >= errbound || -det >= errbound) return det;
   s1 = acxtail * bcy;
   c6 = splitter * acxtail;
   ahi = c6 - (c6 - acxtail);
@@ -7454,8 +7078,7 @@ function orient2d(ax, ay, bx, by, cx, cy) {
   const detright = (ax - cx) * (by - cy);
   const det = detleft - detright;
   const detsum = Math.abs(detleft + detright);
-  if (Math.abs(det) >= ccwerrboundA * detsum)
-    return det;
+  if (Math.abs(det) >= ccwerrboundA * detsum) return det;
   return -orient2dadapt(ax, ay, bx, by, cx, cy, detsum);
 }
 
@@ -7572,7 +7195,7 @@ var fin4 = vec(1152);
 // node_modules/delaunator/index.js
 var EPSILON = Math.pow(2, -52);
 var EDGE_STACK = new Uint32Array(512);
-var Delaunator = class {
+var Delaunator = class _Delaunator {
   static from(points, getX = defaultGetX, getY = defaultGetY) {
     const n = points.length;
     const coords = new Float64Array(n * 2);
@@ -7581,12 +7204,11 @@ var Delaunator = class {
       coords[2 * i] = getX(p);
       coords[2 * i + 1] = getY(p);
     }
-    return new Delaunator(coords);
+    return new _Delaunator(coords);
   }
   constructor(coords) {
     const n = coords.length >> 1;
-    if (n > 0 && typeof coords[0] !== "number")
-      throw new Error("Expected coords to contain numbers.");
+    if (n > 0 && typeof coords[0] !== "number") throw new Error("Expected coords to contain numbers.");
     this.coords = coords;
     const maxTriangles = Math.max(2 * n - 5, 0);
     this._triangles = new Uint32Array(maxTriangles * 3);
@@ -7610,14 +7232,10 @@ var Delaunator = class {
     for (let i = 0; i < n; i++) {
       const x4 = coords[2 * i];
       const y4 = coords[2 * i + 1];
-      if (x4 < minX)
-        minX = x4;
-      if (y4 < minY)
-        minY = y4;
-      if (x4 > maxX)
-        maxX = x4;
-      if (y4 > maxY2)
-        maxY2 = y4;
+      if (x4 < minX) minX = x4;
+      if (y4 < minY) minY = y4;
+      if (x4 > maxX) maxX = x4;
+      if (y4 > maxY2) maxY2 = y4;
       this._ids[i] = i;
     }
     const cx = (minX + maxX) / 2;
@@ -7633,8 +7251,7 @@ var Delaunator = class {
     const i0x = coords[2 * i0];
     const i0y = coords[2 * i0 + 1];
     for (let i = 0, minDist = Infinity; i < n; i++) {
-      if (i === i0)
-        continue;
+      if (i === i0) continue;
       const d = dist(i0x, i0y, coords[2 * i], coords[2 * i + 1]);
       if (d < minDist && d > 0) {
         i1 = i;
@@ -7645,8 +7262,7 @@ var Delaunator = class {
     let i1y = coords[2 * i1 + 1];
     let minRadius = Infinity;
     for (let i = 0; i < n; i++) {
-      if (i === i0 || i === i1)
-        continue;
+      if (i === i0 || i === i1) continue;
       const r = circumradius(i0x, i0y, i1x, i1y, coords[2 * i], coords[2 * i + 1]);
       if (r < minRadius) {
         i2 = i;
@@ -7711,17 +7327,14 @@ var Delaunator = class {
       const i = this._ids[k2];
       const x4 = coords[2 * i];
       const y4 = coords[2 * i + 1];
-      if (k2 > 0 && Math.abs(x4 - xp) <= EPSILON && Math.abs(y4 - yp) <= EPSILON)
-        continue;
+      if (k2 > 0 && Math.abs(x4 - xp) <= EPSILON && Math.abs(y4 - yp) <= EPSILON) continue;
       xp = x4;
       yp = y4;
-      if (i === i0 || i === i1 || i === i2)
-        continue;
+      if (i === i0 || i === i1 || i === i2) continue;
       let start2 = 0;
       for (let j = 0, key = this._hashKey(x4, y4); j < this._hashSize; j++) {
         start2 = hullHash[(key + j) % this._hashSize];
-        if (start2 !== -1 && start2 !== hullNext[start2])
-          break;
+        if (start2 !== -1 && start2 !== hullNext[start2]) break;
       }
       start2 = hullPrev[start2];
       let e = start2, q;
@@ -7732,8 +7345,7 @@ var Delaunator = class {
           break;
         }
       }
-      if (e === -1)
-        continue;
+      if (e === -1) continue;
       let t = this._addTriangle(e, i, hullNext[e], -1, -1, hullTri[e]);
       hullTri[i] = this._legalize(t + 2);
       hullTri[e] = t;
@@ -7782,8 +7394,7 @@ var Delaunator = class {
       const a0 = a4 - a4 % 3;
       ar = a0 + (a4 + 2) % 3;
       if (b === -1) {
-        if (i === 0)
-          break;
+        if (i === 0) break;
         a4 = EDGE_STACK[--i];
         continue;
       }
@@ -7826,8 +7437,7 @@ var Delaunator = class {
           EDGE_STACK[i++] = br;
         }
       } else {
-        if (i === 0)
-          break;
+        if (i === 0) break;
         a4 = EDGE_STACK[--i];
       }
     }
@@ -7835,8 +7445,7 @@ var Delaunator = class {
   }
   _link(a4, b) {
     this._halfedges[a4] = b;
-    if (b !== -1)
-      this._halfedges[b] = a4;
+    if (b !== -1) this._halfedges[b] = a4;
   }
   // add a new triangle given vertex indices and adjacent half-edge ids
   _addTriangle(i0, i1, i2, a4, b, c6) {
@@ -7902,8 +7511,7 @@ function quicksort(ids, dists, left2, right2) {
       const temp = ids[i];
       const tempDist = dists[temp];
       let j = i - 1;
-      while (j >= left2 && dists[ids[j]] > tempDist)
-        ids[j + 1] = ids[j--];
+      while (j >= left2 && dists[ids[j]] > tempDist) ids[j + 1] = ids[j--];
       ids[j + 1] = temp;
     }
   } else {
@@ -7911,12 +7519,9 @@ function quicksort(ids, dists, left2, right2) {
     let i = left2 + 1;
     let j = right2;
     swap2(ids, median2, i);
-    if (dists[ids[left2]] > dists[ids[right2]])
-      swap2(ids, left2, right2);
-    if (dists[ids[i]] > dists[ids[right2]])
-      swap2(ids, i, right2);
-    if (dists[ids[left2]] > dists[ids[i]])
-      swap2(ids, left2, i);
+    if (dists[ids[left2]] > dists[ids[right2]]) swap2(ids, left2, right2);
+    if (dists[ids[i]] > dists[ids[right2]]) swap2(ids, i, right2);
+    if (dists[ids[left2]] > dists[ids[i]]) swap2(ids, left2, i);
     const temp = ids[i];
     const tempDist = dists[temp];
     while (true) {
@@ -7926,8 +7531,7 @@ function quicksort(ids, dists, left2, right2) {
       do
         j--;
       while (dists[ids[j]] > tempDist);
-      if (j < i)
-        break;
+      if (j < i) break;
       swap2(ids, i, j);
     }
     ids[left2 + 1] = ids[j];
@@ -7977,14 +7581,10 @@ var Path2 = class {
     x4 = +x4, y4 = +y4, r = +r;
     const x06 = x4 + r;
     const y06 = y4;
-    if (r < 0)
-      throw new Error("negative radius");
-    if (this._x1 === null)
-      this._ += `M${x06},${y06}`;
-    else if (Math.abs(this._x1 - x06) > epsilon6 || Math.abs(this._y1 - y06) > epsilon6)
-      this._ += "L" + x06 + "," + y06;
-    if (!r)
-      return;
+    if (r < 0) throw new Error("negative radius");
+    if (this._x1 === null) this._ += `M${x06},${y06}`;
+    else if (Math.abs(this._x1 - x06) > epsilon6 || Math.abs(this._y1 - y06) > epsilon6) this._ += "L" + x06 + "," + y06;
+    if (!r) return;
     this._ += `A${r},${r},0,1,1,${x4 - r},${y4}A${r},${r},0,1,1,${this._x1 = x06},${this._y1 = y06}`;
   }
   rect(x4, y4, w, h) {
@@ -8017,8 +7617,7 @@ var Polygon = class {
 // node_modules/d3-delaunay/src/voronoi.js
 var Voronoi = class {
   constructor(delaunay, [xmin, ymin, xmax, ymax] = [0, 0, 960, 500]) {
-    if (!((xmax = +xmax) >= (xmin = +xmin)) || !((ymax = +ymax) >= (ymin = +ymin)))
-      throw new Error("invalid bounds");
+    if (!((xmax = +xmax) >= (xmin = +xmin)) || !((ymax = +ymax) >= (ymin = +ymin))) throw new Error("invalid bounds");
     this.delaunay = delaunay;
     this._circumcenters = new Float64Array(delaunay.points.length * 2);
     this.vectors = new Float64Array(delaunay.points.length * 2);
@@ -8053,8 +7652,7 @@ var Voronoi = class {
       if (Math.abs(ab4) < 1e-9) {
         if (bx === void 0) {
           bx = by = 0;
-          for (const i2 of hull2)
-            bx += points[i2 * 2], by += points[i2 * 2 + 1];
+          for (const i2 of hull2) bx += points[i2 * 2], by += points[i2 * 2 + 1];
           bx /= hull2.length, by /= hull2.length;
         }
         const a4 = 1e9 * Math.sign((bx - x13) * ey - (by - y13) * ex);
@@ -8086,12 +7684,10 @@ var Voronoi = class {
   render(context) {
     const buffer = context == null ? context = new Path2() : void 0;
     const { delaunay: { halfedges, inedges, hull: hull2 }, circumcenters, vectors } = this;
-    if (hull2.length <= 1)
-      return null;
+    if (hull2.length <= 1) return null;
     for (let i = 0, n = halfedges.length; i < n; ++i) {
       const j = halfedges[i];
-      if (j < i)
-        continue;
+      if (j < i) continue;
       const ti = Math.floor(i / 3) * 2;
       const tj = Math.floor(j / 3) * 2;
       const xi = circumcenters[ti];
@@ -8108,8 +7704,7 @@ var Voronoi = class {
       const y4 = circumcenters[t + 1];
       const v2 = h0 * 4;
       const p = this._project(x4, y4, vectors[v2 + 2], vectors[v2 + 3]);
-      if (p)
-        this._renderSegment(x4, y4, p[0], p[1], context);
+      if (p) this._renderSegment(x4, y4, p[0], p[1], context);
     }
     return buffer && buffer.value();
   }
@@ -8121,12 +7716,10 @@ var Voronoi = class {
   renderCell(i, context) {
     const buffer = context == null ? context = new Path2() : void 0;
     const points = this._clip(i);
-    if (points === null || !points.length)
-      return;
+    if (points === null || !points.length) return;
     context.moveTo(points[0], points[1]);
     let n = points.length;
-    while (points[0] === points[n - 2] && points[1] === points[n - 1] && n > 1)
-      n -= 2;
+    while (points[0] === points[n - 2] && points[1] === points[n - 1] && n > 1) n -= 2;
     for (let i2 = 2; i2 < n; i2 += 2) {
       if (points[i2] !== points[i2 - 2] || points[i2 + 1] !== points[i2 - 1])
         context.lineTo(points[i2], points[i2 + 1]);
@@ -8138,8 +7731,7 @@ var Voronoi = class {
     const { delaunay: { points } } = this;
     for (let i = 0, n = points.length / 2; i < n; ++i) {
       const cell2 = this.cellPolygon(i);
-      if (cell2)
-        cell2.index = i, yield cell2;
+      if (cell2) cell2.index = i, yield cell2;
     }
   }
   cellPolygon(i) {
@@ -8160,40 +7752,34 @@ var Voronoi = class {
     }
   }
   contains(i, x4, y4) {
-    if ((x4 = +x4, x4 !== x4) || (y4 = +y4, y4 !== y4))
-      return false;
+    if ((x4 = +x4, x4 !== x4) || (y4 = +y4, y4 !== y4)) return false;
     return this.delaunay._step(i, x4, y4) === i;
   }
   *neighbors(i) {
     const ci = this._clip(i);
-    if (ci)
-      for (const j of this.delaunay.neighbors(i)) {
-        const cj = this._clip(j);
-        if (cj)
-          loop:
-            for (let ai = 0, li = ci.length; ai < li; ai += 2) {
-              for (let aj = 0, lj = cj.length; aj < lj; aj += 2) {
-                if (ci[ai] === cj[aj] && ci[ai + 1] === cj[aj + 1] && ci[(ai + 2) % li] === cj[(aj + lj - 2) % lj] && ci[(ai + 3) % li] === cj[(aj + lj - 1) % lj]) {
-                  yield j;
-                  break loop;
-                }
-              }
-            }
+    if (ci) for (const j of this.delaunay.neighbors(i)) {
+      const cj = this._clip(j);
+      if (cj) loop: for (let ai = 0, li = ci.length; ai < li; ai += 2) {
+        for (let aj = 0, lj = cj.length; aj < lj; aj += 2) {
+          if (ci[ai] === cj[aj] && ci[ai + 1] === cj[aj + 1] && ci[(ai + 2) % li] === cj[(aj + lj - 2) % lj] && ci[(ai + 3) % li] === cj[(aj + lj - 1) % lj]) {
+            yield j;
+            break loop;
+          }
+        }
       }
+    }
   }
   _cell(i) {
     const { circumcenters, delaunay: { inedges, halfedges, triangles } } = this;
     const e0 = inedges[i];
-    if (e0 === -1)
-      return null;
+    if (e0 === -1) return null;
     const points = [];
     let e = e0;
     do {
       const t = Math.floor(e / 3);
       points.push(circumcenters[t * 2], circumcenters[t * 2 + 1]);
       e = e % 3 === 2 ? e - 2 : e + 1;
-      if (triangles[e] !== i)
-        break;
+      if (triangles[e] !== i) break;
       e = halfedges[e];
     } while (e !== e0 && e !== -1);
     return points;
@@ -8203,8 +7789,7 @@ var Voronoi = class {
       return [this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax, this.xmin, this.ymin];
     }
     const points = this._cell(i);
-    if (points === null)
-      return null;
+    if (points === null) return null;
     const { vectors: V } = this;
     const v2 = i * 4;
     return this._simplify(V[v2] || V[v2 + 1] ? this._clipInfinite(i, points, V[v2], V[v2 + 1], V[v2 + 2], V[v2 + 3]) : this._clipFinite(i, points));
@@ -8220,41 +7805,30 @@ var Voronoi = class {
       c0 = c1, c1 = this._regioncode(x12, y12);
       if (c0 === 0 && c1 === 0) {
         e0 = e1, e1 = 0;
-        if (P)
-          P.push(x12, y12);
-        else
-          P = [x12, y12];
+        if (P) P.push(x12, y12);
+        else P = [x12, y12];
       } else {
         let S, sx0, sy0, sx1, sy1;
         if (c0 === 0) {
-          if ((S = this._clipSegment(x06, y06, x12, y12, c0, c1)) === null)
-            continue;
+          if ((S = this._clipSegment(x06, y06, x12, y12, c0, c1)) === null) continue;
           [sx0, sy0, sx1, sy1] = S;
         } else {
-          if ((S = this._clipSegment(x12, y12, x06, y06, c1, c0)) === null)
-            continue;
+          if ((S = this._clipSegment(x12, y12, x06, y06, c1, c0)) === null) continue;
           [sx1, sy1, sx0, sy0] = S;
           e0 = e1, e1 = this._edgecode(sx0, sy0);
-          if (e0 && e1)
-            this._edge(i, e0, e1, P, P.length);
-          if (P)
-            P.push(sx0, sy0);
-          else
-            P = [sx0, sy0];
+          if (e0 && e1) this._edge(i, e0, e1, P, P.length);
+          if (P) P.push(sx0, sy0);
+          else P = [sx0, sy0];
         }
         e0 = e1, e1 = this._edgecode(sx1, sy1);
-        if (e0 && e1)
-          this._edge(i, e0, e1, P, P.length);
-        if (P)
-          P.push(sx1, sy1);
-        else
-          P = [sx1, sy1];
+        if (e0 && e1) this._edge(i, e0, e1, P, P.length);
+        if (P) P.push(sx1, sy1);
+        else P = [sx1, sy1];
       }
     }
     if (P) {
       e0 = e1, e1 = this._edgecode(P[0], P[1]);
-      if (e0 && e1)
-        this._edge(i, e0, e1, P, P.length);
+      if (e0 && e1) this._edge(i, e0, e1, P, P.length);
     } else if (this.contains(i, (this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2)) {
       return [this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax, this.xmin, this.ymin];
     }
@@ -8262,39 +7836,27 @@ var Voronoi = class {
   }
   _clipSegment(x06, y06, x12, y12, c0, c1) {
     const flip2 = c0 < c1;
-    if (flip2)
-      [x06, y06, x12, y12, c0, c1] = [x12, y12, x06, y06, c1, c0];
+    if (flip2) [x06, y06, x12, y12, c0, c1] = [x12, y12, x06, y06, c1, c0];
     while (true) {
-      if (c0 === 0 && c1 === 0)
-        return flip2 ? [x12, y12, x06, y06] : [x06, y06, x12, y12];
-      if (c0 & c1)
-        return null;
+      if (c0 === 0 && c1 === 0) return flip2 ? [x12, y12, x06, y06] : [x06, y06, x12, y12];
+      if (c0 & c1) return null;
       let x4, y4, c6 = c0 || c1;
-      if (c6 & 8)
-        x4 = x06 + (x12 - x06) * (this.ymax - y06) / (y12 - y06), y4 = this.ymax;
-      else if (c6 & 4)
-        x4 = x06 + (x12 - x06) * (this.ymin - y06) / (y12 - y06), y4 = this.ymin;
-      else if (c6 & 2)
-        y4 = y06 + (y12 - y06) * (this.xmax - x06) / (x12 - x06), x4 = this.xmax;
-      else
-        y4 = y06 + (y12 - y06) * (this.xmin - x06) / (x12 - x06), x4 = this.xmin;
-      if (c0)
-        x06 = x4, y06 = y4, c0 = this._regioncode(x06, y06);
-      else
-        x12 = x4, y12 = y4, c1 = this._regioncode(x12, y12);
+      if (c6 & 8) x4 = x06 + (x12 - x06) * (this.ymax - y06) / (y12 - y06), y4 = this.ymax;
+      else if (c6 & 4) x4 = x06 + (x12 - x06) * (this.ymin - y06) / (y12 - y06), y4 = this.ymin;
+      else if (c6 & 2) y4 = y06 + (y12 - y06) * (this.xmax - x06) / (x12 - x06), x4 = this.xmax;
+      else y4 = y06 + (y12 - y06) * (this.xmin - x06) / (x12 - x06), x4 = this.xmin;
+      if (c0) x06 = x4, y06 = y4, c0 = this._regioncode(x06, y06);
+      else x12 = x4, y12 = y4, c1 = this._regioncode(x12, y12);
     }
   }
   _clipInfinite(i, points, vx0, vy0, vxn, vyn) {
     let P = Array.from(points), p;
-    if (p = this._project(P[0], P[1], vx0, vy0))
-      P.unshift(p[0], p[1]);
-    if (p = this._project(P[P.length - 2], P[P.length - 1], vxn, vyn))
-      P.push(p[0], p[1]);
+    if (p = this._project(P[0], P[1], vx0, vy0)) P.unshift(p[0], p[1]);
+    if (p = this._project(P[P.length - 2], P[P.length - 1], vxn, vyn)) P.push(p[0], p[1]);
     if (P = this._clipFinite(i, P)) {
       for (let j = 0, n = P.length, c0, c1 = this._edgecode(P[n - 2], P[n - 1]); j < n; j += 2) {
         c0 = c1, c1 = this._edgecode(P[j], P[j + 1]);
-        if (c0 && c1)
-          j = this._edge(i, c0, c1, P, j), n = P.length;
+        if (c0 && c1) j = this._edge(i, c0, c1, P, j), n = P.length;
       }
     } else if (this.contains(i, (this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2)) {
       P = [this.xmin, this.ymin, this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax];
@@ -8308,24 +7870,31 @@ var Voronoi = class {
         case 5:
           e0 = 4;
           continue;
+        // top-left
         case 4:
           e0 = 6, x4 = this.xmax, y4 = this.ymin;
           break;
+        // top
         case 6:
           e0 = 2;
           continue;
+        // top-right
         case 2:
           e0 = 10, x4 = this.xmax, y4 = this.ymax;
           break;
+        // right
         case 10:
           e0 = 8;
           continue;
+        // bottom-right
         case 8:
           e0 = 9, x4 = this.xmin, y4 = this.ymax;
           break;
+        // bottom
         case 9:
           e0 = 1;
           continue;
+        // bottom-left
         case 1:
           e0 = 5, x4 = this.xmin, y4 = this.ymin;
           break;
@@ -8339,26 +7908,18 @@ var Voronoi = class {
   _project(x06, y06, vx, vy) {
     let t = Infinity, c6, x4, y4;
     if (vy < 0) {
-      if (y06 <= this.ymin)
-        return null;
-      if ((c6 = (this.ymin - y06) / vy) < t)
-        y4 = this.ymin, x4 = x06 + (t = c6) * vx;
+      if (y06 <= this.ymin) return null;
+      if ((c6 = (this.ymin - y06) / vy) < t) y4 = this.ymin, x4 = x06 + (t = c6) * vx;
     } else if (vy > 0) {
-      if (y06 >= this.ymax)
-        return null;
-      if ((c6 = (this.ymax - y06) / vy) < t)
-        y4 = this.ymax, x4 = x06 + (t = c6) * vx;
+      if (y06 >= this.ymax) return null;
+      if ((c6 = (this.ymax - y06) / vy) < t) y4 = this.ymax, x4 = x06 + (t = c6) * vx;
     }
     if (vx > 0) {
-      if (x06 >= this.xmax)
-        return null;
-      if ((c6 = (this.xmax - x06) / vx) < t)
-        x4 = this.xmax, y4 = y06 + (t = c6) * vy;
+      if (x06 >= this.xmax) return null;
+      if ((c6 = (this.xmax - x06) / vx) < t) x4 = this.xmax, y4 = y06 + (t = c6) * vy;
     } else if (vx < 0) {
-      if (x06 <= this.xmin)
-        return null;
-      if ((c6 = (this.xmin - x06) / vx) < t)
-        x4 = this.xmin, y4 = y06 + (t = c6) * vy;
+      if (x06 <= this.xmin) return null;
+      if ((c6 = (this.xmin - x06) / vx) < t) x4 = this.xmin, y4 = y06 + (t = c6) * vy;
     }
     return [x4, y4];
   }
@@ -8376,8 +7937,7 @@ var Voronoi = class {
           P.splice(j, 2), i -= 2;
         }
       }
-      if (!P.length)
-        P = null;
+      if (!P.length) P = null;
     }
     return P;
   }
@@ -8396,17 +7956,16 @@ function collinear2(d) {
   const { triangles, coords } = d;
   for (let i = 0; i < triangles.length; i += 3) {
     const a4 = 2 * triangles[i], b = 2 * triangles[i + 1], c6 = 2 * triangles[i + 2], cross3 = (coords[c6] - coords[a4]) * (coords[b + 1] - coords[a4 + 1]) - (coords[b] - coords[a4]) * (coords[c6 + 1] - coords[a4 + 1]);
-    if (cross3 > 1e-10)
-      return false;
+    if (cross3 > 1e-10) return false;
   }
   return true;
 }
 function jitter(x4, y4, r) {
   return [x4 + Math.sin(x4 + y4) * r, y4 + Math.cos(x4 - y4) * r];
 }
-var Delaunay = class {
+var Delaunay = class _Delaunay {
   static from(points, fx = pointX, fy = pointY, that) {
-    return new Delaunay("length" in points ? flatArray(points, fx, fy, that) : Float64Array.from(flatIterable(points, fx, fy, that)));
+    return new _Delaunay("length" in points ? flatArray(points, fx, fy, that) : Float64Array.from(flatIterable(points, fx, fy, that)));
   }
   constructor(points) {
     this._delaunator = new Delaunator(points);
@@ -8441,8 +8000,7 @@ var Delaunay = class {
     const hullIndex = this._hullIndex.fill(-1);
     for (let e = 0, n = halfedges.length; e < n; ++e) {
       const p = triangles[e % 3 === 2 ? e - 2 : e + 1];
-      if (halfedges[e] === -1 || inedges[p] === -1)
-        inedges[p] = e;
+      if (halfedges[e] === -1 || inedges[p] === -1) inedges[p] = e;
     }
     for (let i = 0, n = hull2.length; i < n; ++i) {
       hullIndex[hull2[i]] = i;
@@ -8466,43 +8024,35 @@ var Delaunay = class {
     const { inedges, hull: hull2, _hullIndex, halfedges, triangles, collinear: collinear3 } = this;
     if (collinear3) {
       const l = collinear3.indexOf(i);
-      if (l > 0)
-        yield collinear3[l - 1];
-      if (l < collinear3.length - 1)
-        yield collinear3[l + 1];
+      if (l > 0) yield collinear3[l - 1];
+      if (l < collinear3.length - 1) yield collinear3[l + 1];
       return;
     }
     const e0 = inedges[i];
-    if (e0 === -1)
-      return;
+    if (e0 === -1) return;
     let e = e0, p02 = -1;
     do {
       yield p02 = triangles[e];
       e = e % 3 === 2 ? e - 2 : e + 1;
-      if (triangles[e] !== i)
-        return;
+      if (triangles[e] !== i) return;
       e = halfedges[e];
       if (e === -1) {
         const p = hull2[(_hullIndex[i] + 1) % hull2.length];
-        if (p !== p02)
-          yield p;
+        if (p !== p02) yield p;
         return;
       }
     } while (e !== e0);
   }
   find(x4, y4, i = 0) {
-    if ((x4 = +x4, x4 !== x4) || (y4 = +y4, y4 !== y4))
-      return -1;
+    if ((x4 = +x4, x4 !== x4) || (y4 = +y4, y4 !== y4)) return -1;
     const i0 = i;
     let c6;
-    while ((c6 = this._step(i, x4, y4)) >= 0 && c6 !== i && c6 !== i0)
-      i = c6;
+    while ((c6 = this._step(i, x4, y4)) >= 0 && c6 !== i && c6 !== i0) i = c6;
     return c6;
   }
   _step(i, x4, y4) {
     const { inedges, hull: hull2, _hullIndex, halfedges, triangles, points } = this;
-    if (inedges[i] === -1 || !points.length)
-      return (i + 1) % (points.length >> 1);
+    if (inedges[i] === -1 || !points.length) return (i + 1) % (points.length >> 1);
     let c6 = i;
     let dc = pow(x4 - points[i * 2], 2) + pow(y4 - points[i * 2 + 1], 2);
     const e0 = inedges[i];
@@ -8510,17 +8060,14 @@ var Delaunay = class {
     do {
       let t = triangles[e];
       const dt = pow(x4 - points[t * 2], 2) + pow(y4 - points[t * 2 + 1], 2);
-      if (dt < dc)
-        dc = dt, c6 = t;
+      if (dt < dc) dc = dt, c6 = t;
       e = e % 3 === 2 ? e - 2 : e + 1;
-      if (triangles[e] !== i)
-        break;
+      if (triangles[e] !== i) break;
       e = halfedges[e];
       if (e === -1) {
         e = hull2[(_hullIndex[i] + 1) % hull2.length];
         if (e !== t) {
-          if (pow(x4 - points[e * 2], 2) + pow(y4 - points[e * 2 + 1], 2) < dc)
-            return e;
+          if (pow(x4 - points[e * 2], 2) + pow(y4 - points[e * 2 + 1], 2) < dc) return e;
         }
         break;
       }
@@ -8532,8 +8079,7 @@ var Delaunay = class {
     const { points, halfedges, triangles } = this;
     for (let i = 0, n = halfedges.length; i < n; ++i) {
       const j = halfedges[i];
-      if (j < i)
-        continue;
+      if (j < i) continue;
       const ti = triangles[i] * 2;
       const tj = triangles[j] * 2;
       context.moveTo(points[ti], points[ti + 1]);
@@ -8543,8 +8089,7 @@ var Delaunay = class {
     return buffer && buffer.value();
   }
   renderPoints(context, r) {
-    if (r === void 0 && (!context || typeof context.moveTo !== "function"))
-      r = context, context = null;
+    if (r === void 0 && (!context || typeof context.moveTo !== "function")) r = context, context = null;
     r = r == void 0 ? 2 : +r;
     const buffer = context == null ? context = new Path2() : void 0;
     const { points } = this;
@@ -8658,8 +8203,7 @@ function dsv_default(delimiter) {
   var reFormat = new RegExp('["' + delimiter + "\n\r]"), DELIMITER = delimiter.charCodeAt(0);
   function parse2(text2, f) {
     var convert, columns, rows = parseRows(text2, function(row, i) {
-      if (convert)
-        return convert(row, i - 1);
+      if (convert) return convert(row, i - 1);
       columns = row, convert = f ? customConverter(row, f) : objectConverter(row);
     });
     rows.columns = columns || [];
@@ -8667,49 +8211,36 @@ function dsv_default(delimiter) {
   }
   function parseRows(text2, f) {
     var rows = [], N = text2.length, I = 0, n = 0, t, eof = N <= 0, eol = false;
-    if (text2.charCodeAt(N - 1) === NEWLINE)
-      --N;
-    if (text2.charCodeAt(N - 1) === RETURN)
-      --N;
+    if (text2.charCodeAt(N - 1) === NEWLINE) --N;
+    if (text2.charCodeAt(N - 1) === RETURN) --N;
     function token() {
-      if (eof)
-        return EOF;
-      if (eol)
-        return eol = false, EOL;
+      if (eof) return EOF;
+      if (eol) return eol = false, EOL;
       var i, j = I, c6;
       if (text2.charCodeAt(j) === QUOTE) {
-        while (I++ < N && text2.charCodeAt(I) !== QUOTE || text2.charCodeAt(++I) === QUOTE)
-          ;
-        if ((i = I) >= N)
-          eof = true;
-        else if ((c6 = text2.charCodeAt(I++)) === NEWLINE)
-          eol = true;
+        while (I++ < N && text2.charCodeAt(I) !== QUOTE || text2.charCodeAt(++I) === QUOTE) ;
+        if ((i = I) >= N) eof = true;
+        else if ((c6 = text2.charCodeAt(I++)) === NEWLINE) eol = true;
         else if (c6 === RETURN) {
           eol = true;
-          if (text2.charCodeAt(I) === NEWLINE)
-            ++I;
+          if (text2.charCodeAt(I) === NEWLINE) ++I;
         }
         return text2.slice(j + 1, i - 1).replace(/""/g, '"');
       }
       while (I < N) {
-        if ((c6 = text2.charCodeAt(i = I++)) === NEWLINE)
-          eol = true;
+        if ((c6 = text2.charCodeAt(i = I++)) === NEWLINE) eol = true;
         else if (c6 === RETURN) {
           eol = true;
-          if (text2.charCodeAt(I) === NEWLINE)
-            ++I;
-        } else if (c6 !== DELIMITER)
-          continue;
+          if (text2.charCodeAt(I) === NEWLINE) ++I;
+        } else if (c6 !== DELIMITER) continue;
         return text2.slice(j, i);
       }
       return eof = true, text2.slice(j, N);
     }
     while ((t = token()) !== EOF) {
       var row = [];
-      while (t !== EOL && t !== EOF)
-        row.push(t), t = token();
-      if (f && (row = f(row, n++)) == null)
-        continue;
+      while (t !== EOL && t !== EOF) row.push(t), t = token();
+      if (f && (row = f(row, n++)) == null) continue;
       rows.push(row);
     }
     return rows;
@@ -8722,13 +8253,11 @@ function dsv_default(delimiter) {
     });
   }
   function format3(rows, columns) {
-    if (columns == null)
-      columns = inferColumns(rows);
+    if (columns == null) columns = inferColumns(rows);
     return [columns.map(formatValue).join(delimiter)].concat(preformatBody(rows, columns)).join("\n");
   }
   function formatBody(rows, columns) {
-    if (columns == null)
-      columns = inferColumns(rows);
+    if (columns == null) columns = inferColumns(rows);
     return preformatBody(rows, columns).join("\n");
   }
   function formatRows(rows) {
@@ -8775,22 +8304,15 @@ var tsvFormatValue = tsv.formatValue;
 function autoType(object2) {
   for (var key in object2) {
     var value = object2[key].trim(), number7, m3;
-    if (!value)
-      value = null;
-    else if (value === "true")
-      value = true;
-    else if (value === "false")
-      value = false;
-    else if (value === "NaN")
-      value = NaN;
-    else if (!isNaN(number7 = +value))
-      value = number7;
+    if (!value) value = null;
+    else if (value === "true") value = true;
+    else if (value === "false") value = false;
+    else if (value === "NaN") value = NaN;
+    else if (!isNaN(number7 = +value)) value = number7;
     else if (m3 = value.match(/^([-+]\d{2})?\d{4}(-\d{2}(-\d{2})?)?(T\d{2}:\d{2}(:\d{2}(\.\d{3})?)?(Z|[-+]\d{2}:\d{2})?)?$/)) {
-      if (fixtz && !!m3[4] && !m3[7])
-        value = value.replace(/-/g, "/").replace(/T/, " ");
+      if (fixtz && !!m3[4] && !m3[7]) value = value.replace(/-/g, "/").replace(/T/, " ");
       value = new Date(value);
-    } else
-      continue;
+    } else continue;
     object2[key] = value;
   }
   return object2;
@@ -8799,8 +8321,7 @@ var fixtz = (/* @__PURE__ */ new Date("2019-01-01T00:00")).getHours() || (/* @__
 
 // node_modules/d3-fetch/src/blob.js
 function responseBlob(response) {
-  if (!response.ok)
-    throw new Error(response.status + " " + response.statusText);
+  if (!response.ok) throw new Error(response.status + " " + response.statusText);
   return response.blob();
 }
 function blob_default(input, init2) {
@@ -8809,8 +8330,7 @@ function blob_default(input, init2) {
 
 // node_modules/d3-fetch/src/buffer.js
 function responseArrayBuffer(response) {
-  if (!response.ok)
-    throw new Error(response.status + " " + response.statusText);
+  if (!response.ok) throw new Error(response.status + " " + response.statusText);
   return response.arrayBuffer();
 }
 function buffer_default(input, init2) {
@@ -8819,8 +8339,7 @@ function buffer_default(input, init2) {
 
 // node_modules/d3-fetch/src/text.js
 function responseText(response) {
-  if (!response.ok)
-    throw new Error(response.status + " " + response.statusText);
+  if (!response.ok) throw new Error(response.status + " " + response.statusText);
   return response.text();
 }
 function text_default3(input, init2) {
@@ -8830,16 +8349,14 @@ function text_default3(input, init2) {
 // node_modules/d3-fetch/src/dsv.js
 function dsvParse(parse2) {
   return function(input, init2, row) {
-    if (arguments.length === 2 && typeof init2 === "function")
-      row = init2, init2 = void 0;
+    if (arguments.length === 2 && typeof init2 === "function") row = init2, init2 = void 0;
     return text_default3(input, init2).then(function(response) {
       return parse2(response, row);
     });
   };
 }
 function dsv(delimiter, input, init2, row) {
-  if (arguments.length === 3 && typeof init2 === "function")
-    row = init2, init2 = void 0;
+  if (arguments.length === 3 && typeof init2 === "function") row = init2, init2 = void 0;
   var format3 = dsv_default(delimiter);
   return text_default3(input, init2).then(function(response) {
     return format3.parse(response, row);
@@ -8852,8 +8369,7 @@ var tsv2 = dsvParse(tsvParse);
 function image_default(input, init2) {
   return new Promise(function(resolve, reject) {
     var image2 = new Image();
-    for (var key in init2)
-      image2[key] = init2[key];
+    for (var key in init2) image2[key] = init2[key];
     image2.onerror = reject;
     image2.onload = function() {
       resolve(image2);
@@ -8864,10 +8380,8 @@ function image_default(input, init2) {
 
 // node_modules/d3-fetch/src/json.js
 function responseJson(response) {
-  if (!response.ok)
-    throw new Error(response.status + " " + response.statusText);
-  if (response.status === 204 || response.status === 205)
-    return;
+  if (!response.ok) throw new Error(response.status + " " + response.statusText);
+  if (response.status === 204 || response.status === 205) return;
   return response.json();
 }
 function json_default(input, init2) {
@@ -8885,10 +8399,8 @@ var svg = parser("image/svg+xml");
 // node_modules/d3-force/src/center.js
 function center_default(x4, y4) {
   var nodes, strength = 1;
-  if (x4 == null)
-    x4 = 0;
-  if (y4 == null)
-    y4 = 0;
+  if (x4 == null) x4 = 0;
+  if (y4 == null) y4 = 0;
   function force() {
     var i, n = nodes.length, node, sx = 0, sy = 0;
     for (i = 0; i < n; ++i) {
@@ -8919,58 +8431,40 @@ function add_default(d) {
   return add(this.cover(x4, y4), x4, y4, d);
 }
 function add(tree2, x4, y4, d) {
-  if (isNaN(x4) || isNaN(y4))
-    return tree2;
+  if (isNaN(x4) || isNaN(y4)) return tree2;
   var parent, node = tree2._root, leaf = { data: d }, x06 = tree2._x0, y06 = tree2._y0, x12 = tree2._x1, y12 = tree2._y1, xm, ym, xp, yp, right2, bottom2, i, j;
-  if (!node)
-    return tree2._root = leaf, tree2;
+  if (!node) return tree2._root = leaf, tree2;
   while (node.length) {
-    if (right2 = x4 >= (xm = (x06 + x12) / 2))
-      x06 = xm;
-    else
-      x12 = xm;
-    if (bottom2 = y4 >= (ym = (y06 + y12) / 2))
-      y06 = ym;
-    else
-      y12 = ym;
-    if (parent = node, !(node = node[i = bottom2 << 1 | right2]))
-      return parent[i] = leaf, tree2;
+    if (right2 = x4 >= (xm = (x06 + x12) / 2)) x06 = xm;
+    else x12 = xm;
+    if (bottom2 = y4 >= (ym = (y06 + y12) / 2)) y06 = ym;
+    else y12 = ym;
+    if (parent = node, !(node = node[i = bottom2 << 1 | right2])) return parent[i] = leaf, tree2;
   }
   xp = +tree2._x.call(null, node.data);
   yp = +tree2._y.call(null, node.data);
-  if (x4 === xp && y4 === yp)
-    return leaf.next = node, parent ? parent[i] = leaf : tree2._root = leaf, tree2;
+  if (x4 === xp && y4 === yp) return leaf.next = node, parent ? parent[i] = leaf : tree2._root = leaf, tree2;
   do {
     parent = parent ? parent[i] = new Array(4) : tree2._root = new Array(4);
-    if (right2 = x4 >= (xm = (x06 + x12) / 2))
-      x06 = xm;
-    else
-      x12 = xm;
-    if (bottom2 = y4 >= (ym = (y06 + y12) / 2))
-      y06 = ym;
-    else
-      y12 = ym;
+    if (right2 = x4 >= (xm = (x06 + x12) / 2)) x06 = xm;
+    else x12 = xm;
+    if (bottom2 = y4 >= (ym = (y06 + y12) / 2)) y06 = ym;
+    else y12 = ym;
   } while ((i = bottom2 << 1 | right2) === (j = (yp >= ym) << 1 | xp >= xm));
   return parent[j] = node, parent[i] = leaf, tree2;
 }
 function addAll(data) {
   var d, i, n = data.length, x4, y4, xz = new Array(n), yz = new Array(n), x06 = Infinity, y06 = Infinity, x12 = -Infinity, y12 = -Infinity;
   for (i = 0; i < n; ++i) {
-    if (isNaN(x4 = +this._x.call(null, d = data[i])) || isNaN(y4 = +this._y.call(null, d)))
-      continue;
+    if (isNaN(x4 = +this._x.call(null, d = data[i])) || isNaN(y4 = +this._y.call(null, d))) continue;
     xz[i] = x4;
     yz[i] = y4;
-    if (x4 < x06)
-      x06 = x4;
-    if (x4 > x12)
-      x12 = x4;
-    if (y4 < y06)
-      y06 = y4;
-    if (y4 > y12)
-      y12 = y4;
+    if (x4 < x06) x06 = x4;
+    if (x4 > x12) x12 = x4;
+    if (y4 < y06) y06 = y4;
+    if (y4 > y12) y12 = y4;
   }
-  if (x06 > x12 || y06 > y12)
-    return this;
+  if (x06 > x12 || y06 > y12) return this;
   this.cover(x06, y06).cover(x12, y12);
   for (i = 0; i < n; ++i) {
     add(this, xz[i], yz[i], data[i]);
@@ -8980,8 +8474,7 @@ function addAll(data) {
 
 // node_modules/d3-quadtree/src/cover.js
 function cover_default(x4, y4) {
-  if (isNaN(x4 = +x4) || isNaN(y4 = +y4))
-    return this;
+  if (isNaN(x4 = +x4) || isNaN(y4 = +y4)) return this;
   var x06 = this._x0, y06 = this._y0, x12 = this._x1, y12 = this._y1;
   if (isNaN(x06)) {
     x12 = (x06 = Math.floor(x4)) + 1;
@@ -9006,8 +8499,7 @@ function cover_default(x4, y4) {
           break;
       }
     }
-    if (this._root && this._root.length)
-      this._root = node;
+    if (this._root && this._root.length) this._root = node;
   }
   this._x0 = x06;
   this._y0 = y06;
@@ -9020,10 +8512,9 @@ function cover_default(x4, y4) {
 function data_default2() {
   var data = [];
   this.visit(function(node) {
-    if (!node.length)
-      do
-        data.push(node.data);
-      while (node = node.next);
+    if (!node.length) do
+      data.push(node.data);
+    while (node = node.next);
   });
   return data;
 }
@@ -9045,18 +8536,15 @@ function quad_default(node, x06, y06, x12, y12) {
 // node_modules/d3-quadtree/src/find.js
 function find_default(x4, y4, radius2) {
   var data, x06 = this._x0, y06 = this._y0, x12, y12, x22, y22, x32 = this._x1, y32 = this._y1, quads = [], node = this._root, q, i;
-  if (node)
-    quads.push(new quad_default(node, x06, y06, x32, y32));
-  if (radius2 == null)
-    radius2 = Infinity;
+  if (node) quads.push(new quad_default(node, x06, y06, x32, y32));
+  if (radius2 == null) radius2 = Infinity;
   else {
     x06 = x4 - radius2, y06 = y4 - radius2;
     x32 = x4 + radius2, y32 = y4 + radius2;
     radius2 *= radius2;
   }
   while (q = quads.pop()) {
-    if (!(node = q.node) || (x12 = q.x0) > x32 || (y12 = q.y0) > y32 || (x22 = q.x1) < x06 || (y22 = q.y1) < y06)
-      continue;
+    if (!(node = q.node) || (x12 = q.x0) > x32 || (y12 = q.y0) > y32 || (x22 = q.x1) < x06 || (y22 = q.y1) < y06) continue;
     if (node.length) {
       var xm = (x12 + x22) / 2, ym = (y12 + y22) / 2;
       quads.push(
@@ -9085,49 +8573,31 @@ function find_default(x4, y4, radius2) {
 
 // node_modules/d3-quadtree/src/remove.js
 function remove_default3(d) {
-  if (isNaN(x4 = +this._x.call(null, d)) || isNaN(y4 = +this._y.call(null, d)))
-    return this;
+  if (isNaN(x4 = +this._x.call(null, d)) || isNaN(y4 = +this._y.call(null, d))) return this;
   var parent, node = this._root, retainer, previous, next, x06 = this._x0, y06 = this._y0, x12 = this._x1, y12 = this._y1, x4, y4, xm, ym, right2, bottom2, i, j;
-  if (!node)
-    return this;
-  if (node.length)
-    while (true) {
-      if (right2 = x4 >= (xm = (x06 + x12) / 2))
-        x06 = xm;
-      else
-        x12 = xm;
-      if (bottom2 = y4 >= (ym = (y06 + y12) / 2))
-        y06 = ym;
-      else
-        y12 = ym;
-      if (!(parent = node, node = node[i = bottom2 << 1 | right2]))
-        return this;
-      if (!node.length)
-        break;
-      if (parent[i + 1 & 3] || parent[i + 2 & 3] || parent[i + 3 & 3])
-        retainer = parent, j = i;
-    }
-  while (node.data !== d)
-    if (!(previous = node, node = node.next))
-      return this;
-  if (next = node.next)
-    delete node.next;
-  if (previous)
-    return next ? previous.next = next : delete previous.next, this;
-  if (!parent)
-    return this._root = next, this;
+  if (!node) return this;
+  if (node.length) while (true) {
+    if (right2 = x4 >= (xm = (x06 + x12) / 2)) x06 = xm;
+    else x12 = xm;
+    if (bottom2 = y4 >= (ym = (y06 + y12) / 2)) y06 = ym;
+    else y12 = ym;
+    if (!(parent = node, node = node[i = bottom2 << 1 | right2])) return this;
+    if (!node.length) break;
+    if (parent[i + 1 & 3] || parent[i + 2 & 3] || parent[i + 3 & 3]) retainer = parent, j = i;
+  }
+  while (node.data !== d) if (!(previous = node, node = node.next)) return this;
+  if (next = node.next) delete node.next;
+  if (previous) return next ? previous.next = next : delete previous.next, this;
+  if (!parent) return this._root = next, this;
   next ? parent[i] = next : delete parent[i];
   if ((node = parent[0] || parent[1] || parent[2] || parent[3]) && node === (parent[3] || parent[2] || parent[1] || parent[0]) && !node.length) {
-    if (retainer)
-      retainer[j] = node;
-    else
-      this._root = node;
+    if (retainer) retainer[j] = node;
+    else this._root = node;
   }
   return this;
 }
 function removeAll(data) {
-  for (var i = 0, n = data.length; i < n; ++i)
-    this.remove(data[i]);
+  for (var i = 0, n = data.length; i < n; ++i) this.remove(data[i]);
   return this;
 }
 
@@ -9140,10 +8610,9 @@ function root_default() {
 function size_default2() {
   var size = 0;
   this.visit(function(node) {
-    if (!node.length)
-      do
-        ++size;
-      while (node = node.next);
+    if (!node.length) do
+      ++size;
+    while (node = node.next);
   });
   return size;
 }
@@ -9151,19 +8620,14 @@ function size_default2() {
 // node_modules/d3-quadtree/src/visit.js
 function visit_default(callback) {
   var quads = [], q, node = this._root, child, x06, y06, x12, y12;
-  if (node)
-    quads.push(new quad_default(node, this._x0, this._y0, this._x1, this._y1));
+  if (node) quads.push(new quad_default(node, this._x0, this._y0, this._x1, this._y1));
   while (q = quads.pop()) {
     if (!callback(node = q.node, x06 = q.x0, y06 = q.y0, x12 = q.x1, y12 = q.y1) && node.length) {
       var xm = (x06 + x12) / 2, ym = (y06 + y12) / 2;
-      if (child = node[3])
-        quads.push(new quad_default(child, xm, ym, x12, y12));
-      if (child = node[2])
-        quads.push(new quad_default(child, x06, ym, xm, y12));
-      if (child = node[1])
-        quads.push(new quad_default(child, xm, y06, x12, ym));
-      if (child = node[0])
-        quads.push(new quad_default(child, x06, y06, xm, ym));
+      if (child = node[3]) quads.push(new quad_default(child, xm, ym, x12, y12));
+      if (child = node[2]) quads.push(new quad_default(child, x06, ym, xm, y12));
+      if (child = node[1]) quads.push(new quad_default(child, xm, y06, x12, ym));
+      if (child = node[0]) quads.push(new quad_default(child, x06, y06, xm, ym));
     }
   }
   return this;
@@ -9172,20 +8636,15 @@ function visit_default(callback) {
 // node_modules/d3-quadtree/src/visitAfter.js
 function visitAfter_default(callback) {
   var quads = [], next = [], q;
-  if (this._root)
-    quads.push(new quad_default(this._root, this._x0, this._y0, this._x1, this._y1));
+  if (this._root) quads.push(new quad_default(this._root, this._x0, this._y0, this._x1, this._y1));
   while (q = quads.pop()) {
     var node = q.node;
     if (node.length) {
       var child, x06 = q.x0, y06 = q.y0, x12 = q.x1, y12 = q.y1, xm = (x06 + x12) / 2, ym = (y06 + y12) / 2;
-      if (child = node[0])
-        quads.push(new quad_default(child, x06, y06, xm, ym));
-      if (child = node[1])
-        quads.push(new quad_default(child, xm, y06, x12, ym));
-      if (child = node[2])
-        quads.push(new quad_default(child, x06, ym, xm, y12));
-      if (child = node[3])
-        quads.push(new quad_default(child, xm, ym, x12, y12));
+      if (child = node[0]) quads.push(new quad_default(child, x06, y06, xm, ym));
+      if (child = node[1]) quads.push(new quad_default(child, xm, y06, x12, ym));
+      if (child = node[2]) quads.push(new quad_default(child, x06, ym, xm, y12));
+      if (child = node[3]) quads.push(new quad_default(child, xm, ym, x12, y12));
     }
     next.push(q);
   }
@@ -9227,25 +8686,20 @@ function Quadtree(x4, y4, x06, y06, x12, y12) {
 }
 function leaf_copy(leaf) {
   var copy3 = { data: leaf.data }, next = copy3;
-  while (leaf = leaf.next)
-    next = next.next = { data: leaf.data };
+  while (leaf = leaf.next) next = next.next = { data: leaf.data };
   return copy3;
 }
 var treeProto = quadtree.prototype = Quadtree.prototype;
 treeProto.copy = function() {
   var copy3 = new Quadtree(this._x, this._y, this._x0, this._y0, this._x1, this._y1), node = this._root, nodes, child;
-  if (!node)
-    return copy3;
-  if (!node.length)
-    return copy3._root = leaf_copy(node), copy3;
+  if (!node) return copy3;
+  if (!node.length) return copy3._root = leaf_copy(node), copy3;
   nodes = [{ source: node, target: copy3._root = new Array(4) }];
   while (node = nodes.pop()) {
     for (var i = 0; i < 4; ++i) {
       if (child = node.source[i]) {
-        if (child.length)
-          nodes.push({ source: child, target: node.target[i] = new Array(4) });
-        else
-          node.target[i] = leaf_copy(child);
+        if (child.length) nodes.push({ source: child, target: node.target[i] = new Array(4) });
+        else node.target[i] = leaf_copy(child);
       }
     }
   }
@@ -9287,8 +8741,7 @@ function y(d) {
 }
 function collide_default(radius2) {
   var nodes, radii, random, strength = 1, iterations2 = 1;
-  if (typeof radius2 !== "function")
-    radius2 = constant_default7(radius2 == null ? 1 : +radius2);
+  if (typeof radius2 !== "function") radius2 = constant_default7(radius2 == null ? 1 : +radius2);
   function force() {
     var i, n = nodes.length, tree2, node, xi, yi, ri, ri2;
     for (var k2 = 0; k2 < iterations2; ++k2) {
@@ -9307,10 +8760,8 @@ function collide_default(radius2) {
         if (data.index > node.index) {
           var x4 = xi - data.x - data.vx, y4 = yi - data.y - data.vy, l = x4 * x4 + y4 * y4;
           if (l < r * r) {
-            if (x4 === 0)
-              x4 = jiggle_default(random), l += x4 * x4;
-            if (y4 === 0)
-              y4 = jiggle_default(random), l += y4 * y4;
+            if (x4 === 0) x4 = jiggle_default(random), l += x4 * x4;
+            if (y4 === 0) y4 = jiggle_default(random), l += y4 * y4;
             l = (r - (l = Math.sqrt(l))) / l * strength;
             node.vx += (x4 *= l) * (r = (rj *= rj) / (ri2 + rj));
             node.vy += (y4 *= l) * r;
@@ -9324,8 +8775,7 @@ function collide_default(radius2) {
     }
   }
   function prepare(quad) {
-    if (quad.data)
-      return quad.r = radii[quad.data.index];
+    if (quad.data) return quad.r = radii[quad.data.index];
     for (var i = quad.r = 0; i < 4; ++i) {
       if (quad[i] && quad[i].r > quad.r) {
         quad.r = quad[i].r;
@@ -9333,12 +8783,10 @@ function collide_default(radius2) {
     }
   }
   function initialize() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     var i, n = nodes.length, node;
     radii = new Array(n);
-    for (i = 0; i < n; ++i)
-      node = nodes[i], radii[node.index] = +radius2(node, i, nodes);
+    for (i = 0; i < n; ++i) node = nodes[i], radii[node.index] = +radius2(node, i, nodes);
   }
   force.initialize = function(_nodes, _random) {
     nodes = _nodes;
@@ -9363,14 +8811,12 @@ function index2(d) {
 }
 function find2(nodeById, nodeId) {
   var node = nodeById.get(nodeId);
-  if (!node)
-    throw new Error("node not found: " + nodeId);
+  if (!node) throw new Error("node not found: " + nodeId);
   return node;
 }
 function link_default(links) {
   var id2 = index2, strength = defaultStrength, strengths, distance = constant_default7(30), distances, nodes, count3, bias, random, iterations2 = 1;
-  if (links == null)
-    links = [];
+  if (links == null) links = [];
   function defaultStrength(link4) {
     return 1 / Math.min(count3[link4.source.index], count3[link4.target.index]);
   }
@@ -9391,15 +8837,12 @@ function link_default(links) {
     }
   }
   function initialize() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     var i, n = nodes.length, m3 = links.length, nodeById = new Map(nodes.map((d, i2) => [id2(d, i2, nodes), d])), link4;
     for (i = 0, count3 = new Array(n); i < m3; ++i) {
       link4 = links[i], link4.index = i;
-      if (typeof link4.source !== "object")
-        link4.source = find2(nodeById, link4.source);
-      if (typeof link4.target !== "object")
-        link4.target = find2(nodeById, link4.target);
+      if (typeof link4.source !== "object") link4.source = find2(nodeById, link4.source);
+      if (typeof link4.target !== "object") link4.target = find2(nodeById, link4.target);
       count3[link4.source.index] = (count3[link4.source.index] || 0) + 1;
       count3[link4.target.index] = (count3[link4.target.index] || 0) + 1;
     }
@@ -9410,15 +8853,13 @@ function link_default(links) {
     distances = new Array(m3), initializeDistance();
   }
   function initializeStrength() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     for (var i = 0, n = links.length; i < n; ++i) {
       strengths[i] = +strength(links[i], i, links);
     }
   }
   function initializeDistance() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     for (var i = 0, n = links.length; i < n; ++i) {
       distances[i] = +distance(links[i], i, links);
     }
@@ -9466,8 +8907,7 @@ var initialRadius = 10;
 var initialAngle = Math.PI * (3 - Math.sqrt(5));
 function simulation_default(nodes) {
   var simulation, alpha = 1, alphaMin = 1e-3, alphaDecay = 1 - Math.pow(alphaMin, 1 / 300), alphaTarget = 0, velocityDecay = 0.6, forces = /* @__PURE__ */ new Map(), stepper = timer(step), event = dispatch_default("tick", "end"), random = lcg_default();
-  if (nodes == null)
-    nodes = [];
+  if (nodes == null) nodes = [];
   function step() {
     tick();
     event.call("tick", simulation);
@@ -9478,8 +8918,7 @@ function simulation_default(nodes) {
   }
   function tick(iterations2) {
     var i, n = nodes.length, node;
-    if (iterations2 === void 0)
-      iterations2 = 1;
+    if (iterations2 === void 0) iterations2 = 1;
     for (var k2 = 0; k2 < iterations2; ++k2) {
       alpha += (alphaTarget - alpha) * alphaDecay;
       forces.forEach(function(force) {
@@ -9487,14 +8926,10 @@ function simulation_default(nodes) {
       });
       for (i = 0; i < n; ++i) {
         node = nodes[i];
-        if (node.fx == null)
-          node.x += node.vx *= velocityDecay;
-        else
-          node.x = node.fx, node.vx = 0;
-        if (node.fy == null)
-          node.y += node.vy *= velocityDecay;
-        else
-          node.y = node.fy, node.vy = 0;
+        if (node.fx == null) node.x += node.vx *= velocityDecay;
+        else node.x = node.fx, node.vx = 0;
+        if (node.fy == null) node.y += node.vy *= velocityDecay;
+        else node.y = node.fy, node.vy = 0;
       }
     }
     return simulation;
@@ -9502,10 +8937,8 @@ function simulation_default(nodes) {
   function initializeNodes() {
     for (var i = 0, n = nodes.length, node; i < n; ++i) {
       node = nodes[i], node.index = i;
-      if (node.fx != null)
-        node.x = node.fx;
-      if (node.fy != null)
-        node.y = node.fy;
+      if (node.fx != null) node.x = node.fx;
+      if (node.fy != null) node.y = node.fy;
       if (isNaN(node.x) || isNaN(node.y)) {
         var radius2 = initialRadius * Math.sqrt(0.5 + i), angle2 = i * initialAngle;
         node.x = radius2 * Math.cos(angle2);
@@ -9517,8 +8950,7 @@ function simulation_default(nodes) {
     }
   }
   function initializeForce(force) {
-    if (force.initialize)
-      force.initialize(nodes, random);
+    if (force.initialize) force.initialize(nodes, random);
     return force;
   }
   initializeNodes();
@@ -9556,17 +8988,14 @@ function simulation_default(nodes) {
     },
     find: function(x4, y4, radius2) {
       var i = 0, n = nodes.length, dx, dy, d2, node, closest;
-      if (radius2 == null)
-        radius2 = Infinity;
-      else
-        radius2 *= radius2;
+      if (radius2 == null) radius2 = Infinity;
+      else radius2 *= radius2;
       for (i = 0; i < n; ++i) {
         node = nodes[i];
         dx = x4 - node.x;
         dy = y4 - node.y;
         d2 = dx * dx + dy * dy;
-        if (d2 < radius2)
-          closest = node, radius2 = d2;
+        if (d2 < radius2) closest = node, radius2 = d2;
       }
       return closest;
     },
@@ -9581,16 +9010,13 @@ function manyBody_default() {
   var nodes, node, random, alpha, strength = constant_default7(-30), strengths, distanceMin2 = 1, distanceMax2 = Infinity, theta2 = 0.81;
   function force(_) {
     var i, n = nodes.length, tree2 = quadtree(nodes, x2, y2).visitAfter(accumulate);
-    for (alpha = _, i = 0; i < n; ++i)
-      node = nodes[i], tree2.visit(apply2);
+    for (alpha = _, i = 0; i < n; ++i) node = nodes[i], tree2.visit(apply2);
   }
   function initialize() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     var i, n = nodes.length, node2;
     strengths = new Array(n);
-    for (i = 0; i < n; ++i)
-      node2 = nodes[i], strengths[node2.index] = +strength(node2, i, nodes);
+    for (i = 0; i < n; ++i) node2 = nodes[i], strengths[node2.index] = +strength(node2, i, nodes);
   }
   function accumulate(quad) {
     var strength2 = 0, q, c6, weight = 0, x4, y4, i;
@@ -9613,30 +9039,22 @@ function manyBody_default() {
     quad.value = strength2;
   }
   function apply2(quad, x12, _, x22) {
-    if (!quad.value)
-      return true;
+    if (!quad.value) return true;
     var x4 = quad.x - node.x, y4 = quad.y - node.y, w = x22 - x12, l = x4 * x4 + y4 * y4;
     if (w * w / theta2 < l) {
       if (l < distanceMax2) {
-        if (x4 === 0)
-          x4 = jiggle_default(random), l += x4 * x4;
-        if (y4 === 0)
-          y4 = jiggle_default(random), l += y4 * y4;
-        if (l < distanceMin2)
-          l = Math.sqrt(distanceMin2 * l);
+        if (x4 === 0) x4 = jiggle_default(random), l += x4 * x4;
+        if (y4 === 0) y4 = jiggle_default(random), l += y4 * y4;
+        if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l);
         node.vx += x4 * quad.value * alpha / l;
         node.vy += y4 * quad.value * alpha / l;
       }
       return true;
-    } else if (quad.length || l >= distanceMax2)
-      return;
+    } else if (quad.length || l >= distanceMax2) return;
     if (quad.data !== node || quad.next) {
-      if (x4 === 0)
-        x4 = jiggle_default(random), l += x4 * x4;
-      if (y4 === 0)
-        y4 = jiggle_default(random), l += y4 * y4;
-      if (l < distanceMin2)
-        l = Math.sqrt(distanceMin2 * l);
+      if (x4 === 0) x4 = jiggle_default(random), l += x4 * x4;
+      if (y4 === 0) y4 = jiggle_default(random), l += y4 * y4;
+      if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l);
     }
     do
       if (quad.data !== node) {
@@ -9669,12 +9087,9 @@ function manyBody_default() {
 // node_modules/d3-force/src/radial.js
 function radial_default(radius2, x4, y4) {
   var nodes, strength = constant_default7(0.1), strengths, radiuses;
-  if (typeof radius2 !== "function")
-    radius2 = constant_default7(+radius2);
-  if (x4 == null)
-    x4 = 0;
-  if (y4 == null)
-    y4 = 0;
+  if (typeof radius2 !== "function") radius2 = constant_default7(+radius2);
+  if (x4 == null) x4 = 0;
+  if (y4 == null) y4 = 0;
   function force(alpha) {
     for (var i = 0, n = nodes.length; i < n; ++i) {
       var node = nodes[i], dx = node.x - x4 || 1e-6, dy = node.y - y4 || 1e-6, r = Math.sqrt(dx * dx + dy * dy), k2 = (radiuses[i] - r) * strengths[i] * alpha / r;
@@ -9683,8 +9098,7 @@ function radial_default(radius2, x4, y4) {
     }
   }
   function initialize() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     var i, n = nodes.length;
     strengths = new Array(n);
     radiuses = new Array(n);
@@ -9714,16 +9128,14 @@ function radial_default(radius2, x4, y4) {
 // node_modules/d3-force/src/x.js
 function x_default2(x4) {
   var strength = constant_default7(0.1), nodes, strengths, xz;
-  if (typeof x4 !== "function")
-    x4 = constant_default7(x4 == null ? 0 : +x4);
+  if (typeof x4 !== "function") x4 = constant_default7(x4 == null ? 0 : +x4);
   function force(alpha) {
     for (var i = 0, n = nodes.length, node; i < n; ++i) {
       node = nodes[i], node.vx += (xz[i] - node.x) * strengths[i] * alpha;
     }
   }
   function initialize() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     var i, n = nodes.length;
     strengths = new Array(n);
     xz = new Array(n);
@@ -9747,16 +9159,14 @@ function x_default2(x4) {
 // node_modules/d3-force/src/y.js
 function y_default2(y4) {
   var strength = constant_default7(0.1), nodes, strengths, yz;
-  if (typeof y4 !== "function")
-    y4 = constant_default7(y4 == null ? 0 : +y4);
+  if (typeof y4 !== "function") y4 = constant_default7(y4 == null ? 0 : +y4);
   function force(alpha) {
     for (var i = 0, n = nodes.length, node; i < n; ++i) {
       node = nodes[i], node.vy += (yz[i] - node.y) * strengths[i] * alpha;
     }
   }
   function initialize() {
-    if (!nodes)
-      return;
+    if (!nodes) return;
     var i, n = nodes.length;
     strengths = new Array(n);
     yz = new Array(n);
@@ -9782,8 +9192,7 @@ function formatDecimal_default(x4) {
   return Math.abs(x4 = Math.round(x4)) >= 1e21 ? x4.toLocaleString("en").replace(/,/g, "") : x4.toString(10);
 }
 function formatDecimalParts(x4, p) {
-  if ((i = (x4 = p ? x4.toExponential(p - 1) : x4.toExponential()).indexOf("e")) < 0)
-    return null;
+  if ((i = (x4 = p ? x4.toExponential(p - 1) : x4.toExponential()).indexOf("e")) < 0) return null;
   var i, coefficient = x4.slice(0, i);
   return [
     coefficient.length > 1 ? coefficient[0] + coefficient.slice(2) : coefficient,
@@ -9801,11 +9210,9 @@ function formatGroup_default(grouping, thousands) {
   return function(value, width) {
     var i = value.length, t = [], j = 0, g = grouping[0], length4 = 0;
     while (i > 0 && g > 0) {
-      if (length4 + g + 1 > width)
-        g = Math.max(1, width - length4);
+      if (length4 + g + 1 > width) g = Math.max(1, width - length4);
       t.push(value.substring(i -= g, i + g));
-      if ((length4 += g + 1) > width)
-        break;
+      if ((length4 += g + 1) > width) break;
       g = grouping[j = (j + 1) % grouping.length];
     }
     return t.reverse().join(thousands);
@@ -9824,8 +9231,7 @@ function formatNumerals_default(numerals) {
 // node_modules/d3-format/src/formatSpecifier.js
 var re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;
 function formatSpecifier(specifier) {
-  if (!(match = re.exec(specifier)))
-    throw new Error("invalid format: " + specifier);
+  if (!(match = re.exec(specifier))) throw new Error("invalid format: " + specifier);
   var match;
   return new FormatSpecifier({
     fill: match[1],
@@ -9859,25 +9265,21 @@ FormatSpecifier.prototype.toString = function() {
 
 // node_modules/d3-format/src/formatTrim.js
 function formatTrim_default(s2) {
-  out:
-    for (var n = s2.length, i = 1, i0 = -1, i1; i < n; ++i) {
-      switch (s2[i]) {
-        case ".":
-          i0 = i1 = i;
-          break;
-        case "0":
-          if (i0 === 0)
-            i0 = i;
-          i1 = i;
-          break;
-        default:
-          if (!+s2[i])
-            break out;
-          if (i0 > 0)
-            i0 = 0;
-          break;
-      }
+  out: for (var n = s2.length, i = 1, i0 = -1, i1; i < n; ++i) {
+    switch (s2[i]) {
+      case ".":
+        i0 = i1 = i;
+        break;
+      case "0":
+        if (i0 === 0) i0 = i;
+        i1 = i;
+        break;
+      default:
+        if (!+s2[i]) break out;
+        if (i0 > 0) i0 = 0;
+        break;
     }
+  }
   return i0 > 0 ? s2.slice(0, i0) + s2.slice(i1 + 1) : s2;
 }
 
@@ -9885,8 +9287,7 @@ function formatTrim_default(s2) {
 var prefixExponent;
 function formatPrefixAuto_default(x4, p) {
   var d = formatDecimalParts(x4, p);
-  if (!d)
-    return x4 + "";
+  if (!d) return x4 + "";
   var coefficient = d[0], exponent2 = d[1], i = exponent2 - (prefixExponent = Math.max(-8, Math.min(8, Math.floor(exponent2 / 3))) * 3) + 1, n = coefficient.length;
   return i === n ? coefficient : i > n ? coefficient + new Array(i - n + 1).join("0") : i > 0 ? coefficient.slice(0, i) + "." + coefficient.slice(i) : "0." + new Array(1 - i).join("0") + formatDecimalParts(x4, Math.max(0, p + i - 1))[0];
 }
@@ -9894,8 +9295,7 @@ function formatPrefixAuto_default(x4, p) {
 // node_modules/d3-format/src/formatRounded.js
 function formatRounded_default(x4, p) {
   var d = formatDecimalParts(x4, p);
-  if (!d)
-    return x4 + "";
+  if (!d) return x4 + "";
   var coefficient = d[0], exponent2 = d[1];
   return exponent2 < 0 ? "0." + new Array(-exponent2).join("0") + coefficient : coefficient.length > exponent2 + 1 ? coefficient.slice(0, exponent2 + 1) + "." + coefficient.slice(exponent2 + 1) : coefficient + new Array(exponent2 - coefficient.length + 2).join("0");
 }
@@ -9930,12 +9330,9 @@ function locale_default(locale3) {
   function newFormat(specifier) {
     specifier = formatSpecifier(specifier);
     var fill = specifier.fill, align = specifier.align, sign3 = specifier.sign, symbol2 = specifier.symbol, zero3 = specifier.zero, width = specifier.width, comma = specifier.comma, precision = specifier.precision, trim = specifier.trim, type2 = specifier.type;
-    if (type2 === "n")
-      comma = true, type2 = "g";
-    else if (!formatTypes_default[type2])
-      precision === void 0 && (precision = 12), trim = true, type2 = "g";
-    if (zero3 || fill === "0" && align === "=")
-      zero3 = true, fill = "0", align = "=";
+    if (type2 === "n") comma = true, type2 = "g";
+    else if (!formatTypes_default[type2]) precision === void 0 && (precision = 12), trim = true, type2 = "g";
+    if (zero3 || fill === "0" && align === "=") zero3 = true, fill = "0", align = "=";
     var prefix = symbol2 === "$" ? currencyPrefix : symbol2 === "#" && /[boxX]/.test(type2) ? "0" + type2.toLowerCase() : "", suffix = symbol2 === "$" ? currencySuffix : /[%p]/.test(type2) ? percent : "";
     var formatType = formatTypes_default[type2], maybeSuffix = /[defgprs%]/.test(type2);
     precision = precision === void 0 ? 6 : /[gprs]/.test(type2) ? Math.max(1, Math.min(21, precision)) : Math.max(0, Math.min(20, precision));
@@ -9948,10 +9345,8 @@ function locale_default(locale3) {
         value = +value;
         var valueNegative = value < 0 || 1 / value < 0;
         value = isNaN(value) ? nan : formatType(Math.abs(value), precision);
-        if (trim)
-          value = formatTrim_default(value);
-        if (valueNegative && +value === 0 && sign3 !== "+")
-          valueNegative = false;
+        if (trim) value = formatTrim_default(value);
+        if (valueNegative && +value === 0 && sign3 !== "+") valueNegative = false;
         valuePrefix = (valueNegative ? sign3 === "(" ? sign3 : minus : sign3 === "-" || sign3 === "(" ? "" : sign3) + valuePrefix;
         valueSuffix = (type2 === "s" ? prefixes[8 + prefixExponent / 3] : "") + valueSuffix + (valueNegative && sign3 === "(" ? ")" : "");
         if (maybeSuffix) {
@@ -9965,11 +9360,9 @@ function locale_default(locale3) {
           }
         }
       }
-      if (comma && !zero3)
-        value = group3(value, Infinity);
+      if (comma && !zero3) value = group3(value, Infinity);
       var length4 = valuePrefix.length + value.length + valueSuffix.length, padding = length4 < width ? new Array(width - length4 + 1).join(fill) : "";
-      if (comma && zero3)
-        value = group3(padding + value, padding.length ? width - valueSuffix.length : Infinity), padding = "";
+      if (comma && zero3) value = group3(padding + value, padding.length ? width - valueSuffix.length : Infinity), padding = "";
       switch (align) {
         case "<":
           value = valuePrefix + value + valueSuffix + padding;
@@ -10085,8 +9478,7 @@ var streamObjectType = {
   },
   FeatureCollection: function(object2, stream) {
     var features = object2.features, i = -1, n = features.length;
-    while (++i < n)
-      streamGeometry(features[i].geometry, stream);
+    while (++i < n) streamGeometry(features[i].geometry, stream);
   }
 };
 var streamGeometryType = {
@@ -10099,43 +9491,37 @@ var streamGeometryType = {
   },
   MultiPoint: function(object2, stream) {
     var coordinates2 = object2.coordinates, i = -1, n = coordinates2.length;
-    while (++i < n)
-      object2 = coordinates2[i], stream.point(object2[0], object2[1], object2[2]);
+    while (++i < n) object2 = coordinates2[i], stream.point(object2[0], object2[1], object2[2]);
   },
   LineString: function(object2, stream) {
     streamLine(object2.coordinates, stream, 0);
   },
   MultiLineString: function(object2, stream) {
     var coordinates2 = object2.coordinates, i = -1, n = coordinates2.length;
-    while (++i < n)
-      streamLine(coordinates2[i], stream, 0);
+    while (++i < n) streamLine(coordinates2[i], stream, 0);
   },
   Polygon: function(object2, stream) {
     streamPolygon(object2.coordinates, stream);
   },
   MultiPolygon: function(object2, stream) {
     var coordinates2 = object2.coordinates, i = -1, n = coordinates2.length;
-    while (++i < n)
-      streamPolygon(coordinates2[i], stream);
+    while (++i < n) streamPolygon(coordinates2[i], stream);
   },
   GeometryCollection: function(object2, stream) {
     var geometries = object2.geometries, i = -1, n = geometries.length;
-    while (++i < n)
-      streamGeometry(geometries[i], stream);
+    while (++i < n) streamGeometry(geometries[i], stream);
   }
 };
 function streamLine(coordinates2, stream, closed) {
   var i = -1, n = coordinates2.length - closed, coordinate;
   stream.lineStart();
-  while (++i < n)
-    coordinate = coordinates2[i], stream.point(coordinate[0], coordinate[1], coordinate[2]);
+  while (++i < n) coordinate = coordinates2[i], stream.point(coordinate[0], coordinate[1], coordinate[2]);
   stream.lineEnd();
 }
 function streamPolygon(coordinates2, stream) {
   var i = -1, n = coordinates2.length;
   stream.polygonStart();
-  while (++i < n)
-    streamLine(coordinates2[i], stream, 1);
+  while (++i < n) streamLine(coordinates2[i], stream, 1);
   stream.polygonEnd();
 }
 function stream_default(object2, stream) {
@@ -10250,12 +9636,9 @@ var boundsStream = {
     boundsStream.point = boundsPoint;
     boundsStream.lineStart = boundsLineStart;
     boundsStream.lineEnd = boundsLineEnd;
-    if (areaRingSum < 0)
-      lambda02 = -(lambda1 = 180), phi0 = -(phi1 = 90);
-    else if (deltaSum > epsilon7)
-      phi1 = 90;
-    else if (deltaSum < -epsilon7)
-      phi0 = -90;
+    if (areaRingSum < 0) lambda02 = -(lambda1 = 180), phi0 = -(phi1 = 90);
+    else if (deltaSum > epsilon7) phi1 = 90;
+    else if (deltaSum < -epsilon7) phi0 = -90;
     range3[0] = lambda02, range3[1] = lambda1;
   },
   sphere: function() {
@@ -10264,10 +9647,8 @@ var boundsStream = {
 };
 function boundsPoint(lambda, phi2) {
   ranges.push(range3 = [lambda02 = lambda, lambda1 = lambda]);
-  if (phi2 < phi0)
-    phi0 = phi2;
-  if (phi2 > phi1)
-    phi1 = phi2;
+  if (phi2 < phi0) phi0 = phi2;
+  if (phi2 > phi1) phi1 = phi2;
 }
 function linePoint(lambda, phi2) {
   var p = cartesian([lambda * radians2, phi2 * radians2]);
@@ -10278,49 +9659,37 @@ function linePoint(lambda, phi2) {
     var delta = lambda - lambda2, sign3 = delta > 0 ? 1 : -1, lambdai = inflection[0] * degrees3 * sign3, phii, antimeridian = abs3(delta) > 180;
     if (antimeridian ^ (sign3 * lambda2 < lambdai && lambdai < sign3 * lambda)) {
       phii = inflection[1] * degrees3;
-      if (phii > phi1)
-        phi1 = phii;
+      if (phii > phi1) phi1 = phii;
     } else if (lambdai = (lambdai + 360) % 360 - 180, antimeridian ^ (sign3 * lambda2 < lambdai && lambdai < sign3 * lambda)) {
       phii = -inflection[1] * degrees3;
-      if (phii < phi0)
-        phi0 = phii;
+      if (phii < phi0) phi0 = phii;
     } else {
-      if (phi2 < phi0)
-        phi0 = phi2;
-      if (phi2 > phi1)
-        phi1 = phi2;
+      if (phi2 < phi0) phi0 = phi2;
+      if (phi2 > phi1) phi1 = phi2;
     }
     if (antimeridian) {
       if (lambda < lambda2) {
-        if (angle(lambda02, lambda) > angle(lambda02, lambda1))
-          lambda1 = lambda;
+        if (angle(lambda02, lambda) > angle(lambda02, lambda1)) lambda1 = lambda;
       } else {
-        if (angle(lambda, lambda1) > angle(lambda02, lambda1))
-          lambda02 = lambda;
+        if (angle(lambda, lambda1) > angle(lambda02, lambda1)) lambda02 = lambda;
       }
     } else {
       if (lambda1 >= lambda02) {
-        if (lambda < lambda02)
-          lambda02 = lambda;
-        if (lambda > lambda1)
-          lambda1 = lambda;
+        if (lambda < lambda02) lambda02 = lambda;
+        if (lambda > lambda1) lambda1 = lambda;
       } else {
         if (lambda > lambda2) {
-          if (angle(lambda02, lambda) > angle(lambda02, lambda1))
-            lambda1 = lambda;
+          if (angle(lambda02, lambda) > angle(lambda02, lambda1)) lambda1 = lambda;
         } else {
-          if (angle(lambda, lambda1) > angle(lambda02, lambda1))
-            lambda02 = lambda;
+          if (angle(lambda, lambda1) > angle(lambda02, lambda1)) lambda02 = lambda;
         }
       }
     }
   } else {
     ranges.push(range3 = [lambda02 = lambda, lambda1 = lambda]);
   }
-  if (phi2 < phi0)
-    phi0 = phi2;
-  if (phi2 > phi1)
-    phi1 = phi2;
+  if (phi2 < phi0) phi0 = phi2;
+  if (phi2 > phi1) phi1 = phi2;
   p0 = p, lambda2 = lambda;
 }
 function boundsLineStart() {
@@ -10347,8 +9716,7 @@ function boundsRingStart() {
 function boundsRingEnd() {
   boundsRingPoint(lambda002, phi002);
   areaStream.lineEnd();
-  if (abs3(deltaSum) > epsilon7)
-    lambda02 = -(lambda1 = 180);
+  if (abs3(deltaSum) > epsilon7) lambda02 = -(lambda1 = 180);
   range3[0] = lambda02, range3[1] = lambda1;
   p0 = null;
 }
@@ -10371,18 +9739,15 @@ function bounds_default(feature) {
     for (i = 1, a4 = ranges[0], merged = [a4]; i < n; ++i) {
       b = ranges[i];
       if (rangeContains(a4, b[0]) || rangeContains(a4, b[1])) {
-        if (angle(a4[0], b[1]) > angle(a4[0], a4[1]))
-          a4[1] = b[1];
-        if (angle(b[0], a4[1]) > angle(a4[0], a4[1]))
-          a4[0] = b[0];
+        if (angle(a4[0], b[1]) > angle(a4[0], a4[1])) a4[1] = b[1];
+        if (angle(b[0], a4[1]) > angle(a4[0], a4[1])) a4[0] = b[0];
       } else {
         merged.push(a4 = b);
       }
     }
     for (deltaMax = -Infinity, n = merged.length - 1, i = 0, a4 = merged[n]; i <= n; a4 = b, ++i) {
       b = merged[i];
-      if ((delta = angle(a4[1], b[0])) > deltaMax)
-        deltaMax = delta, lambda02 = b[0], lambda1 = a4[1];
+      if ((delta = angle(a4[1], b[0])) > deltaMax) deltaMax = delta, lambda02 = b[0], lambda1 = a4[1];
     }
   }
   ranges = range3 = null;
@@ -10493,11 +9858,9 @@ function centroid_default(object2) {
   var x4 = +X2, y4 = +Y2, z = +Z2, m3 = hypot(x4, y4, z);
   if (m3 < epsilon22) {
     x4 = X1, y4 = Y1, z = Z1;
-    if (W1 < epsilon7)
-      x4 = X0, y4 = Y0, z = Z0;
+    if (W1 < epsilon7) x4 = X0, y4 = Y0, z = Z0;
     m3 = hypot(x4, y4, z);
-    if (m3 < epsilon22)
-      return [NaN, NaN];
+    if (m3 < epsilon22) return [NaN, NaN];
   }
   return [atan2(y4, x4) * degrees3, asin(z / m3) * degrees3];
 }
@@ -10514,17 +9877,15 @@ function compose_default(a4, b) {
   function compose(x4, y4) {
     return x4 = a4(x4, y4), b(x4[0], x4[1]);
   }
-  if (a4.invert && b.invert)
-    compose.invert = function(x4, y4) {
-      return x4 = b.invert(x4, y4), x4 && a4.invert(x4[0], x4[1]);
-    };
+  if (a4.invert && b.invert) compose.invert = function(x4, y4) {
+    return x4 = b.invert(x4, y4), x4 && a4.invert(x4[0], x4[1]);
+  };
   return compose;
 }
 
 // node_modules/d3-geo/src/rotation.js
 function rotationIdentity(lambda, phi2) {
-  if (abs3(lambda) > pi4)
-    lambda -= Math.round(lambda / tau5) * tau5;
+  if (abs3(lambda) > pi4) lambda -= Math.round(lambda / tau5) * tau5;
   return [lambda, phi2];
 }
 rotationIdentity.invert = rotationIdentity;
@@ -10534,8 +9895,7 @@ function rotateRadians(deltaLambda, deltaPhi, deltaGamma) {
 function forwardRotationLambda(deltaLambda) {
   return function(lambda, phi2) {
     lambda += deltaLambda;
-    if (abs3(lambda) > pi4)
-      lambda -= Math.round(lambda / tau5) * tau5;
+    if (abs3(lambda) > pi4) lambda -= Math.round(lambda / tau5) * tau5;
     return [lambda, phi2];
   };
 }
@@ -10577,8 +9937,7 @@ function rotation_default(rotate) {
 
 // node_modules/d3-geo/src/circle.js
 function circleStream(stream, radius2, delta, direction, t03, t13) {
-  if (!delta)
-    return;
+  if (!delta) return;
   var cosRadius = cos2(radius2), sinRadius = sin2(radius2), step = direction * delta;
   if (t03 == null) {
     t03 = radius2 + direction * tau5;
@@ -10586,8 +9945,7 @@ function circleStream(stream, radius2, delta, direction, t03, t13) {
   } else {
     t03 = circleRadius(cosRadius, t03);
     t13 = circleRadius(cosRadius, t13);
-    if (direction > 0 ? t03 < t13 : t03 > t13)
-      t03 += direction * tau5;
+    if (direction > 0 ? t03 < t13 : t03 > t13) t03 += direction * tau5;
   }
   for (var point6, t = t03; direction > 0 ? t > t13 : t < t13; t -= step) {
     point6 = spherical([cosRadius, -sinRadius * cos2(t), -sinRadius * sin2(t)]);
@@ -10639,8 +9997,7 @@ function buffer_default2() {
     },
     lineEnd: noop2,
     rejoin: function() {
-      if (lines.length > 1)
-        lines.push(lines.pop().concat(lines.shift()));
+      if (lines.length > 1) lines.push(lines.pop().concat(lines.shift()));
     },
     result: function() {
       var result = lines;
@@ -10668,14 +10025,12 @@ function Intersection(point6, points, other, entry) {
 function rejoin_default(segments, compareIntersection2, startInside, interpolate, stream) {
   var subject = [], clip = [], i, n;
   segments.forEach(function(segment) {
-    if ((n2 = segment.length - 1) <= 0)
-      return;
+    if ((n2 = segment.length - 1) <= 0) return;
     var n2, p02 = segment[0], p1 = segment[n2], x4;
     if (pointEqual_default(p02, p1)) {
       if (!p02[2] && !p1[2]) {
         stream.lineStart();
-        for (i = 0; i < n2; ++i)
-          stream.point((p02 = segment[i])[0], p02[1]);
+        for (i = 0; i < n2; ++i) stream.point((p02 = segment[i])[0], p02[1]);
         stream.lineEnd();
         return;
       }
@@ -10686,8 +10041,7 @@ function rejoin_default(segments, compareIntersection2, startInside, interpolate
     subject.push(x4 = new Intersection(p1, segment, null, false));
     clip.push(x4.o = new Intersection(p1, null, x4, true));
   });
-  if (!subject.length)
-    return;
+  if (!subject.length) return;
   clip.sort(compareIntersection2);
   link(subject);
   link(clip);
@@ -10697,17 +10051,14 @@ function rejoin_default(segments, compareIntersection2, startInside, interpolate
   var start2 = subject[0], points, point6;
   while (1) {
     var current = start2, isSubject = true;
-    while (current.v)
-      if ((current = current.n) === start2)
-        return;
+    while (current.v) if ((current = current.n) === start2) return;
     points = current.z;
     stream.lineStart();
     do {
       current.v = current.o.v = true;
       if (current.e) {
         if (isSubject) {
-          for (i = 0, n = points.length; i < n; ++i)
-            stream.point((point6 = points[i])[0], point6[1]);
+          for (i = 0, n = points.length; i < n; ++i) stream.point((point6 = points[i])[0], point6[1]);
         } else {
           interpolate(current.x, current.n.x, 1, stream);
         }
@@ -10715,8 +10066,7 @@ function rejoin_default(segments, compareIntersection2, startInside, interpolate
       } else {
         if (isSubject) {
           points = current.p.z;
-          for (i = points.length - 1; i >= 0; --i)
-            stream.point((point6 = points[i])[0], point6[1]);
+          for (i = points.length - 1; i >= 0; --i) stream.point((point6 = points[i])[0], point6[1]);
         } else {
           interpolate(current.x, current.p.x, -1, stream);
         }
@@ -10730,8 +10080,7 @@ function rejoin_default(segments, compareIntersection2, startInside, interpolate
   }
 }
 function link(array4) {
-  if (!(n = array4.length))
-    return;
+  if (!(n = array4.length)) return;
   var n, i = 0, a4 = array4[0], b;
   while (++i < n) {
     a4.n = b = array4[i];
@@ -10749,13 +10098,10 @@ function longitude(point6) {
 function polygonContains_default(polygon, point6) {
   var lambda = longitude(point6), phi2 = point6[1], sinPhi = sin2(phi2), normal = [sin2(lambda), -cos2(lambda), 0], angle2 = 0, winding = 0;
   var sum4 = new Adder();
-  if (sinPhi === 1)
-    phi2 = halfPi3 + epsilon7;
-  else if (sinPhi === -1)
-    phi2 = -halfPi3 - epsilon7;
+  if (sinPhi === 1) phi2 = halfPi3 + epsilon7;
+  else if (sinPhi === -1) phi2 = -halfPi3 - epsilon7;
   for (var i = 0, n = polygon.length; i < n; ++i) {
-    if (!(m3 = (ring = polygon[i]).length))
-      continue;
+    if (!(m3 = (ring = polygon[i]).length)) continue;
     var ring, m3, point0 = ring[m3 - 1], lambda04 = longitude(point0), phi02 = point0[1] / 2 + quarterPi, sinPhi03 = sin2(phi02), cosPhi03 = cos2(phi02);
     for (var j = 0; j < m3; ++j, lambda04 = lambda12, sinPhi03 = sinPhi1, cosPhi03 = cosPhi1, point0 = point1) {
       var point1 = ring[j], lambda12 = longitude(point1), phi12 = point1[1] / 2 + quarterPi, sinPhi1 = sin2(phi12), cosPhi1 = cos2(phi12), delta = lambda12 - lambda04, sign3 = delta >= 0 ? 1 : -1, absDelta = sign3 * delta, antimeridian = absDelta > pi4, k2 = sinPhi03 * sinPhi1;
@@ -10798,18 +10144,15 @@ function clip_default(pointVisible, clipLine, interpolate, start2) {
         segments = merge(segments);
         var startInside = polygonContains_default(polygon, start2);
         if (segments.length) {
-          if (!polygonStarted)
-            sink.polygonStart(), polygonStarted = true;
+          if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
           rejoin_default(segments, compareIntersection, startInside, interpolate, sink);
         } else if (startInside) {
-          if (!polygonStarted)
-            sink.polygonStart(), polygonStarted = true;
+          if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
           sink.lineStart();
           interpolate(null, null, 1, sink);
           sink.lineEnd();
         }
-        if (polygonStarted)
-          sink.polygonEnd(), polygonStarted = false;
+        if (polygonStarted) sink.polygonEnd(), polygonStarted = false;
         segments = polygon = null;
       },
       sphere: function() {
@@ -10821,8 +10164,7 @@ function clip_default(pointVisible, clipLine, interpolate, start2) {
       }
     };
     function point6(lambda, phi2) {
-      if (pointVisible(lambda, phi2))
-        sink.point(lambda, phi2);
+      if (pointVisible(lambda, phi2)) sink.point(lambda, phi2);
     }
     function pointLine(lambda, phi2) {
       line2.point(lambda, phi2);
@@ -10850,22 +10192,18 @@ function clip_default(pointVisible, clipLine, interpolate, start2) {
       ring.pop();
       polygon.push(ring);
       ring = null;
-      if (!n)
-        return;
+      if (!n) return;
       if (clean & 1) {
         segment = ringSegments[0];
         if ((m3 = segment.length - 1) > 0) {
-          if (!polygonStarted)
-            sink.polygonStart(), polygonStarted = true;
+          if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
           sink.lineStart();
-          for (i = 0; i < m3; ++i)
-            sink.point((point7 = segment[i])[0], point7[1]);
+          for (i = 0; i < m3; ++i) sink.point((point7 = segment[i])[0], point7[1]);
           sink.lineEnd();
         }
         return;
       }
-      if (n > 1 && clean & 2)
-        ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
+      if (n > 1 && clean & 2) ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
       segments.push(ringSegments.filter(validSegment));
     }
     return clip;
@@ -10905,10 +10243,8 @@ function clipAntimeridianLine(stream) {
         stream.point(lambda12, phi02);
         clean = 0;
       } else if (sign0 !== sign1 && delta >= pi4) {
-        if (abs3(lambda04 - sign0) < epsilon7)
-          lambda04 -= sign0 * epsilon7;
-        if (abs3(lambda12 - sign1) < epsilon7)
-          lambda12 -= sign1 * epsilon7;
+        if (abs3(lambda04 - sign0) < epsilon7) lambda04 -= sign0 * epsilon7;
+        if (abs3(lambda12 - sign1) < epsilon7) lambda12 -= sign1 * epsilon7;
         phi02 = clipAntimeridianIntersect(lambda04, phi02, lambda12, phi12);
         stream.point(sign0, phi02);
         stream.lineEnd();
@@ -10974,8 +10310,7 @@ function circle_default2(radius2) {
       },
       point: function(lambda, phi2) {
         var point1 = [lambda, phi2], point22, v2 = visible(lambda, phi2), c6 = smallRadius ? v2 ? 0 : code(lambda, phi2) : v2 ? code(lambda + (lambda < 0 ? pi4 : -pi4), phi2) : 0;
-        if (!point0 && (v00 = v0 = v2))
-          stream.lineStart();
+        if (!point0 && (v00 = v0 = v2)) stream.lineStart();
         if (v2 !== v0) {
           point22 = intersect2(point0, point1);
           if (!point22 || pointEqual_default(point0, point22) || pointEqual_default(point1, point22))
@@ -11016,8 +10351,7 @@ function circle_default2(radius2) {
         point0 = point1, v0 = v2, c0 = c6;
       },
       lineEnd: function() {
-        if (v0)
-          stream.lineEnd();
+        if (v0) stream.lineEnd();
         point0 = null;
       },
       // Rejoin first and last segments if there were intersections and the first
@@ -11030,24 +10364,19 @@ function circle_default2(radius2) {
   function intersect2(a4, b, two) {
     var pa = cartesian(a4), pb = cartesian(b);
     var n1 = [1, 0, 0], n2 = cartesianCross(pa, pb), n2n2 = cartesianDot(n2, n2), n1n2 = n2[0], determinant = n2n2 - n1n2 * n1n2;
-    if (!determinant)
-      return !two && a4;
+    if (!determinant) return !two && a4;
     var c1 = cr * n2n2 / determinant, c22 = -cr * n1n2 / determinant, n1xn2 = cartesianCross(n1, n2), A5 = cartesianScale(n1, c1), B3 = cartesianScale(n2, c22);
     cartesianAddInPlace(A5, B3);
     var u4 = n1xn2, w = cartesianDot(A5, u4), uu = cartesianDot(u4, u4), t22 = w * w - uu * (cartesianDot(A5, A5) - 1);
-    if (t22 < 0)
-      return;
+    if (t22 < 0) return;
     var t = sqrt(t22), q = cartesianScale(u4, (-w - t) / uu);
     cartesianAddInPlace(q, A5);
     q = spherical(q);
-    if (!two)
-      return q;
+    if (!two) return q;
     var lambda04 = a4[0], lambda12 = b[0], phi02 = a4[1], phi12 = b[1], z;
-    if (lambda12 < lambda04)
-      z = lambda04, lambda04 = lambda12, lambda12 = z;
+    if (lambda12 < lambda04) z = lambda04, lambda04 = lambda12, lambda12 = z;
     var delta2 = lambda12 - lambda04, polar = abs3(delta2 - pi4) < epsilon7, meridian = polar || delta2 < epsilon7;
-    if (!polar && phi12 < phi02)
-      z = phi02, phi02 = phi12, phi12 = z;
+    if (!polar && phi12 < phi02) z = phi02, phi02 = phi12, phi12 = z;
     if (meridian ? polar ? phi02 + phi12 > 0 ^ q[1] < (abs3(q[0] - lambda04) < epsilon7 ? phi02 : phi12) : phi02 <= q[1] && q[1] <= phi12 : delta2 > pi4 ^ (lambda04 <= q[0] && q[0] <= lambda12)) {
       var q1 = cartesianScale(u4, (-w + t) / uu);
       cartesianAddInPlace(q1, A5);
@@ -11056,14 +10385,10 @@ function circle_default2(radius2) {
   }
   function code(lambda, phi2) {
     var r = smallRadius ? radius2 : pi4 - radius2, code2 = 0;
-    if (lambda < -r)
-      code2 |= 1;
-    else if (lambda > r)
-      code2 |= 2;
-    if (phi2 < -r)
-      code2 |= 4;
-    else if (phi2 > r)
-      code2 |= 8;
+    if (lambda < -r) code2 |= 1;
+    else if (lambda > r) code2 |= 2;
+    if (phi2 < -r) code2 |= 4;
+    else if (phi2 > r) code2 |= 8;
     return code2;
   }
   return clip_default(visible, clipLine, interpolate, smallRadius ? [0, -radius2] : [-pi4, radius2 - pi4]);
@@ -11073,69 +10398,47 @@ function circle_default2(radius2) {
 function line_default(a4, b, x06, y06, x12, y12) {
   var ax = a4[0], ay = a4[1], bx = b[0], by = b[1], t03 = 0, t13 = 1, dx = bx - ax, dy = by - ay, r;
   r = x06 - ax;
-  if (!dx && r > 0)
-    return;
+  if (!dx && r > 0) return;
   r /= dx;
   if (dx < 0) {
-    if (r < t03)
-      return;
-    if (r < t13)
-      t13 = r;
+    if (r < t03) return;
+    if (r < t13) t13 = r;
   } else if (dx > 0) {
-    if (r > t13)
-      return;
-    if (r > t03)
-      t03 = r;
+    if (r > t13) return;
+    if (r > t03) t03 = r;
   }
   r = x12 - ax;
-  if (!dx && r < 0)
-    return;
+  if (!dx && r < 0) return;
   r /= dx;
   if (dx < 0) {
-    if (r > t13)
-      return;
-    if (r > t03)
-      t03 = r;
+    if (r > t13) return;
+    if (r > t03) t03 = r;
   } else if (dx > 0) {
-    if (r < t03)
-      return;
-    if (r < t13)
-      t13 = r;
+    if (r < t03) return;
+    if (r < t13) t13 = r;
   }
   r = y06 - ay;
-  if (!dy && r > 0)
-    return;
+  if (!dy && r > 0) return;
   r /= dy;
   if (dy < 0) {
-    if (r < t03)
-      return;
-    if (r < t13)
-      t13 = r;
+    if (r < t03) return;
+    if (r < t13) t13 = r;
   } else if (dy > 0) {
-    if (r > t13)
-      return;
-    if (r > t03)
-      t03 = r;
+    if (r > t13) return;
+    if (r > t03) t03 = r;
   }
   r = y12 - ay;
-  if (!dy && r < 0)
-    return;
+  if (!dy && r < 0) return;
   r /= dy;
   if (dy < 0) {
-    if (r > t13)
-      return;
-    if (r > t03)
-      t03 = r;
+    if (r > t13) return;
+    if (r > t03) t03 = r;
   } else if (dy > 0) {
-    if (r < t03)
-      return;
-    if (r < t13)
-      t13 = r;
+    if (r < t03) return;
+    if (r < t13) t13 = r;
   }
-  if (t03 > 0)
-    a4[0] = ax + t03 * dx, a4[1] = ay + t03 * dy;
-  if (t13 < 1)
-    b[0] = ax + t13 * dx, b[1] = ay + t13 * dy;
+  if (t03 > 0) a4[0] = ax + t03 * dx, a4[1] = ay + t03 * dy;
+  if (t13 < 1) b[0] = ax + t13 * dx, b[1] = ay + t13 * dy;
   return true;
 }
 
@@ -11176,8 +10479,7 @@ function clipRectangle(x06, y06, x12, y12) {
       polygonEnd
     };
     function point6(x4, y4) {
-      if (visible(x4, y4))
-        activeStream.point(x4, y4);
+      if (visible(x4, y4)) activeStream.point(x4, y4);
     }
     function polygonInside() {
       var winding = 0;
@@ -11185,11 +10487,9 @@ function clipRectangle(x06, y06, x12, y12) {
         for (var ring2 = polygon[i], j = 1, m3 = ring2.length, point7 = ring2[0], a0, a1, b02 = point7[0], b12 = point7[1]; j < m3; ++j) {
           a0 = b02, a1 = b12, point7 = ring2[j], b02 = point7[0], b12 = point7[1];
           if (a1 <= y12) {
-            if (b12 > y12 && (b02 - a0) * (y12 - a1) > (b12 - a1) * (x06 - a0))
-              ++winding;
+            if (b12 > y12 && (b02 - a0) * (y12 - a1) > (b12 - a1) * (x06 - a0)) ++winding;
           } else {
-            if (b12 <= y12 && (b02 - a0) * (y12 - a1) < (b12 - a1) * (x06 - a0))
-              --winding;
+            if (b12 <= y12 && (b02 - a0) * (y12 - a1) < (b12 - a1) * (x06 - a0)) --winding;
           }
         }
       }
@@ -11216,8 +10516,7 @@ function clipRectangle(x06, y06, x12, y12) {
     }
     function lineStart() {
       clipStream.point = linePoint2;
-      if (polygon)
-        polygon.push(ring = []);
+      if (polygon) polygon.push(ring = []);
       first2 = true;
       v_ = false;
       x_ = y_ = NaN;
@@ -11225,18 +10524,15 @@ function clipRectangle(x06, y06, x12, y12) {
     function lineEnd() {
       if (segments) {
         linePoint2(x__, y__);
-        if (v__ && v_)
-          bufferStream.rejoin();
+        if (v__ && v_) bufferStream.rejoin();
         segments.push(bufferStream.result());
       }
       clipStream.point = point6;
-      if (v_)
-        activeStream.lineEnd();
+      if (v_) activeStream.lineEnd();
     }
     function linePoint2(x4, y4) {
       var v2 = visible(x4, y4);
-      if (polygon)
-        ring.push([x4, y4]);
+      if (polygon) ring.push([x4, y4]);
       if (first2) {
         x__ = x4, y__ = y4, v__ = v2;
         first2 = false;
@@ -11245,8 +10541,7 @@ function clipRectangle(x06, y06, x12, y12) {
           activeStream.point(x4, y4);
         }
       } else {
-        if (v2 && v_)
-          activeStream.point(x4, y4);
+        if (v2 && v_) activeStream.point(x4, y4);
         else {
           var a4 = [x_ = Math.max(clipMin, Math.min(clipMax, x_)), y_ = Math.max(clipMin, Math.min(clipMax, y_))], b = [x4 = Math.max(clipMin, Math.min(clipMax, x4)), y4 = Math.max(clipMin, Math.min(clipMax, y4))];
           if (line_default(a4, b, x06, y06, x12, y12)) {
@@ -11255,8 +10550,7 @@ function clipRectangle(x06, y06, x12, y12) {
               activeStream.point(a4[0], a4[1]);
             }
             activeStream.point(b[0], b[1]);
-            if (!v2)
-              activeStream.lineEnd();
+            if (!v2) activeStream.lineEnd();
             clean = false;
           } else if (v2) {
             activeStream.lineStart();
@@ -11337,9 +10631,7 @@ var containsObjectType = {
   },
   FeatureCollection: function(object2, point6) {
     var features = object2.features, i = -1, n = features.length;
-    while (++i < n)
-      if (containsGeometry(features[i].geometry, point6))
-        return true;
+    while (++i < n) if (containsGeometry(features[i].geometry, point6)) return true;
     return false;
   }
 };
@@ -11352,9 +10644,7 @@ var containsGeometryType = {
   },
   MultiPoint: function(object2, point6) {
     var coordinates2 = object2.coordinates, i = -1, n = coordinates2.length;
-    while (++i < n)
-      if (containsPoint(coordinates2[i], point6))
-        return true;
+    while (++i < n) if (containsPoint(coordinates2[i], point6)) return true;
     return false;
   },
   LineString: function(object2, point6) {
@@ -11362,9 +10652,7 @@ var containsGeometryType = {
   },
   MultiLineString: function(object2, point6) {
     var coordinates2 = object2.coordinates, i = -1, n = coordinates2.length;
-    while (++i < n)
-      if (containsLine(coordinates2[i], point6))
-        return true;
+    while (++i < n) if (containsLine(coordinates2[i], point6)) return true;
     return false;
   },
   Polygon: function(object2, point6) {
@@ -11372,16 +10660,12 @@ var containsGeometryType = {
   },
   MultiPolygon: function(object2, point6) {
     var coordinates2 = object2.coordinates, i = -1, n = coordinates2.length;
-    while (++i < n)
-      if (containsPolygon(coordinates2[i], point6))
-        return true;
+    while (++i < n) if (containsPolygon(coordinates2[i], point6)) return true;
     return false;
   },
   GeometryCollection: function(object2, point6) {
     var geometries = object2.geometries, i = -1, n = geometries.length;
-    while (++i < n)
-      if (containsGeometry(geometries[i], point6))
-        return true;
+    while (++i < n) if (containsGeometry(geometries[i], point6)) return true;
     return false;
   }
 };
@@ -11395,8 +10679,7 @@ function containsLine(coordinates2, point6) {
   var ao, bo, ab4;
   for (var i = 0, n = coordinates2.length; i < n; i++) {
     bo = distance_default(coordinates2[i], point6);
-    if (bo === 0)
-      return true;
+    if (bo === 0) return true;
     if (i > 0) {
       ab4 = distance_default(coordinates2[i], coordinates2[i - 1]);
       if (ab4 > 0 && ao <= ab4 && bo <= ab4 && (ao + bo - ab4) * (1 - Math.pow((ao - bo) / ab4, 2)) < epsilon22 * ab4)
@@ -11466,52 +10749,41 @@ function graticule() {
     };
   };
   graticule3.extent = function(_) {
-    if (!arguments.length)
-      return graticule3.extentMinor();
+    if (!arguments.length) return graticule3.extentMinor();
     return graticule3.extentMajor(_).extentMinor(_);
   };
   graticule3.extentMajor = function(_) {
-    if (!arguments.length)
-      return [[X03, Y03], [X13, Y13]];
+    if (!arguments.length) return [[X03, Y03], [X13, Y13]];
     X03 = +_[0][0], X13 = +_[1][0];
     Y03 = +_[0][1], Y13 = +_[1][1];
-    if (X03 > X13)
-      _ = X03, X03 = X13, X13 = _;
-    if (Y03 > Y13)
-      _ = Y03, Y03 = Y13, Y13 = _;
+    if (X03 > X13) _ = X03, X03 = X13, X13 = _;
+    if (Y03 > Y13) _ = Y03, Y03 = Y13, Y13 = _;
     return graticule3.precision(precision);
   };
   graticule3.extentMinor = function(_) {
-    if (!arguments.length)
-      return [[x06, y06], [x12, y12]];
+    if (!arguments.length) return [[x06, y06], [x12, y12]];
     x06 = +_[0][0], x12 = +_[1][0];
     y06 = +_[0][1], y12 = +_[1][1];
-    if (x06 > x12)
-      _ = x06, x06 = x12, x12 = _;
-    if (y06 > y12)
-      _ = y06, y06 = y12, y12 = _;
+    if (x06 > x12) _ = x06, x06 = x12, x12 = _;
+    if (y06 > y12) _ = y06, y06 = y12, y12 = _;
     return graticule3.precision(precision);
   };
   graticule3.step = function(_) {
-    if (!arguments.length)
-      return graticule3.stepMinor();
+    if (!arguments.length) return graticule3.stepMinor();
     return graticule3.stepMajor(_).stepMinor(_);
   };
   graticule3.stepMajor = function(_) {
-    if (!arguments.length)
-      return [DX, DY];
+    if (!arguments.length) return [DX, DY];
     DX = +_[0], DY = +_[1];
     return graticule3;
   };
   graticule3.stepMinor = function(_) {
-    if (!arguments.length)
-      return [dx, dy];
+    if (!arguments.length) return [dx, dy];
     dx = +_[0], dy = +_[1];
     return graticule3;
   };
   graticule3.precision = function(_) {
-    if (!arguments.length)
-      return precision;
+    if (!arguments.length) return precision;
     precision = +_;
     x4 = graticuleX(y06, y12, 90);
     y4 = graticuleY(x06, x12, precision);
@@ -11604,14 +10876,10 @@ var boundsStream2 = {
   }
 };
 function boundsPoint2(x4, y4) {
-  if (x4 < x03)
-    x03 = x4;
-  if (x4 > x1)
-    x1 = x4;
-  if (y4 < y03)
-    y03 = y4;
-  if (y4 > y1)
-    y1 = y4;
+  if (x4 < x03) x03 = x4;
+  if (x4 > x1) x1 = x4;
+  if (y4 < y03) y03 = y4;
+  if (y4 > y1) y1 = y4;
 }
 var bounds_default2 = boundsStream2;
 
@@ -11712,8 +10980,7 @@ PathContext.prototype = {
     this._point = 0;
   },
   lineEnd: function() {
-    if (this._line === 0)
-      this._context.closePath();
+    if (this._line === 0) this._context.closePath();
     this._point = NaN;
   },
   point: function(x4, y4) {
@@ -11750,8 +11017,7 @@ var lengthStream2 = {
     lengthStream2.point = lengthPointFirst2;
   },
   lineEnd: function() {
-    if (lengthRing)
-      lengthPoint2(x003, y003);
+    if (lengthRing) lengthPoint2(x003, y003);
     lengthStream2.point = noop2;
   },
   polygonStart: function() {
@@ -11802,8 +11068,7 @@ var PathString = class {
     this._point = 0;
   }
   lineEnd() {
-    if (this._line === 0)
-      this._ += "Z";
+    if (this._line === 0) this._ += "Z";
     this._point = NaN;
   }
   point(x4, y4) {
@@ -11849,10 +11114,8 @@ function append2(strings) {
 }
 function appendRound2(digits) {
   const d = Math.floor(digits);
-  if (!(d >= 0))
-    throw new RangeError(`invalid digits: ${digits}`);
-  if (d > 15)
-    return append2;
+  if (!(d >= 0)) throw new RangeError(`invalid digits: ${digits}`);
+  if (d > 15) return append2;
   if (d !== cacheDigits) {
     const k2 = 10 ** d;
     cacheDigits = d;
@@ -11872,8 +11135,7 @@ function path_default(projection3, context) {
   let digits = 3, pointRadius = 4.5, projectionStream, contextStream;
   function path2(object2) {
     if (object2) {
-      if (typeof pointRadius === "function")
-        contextStream.pointRadius(+pointRadius.apply(this, arguments));
+      if (typeof pointRadius === "function") contextStream.pointRadius(+pointRadius.apply(this, arguments));
       stream_default(object2, projectionStream(contextStream));
     }
     return contextStream.result();
@@ -11895,38 +11157,30 @@ function path_default(projection3, context) {
     return centroid_default2.result();
   };
   path2.projection = function(_) {
-    if (!arguments.length)
-      return projection3;
+    if (!arguments.length) return projection3;
     projectionStream = _ == null ? (projection3 = null, identity_default3) : (projection3 = _).stream;
     return path2;
   };
   path2.context = function(_) {
-    if (!arguments.length)
-      return context;
+    if (!arguments.length) return context;
     contextStream = _ == null ? (context = null, new PathString(digits)) : new PathContext(context = _);
-    if (typeof pointRadius !== "function")
-      contextStream.pointRadius(pointRadius);
+    if (typeof pointRadius !== "function") contextStream.pointRadius(pointRadius);
     return path2;
   };
   path2.pointRadius = function(_) {
-    if (!arguments.length)
-      return pointRadius;
+    if (!arguments.length) return pointRadius;
     pointRadius = typeof _ === "function" ? _ : (contextStream.pointRadius(+_), +_);
     return path2;
   };
   path2.digits = function(_) {
-    if (!arguments.length)
-      return digits;
-    if (_ == null)
-      digits = null;
+    if (!arguments.length) return digits;
+    if (_ == null) digits = null;
     else {
       const d = Math.floor(_);
-      if (!(d >= 0))
-        throw new RangeError(`invalid digits: ${_}`);
+      if (!(d >= 0)) throw new RangeError(`invalid digits: ${_}`);
       digits = d;
     }
-    if (context === null)
-      contextStream = new PathString(digits);
+    if (context === null) contextStream = new PathString(digits);
     return path2;
   };
   return path2.projection(projection3).digits(digits).context(context);
@@ -11941,8 +11195,7 @@ function transform_default(methods) {
 function transformer(methods) {
   return function(stream) {
     var s2 = new TransformStream();
-    for (var key in methods)
-      s2[key] = methods[key];
+    for (var key in methods) s2[key] = methods[key];
     s2.stream = stream;
     return s2;
   };
@@ -11975,12 +11228,10 @@ TransformStream.prototype = {
 function fit(projection3, fitBounds, object2) {
   var clip = projection3.clipExtent && projection3.clipExtent();
   projection3.scale(150).translate([0, 0]);
-  if (clip != null)
-    projection3.clipExtent(null);
+  if (clip != null) projection3.clipExtent(null);
   stream_default(object2, projection3.stream(bounds_default2));
   fitBounds(bounds_default2.result());
-  if (clip != null)
-    projection3.clipExtent(clip);
+  if (clip != null) projection3.clipExtent(clip);
   return projection3;
 }
 function fitExtent(projection3, extent3, object2) {
@@ -12108,8 +11359,7 @@ function scaleTranslate(k2, dx, dy, sx, sy) {
   return transform2;
 }
 function scaleTranslateRotate(k2, dx, dy, sx, sy, alpha) {
-  if (!alpha)
-    return scaleTranslate(k2, dx, dy, sx, sy);
+  if (!alpha) return scaleTranslate(k2, dx, dy, sx, sy);
   var cosAlpha = cos2(alpha), sinAlpha = sin2(alpha), a4 = cosAlpha * k2, b = sinAlpha * k2, ai = cosAlpha / k2, bi = sinAlpha / k2, ci = (sinAlpha * dy - cosAlpha * dx) / k2, fi = (sinAlpha * dx + cosAlpha * dy) / k2;
   function transform2(x4, y4) {
     x4 *= sx;
@@ -12229,8 +11479,7 @@ function cylindricalEqualAreaRaw(phi02) {
 // node_modules/d3-geo/src/projection/conicEqualArea.js
 function conicEqualAreaRaw(y06, y12) {
   var sy0 = sin2(y06), n = (sy0 + sin2(y12)) / 2;
-  if (abs3(n) < epsilon7)
-    return cylindricalEqualAreaRaw(y06);
+  if (abs3(n) < epsilon7) return cylindricalEqualAreaRaw(y06);
   var c6 = 1 + sy0 * (2 * n - sy0), r0 = sqrt(c6) / n;
   function project2(x4, y4) {
     var r = sqrt(c6 - 2 * n * sin2(y4)) / n;
@@ -12259,33 +11508,27 @@ function multiplex(streams) {
   return {
     point: function(x4, y4) {
       var i = -1;
-      while (++i < n)
-        streams[i].point(x4, y4);
+      while (++i < n) streams[i].point(x4, y4);
     },
     sphere: function() {
       var i = -1;
-      while (++i < n)
-        streams[i].sphere();
+      while (++i < n) streams[i].sphere();
     },
     lineStart: function() {
       var i = -1;
-      while (++i < n)
-        streams[i].lineStart();
+      while (++i < n) streams[i].lineStart();
     },
     lineEnd: function() {
       var i = -1;
-      while (++i < n)
-        streams[i].lineEnd();
+      while (++i < n) streams[i].lineEnd();
     },
     polygonStart: function() {
       var i = -1;
-      while (++i < n)
-        streams[i].polygonStart();
+      while (++i < n) streams[i].polygonStart();
     },
     polygonEnd: function() {
       var i = -1;
-      while (++i < n)
-        streams[i].polygonEnd();
+      while (++i < n) streams[i].polygonEnd();
     }
   };
 }
@@ -12305,20 +11548,17 @@ function albersUsa_default() {
     return cache && cacheStream === stream ? cache : cache = multiplex([lower48.stream(cacheStream = stream), alaska.stream(stream), hawaii.stream(stream)]);
   };
   albersUsa.precision = function(_) {
-    if (!arguments.length)
-      return lower48.precision();
+    if (!arguments.length) return lower48.precision();
     lower48.precision(_), alaska.precision(_), hawaii.precision(_);
     return reset();
   };
   albersUsa.scale = function(_) {
-    if (!arguments.length)
-      return lower48.scale();
+    if (!arguments.length) return lower48.scale();
     lower48.scale(_), alaska.scale(_ * 0.35), hawaii.scale(_);
     return albersUsa.translate(lower48.translate());
   };
   albersUsa.translate = function(_) {
-    if (!arguments.length)
-      return lower48.translate();
+    if (!arguments.length) return lower48.translate();
     var k2 = lower48.scale(), x4 = +_[0], y4 = +_[1];
     lower48Point = lower48.translate(_).clipExtent([[x4 - 0.455 * k2, y4 - 0.238 * k2], [x4 + 0.455 * k2, y4 + 0.238 * k2]]).stream(pointStream);
     alaskaPoint = alaska.translate([x4 - 0.307 * k2, y4 + 0.201 * k2]).clipExtent([[x4 - 0.425 * k2 + epsilon7, y4 + 0.12 * k2 + epsilon7], [x4 - 0.214 * k2 - epsilon7, y4 + 0.234 * k2 - epsilon7]]).stream(pointStream);
@@ -12348,8 +11588,7 @@ function albersUsa_default() {
 function azimuthalRaw(scale3) {
   return function(x4, y4) {
     var cx = cos2(x4), cy = cos2(y4), k2 = scale3(cx * cy);
-    if (k2 === Infinity)
-      return [2, 0];
+    if (k2 === Infinity) return [2, 0];
     return [
       k2 * cy * sin2(x4),
       k2 * sin2(y4)
@@ -12425,15 +11664,12 @@ function tany(y4) {
 }
 function conicConformalRaw(y06, y12) {
   var cy0 = cos2(y06), n = y06 === y12 ? sin2(y06) : log(cy0 / cos2(y12)) / log(tany(y12) / tany(y06)), f = cy0 * pow2(tany(y06), n) / n;
-  if (!n)
-    return mercatorRaw;
+  if (!n) return mercatorRaw;
   function project2(x4, y4) {
     if (f > 0) {
-      if (y4 < -halfPi3 + epsilon7)
-        y4 = -halfPi3 + epsilon7;
+      if (y4 < -halfPi3 + epsilon7) y4 = -halfPi3 + epsilon7;
     } else {
-      if (y4 > halfPi3 - epsilon7)
-        y4 = halfPi3 - epsilon7;
+      if (y4 > halfPi3 - epsilon7) y4 = halfPi3 - epsilon7;
     }
     var r = f / pow2(tany(y4), n);
     return [r * sin2(n * x4), f - r * cos2(n * x4)];
@@ -12462,8 +11698,7 @@ function equirectangular_default() {
 // node_modules/d3-geo/src/projection/conicEquidistant.js
 function conicEquidistantRaw(y06, y12) {
   var cy0 = cos2(y06), n = y06 === y12 ? sin2(y06) : (cy0 - cos2(y12)) / (y12 - y06), g = cy0 / n + y06;
-  if (abs3(n) < epsilon7)
-    return equirectangularRaw;
+  if (abs3(n) < epsilon7) return equirectangularRaw;
   function project2(x4, y4) {
     var gy = g - y4, nx = n * x4;
     return [gy * sin2(nx), g - gy * cos2(nx)];
@@ -12500,8 +11735,7 @@ equalEarthRaw.invert = function(x4, y4) {
     fy = l * (A1 + A2 * l2 + l6 * (A3 + A4 * l2)) - y4;
     fpy = A1 + 3 * A2 * l2 + l6 * (7 * A3 + 9 * A4 * l2);
     l -= delta = fy / fpy, l2 = l * l, l6 = l2 * l2 * l2;
-    if (abs3(delta) < epsilon22)
-      break;
+    if (abs3(delta) < epsilon22) break;
   }
   return [
     M * x4 * (A1 + 3 * A2 * l2 + l6 * (7 * A3 + 9 * A4 * l2)) / cos2(l),
@@ -12673,14 +11907,12 @@ function maxYReduce(y4, c6) {
 }
 function leafLeft(node) {
   var children2;
-  while (children2 = node.children)
-    node = children2[0];
+  while (children2 = node.children) node = children2[0];
   return node;
 }
 function leafRight(node) {
   var children2;
-  while (children2 = node.children)
-    node = children2[children2.length - 1];
+  while (children2 = node.children) node = children2[children2.length - 1];
   return node;
 }
 function cluster_default() {
@@ -12722,11 +11954,8 @@ function cluster_default() {
 // node_modules/d3-hierarchy/src/hierarchy/count.js
 function count2(node) {
   var sum4 = 0, children2 = node.children, i = children2 && children2.length;
-  if (!i)
-    sum4 = 1;
-  else
-    while (--i >= 0)
-      sum4 += children2[i].value;
+  if (!i) sum4 = 1;
+  else while (--i >= 0) sum4 += children2[i].value;
   node.value = sum4;
 }
 function count_default() {
@@ -12787,8 +12016,7 @@ function find_default2(callback, that) {
 function sum_default(value) {
   return this.eachAfter(function(node) {
     var sum4 = +value(node.data) || 0, children2 = node.children, i = children2 && children2.length;
-    while (--i >= 0)
-      sum4 += children2[i].value;
+    while (--i >= 0) sum4 += children2[i].value;
     node.value = sum4;
   });
 }
@@ -12817,8 +12045,7 @@ function path_default2(end) {
   return nodes;
 }
 function leastCommonAncestor(a4, b) {
-  if (a4 === b)
-    return a4;
+  if (a4 === b) return a4;
   var aNodes = a4.ancestors(), bNodes = b.ancestors(), c6 = null;
   a4 = aNodes.pop();
   b = bNodes.pop();
@@ -12886,8 +12113,7 @@ function* iterator_default2() {
 function hierarchy(data, children2) {
   if (data instanceof Map) {
     data = [void 0, data];
-    if (children2 === void 0)
-      children2 = mapChildren;
+    if (children2 === void 0) children2 = mapChildren;
   } else if (children2 === void 0) {
     children2 = objectChildren;
   }
@@ -12914,8 +12140,7 @@ function mapChildren(d) {
   return Array.isArray(d) ? d[1] : null;
 }
 function copyData(node) {
-  if (node.data.value !== void 0)
-    node.value = node.data.value;
+  if (node.data.value !== void 0) node.value = node.data.value;
   node.data = node.data.data;
 }
 function computeHeight(node) {
@@ -12952,8 +12177,7 @@ function optional(f) {
   return f == null ? null : required(f);
 }
 function required(f) {
-  if (typeof f !== "function")
-    throw new Error();
+  if (typeof f !== "function") throw new Error();
   return f;
 }
 
@@ -12999,17 +12223,14 @@ function packEncloseRandom(circles, random) {
   var i = 0, n = (circles = shuffle(Array.from(circles), random)).length, B3 = [], p, e;
   while (i < n) {
     p = circles[i];
-    if (e && enclosesWeak(e, p))
-      ++i;
-    else
-      e = encloseBasis(B3 = extendBasis(B3, p)), i = 0;
+    if (e && enclosesWeak(e, p)) ++i;
+    else e = encloseBasis(B3 = extendBasis(B3, p)), i = 0;
   }
   return e;
 }
 function extendBasis(B3, p) {
   var i, j;
-  if (enclosesWeakAll(p, B3))
-    return [p];
+  if (enclosesWeakAll(p, B3)) return [p];
   for (i = 0; i < B3.length; ++i) {
     if (enclosesNot(p, B3[i]) && enclosesWeakAll(encloseBasis2(B3[i], p), B3)) {
       return [B3[i], p];
@@ -13110,54 +12331,48 @@ function Node2(circle2) {
   this.previous = null;
 }
 function packSiblingsRandom(circles, random) {
-  if (!(n = (circles = array_default2(circles)).length))
-    return 0;
+  if (!(n = (circles = array_default2(circles)).length)) return 0;
   var a4, b, c6, n, aa2, ca3, i, j, k2, sj, sk;
   a4 = circles[0], a4.x = 0, a4.y = 0;
-  if (!(n > 1))
-    return a4.r;
+  if (!(n > 1)) return a4.r;
   b = circles[1], a4.x = -b.r, b.x = a4.r, b.y = 0;
-  if (!(n > 2))
-    return a4.r + b.r;
+  if (!(n > 2)) return a4.r + b.r;
   place(b, a4, c6 = circles[2]);
   a4 = new Node2(a4), b = new Node2(b), c6 = new Node2(c6);
   a4.next = c6.previous = b;
   b.next = a4.previous = c6;
   c6.next = b.previous = a4;
-  pack:
-    for (i = 3; i < n; ++i) {
-      place(a4._, b._, c6 = circles[i]), c6 = new Node2(c6);
-      j = b.next, k2 = a4.previous, sj = b._.r, sk = a4._.r;
-      do {
-        if (sj <= sk) {
-          if (intersects(j._, c6._)) {
-            b = j, a4.next = b, b.previous = a4, --i;
-            continue pack;
-          }
-          sj += j._.r, j = j.next;
-        } else {
-          if (intersects(k2._, c6._)) {
-            a4 = k2, a4.next = b, b.previous = a4, --i;
-            continue pack;
-          }
-          sk += k2._.r, k2 = k2.previous;
+  pack: for (i = 3; i < n; ++i) {
+    place(a4._, b._, c6 = circles[i]), c6 = new Node2(c6);
+    j = b.next, k2 = a4.previous, sj = b._.r, sk = a4._.r;
+    do {
+      if (sj <= sk) {
+        if (intersects(j._, c6._)) {
+          b = j, a4.next = b, b.previous = a4, --i;
+          continue pack;
         }
-      } while (j !== k2.next);
-      c6.previous = a4, c6.next = b, a4.next = b.previous = b = c6;
-      aa2 = score(a4);
-      while ((c6 = c6.next) !== b) {
-        if ((ca3 = score(c6)) < aa2) {
-          a4 = c6, aa2 = ca3;
+        sj += j._.r, j = j.next;
+      } else {
+        if (intersects(k2._, c6._)) {
+          a4 = k2, a4.next = b, b.previous = a4, --i;
+          continue pack;
         }
+        sk += k2._.r, k2 = k2.previous;
       }
-      b = a4.next;
+    } while (j !== k2.next);
+    c6.previous = a4, c6.next = b, a4.next = b.previous = b = c6;
+    aa2 = score(a4);
+    while ((c6 = c6.next) !== b) {
+      if ((ca3 = score(c6)) < aa2) {
+        a4 = c6, aa2 = ca3;
+      }
     }
+    b = a4.next;
+  }
   a4 = [b._], c6 = b;
-  while ((c6 = c6.next) !== b)
-    a4.push(c6._);
+  while ((c6 = c6.next) !== b) a4.push(c6._);
   c6 = packEncloseRandom(a4, random);
-  for (i = 0; i < n; ++i)
-    a4 = circles[i], a4.x -= c6.x, a4.y -= c6.y;
+  for (i = 0; i < n; ++i) a4 = circles[i], a4.x -= c6.x, a4.y -= c6.y;
   return c6.r;
 }
 function siblings_default(circles) {
@@ -13203,13 +12418,9 @@ function packChildrenRandom(padding, k2, random) {
   return function(node) {
     if (children2 = node.children) {
       var children2, i, n = children2.length, r = padding(node) * k2 || 0, e;
-      if (r)
-        for (i = 0; i < n; ++i)
-          children2[i].r += r;
+      if (r) for (i = 0; i < n; ++i) children2[i].r += r;
       e = packSiblingsRandom(children2, random);
-      if (r)
-        for (i = 0; i < n; ++i)
-          children2[i].r -= r;
+      if (r) for (i = 0; i < n; ++i) children2[i].r -= r;
       node.r = e + r;
     }
   };
@@ -13251,8 +12462,7 @@ function partition_default() {
     root3.x1 = dx;
     root3.y1 = dy / n;
     root3.eachBefore(positionNode(dy, n));
-    if (round2)
-      root3.eachBefore(round_default2);
+    if (round2) root3.eachBefore(round_default2);
     return root3;
   }
   function positionNode(dy2, n) {
@@ -13261,10 +12471,8 @@ function partition_default() {
         dice_default(node, node.x0, dy2 * (node.depth + 1) / n, node.x1, dy2 * (node.depth + 2) / n);
       }
       var x06 = node.x0, y06 = node.y0, x12 = node.x1 - padding, y12 = node.y1 - padding;
-      if (x12 < x06)
-        x06 = x12 = (x06 + x12) / 2;
-      if (y12 < y06)
-        y06 = y12 = (y06 + y12) / 2;
+      if (x12 < x06) x06 = x12 = (x06 + x12) / 2;
+      if (y12 < y06) y06 = y12 = (y06 + y12) / 2;
       node.x0 = x06;
       node.y0 = y06;
       node.x1 = x12;
@@ -13326,31 +12534,24 @@ function stratify_default() {
       node = nodes[i];
       if (nodeId = node.parent) {
         parent = nodeByKey.get(nodeId);
-        if (!parent)
-          throw new Error("missing: " + nodeId);
-        if (parent === ambiguous)
-          throw new Error("ambiguous: " + nodeId);
-        if (parent.children)
-          parent.children.push(node);
-        else
-          parent.children = [node];
+        if (!parent) throw new Error("missing: " + nodeId);
+        if (parent === ambiguous) throw new Error("ambiguous: " + nodeId);
+        if (parent.children) parent.children.push(node);
+        else parent.children = [node];
         node.parent = parent;
       } else {
-        if (root3)
-          throw new Error("multiple roots");
+        if (root3) throw new Error("multiple roots");
         root3 = node;
       }
     }
-    if (!root3)
-      throw new Error("no root");
+    if (!root3) throw new Error("no root");
     if (path2 != null) {
       while (root3.data === imputed && root3.children.length === 1) {
         root3 = root3.children[0], --n;
       }
       for (let i2 = nodes.length - 1; i2 >= 0; --i2) {
         node = nodes[i2];
-        if (node.data !== imputed)
-          break;
+        if (node.data !== imputed) break;
         node.data = null;
       }
     }
@@ -13360,8 +12561,7 @@ function stratify_default() {
       --n;
     }).eachBefore(computeHeight);
     root3.parent = null;
-    if (n > 0)
-      throw new Error("cycle");
+    if (n > 0) throw new Error("cycle");
     return root3;
   }
   stratify.id = function(x4) {
@@ -13378,26 +12578,20 @@ function stratify_default() {
 function normalize(path2) {
   path2 = `${path2}`;
   let i = path2.length;
-  if (slash(path2, i - 1) && !slash(path2, i - 2))
-    path2 = path2.slice(0, -1);
+  if (slash(path2, i - 1) && !slash(path2, i - 2)) path2 = path2.slice(0, -1);
   return path2[0] === "/" ? path2 : `/${path2}`;
 }
 function parentof(path2) {
   let i = path2.length;
-  if (i < 2)
-    return "";
-  while (--i > 1)
-    if (slash(path2, i))
-      break;
+  if (i < 2) return "";
+  while (--i > 1) if (slash(path2, i)) break;
   return path2.slice(0, i);
 }
 function slash(path2, i) {
   if (path2[i] === "/") {
     let k2 = 0;
-    while (i > 0 && path2[--i] === "\\")
-      ++k2;
-    if ((k2 & 1) === 0)
-      return true;
+    while (i > 0 && path2[--i] === "\\") ++k2;
+    if ((k2 & 1) === 0) return true;
   }
   return false;
 }
@@ -13468,17 +12662,13 @@ function tree_default() {
     var t = treeRoot(root3);
     t.eachAfter(firstWalk), t.parent.m = -t.z;
     t.eachBefore(secondWalk);
-    if (nodeSize)
-      root3.eachBefore(sizeNode);
+    if (nodeSize) root3.eachBefore(sizeNode);
     else {
       var left2 = root3, right2 = root3, bottom2 = root3;
       root3.eachBefore(function(node) {
-        if (node.x < left2.x)
-          left2 = node;
-        if (node.x > right2.x)
-          right2 = node;
-        if (node.depth > bottom2.depth)
-          bottom2 = node;
+        if (node.x < left2.x) left2 = node;
+        if (node.x > right2.x) right2 = node;
+        if (node.depth > bottom2.depth) bottom2 = node;
       });
       var s2 = left2 === right2 ? 1 : separation(left2, right2) / 2, tx = s2 - left2.x, kx2 = dx / (right2.x + s2 + tx), ky2 = dy / (bottom2.depth || 1);
       root3.eachBefore(function(node) {
@@ -13578,10 +12768,8 @@ function squarifyRatio(ratio, parent, x06, y06, x12, y12) {
     minRatio = Math.max(maxValue / beta, beta / minValue);
     for (; i1 < n; ++i1) {
       sumValue += nodeValue = nodes[i1].value;
-      if (nodeValue < minValue)
-        minValue = nodeValue;
-      if (nodeValue > maxValue)
-        maxValue = nodeValue;
+      if (nodeValue < minValue) minValue = nodeValue;
+      if (nodeValue > maxValue) maxValue = nodeValue;
       beta = sumValue * sumValue * alpha;
       newRatio = Math.max(maxValue / beta, beta / minValue);
       if (newRatio > minRatio) {
@@ -13591,10 +12779,8 @@ function squarifyRatio(ratio, parent, x06, y06, x12, y12) {
       minRatio = newRatio;
     }
     rows.push(row = { value: sumValue, dice: dx < dy, children: nodes.slice(i0, i1) });
-    if (row.dice)
-      dice_default(row, x06, y06, x12, value ? y06 += dy * sumValue / value : y12);
-    else
-      slice_default(row, x06, y06, value ? x06 += dx * sumValue / value : x12, y12);
+    if (row.dice) dice_default(row, x06, y06, x12, value ? y06 += dy * sumValue / value : y12);
+    else slice_default(row, x06, y06, value ? x06 += dx * sumValue / value : x12, y12);
     value -= sumValue, i0 = i1;
   }
   return rows;
@@ -13618,16 +12804,13 @@ function treemap_default() {
     root3.y1 = dy;
     root3.eachBefore(positionNode);
     paddingStack = [0];
-    if (round2)
-      root3.eachBefore(round_default2);
+    if (round2) root3.eachBefore(round_default2);
     return root3;
   }
   function positionNode(node) {
     var p = paddingStack[node.depth], x06 = node.x0 + p, y06 = node.y0 + p, x12 = node.x1 - p, y12 = node.y1 - p;
-    if (x12 < x06)
-      x06 = x12 = (x06 + x12) / 2;
-    if (y12 < y06)
-      y06 = y12 = (y06 + y12) / 2;
+    if (x12 < x06) x06 = x12 = (x06 + x12) / 2;
+    if (y12 < y06) y06 = y12 = (y06 + y12) / 2;
     node.x0 = x06;
     node.y0 = y06;
     node.x1 = x12;
@@ -13638,10 +12821,8 @@ function treemap_default() {
       y06 += paddingTop(node) - p;
       x12 -= paddingRight(node) - p;
       y12 -= paddingBottom(node) - p;
-      if (x12 < x06)
-        x06 = x12 = (x06 + x12) / 2;
-      if (y12 < y06)
-        y06 = y12 = (y06 + y12) / 2;
+      if (x12 < x06) x06 = x12 = (x06 + x12) / 2;
+      if (y12 < y06) y06 = y12 = (y06 + y12) / 2;
       tile(node, x06, y06, x12, y12);
     }
   }
@@ -13695,13 +12876,10 @@ function binary_default(parent, x06, y06, x12, y12) {
     var valueOffset = sums[i2], valueTarget = value / 2 + valueOffset, k2 = i2 + 1, hi = j - 1;
     while (k2 < hi) {
       var mid2 = k2 + hi >>> 1;
-      if (sums[mid2] < valueTarget)
-        k2 = mid2 + 1;
-      else
-        hi = mid2;
+      if (sums[mid2] < valueTarget) k2 = mid2 + 1;
+      else hi = mid2;
     }
-    if (valueTarget - sums[k2 - 1] < sums[k2] - valueTarget && i2 + 1 < k2)
-      --k2;
+    if (valueTarget - sums[k2 - 1] < sums[k2] - valueTarget && i2 + 1 < k2) --k2;
     var valueLeft = sums[k2] - valueOffset, valueRight = value - valueLeft;
     if (x13 - x07 > y13 - y07) {
       var xk = value ? (x07 * valueRight + x13 * valueLeft) / value : x13;
@@ -13727,12 +12905,9 @@ var resquarify_default = function custom11(ratio) {
       var rows, row, nodes, i, j = -1, n, m3 = rows.length, value = parent.value;
       while (++j < m3) {
         row = rows[j], nodes = row.children;
-        for (i = row.value = 0, n = nodes.length; i < n; ++i)
-          row.value += nodes[i].value;
-        if (row.dice)
-          dice_default(row, x06, y06, x12, value ? y06 += (y12 - y06) * row.value / value : y12);
-        else
-          slice_default(row, x06, y06, value ? x06 += (x12 - x06) * row.value / value : x12, y12);
+        for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value;
+        if (row.dice) dice_default(row, x06, y06, x12, value ? y06 += (y12 - y06) * row.value / value : y12);
+        else slice_default(row, x06, y06, value ? x06 += (x12 - x06) * row.value / value : x12, y12);
         value -= row.value;
       }
     } else {
@@ -13783,27 +12958,21 @@ function computeUpperHullIndexes(points) {
   const n = points.length, indexes2 = [0, 1];
   let size = 2, i;
   for (i = 2; i < n; ++i) {
-    while (size > 1 && cross_default(points[indexes2[size - 2]], points[indexes2[size - 1]], points[i]) <= 0)
-      --size;
+    while (size > 1 && cross_default(points[indexes2[size - 2]], points[indexes2[size - 1]], points[i]) <= 0) --size;
     indexes2[size++] = i;
   }
   return indexes2.slice(0, size);
 }
 function hull_default(points) {
-  if ((n = points.length) < 3)
-    return null;
+  if ((n = points.length) < 3) return null;
   var i, n, sortedPoints = new Array(n), flippedPoints = new Array(n);
-  for (i = 0; i < n; ++i)
-    sortedPoints[i] = [+points[i][0], +points[i][1], i];
+  for (i = 0; i < n; ++i) sortedPoints[i] = [+points[i][0], +points[i][1], i];
   sortedPoints.sort(lexicographicOrder);
-  for (i = 0; i < n; ++i)
-    flippedPoints[i] = [sortedPoints[i][0], -sortedPoints[i][1]];
+  for (i = 0; i < n; ++i) flippedPoints[i] = [sortedPoints[i][0], -sortedPoints[i][1]];
   var upperIndexes = computeUpperHullIndexes(sortedPoints), lowerIndexes = computeUpperHullIndexes(flippedPoints);
   var skipLeft = lowerIndexes[0] === upperIndexes[0], skipRight = lowerIndexes[lowerIndexes.length - 1] === upperIndexes[upperIndexes.length - 1], hull2 = [];
-  for (i = upperIndexes.length - 1; i >= 0; --i)
-    hull2.push(points[sortedPoints[upperIndexes[i]][2]]);
-  for (i = +skipLeft; i < lowerIndexes.length - skipRight; ++i)
-    hull2.push(points[sortedPoints[lowerIndexes[i]][2]]);
+  for (i = upperIndexes.length - 1; i >= 0; --i) hull2.push(points[sortedPoints[upperIndexes[i]][2]]);
+  for (i = +skipLeft; i < lowerIndexes.length - skipRight; ++i) hull2.push(points[sortedPoints[lowerIndexes[i]][2]]);
   return hull2;
 }
 
@@ -13812,8 +12981,7 @@ function contains_default3(polygon, point6) {
   var n = polygon.length, p = polygon[n - 1], x4 = point6[0], y4 = point6[1], x06 = p[0], y06 = p[1], x12, y12, inside = false;
   for (var i = 0; i < n; ++i) {
     p = polygon[i], x12 = p[0], y12 = p[1];
-    if (y12 > y4 !== y06 > y4 && x4 < (x06 - x12) * (y4 - y12) / (y06 - y12) + x12)
-      inside = !inside;
+    if (y12 > y4 !== y06 > y4 && x4 < (x06 - x12) * (y4 - y12) / (y06 - y12) + x12) inside = !inside;
     x06 = x12, y06 = y12;
   }
   return inside;
@@ -13843,10 +13011,8 @@ var uniform_default = function sourceRandomUniform(source) {
   function randomUniform(min4, max5) {
     min4 = min4 == null ? 0 : +min4;
     max5 = max5 == null ? 1 : +max5;
-    if (arguments.length === 1)
-      max5 = min4, min4 = 0;
-    else
-      max5 -= min4;
+    if (arguments.length === 1) max5 = min4, min4 = 0;
+    else max5 -= min4;
     return function() {
       return source() * max5 + min4;
     };
@@ -13858,8 +13024,7 @@ var uniform_default = function sourceRandomUniform(source) {
 // node_modules/d3-random/src/int.js
 var int_default = function sourceRandomInt(source) {
   function randomInt(min4, max5) {
-    if (arguments.length < 2)
-      max5 = min4, min4 = 0;
+    if (arguments.length < 2) max5 = min4, min4 = 0;
     min4 = Math.floor(min4);
     max5 = Math.floor(max5) - min4;
     return function() {
@@ -13878,14 +13043,12 @@ var normal_default = function sourceRandomNormal(source) {
     sigma = sigma == null ? 1 : +sigma;
     return function() {
       var y4;
-      if (x4 != null)
-        y4 = x4, x4 = null;
-      else
-        do {
-          x4 = source() * 2 - 1;
-          y4 = source() * 2 - 1;
-          r = x4 * x4 + y4 * y4;
-        } while (!r || r > 1);
+      if (x4 != null) y4 = x4, x4 = null;
+      else do {
+        x4 = source() * 2 - 1;
+        y4 = source() * 2 - 1;
+        r = x4 * x4 + y4 * y4;
+      } while (!r || r > 1);
       return mu + sigma * y4 * Math.sqrt(-2 * Math.log(r) / r);
     };
   }
@@ -13909,11 +13072,9 @@ var logNormal_default = function sourceRandomLogNormal(source) {
 // node_modules/d3-random/src/irwinHall.js
 var irwinHall_default = function sourceRandomIrwinHall(source) {
   function randomIrwinHall(n) {
-    if ((n = +n) <= 0)
-      return () => 0;
+    if ((n = +n) <= 0) return () => 0;
     return function() {
-      for (var sum4 = 0, i = n; i > 1; --i)
-        sum4 += source();
+      for (var sum4 = 0, i = n; i > 1; --i) sum4 += source();
       return sum4 + i * source();
     };
   }
@@ -13925,8 +13086,7 @@ var irwinHall_default = function sourceRandomIrwinHall(source) {
 var bates_default = function sourceRandomBates(source) {
   var I = irwinHall_default.source(source);
   function randomBates(n) {
-    if ((n = +n) === 0)
-      return source;
+    if ((n = +n) === 0) return source;
     var randomIrwinHall = I(n);
     return function() {
       return randomIrwinHall() / n;
@@ -13950,8 +13110,7 @@ var exponential_default = function sourceRandomExponential(source) {
 // node_modules/d3-random/src/pareto.js
 var pareto_default = function sourceRandomPareto(source) {
   function randomPareto(alpha) {
-    if ((alpha = +alpha) < 0)
-      throw new RangeError("invalid alpha");
+    if ((alpha = +alpha) < 0) throw new RangeError("invalid alpha");
     alpha = 1 / -alpha;
     return function() {
       return Math.pow(1 - source(), alpha);
@@ -13964,8 +13123,7 @@ var pareto_default = function sourceRandomPareto(source) {
 // node_modules/d3-random/src/bernoulli.js
 var bernoulli_default = function sourceRandomBernoulli(source) {
   function randomBernoulli(p) {
-    if ((p = +p) < 0 || p > 1)
-      throw new RangeError("invalid p");
+    if ((p = +p) < 0 || p > 1) throw new RangeError("invalid p");
     return function() {
       return Math.floor(source() + p);
     };
@@ -13977,12 +13135,9 @@ var bernoulli_default = function sourceRandomBernoulli(source) {
 // node_modules/d3-random/src/geometric.js
 var geometric_default = function sourceRandomGeometric(source) {
   function randomGeometric(p) {
-    if ((p = +p) < 0 || p > 1)
-      throw new RangeError("invalid p");
-    if (p === 0)
-      return () => Infinity;
-    if (p === 1)
-      return () => 1;
+    if ((p = +p) < 0 || p > 1) throw new RangeError("invalid p");
+    if (p === 0) return () => Infinity;
+    if (p === 1) return () => 1;
     p = Math.log1p(-p);
     return function() {
       return 1 + Math.floor(Math.log1p(-source()) / p);
@@ -13996,13 +13151,10 @@ var geometric_default = function sourceRandomGeometric(source) {
 var gamma_default = function sourceRandomGamma(source) {
   var randomNormal = normal_default.source(source)();
   function randomGamma(k2, theta) {
-    if ((k2 = +k2) < 0)
-      throw new RangeError("invalid k");
-    if (k2 === 0)
-      return () => 0;
+    if ((k2 = +k2) < 0) throw new RangeError("invalid k");
+    if (k2 === 0) return () => 0;
     theta = theta == null ? 1 : +theta;
-    if (k2 === 1)
-      return () => -Math.log1p(-source()) * theta;
+    if (k2 === 1) return () => -Math.log1p(-source()) * theta;
     var d = (k2 < 1 ? k2 + 1 : k2) - 1 / 3, c6 = 1 / (3 * Math.sqrt(d)), multiplier = k2 < 1 ? () => Math.pow(source(), 1 / k2) : () => 1;
     return function() {
       do {
@@ -14038,10 +13190,8 @@ var binomial_default = function sourceRandomBinomial(source) {
   var G = geometric_default.source(source), B3 = beta_default.source(source);
   function randomBinomial(n, p) {
     n = +n;
-    if ((p = +p) >= 1)
-      return () => n;
-    if (p <= 0)
-      return () => 0;
+    if ((p = +p) >= 1) return () => n;
+    if (p <= 0) return () => 0;
     return function() {
       var acc = 0, nn = n, pp = p;
       while (nn * pp > 16 && nn * (1 - pp) > 16) {
@@ -14056,8 +13206,7 @@ var binomial_default = function sourceRandomBinomial(source) {
         }
       }
       var sign3 = pp < 0.5, pFinal = sign3 ? pp : 1 - pp, g = G(pFinal);
-      for (var s2 = g(), k2 = 0; s2 <= nn; ++k2)
-        s2 += g();
+      for (var s2 = g(), k2 = 0; s2 <= nn; ++k2) s2 += g();
       return acc + (sign3 ? k2 : nn - k2);
     };
   }
@@ -14120,13 +13269,11 @@ var poisson_default = function sourceRandomPoisson(source) {
       var acc = 0, l = lambda;
       while (l > 16) {
         var n = Math.floor(0.875 * l), t = G(n)();
-        if (t > l)
-          return acc + B3(n - 1, l / t)();
+        if (t > l) return acc + B3(n - 1, l / t)();
         acc += n;
         l -= t;
       }
-      for (var s2 = -Math.log1p(-source()), k2 = 0; s2 <= l; ++k2)
-        s2 -= Math.log1p(-source());
+      for (var s2 = -Math.log1p(-source()), k2 = 0; s2 <= l; ++k2) s2 -= Math.log1p(-source());
       return acc + k2;
     };
   }
@@ -14162,18 +13309,14 @@ function initInterpolator(domain, interpolator) {
     case 0:
       break;
     case 1: {
-      if (typeof domain === "function")
-        this.interpolator(domain);
-      else
-        this.range(domain);
+      if (typeof domain === "function") this.interpolator(domain);
+      else this.range(domain);
       break;
     }
     default: {
       this.domain(domain);
-      if (typeof interpolator === "function")
-        this.interpolator(interpolator);
-      else
-        this.range(interpolator);
+      if (typeof interpolator === "function") this.interpolator(interpolator);
+      else this.range(interpolator);
       break;
     }
   }
@@ -14187,19 +13330,16 @@ function ordinal() {
   function scale3(d) {
     let i = index3.get(d);
     if (i === void 0) {
-      if (unknown !== implicit)
-        return unknown;
+      if (unknown !== implicit) return unknown;
       index3.set(d, i = domain.push(d) - 1);
     }
     return range5[i % range5.length];
   }
   scale3.domain = function(_) {
-    if (!arguments.length)
-      return domain.slice();
+    if (!arguments.length) return domain.slice();
     domain = [], index3 = new InternMap();
     for (const value of _) {
-      if (index3.has(value))
-        continue;
+      if (index3.has(value)) continue;
       index3.set(value, domain.push(value) - 1);
     }
     return scale3;
@@ -14224,12 +13364,10 @@ function band() {
   function rescale() {
     var n = domain().length, reverse3 = r1 < r0, start2 = reverse3 ? r1 : r0, stop = reverse3 ? r0 : r1;
     step = (stop - start2) / Math.max(1, n - paddingInner + paddingOuter * 2);
-    if (round2)
-      step = Math.floor(step);
+    if (round2) step = Math.floor(step);
     start2 += (stop - start2 - step * (n - paddingInner)) * align;
     bandwidth = step * (1 - paddingInner);
-    if (round2)
-      start2 = Math.round(start2), bandwidth = Math.round(bandwidth);
+    if (round2) start2 = Math.round(start2), bandwidth = Math.round(bandwidth);
     var values2 = range(n).map(function(i) {
       return start2 + step * i;
     });
@@ -14308,18 +13446,15 @@ function normalize2(a4, b) {
 }
 function clamper(a4, b) {
   var t;
-  if (a4 > b)
-    t = a4, a4 = b, b = t;
+  if (a4 > b) t = a4, a4 = b, b = t;
   return function(x4) {
     return Math.max(a4, Math.min(b, x4));
   };
 }
 function bimap(domain, range5, interpolate) {
   var d0 = domain[0], d1 = domain[1], r0 = range5[0], r1 = range5[1];
-  if (d1 < d0)
-    d0 = normalize2(d1, d0), r0 = interpolate(r1, r0);
-  else
-    d0 = normalize2(d0, d1), r0 = interpolate(r0, r1);
+  if (d1 < d0) d0 = normalize2(d1, d0), r0 = interpolate(r1, r0);
+  else d0 = normalize2(d0, d1), r0 = interpolate(r0, r1);
   return function(x4) {
     return r0(d0(x4));
   };
@@ -14346,8 +13481,7 @@ function transformer2() {
   var domain = unit, range5 = unit, interpolate = value_default, transform2, untransform, unknown, clamp = identity3, piecewise2, output, input;
   function rescale() {
     var n = Math.min(domain.length, range5.length);
-    if (clamp !== identity3)
-      clamp = clamper(domain[0], domain[n - 1]);
+    if (clamp !== identity3) clamp = clamper(domain[0], domain[n - 1]);
     piecewise2 = n > 2 ? polymap : bimap;
     output = input = null;
     return scale3;
@@ -14392,8 +13526,7 @@ function tickFormat(start2, stop, count3, specifier) {
   switch (specifier.type) {
     case "s": {
       var value = Math.max(Math.abs(start2), Math.abs(stop));
-      if (specifier.precision == null && !isNaN(precision = precisionPrefix_default(step, value)))
-        specifier.precision = precision;
+      if (specifier.precision == null && !isNaN(precision = precisionPrefix_default(step, value))) specifier.precision = precision;
       return formatPrefix(specifier, value);
     }
     case "":
@@ -14401,14 +13534,12 @@ function tickFormat(start2, stop, count3, specifier) {
     case "g":
     case "p":
     case "r": {
-      if (specifier.precision == null && !isNaN(precision = precisionRound_default(step, Math.max(Math.abs(start2), Math.abs(stop)))))
-        specifier.precision = precision - (specifier.type === "e");
+      if (specifier.precision == null && !isNaN(precision = precisionRound_default(step, Math.max(Math.abs(start2), Math.abs(stop))))) specifier.precision = precision - (specifier.type === "e");
       break;
     }
     case "f":
     case "%": {
-      if (specifier.precision == null && !isNaN(precision = precisionFixed_default(step)))
-        specifier.precision = precision - (specifier.type === "%") * 2;
+      if (specifier.precision == null && !isNaN(precision = precisionFixed_default(step))) specifier.precision = precision - (specifier.type === "%") * 2;
       break;
     }
   }
@@ -14427,8 +13558,7 @@ function linearish(scale3) {
     return tickFormat(d[0], d[d.length - 1], count3 == null ? 10 : count3, specifier);
   };
   scale3.nice = function(count3) {
-    if (count3 == null)
-      count3 = 10;
+    if (count3 == null) count3 = 10;
     var d = domain();
     var i0 = 0;
     var i1 = d.length - 1;
@@ -14556,8 +13686,7 @@ function loggish(transform2) {
     let u4 = d[0];
     let v2 = d[d.length - 1];
     const r = v2 < u4;
-    if (r)
-      [u4, v2] = [v2, u4];
+    if (r) [u4, v2] = [v2, u4];
     let i = logs(u4);
     let j = logs(v2);
     let k2;
@@ -14566,52 +13695,40 @@ function loggish(transform2) {
     let z = [];
     if (!(base % 1) && j - i < n) {
       i = Math.floor(i), j = Math.ceil(j);
-      if (u4 > 0)
-        for (; i <= j; ++i) {
-          for (k2 = 1; k2 < base; ++k2) {
-            t = i < 0 ? k2 / pows(-i) : k2 * pows(i);
-            if (t < u4)
-              continue;
-            if (t > v2)
-              break;
-            z.push(t);
-          }
+      if (u4 > 0) for (; i <= j; ++i) {
+        for (k2 = 1; k2 < base; ++k2) {
+          t = i < 0 ? k2 / pows(-i) : k2 * pows(i);
+          if (t < u4) continue;
+          if (t > v2) break;
+          z.push(t);
         }
-      else
-        for (; i <= j; ++i) {
-          for (k2 = base - 1; k2 >= 1; --k2) {
-            t = i > 0 ? k2 / pows(-i) : k2 * pows(i);
-            if (t < u4)
-              continue;
-            if (t > v2)
-              break;
-            z.push(t);
-          }
+      }
+      else for (; i <= j; ++i) {
+        for (k2 = base - 1; k2 >= 1; --k2) {
+          t = i > 0 ? k2 / pows(-i) : k2 * pows(i);
+          if (t < u4) continue;
+          if (t > v2) break;
+          z.push(t);
         }
-      if (z.length * 2 < n)
-        z = ticks(u4, v2, n);
+      }
+      if (z.length * 2 < n) z = ticks(u4, v2, n);
     } else {
       z = ticks(i, j, Math.min(j - i, n)).map(pows);
     }
     return r ? z.reverse() : z;
   };
   scale3.tickFormat = (count3, specifier) => {
-    if (count3 == null)
-      count3 = 10;
-    if (specifier == null)
-      specifier = base === 10 ? "s" : ",";
+    if (count3 == null) count3 = 10;
+    if (specifier == null) specifier = base === 10 ? "s" : ",";
     if (typeof specifier !== "function") {
-      if (!(base % 1) && (specifier = formatSpecifier(specifier)).precision == null)
-        specifier.trim = true;
+      if (!(base % 1) && (specifier = formatSpecifier(specifier)).precision == null) specifier.trim = true;
       specifier = format(specifier);
     }
-    if (count3 === Infinity)
-      return specifier;
+    if (count3 === Infinity) return specifier;
     const k2 = Math.max(1, base * count3 / scale3.ticks().length);
     return (d) => {
       let i = d / pows(Math.round(logs(d)));
-      if (i * base < base - 0.5)
-        i *= base;
+      if (i * base < base - 0.5) i *= base;
       return i <= k2 ? specifier(d) : "";
     };
   };
@@ -14737,8 +13854,7 @@ function quantile2() {
   function rescale() {
     var i = 0, n = Math.max(1, range5.length);
     thresholds = new Array(n - 1);
-    while (++i < n)
-      thresholds[i - 1] = quantileSorted(domain, i / n);
+    while (++i < n) thresholds[i - 1] = quantileSorted(domain, i / n);
     return scale3;
   }
   function scale3(x4) {
@@ -14752,12 +13868,9 @@ function quantile2() {
     ];
   };
   scale3.domain = function(_) {
-    if (!arguments.length)
-      return domain.slice();
+    if (!arguments.length) return domain.slice();
     domain = [];
-    for (let d of _)
-      if (d != null && !isNaN(d = +d))
-        domain.push(d);
+    for (let d of _) if (d != null && !isNaN(d = +d)) domain.push(d);
     domain.sort(ascending);
     return rescale();
   };
@@ -14785,8 +13898,7 @@ function quantize() {
   function rescale() {
     var i = -1;
     domain = new Array(n);
-    while (++i < n)
-      domain[i] = ((i + 1) * x12 - (i - n) * x06) / (n + 1);
+    while (++i < n) domain[i] = ((i + 1) * x12 - (i - n) * x06) / (n + 1);
     return scale3;
   }
   scale3.domain = function(_) {
@@ -14860,8 +13972,7 @@ function timeInterval(floori, offseti, count3, field2) {
     const range5 = [];
     start2 = interval2.ceil(start2);
     step = step == null ? 1 : Math.floor(step);
-    if (!(start2 < stop) || !(step > 0))
-      return range5;
+    if (!(start2 < stop) || !(step > 0)) return range5;
     let previous;
     do
       range5.push(previous = /* @__PURE__ */ new Date(+start2)), offseti(start2, step), floori(start2);
@@ -14870,21 +13981,17 @@ function timeInterval(floori, offseti, count3, field2) {
   };
   interval2.filter = (test) => {
     return timeInterval((date2) => {
-      if (date2 >= date2)
-        while (floori(date2), !test(date2))
-          date2.setTime(date2 - 1);
+      if (date2 >= date2) while (floori(date2), !test(date2)) date2.setTime(date2 - 1);
     }, (date2, step) => {
       if (date2 >= date2) {
-        if (step < 0)
-          while (++step <= 0) {
-            while (offseti(date2, -1), !test(date2)) {
-            }
+        if (step < 0) while (++step <= 0) {
+          while (offseti(date2, -1), !test(date2)) {
           }
-        else
-          while (--step >= 0) {
-            while (offseti(date2, 1), !test(date2)) {
-            }
+        }
+        else while (--step >= 0) {
+          while (offseti(date2, 1), !test(date2)) {
           }
+        }
       }
     });
   };
@@ -14911,10 +14018,8 @@ var millisecond = timeInterval(() => {
 });
 millisecond.every = (k2) => {
   k2 = Math.floor(k2);
-  if (!isFinite(k2) || !(k2 > 0))
-    return null;
-  if (!(k2 > 1))
-    return millisecond;
+  if (!isFinite(k2) || !(k2 > 0)) return null;
+  if (!(k2 > 1)) return millisecond;
   return timeInterval((date2) => {
     date2.setTime(Math.floor(date2 / k2) * k2);
   }, (date2, step) => {
@@ -15159,8 +14264,7 @@ function ticker(year, month, week, day, hour, minute) {
   ];
   function ticks2(start2, stop, count3) {
     const reverse3 = stop < start2;
-    if (reverse3)
-      [start2, stop] = [stop, start2];
+    if (reverse3) [start2, stop] = [stop, start2];
     const interval2 = count3 && typeof count3.range === "function" ? count3 : tickInterval(start2, stop, count3);
     const ticks3 = interval2 ? interval2.range(start2, +stop + 1) : [];
     return reverse3 ? ticks3.reverse() : ticks3;
@@ -15168,10 +14272,8 @@ function ticker(year, month, week, day, hour, minute) {
   function tickInterval(start2, stop, count3) {
     const target = Math.abs(stop - start2) / count3;
     const i = bisector(([, , step2]) => step2).right(tickIntervals2, target);
-    if (i === tickIntervals2.length)
-      return year.every(tickStep(start2 / durationYear, stop / durationYear, count3));
-    if (i === 0)
-      return millisecond.every(Math.max(tickStep(start2, stop, count3), 1));
+    if (i === tickIntervals2.length) return year.every(tickStep(start2 / durationYear, stop / durationYear, count3));
+    if (i === 0) return millisecond.every(Math.max(tickStep(start2, stop, count3), 1));
     const [t, step] = tickIntervals2[target / tickIntervals2[i - 1][2] < tickIntervals2[i][2] / target ? i - 1 : i];
     return t.every(step);
   }
@@ -15314,17 +14416,13 @@ function formatLocale(locale3) {
   function newFormat(specifier, formats2) {
     return function(date2) {
       var string2 = [], i = -1, j = 0, n = specifier.length, c6, pad4, format3;
-      if (!(date2 instanceof Date))
-        date2 = /* @__PURE__ */ new Date(+date2);
+      if (!(date2 instanceof Date)) date2 = /* @__PURE__ */ new Date(+date2);
       while (++i < n) {
         if (specifier.charCodeAt(i) === 37) {
           string2.push(specifier.slice(j, i));
-          if ((pad4 = pads[c6 = specifier.charAt(++i)]) != null)
-            c6 = specifier.charAt(++i);
-          else
-            pad4 = c6 === "e" ? " " : "0";
-          if (format3 = formats2[c6])
-            c6 = format3(date2, pad4);
+          if ((pad4 = pads[c6 = specifier.charAt(++i)]) != null) c6 = specifier.charAt(++i);
+          else pad4 = c6 === "e" ? " " : "0";
+          if (format3 = formats2[c6]) c6 = format3(date2, pad4);
           string2.push(c6);
           j = i + 1;
         }
@@ -15336,23 +14434,15 @@ function formatLocale(locale3) {
   function newParse(specifier, Z) {
     return function(string2) {
       var d = newDate(1900, void 0, 1), i = parseSpecifier(d, specifier, string2 += "", 0), week, day;
-      if (i != string2.length)
-        return null;
-      if ("Q" in d)
-        return new Date(d.Q);
-      if ("s" in d)
-        return new Date(d.s * 1e3 + ("L" in d ? d.L : 0));
-      if (Z && !("Z" in d))
-        d.Z = 0;
-      if ("p" in d)
-        d.H = d.H % 12 + d.p * 12;
-      if (d.m === void 0)
-        d.m = "q" in d ? d.q : 0;
+      if (i != string2.length) return null;
+      if ("Q" in d) return new Date(d.Q);
+      if ("s" in d) return new Date(d.s * 1e3 + ("L" in d ? d.L : 0));
+      if (Z && !("Z" in d)) d.Z = 0;
+      if ("p" in d) d.H = d.H % 12 + d.p * 12;
+      if (d.m === void 0) d.m = "q" in d ? d.q : 0;
       if ("V" in d) {
-        if (d.V < 1 || d.V > 53)
-          return null;
-        if (!("w" in d))
-          d.w = 1;
+        if (d.V < 1 || d.V > 53) return null;
+        if (!("w" in d)) d.w = 1;
         if ("Z" in d) {
           week = utcDate(newDate(d.y, 0, 1)), day = week.getUTCDay();
           week = day > 4 || day === 0 ? utcMonday.ceil(week) : utcMonday(week);
@@ -15369,8 +14459,7 @@ function formatLocale(locale3) {
           d.d = week.getDate() + (d.w + 6) % 7;
         }
       } else if ("W" in d || "U" in d) {
-        if (!("w" in d))
-          d.w = "u" in d ? d.u % 7 : "W" in d ? 1 : 0;
+        if (!("w" in d)) d.w = "u" in d ? d.u % 7 : "W" in d ? 1 : 0;
         day = "Z" in d ? utcDate(newDate(d.y, 0, 1)).getUTCDay() : localDate(newDate(d.y, 0, 1)).getDay();
         d.m = 0;
         d.d = "W" in d ? (d.w + 6) % 7 + d.W * 7 - (day + 5) % 7 : d.w + d.U * 7 - (day + 6) % 7;
@@ -15386,14 +14475,12 @@ function formatLocale(locale3) {
   function parseSpecifier(d, specifier, string2, j) {
     var i = 0, n = specifier.length, m3 = string2.length, c6, parse2;
     while (i < n) {
-      if (j >= m3)
-        return -1;
+      if (j >= m3) return -1;
       c6 = specifier.charCodeAt(i++);
       if (c6 === 37) {
         c6 = specifier.charAt(i++);
         parse2 = parses[c6 in pads ? specifier.charAt(i++) : c6];
-        if (!parse2 || (j = parse2(d, string2, j)) < 0)
-          return -1;
+        if (!parse2 || (j = parse2(d, string2, j)) < 0) return -1;
       } else if (c6 != string2.charCodeAt(j++)) {
         return -1;
       }
@@ -15805,8 +14892,7 @@ function calendar(ticks2, tickInterval, year, month, week, day, hour, minute, se
   };
   scale3.nice = function(interval2) {
     var d = domain();
-    if (!interval2 || typeof interval2.range !== "function")
-      interval2 = tickInterval(d[0], d[d.length - 1], interval2 == null ? 10 : interval2);
+    if (!interval2 || typeof interval2.range !== "function") interval2 = tickInterval(d[0], d[d.length - 1], interval2 == null ? 10 : interval2);
     return interval2 ? domain(nice2(d, interval2)) : scale3;
   };
   scale3.copy = function() {
@@ -15893,16 +14979,12 @@ function sequentialSqrt() {
 function sequentialQuantile() {
   var domain = [], interpolator = identity3;
   function scale3(x4) {
-    if (x4 != null && !isNaN(x4 = +x4))
-      return interpolator((bisect_default(domain, x4, 1) - 1) / (domain.length - 1));
+    if (x4 != null && !isNaN(x4 = +x4)) return interpolator((bisect_default(domain, x4, 1) - 1) / (domain.length - 1));
   }
   scale3.domain = function(_) {
-    if (!arguments.length)
-      return domain.slice();
+    if (!arguments.length) return domain.slice();
     domain = [];
-    for (let d of _)
-      if (d != null && !isNaN(d = +d))
-        domain.push(d);
+    for (let d of _) if (d != null && !isNaN(d = +d)) domain.push(d);
     domain.sort(ascending);
     return scale3;
   };
@@ -15987,8 +15069,7 @@ function divergingSqrt() {
 // node_modules/d3-scale-chromatic/src/colors.js
 function colors_default(specifier) {
   var n = specifier.length / 6 | 0, colors = new Array(n), i = 0;
-  while (i < n)
-    colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
+  while (i < n) colors[i] = "#" + specifier.slice(i * 6, ++i * 6);
   return colors;
 }
 
@@ -16384,8 +15465,7 @@ var warm = cubehelixLong(cubehelix(-100, 0.75, 0.35), cubehelix(80, 1.5, 0.8));
 var cool = cubehelixLong(cubehelix(260, 0.75, 0.35), cubehelix(80, 1.5, 0.8));
 var c3 = cubehelix();
 function rainbow_default(t) {
-  if (t < 0 || t > 1)
-    t -= Math.floor(t);
+  if (t < 0 || t > 1) t -= Math.floor(t);
   var ts = Math.abs(t - 0.5);
   c3.h = 360 * t - 100;
   c3.s = 1.5 - 1.5 * ts;
@@ -16454,14 +15534,12 @@ function asin2(x4) {
 function withPath(shape) {
   let digits = 3;
   shape.digits = function(_) {
-    if (!arguments.length)
-      return digits;
+    if (!arguments.length) return digits;
     if (_ == null) {
       digits = null;
     } else {
       const d = Math.floor(_);
-      if (!(d >= 0))
-        throw new RangeError(`invalid digits: ${_}`);
+      if (!(d >= 0)) throw new RangeError(`invalid digits: ${_}`);
       digits = d;
     }
     return shape;
@@ -16487,15 +15565,13 @@ function arcPadAngle(d) {
 }
 function intersect(x06, y06, x12, y12, x22, y22, x32, y32) {
   var x10 = x12 - x06, y10 = y12 - y06, x322 = x32 - x22, y322 = y32 - y22, t = y322 * x10 - x322 * y10;
-  if (t * t < epsilon8)
-    return;
+  if (t * t < epsilon8) return;
   t = (x322 * (y06 - y22) - y322 * (x06 - x22)) / t;
   return [x06 + t * x10, y06 + t * y10];
 }
 function cornerTangents(x06, y06, x12, y12, r1, rc, cw) {
   var x01 = x06 - x12, y01 = y06 - y12, lo = (cw ? rc : -rc) / sqrt3(x01 * x01 + y01 * y01), ox2 = lo * y01, oy2 = -lo * x01, x11 = x06 + ox2, y11 = y06 + oy2, x10 = x12 + ox2, y10 = y12 + oy2, x004 = (x11 + x10) / 2, y004 = (y11 + y10) / 2, dx = x10 - x11, dy = y10 - y11, d2 = dx * dx + dy * dy, r = r1 - rc, D3 = x11 * y10 - x10 * y11, d = (dy < 0 ? -1 : 1) * sqrt3(max4(0, r * r * d2 - D3 * D3)), cx0 = (D3 * dy - dx * d) / d2, cy0 = (-D3 * dx - dy * d) / d2, cx1 = (D3 * dy + dx * d) / d2, cy1 = (-D3 * dx + dy * d) / d2, dx0 = cx0 - x004, dy0 = cy0 - y004, dx1 = cx1 - x004, dy1 = cy1 - y004;
-  if (dx0 * dx0 + dy0 * dy0 > dx1 * dx1 + dy1 * dy1)
-    cx0 = cx1, cy0 = cy1;
+  if (dx0 * dx0 + dy0 * dy0 > dx1 * dx1 + dy1 * dy1) cx0 = cx1, cy0 = cy1;
   return {
     cx: cx0,
     cy: cy0,
@@ -16509,12 +15585,9 @@ function arc_default() {
   var innerRadius = arcInnerRadius, outerRadius = arcOuterRadius, cornerRadius = constant_default10(0), padRadius = null, startAngle = arcStartAngle, endAngle = arcEndAngle, padAngle = arcPadAngle, context = null, path2 = withPath(arc);
   function arc() {
     var buffer, r, r0 = +innerRadius.apply(this, arguments), r1 = +outerRadius.apply(this, arguments), a0 = startAngle.apply(this, arguments) - halfPi4, a1 = endAngle.apply(this, arguments) - halfPi4, da2 = abs4(a1 - a0), cw = a1 > a0;
-    if (!context)
-      context = buffer = path2();
-    if (r1 < r0)
-      r = r1, r1 = r0, r0 = r;
-    if (!(r1 > epsilon8))
-      context.moveTo(0, 0);
+    if (!context) context = buffer = path2();
+    if (r1 < r0) r = r1, r1 = r0, r0 = r;
+    if (!(r1 > epsilon8)) context.moveTo(0, 0);
     else if (da2 > tau6 - epsilon8) {
       context.moveTo(r1 * cos3(a0), r1 * sin3(a0));
       context.arc(0, 0, r1, a0, a1, !cw);
@@ -16526,14 +15599,10 @@ function arc_default() {
       var a01 = a0, a11 = a1, a00 = a0, a10 = a1, da0 = da2, da1 = da2, ap = padAngle.apply(this, arguments) / 2, rp = ap > epsilon8 && (padRadius ? +padRadius.apply(this, arguments) : sqrt3(r0 * r0 + r1 * r1)), rc = min3(abs4(r1 - r0) / 2, +cornerRadius.apply(this, arguments)), rc0 = rc, rc1 = rc, t03, t13;
       if (rp > epsilon8) {
         var p02 = asin2(rp / r0 * sin3(ap)), p1 = asin2(rp / r1 * sin3(ap));
-        if ((da0 -= p02 * 2) > epsilon8)
-          p02 *= cw ? 1 : -1, a00 += p02, a10 -= p02;
-        else
-          da0 = 0, a00 = a10 = (a0 + a1) / 2;
-        if ((da1 -= p1 * 2) > epsilon8)
-          p1 *= cw ? 1 : -1, a01 += p1, a11 -= p1;
-        else
-          da1 = 0, a01 = a11 = (a0 + a1) / 2;
+        if ((da0 -= p02 * 2) > epsilon8) p02 *= cw ? 1 : -1, a00 += p02, a10 -= p02;
+        else da0 = 0, a00 = a10 = (a0 + a1) / 2;
+        if ((da1 -= p1 * 2) > epsilon8) p1 *= cw ? 1 : -1, a01 += p1, a11 -= p1;
+        else da1 = 0, a01 = a11 = (a0 + a1) / 2;
       }
       var x01 = r1 * cos3(a01), y01 = r1 * sin3(a01), x10 = r0 * cos3(a10), y10 = r0 * sin3(a10);
       if (rc > epsilon8) {
@@ -16548,40 +15617,33 @@ function arc_default() {
           }
         }
       }
-      if (!(da1 > epsilon8))
-        context.moveTo(x01, y01);
+      if (!(da1 > epsilon8)) context.moveTo(x01, y01);
       else if (rc1 > epsilon8) {
         t03 = cornerTangents(x004, y004, x01, y01, r1, rc1, cw);
         t13 = cornerTangents(x11, y11, x10, y10, r1, rc1, cw);
         context.moveTo(t03.cx + t03.x01, t03.cy + t03.y01);
-        if (rc1 < rc)
-          context.arc(t03.cx, t03.cy, rc1, atan22(t03.y01, t03.x01), atan22(t13.y01, t13.x01), !cw);
+        if (rc1 < rc) context.arc(t03.cx, t03.cy, rc1, atan22(t03.y01, t03.x01), atan22(t13.y01, t13.x01), !cw);
         else {
           context.arc(t03.cx, t03.cy, rc1, atan22(t03.y01, t03.x01), atan22(t03.y11, t03.x11), !cw);
           context.arc(0, 0, r1, atan22(t03.cy + t03.y11, t03.cx + t03.x11), atan22(t13.cy + t13.y11, t13.cx + t13.x11), !cw);
           context.arc(t13.cx, t13.cy, rc1, atan22(t13.y11, t13.x11), atan22(t13.y01, t13.x01), !cw);
         }
-      } else
-        context.moveTo(x01, y01), context.arc(0, 0, r1, a01, a11, !cw);
-      if (!(r0 > epsilon8) || !(da0 > epsilon8))
-        context.lineTo(x10, y10);
+      } else context.moveTo(x01, y01), context.arc(0, 0, r1, a01, a11, !cw);
+      if (!(r0 > epsilon8) || !(da0 > epsilon8)) context.lineTo(x10, y10);
       else if (rc0 > epsilon8) {
         t03 = cornerTangents(x10, y10, x11, y11, r0, -rc0, cw);
         t13 = cornerTangents(x01, y01, x004, y004, r0, -rc0, cw);
         context.lineTo(t03.cx + t03.x01, t03.cy + t03.y01);
-        if (rc0 < rc)
-          context.arc(t03.cx, t03.cy, rc0, atan22(t03.y01, t03.x01), atan22(t13.y01, t13.x01), !cw);
+        if (rc0 < rc) context.arc(t03.cx, t03.cy, rc0, atan22(t03.y01, t03.x01), atan22(t13.y01, t13.x01), !cw);
         else {
           context.arc(t03.cx, t03.cy, rc0, atan22(t03.y01, t03.x01), atan22(t03.y11, t03.x11), !cw);
           context.arc(0, 0, r0, atan22(t03.cy + t03.y11, t03.cx + t03.x11), atan22(t13.cy + t13.y11, t13.cx + t13.x11), cw);
           context.arc(t13.cx, t13.cy, rc0, atan22(t13.y11, t13.x11), atan22(t13.y01, t13.x01), !cw);
         }
-      } else
-        context.arc(0, 0, r0, a10, a00, cw);
+      } else context.arc(0, 0, r0, a10, a00, cw);
     }
     context.closePath();
-    if (buffer)
-      return context = null, buffer + "" || null;
+    if (buffer) return context = null, buffer + "" || null;
   }
   arc.centroid = function() {
     var r = (+innerRadius.apply(this, arguments) + +outerRadius.apply(this, arguments)) / 2, a4 = (+startAngle.apply(this, arguments) + +endAngle.apply(this, arguments)) / 2 - pi5 / 2;
@@ -16635,8 +15697,7 @@ Linear.prototype = {
     this._point = 0;
   },
   lineEnd: function() {
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -16648,6 +15709,7 @@ Linear.prototype = {
         break;
       case 1:
         this._point = 2;
+      // falls through
       default:
         this._context.lineTo(x4, y4);
         break;
@@ -16673,20 +15735,15 @@ function line_default2(x4, y4) {
   y4 = typeof y4 === "function" ? y4 : y4 === void 0 ? y3 : constant_default10(y4);
   function line2(data) {
     var i, n = (data = array_default3(data)).length, d, defined0 = false, buffer;
-    if (context == null)
-      output = curve(buffer = path2());
+    if (context == null) output = curve(buffer = path2());
     for (i = 0; i <= n; ++i) {
       if (!(i < n && defined2(d = data[i], i, data)) === defined0) {
-        if (defined0 = !defined0)
-          output.lineStart();
-        else
-          output.lineEnd();
+        if (defined0 = !defined0) output.lineStart();
+        else output.lineEnd();
       }
-      if (defined0)
-        output.point(+x4(d, i, data), +y4(d, i, data));
+      if (defined0) output.point(+x4(d, i, data), +y4(d, i, data));
     }
-    if (buffer)
-      return output = null, buffer + "" || null;
+    if (buffer) return output = null, buffer + "" || null;
   }
   line2.x = function(_) {
     return arguments.length ? (x4 = typeof _ === "function" ? _ : constant_default10(+_), line2) : x4;
@@ -16714,8 +15771,7 @@ function area_default5(x06, y06, y12) {
   y12 = typeof y12 === "function" ? y12 : y12 === void 0 ? y3 : constant_default10(+y12);
   function area2(data) {
     var i, j, k2, n = (data = array_default3(data)).length, d, defined0 = false, buffer, x0z = new Array(n), y0z = new Array(n);
-    if (context == null)
-      output = curve(buffer = path2());
+    if (context == null) output = curve(buffer = path2());
     for (i = 0; i <= n; ++i) {
       if (!(i < n && defined2(d = data[i], i, data)) === defined0) {
         if (defined0 = !defined0) {
@@ -16737,8 +15793,7 @@ function area_default5(x06, y06, y12) {
         output.point(x12 ? +x12(d, i, data) : x0z[i], y12 ? +y12(d, i, data) : y0z[i]);
       }
     }
-    if (buffer)
-      return output = null, buffer + "" || null;
+    if (buffer) return output = null, buffer + "" || null;
   }
   function arealine() {
     return line_default2().defined(defined2).curve(curve).context(context);
@@ -16802,14 +15857,12 @@ function pie_default() {
         sum4 += v2;
       }
     }
-    if (sortValues != null)
-      index3.sort(function(i2, j2) {
-        return sortValues(arcs[i2], arcs[j2]);
-      });
-    else if (sort3 != null)
-      index3.sort(function(i2, j2) {
-        return sort3(data[i2], data[j2]);
-      });
+    if (sortValues != null) index3.sort(function(i2, j2) {
+      return sortValues(arcs[i2], arcs[j2]);
+    });
+    else if (sort3 != null) index3.sort(function(i2, j2) {
+      return sort3(data[i2], data[j2]);
+    });
     for (i = 0, k2 = sum4 ? (da2 - n * pa) / sum4 : 0; i < n; ++i, a0 = a1) {
       j = index3[i], v2 = arcs[j], a1 = a0 + (v2 > 0 ? v2 * k2 : 0) + pa, arcs[j] = {
         data: data[j],
@@ -16935,8 +15988,7 @@ var Bump = class {
     this._point = 0;
   }
   lineEnd() {
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   }
   point(x4, y4) {
@@ -16944,19 +15996,16 @@ var Bump = class {
     switch (this._point) {
       case 0: {
         this._point = 1;
-        if (this._line)
-          this._context.lineTo(x4, y4);
-        else
-          this._context.moveTo(x4, y4);
+        if (this._line) this._context.lineTo(x4, y4);
+        else this._context.moveTo(x4, y4);
         break;
       }
       case 1:
         this._point = 2;
+      // falls through
       default: {
-        if (this._x)
-          this._context.bezierCurveTo(this._x0 = (this._x0 + x4) / 2, this._y0, this._x0, y4, x4, y4);
-        else
-          this._context.bezierCurveTo(this._x0, this._y0 = (this._y0 + y4) / 2, x4, this._y0, x4, y4);
+        if (this._x) this._context.bezierCurveTo(this._x0 = (this._x0 + x4) / 2, this._y0, this._x0, y4, x4, y4);
+        else this._context.bezierCurveTo(this._x0, this._y0 = (this._y0 + y4) / 2, x4, this._y0, x4, y4);
         break;
       }
     }
@@ -17011,14 +16060,12 @@ function link2(curve) {
     const argv = slice4.call(arguments);
     const s2 = source.apply(this, argv);
     const t = target.apply(this, argv);
-    if (context == null)
-      output = curve(buffer = path2());
+    if (context == null) output = curve(buffer = path2());
     output.lineStart();
     argv[0] = s2, output.point(+x4.apply(this, argv), +y4.apply(this, argv));
     argv[0] = t, output.point(+x4.apply(this, argv), +y4.apply(this, argv));
     output.lineEnd();
-    if (buffer)
-      return output = null, buffer + "" || null;
+    if (buffer) return output = null, buffer + "" || null;
   }
   link4.source = function(_) {
     return arguments.length ? (source = _, link4) : source;
@@ -17263,11 +16310,9 @@ function Symbol2(type2, size) {
   size = typeof size === "function" ? size : constant_default10(size === void 0 ? 64 : +size);
   function symbol2() {
     let buffer;
-    if (!context)
-      context = buffer = path2();
+    if (!context) context = buffer = path2();
     type2.apply(this, arguments).draw(context, +size.apply(this, arguments));
-    if (buffer)
-      return context = null, buffer + "" || null;
+    if (buffer) return context = null, buffer + "" || null;
   }
   symbol2.type = function(_) {
     return arguments.length ? (type2 = typeof _ === "function" ? _ : constant_default10(_), symbol2) : type2;
@@ -17314,12 +16359,12 @@ Basis.prototype = {
     switch (this._point) {
       case 3:
         point2(this, this._x1, this._y1);
+      // falls through
       case 2:
         this._context.lineTo(this._x1, this._y1);
         break;
     }
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -17335,6 +16380,7 @@ Basis.prototype = {
       case 2:
         this._point = 3;
         this._context.lineTo((5 * this._x0 + this._x1) / 6, (5 * this._y0 + this._y1) / 6);
+      // falls through
       default:
         point2(this, x4, y4);
         break;
@@ -17423,8 +16469,7 @@ BasisOpen.prototype = {
     this._point = 0;
   },
   lineEnd: function() {
-    if (this._line || this._line !== 0 && this._point === 3)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 3) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -17443,6 +16488,7 @@ BasisOpen.prototype = {
         break;
       case 3:
         this._point = 4;
+      // falls through
       default:
         point2(this, x4, y4);
         break;
@@ -17531,8 +16577,7 @@ Cardinal.prototype = {
         point3(this, this._x1, this._y1);
         break;
     }
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -17548,6 +16593,7 @@ Cardinal.prototype = {
         break;
       case 2:
         this._point = 3;
+      // falls through
       default:
         point3(this, x4, y4);
         break;
@@ -17648,8 +16694,7 @@ CardinalOpen.prototype = {
     this._point = 0;
   },
   lineEnd: function() {
-    if (this._line || this._line !== 0 && this._point === 3)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 3) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -17667,6 +16712,7 @@ CardinalOpen.prototype = {
         break;
       case 3:
         this._point = 4;
+      // falls through
       default:
         point3(this, x4, y4);
         break;
@@ -17724,8 +16770,7 @@ CatmullRom.prototype = {
         this.point(this._x2, this._y2);
         break;
     }
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -17744,6 +16789,7 @@ CatmullRom.prototype = {
         break;
       case 2:
         this._point = 3;
+      // falls through
       default:
         point4(this, x4, y4);
         break;
@@ -17852,8 +16898,7 @@ CatmullRomOpen.prototype = {
     this._l01_a = this._l12_a = this._l23_a = this._l01_2a = this._l12_2a = this._l23_2a = this._point = 0;
   },
   lineEnd: function() {
-    if (this._line || this._line !== 0 && this._point === 3)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 3) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
@@ -17875,6 +16920,7 @@ CatmullRomOpen.prototype = {
         break;
       case 3:
         this._point = 4;
+      // falls through
       default:
         point4(this, x4, y4);
         break;
@@ -17906,15 +16952,12 @@ LinearClosed.prototype = {
     this._point = 0;
   },
   lineEnd: function() {
-    if (this._point)
-      this._context.closePath();
+    if (this._point) this._context.closePath();
   },
   point: function(x4, y4) {
     x4 = +x4, y4 = +y4;
-    if (this._point)
-      this._context.lineTo(x4, y4);
-    else
-      this._point = 1, this._context.moveTo(x4, y4);
+    if (this._point) this._context.lineTo(x4, y4);
+    else this._point = 1, this._context.moveTo(x4, y4);
   }
 };
 function linearClosed_default(context) {
@@ -17960,15 +17003,13 @@ MonotoneX.prototype = {
         point5(this, this._t0, slope2(this, this._t0));
         break;
     }
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   },
   point: function(x4, y4) {
     var t13 = NaN;
     x4 = +x4, y4 = +y4;
-    if (x4 === this._x1 && y4 === this._y1)
-      return;
+    if (x4 === this._x1 && y4 === this._y1) return;
     switch (this._point) {
       case 0:
         this._point = 1;
@@ -18048,8 +17089,7 @@ Natural.prototype = {
         }
       }
     }
-    if (this._line || this._line !== 0 && n === 1)
-      this._context.closePath();
+    if (this._line || this._line !== 0 && n === 1) this._context.closePath();
     this._line = 1 - this._line;
     this._x = this._y = null;
   },
@@ -18061,17 +17101,13 @@ Natural.prototype = {
 function controlPoints(x4) {
   var i, n = x4.length - 1, m3, a4 = new Array(n), b = new Array(n), r = new Array(n);
   a4[0] = 0, b[0] = 2, r[0] = x4[0] + 2 * x4[1];
-  for (i = 1; i < n - 1; ++i)
-    a4[i] = 1, b[i] = 4, r[i] = 4 * x4[i] + 2 * x4[i + 1];
+  for (i = 1; i < n - 1; ++i) a4[i] = 1, b[i] = 4, r[i] = 4 * x4[i] + 2 * x4[i + 1];
   a4[n - 1] = 2, b[n - 1] = 7, r[n - 1] = 8 * x4[n - 1] + x4[n];
-  for (i = 1; i < n; ++i)
-    m3 = a4[i] / b[i - 1], b[i] -= m3, r[i] -= m3 * r[i - 1];
+  for (i = 1; i < n; ++i) m3 = a4[i] / b[i - 1], b[i] -= m3, r[i] -= m3 * r[i - 1];
   a4[n - 1] = r[n - 1] / b[n - 1];
-  for (i = n - 2; i >= 0; --i)
-    a4[i] = (r[i] - a4[i + 1]) / b[i];
+  for (i = n - 2; i >= 0; --i) a4[i] = (r[i] - a4[i + 1]) / b[i];
   b[n - 1] = (x4[n] + a4[n - 1]) / 2;
-  for (i = 0; i < n - 1; ++i)
-    b[i] = 2 * x4[i + 1] - a4[i + 1];
+  for (i = 0; i < n - 1; ++i) b[i] = 2 * x4[i + 1] - a4[i + 1];
   return [a4, b];
 }
 function natural_default(context) {
@@ -18095,12 +17131,9 @@ Step.prototype = {
     this._point = 0;
   },
   lineEnd: function() {
-    if (0 < this._t && this._t < 1 && this._point === 2)
-      this._context.lineTo(this._x, this._y);
-    if (this._line || this._line !== 0 && this._point === 1)
-      this._context.closePath();
-    if (this._line >= 0)
-      this._t = 1 - this._t, this._line = 1 - this._line;
+    if (0 < this._t && this._t < 1 && this._point === 2) this._context.lineTo(this._x, this._y);
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
+    if (this._line >= 0) this._t = 1 - this._t, this._line = 1 - this._line;
   },
   point: function(x4, y4) {
     x4 = +x4, y4 = +y4;
@@ -18111,6 +17144,7 @@ Step.prototype = {
         break;
       case 1:
         this._point = 2;
+      // falls through
       default: {
         if (this._t <= 0) {
           this._context.lineTo(this._x, y4);
@@ -18138,8 +17172,7 @@ function stepAfter(context) {
 
 // node_modules/d3-shape/src/offset/none.js
 function none_default(series, order) {
-  if (!((n = series.length) > 1))
-    return;
+  if (!((n = series.length) > 1)) return;
   for (var i = 1, j, s0, s1 = series[order[0]], n, m3 = s1.length; i < n; ++i) {
     s0 = s1, s1 = series[order[i]];
     for (j = 0; j < m3; ++j) {
@@ -18151,8 +17184,7 @@ function none_default(series, order) {
 // node_modules/d3-shape/src/order/none.js
 function none_default2(series) {
   var n = series.length, o = new Array(n);
-  while (--n >= 0)
-    o[n] = n;
+  while (--n >= 0) o[n] = n;
   return o;
 }
 
@@ -18197,22 +17229,17 @@ function stack_default() {
 
 // node_modules/d3-shape/src/offset/expand.js
 function expand_default(series, order) {
-  if (!((n = series.length) > 0))
-    return;
+  if (!((n = series.length) > 0)) return;
   for (var i, n, j = 0, m3 = series[0].length, y4; j < m3; ++j) {
-    for (y4 = i = 0; i < n; ++i)
-      y4 += series[i][j][1] || 0;
-    if (y4)
-      for (i = 0; i < n; ++i)
-        series[i][j][1] /= y4;
+    for (y4 = i = 0; i < n; ++i) y4 += series[i][j][1] || 0;
+    if (y4) for (i = 0; i < n; ++i) series[i][j][1] /= y4;
   }
   none_default(series, order);
 }
 
 // node_modules/d3-shape/src/offset/diverging.js
 function diverging_default(series, order) {
-  if (!((n = series.length) > 0))
-    return;
+  if (!((n = series.length) > 0)) return;
   for (var i, j = 0, d, dy, yp, yn, n, m3 = series[order[0]].length; j < m3; ++j) {
     for (yp = yn = 0, i = 0; i < n; ++i) {
       if ((dy = (d = series[order[i]][j])[1] - d[0]) > 0) {
@@ -18228,11 +17255,9 @@ function diverging_default(series, order) {
 
 // node_modules/d3-shape/src/offset/silhouette.js
 function silhouette_default(series, order) {
-  if (!((n = series.length) > 0))
-    return;
+  if (!((n = series.length) > 0)) return;
   for (var j = 0, s0 = series[order[0]], n, m3 = s0.length; j < m3; ++j) {
-    for (var i = 0, y4 = 0; i < n; ++i)
-      y4 += series[i][j][1] || 0;
+    for (var i = 0, y4 = 0; i < n; ++i) y4 += series[i][j][1] || 0;
     s0[j][1] += s0[j][0] = -y4 / 2;
   }
   none_default(series, order);
@@ -18240,8 +17265,7 @@ function silhouette_default(series, order) {
 
 // node_modules/d3-shape/src/offset/wiggle.js
 function wiggle_default(series, order) {
-  if (!((n = series.length) > 0) || !((m3 = (s0 = series[order[0]]).length) > 0))
-    return;
+  if (!((n = series.length) > 0) || !((m3 = (s0 = series[order[0]]).length) > 0)) return;
   for (var y4 = 0, j = 1, s0, m3, n; j < m3; ++j) {
     for (var i = 0, s1 = 0, s2 = 0; i < n; ++i) {
       var si = series[order[i]], sij0 = si[j][1] || 0, sij1 = si[j - 1][1] || 0, s3 = (sij0 - sij1) / 2;
@@ -18252,8 +17276,7 @@ function wiggle_default(series, order) {
       s1 += sij0, s2 += s3 * sij0;
     }
     s0[j - 1][1] += s0[j - 1][0] = y4;
-    if (s1)
-      y4 -= s2 / s1;
+    if (s1) y4 -= s2 / s1;
   }
   s0[j - 1][1] += s0[j - 1][0] = y4;
   none_default(series, order);
@@ -18268,9 +17291,7 @@ function appearance_default(series) {
 }
 function peak(series) {
   var i = -1, j = 0, n = series.length, vi, vj = -Infinity;
-  while (++i < n)
-    if ((vi = +series[i][1]) > vj)
-      vj = vi, j = i;
+  while (++i < n) if ((vi = +series[i][1]) > vj) vj = vi, j = i;
   return j;
 }
 
@@ -18283,9 +17304,7 @@ function ascending_default2(series) {
 }
 function sum3(series) {
   var s2 = 0, i = -1, n = series.length, v2;
-  while (++i < n)
-    if (v2 = +series[i][1])
-      s2 += v2;
+  while (++i < n) if (v2 = +series[i][1]) s2 += v2;
   return s2;
 }
 
@@ -18379,9 +17398,7 @@ Transform.prototype = {
 var identity5 = new Transform(1, 0, 0);
 transform.prototype = Transform.prototype;
 function transform(node) {
-  while (!node.__zoom)
-    if (!(node = node.parentNode))
-      return identity5;
+  while (!node.__zoom) if (!(node = node.parentNode)) return identity5;
   return node.__zoom;
 }
 
@@ -18490,8 +17507,7 @@ function zoom_default2() {
     }).tween("zoom", function() {
       var that = this, args = arguments, g = gesture(that, args).event(event), e = extent3.apply(that, args), p = point6 == null ? centroid2(e) : typeof point6 === "function" ? point6.apply(that, args) : point6, w = Math.max(e[1][0] - e[0][0], e[1][1] - e[0][1]), a4 = that.__zoom, b = typeof transform2 === "function" ? transform2.apply(that, args) : transform2, i = interpolate(a4.invert(p).concat(w / a4.k), b.invert(p).concat(w / b.k));
       return function(t) {
-        if (t === 1)
-          t = b;
+        if (t === 1) t = b;
         else {
           var l = i(t), k2 = w / l[2];
           t = new Transform(k2, p[0] - l[0] * k2, p[1] - l[1] * k2);
@@ -18513,8 +17529,7 @@ function zoom_default2() {
   }
   Gesture.prototype = {
     event: function(event) {
-      if (event)
-        this.sourceEvent = event;
+      if (event) this.sourceEvent = event;
       return this;
     },
     start: function() {
@@ -18525,12 +17540,9 @@ function zoom_default2() {
       return this;
     },
     zoom: function(key, transform2) {
-      if (this.mouse && key !== "mouse")
-        this.mouse[1] = transform2.invert(this.mouse[0]);
-      if (this.touch0 && key !== "touch")
-        this.touch0[1] = transform2.invert(this.touch0[0]);
-      if (this.touch1 && key !== "touch")
-        this.touch1[1] = transform2.invert(this.touch1[0]);
+      if (this.mouse && key !== "mouse") this.mouse[1] = transform2.invert(this.mouse[0]);
+      if (this.touch0 && key !== "touch") this.touch0[1] = transform2.invert(this.touch0[0]);
+      if (this.touch1 && key !== "touch") this.touch1[1] = transform2.invert(this.touch1[0]);
       this.that.__zoom = transform2;
       this.emit("zoom");
       return this;
@@ -18559,16 +17571,14 @@ function zoom_default2() {
     }
   };
   function wheeled(event, ...args) {
-    if (!filter4.apply(this, arguments))
-      return;
+    if (!filter4.apply(this, arguments)) return;
     var g = gesture(this, args).event(event), t = this.__zoom, k2 = Math.max(scaleExtent[0], Math.min(scaleExtent[1], t.k * Math.pow(2, wheelDelta.apply(this, arguments)))), p = pointer_default(event);
     if (g.wheel) {
       if (g.mouse[0][0] !== p[0] || g.mouse[0][1] !== p[1]) {
         g.mouse[1] = t.invert(g.mouse[0] = p);
       }
       clearTimeout(g.wheel);
-    } else if (t.k === k2)
-      return;
+    } else if (t.k === k2) return;
     else {
       g.mouse = [p, t.invert(p)];
       interrupt_default(this);
@@ -18583,8 +17593,7 @@ function zoom_default2() {
     }
   }
   function mousedowned(event, ...args) {
-    if (touchending || !filter4.apply(this, arguments))
-      return;
+    if (touchending || !filter4.apply(this, arguments)) return;
     var currentTarget = event.currentTarget, g = gesture(this, args, true).event(event), v2 = select_default2(event.view).on("mousemove.zoom", mousemoved, true).on("mouseup.zoom", mouseupped, true), p = pointer_default(event, currentTarget), x06 = event.clientX, y06 = event.clientY;
     nodrag_default(event.view);
     nopropagation3(event);
@@ -18607,50 +17616,39 @@ function zoom_default2() {
     }
   }
   function dblclicked(event, ...args) {
-    if (!filter4.apply(this, arguments))
-      return;
+    if (!filter4.apply(this, arguments)) return;
     var t03 = this.__zoom, p02 = pointer_default(event.changedTouches ? event.changedTouches[0] : event, this), p1 = t03.invert(p02), k1 = t03.k * (event.shiftKey ? 0.5 : 2), t13 = constrain(translate(scale3(t03, k1), p02, p1), extent3.apply(this, args), translateExtent);
     noevent_default3(event);
-    if (duration > 0)
-      select_default2(this).transition().duration(duration).call(schedule, t13, p02, event);
-    else
-      select_default2(this).call(zoom.transform, t13, p02, event);
+    if (duration > 0) select_default2(this).transition().duration(duration).call(schedule, t13, p02, event);
+    else select_default2(this).call(zoom.transform, t13, p02, event);
   }
   function touchstarted(event, ...args) {
-    if (!filter4.apply(this, arguments))
-      return;
+    if (!filter4.apply(this, arguments)) return;
     var touches = event.touches, n = touches.length, g = gesture(this, args, event.changedTouches.length === n).event(event), started, i, t, p;
     nopropagation3(event);
     for (i = 0; i < n; ++i) {
       t = touches[i], p = pointer_default(t, this);
       p = [p, this.__zoom.invert(p), t.identifier];
-      if (!g.touch0)
-        g.touch0 = p, started = true, g.taps = 1 + !!touchstarting;
-      else if (!g.touch1 && g.touch0[2] !== p[2])
-        g.touch1 = p, g.taps = 0;
+      if (!g.touch0) g.touch0 = p, started = true, g.taps = 1 + !!touchstarting;
+      else if (!g.touch1 && g.touch0[2] !== p[2]) g.touch1 = p, g.taps = 0;
     }
-    if (touchstarting)
-      touchstarting = clearTimeout(touchstarting);
+    if (touchstarting) touchstarting = clearTimeout(touchstarting);
     if (started) {
-      if (g.taps < 2)
-        touchfirst = p[0], touchstarting = setTimeout(function() {
-          touchstarting = null;
-        }, touchDelay);
+      if (g.taps < 2) touchfirst = p[0], touchstarting = setTimeout(function() {
+        touchstarting = null;
+      }, touchDelay);
       interrupt_default(this);
       g.start();
     }
   }
   function touchmoved(event, ...args) {
-    if (!this.__zooming)
-      return;
+    if (!this.__zooming) return;
     var g = gesture(this, args).event(event), touches = event.changedTouches, n = touches.length, i, t, p, l;
     noevent_default3(event);
     for (i = 0; i < n; ++i) {
       t = touches[i], p = pointer_default(t, this);
-      if (g.touch0 && g.touch0[2] === t.identifier)
-        g.touch0[0] = p;
-      else if (g.touch1 && g.touch1[2] === t.identifier)
-        g.touch1[0] = p;
+      if (g.touch0 && g.touch0[2] === t.identifier) g.touch0[0] = p;
+      else if (g.touch1 && g.touch1[2] === t.identifier) g.touch1[0] = p;
     }
     t = g.that.__zoom;
     if (g.touch1) {
@@ -18658,41 +17656,32 @@ function zoom_default2() {
       t = scale3(t, Math.sqrt(dp / dl));
       p = [(p02[0] + p1[0]) / 2, (p02[1] + p1[1]) / 2];
       l = [(l0[0] + l1[0]) / 2, (l0[1] + l1[1]) / 2];
-    } else if (g.touch0)
-      p = g.touch0[0], l = g.touch0[1];
-    else
-      return;
+    } else if (g.touch0) p = g.touch0[0], l = g.touch0[1];
+    else return;
     g.zoom("touch", constrain(translate(t, p, l), g.extent, translateExtent));
   }
   function touchended(event, ...args) {
-    if (!this.__zooming)
-      return;
+    if (!this.__zooming) return;
     var g = gesture(this, args).event(event), touches = event.changedTouches, n = touches.length, i, t;
     nopropagation3(event);
-    if (touchending)
-      clearTimeout(touchending);
+    if (touchending) clearTimeout(touchending);
     touchending = setTimeout(function() {
       touchending = null;
     }, touchDelay);
     for (i = 0; i < n; ++i) {
       t = touches[i];
-      if (g.touch0 && g.touch0[2] === t.identifier)
-        delete g.touch0;
-      else if (g.touch1 && g.touch1[2] === t.identifier)
-        delete g.touch1;
+      if (g.touch0 && g.touch0[2] === t.identifier) delete g.touch0;
+      else if (g.touch1 && g.touch1[2] === t.identifier) delete g.touch1;
     }
-    if (g.touch1 && !g.touch0)
-      g.touch0 = g.touch1, delete g.touch1;
-    if (g.touch0)
-      g.touch0[1] = this.__zoom.invert(g.touch0[0]);
+    if (g.touch1 && !g.touch0) g.touch0 = g.touch1, delete g.touch1;
+    if (g.touch0) g.touch0[1] = this.__zoom.invert(g.touch0[0]);
     else {
       g.end();
       if (g.taps === 2) {
         t = pointer_default(t, this);
         if (Math.hypot(touchfirst[0] - t[0], touchfirst[1] - t[1]) < tapDistance) {
           var p = select_default2(this).on("dblclick.zoom");
-          if (p)
-            p.apply(this, arguments);
+          if (p) p.apply(this, arguments);
         }
       }
     }
@@ -18762,10 +17751,8 @@ function negative(x4) {
 
 // node_modules/isoformat/src/format.js
 function format2(date2, fallback) {
-  if (!(date2 instanceof Date))
-    date2 = /* @__PURE__ */ new Date(+date2);
-  if (isNaN(date2))
-    return typeof fallback === "function" ? fallback(date2) : fallback;
+  if (!(date2 instanceof Date)) date2 = /* @__PURE__ */ new Date(+date2);
+  if (isNaN(date2)) return typeof fallback === "function" ? fallback(date2) : fallback;
   const hours = date2.getUTCHours();
   const minutes = date2.getUTCMinutes();
   const seconds2 = date2.getUTCSeconds();
@@ -18782,15 +17769,13 @@ function pad3(value, width) {
 // node_modules/isoformat/src/parse.js
 var re2 = /^(?:[-+]\d{2})?\d{4}(?:-\d{2}(?:-\d{2})?)?(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{3})?)?(?:Z|[-+]\d{2}:?\d{2})?)?$/;
 function parse(string2, fallback) {
-  if (!re2.test(string2 += ""))
-    return typeof fallback === "function" ? fallback(string2) : fallback;
+  if (!re2.test(string2 += "")) return typeof fallback === "function" ? fallback(string2) : fallback;
   return new Date(string2);
 }
 
 // node_modules/@observablehq/plot/src/order.js
 function orderof(values2) {
-  if (values2 == null)
-    return;
+  if (values2 == null) return;
   const first2 = values2[0];
   const last = values2[values2.length - 1];
   return descending(first2, last);
@@ -18933,8 +17918,7 @@ var formatIntervals = [
 ];
 function parseTimeInterval(input) {
   let name = `${input}`.toLowerCase();
-  if (name.endsWith("s"))
-    name = name.slice(0, -1);
+  if (name.endsWith("s")) name = name.slice(0, -1);
   let period2 = 1;
   const match = /^(?:(\d+)\s+)/.exec(name);
   if (match) {
@@ -18952,10 +17936,8 @@ function parseTimeInterval(input) {
       break;
   }
   let interval2 = utcIntervals.get(name);
-  if (!interval2)
-    throw new Error(`unknown interval: ${input}`);
-  if (period2 > 1 && !interval2.every)
-    throw new Error(`non-periodic interval: ${name}`);
+  if (!interval2) throw new Error(`unknown interval: ${input}`);
+  if (period2 > 1 && !interval2.every) throw new Error(`non-periodic interval: ${name}`);
   return [name, period2];
 }
 function timeInterval2(input) {
@@ -18974,13 +17956,10 @@ function asInterval([name, period2], type2) {
   return interval2;
 }
 function generalizeTimeInterval(interval2, n) {
-  if (!(n > 1))
-    return;
+  if (!(n > 1)) return;
   const duration = interval2[intervalDuration];
-  if (!tickIntervals.some(([, d]) => d === duration))
-    return;
-  if (duration % durationDay2 === 0 && durationDay2 < duration && duration < durationMonth2)
-    return;
+  if (!tickIntervals.some(([, d]) => d === duration)) return;
+  if (duration % durationDay2 === 0 && durationDay2 < duration && duration < durationMonth2) return;
   const [i] = tickIntervals[bisector(([, step]) => Math.log(step)).center(tickIntervals, Math.log(duration * n))];
   return (interval2[intervalType] === "time" ? timeInterval2 : utcInterval)(i);
 }
@@ -19022,15 +18001,11 @@ function getFormatIntervals(type2) {
 }
 function inferTimeFormat(type2, dates, anchor) {
   const step = max(pairs(dates, (a4, b) => Math.abs(b - a4)));
-  if (step < 1e3)
-    return formatTimeInterval("millisecond", "utc", anchor);
+  if (step < 1e3) return formatTimeInterval("millisecond", "utc", anchor);
   for (const [name, interval2, intervalType2, maxStep] of getFormatIntervals(type2)) {
-    if (step > maxStep)
-      break;
-    if (name === "hour" && !step)
-      break;
-    if (dates.every((d) => interval2.floor(d) >= d))
-      return formatTimeInterval(name, intervalType2, anchor);
+    if (step > maxStep) break;
+    if (name === "hour" && !step) break;
+    if (dates.every((d) => interval2.floor(d) >= d)) return formatTimeInterval(name, intervalType2, anchor);
   }
 }
 function formatConditional(format1, format22, template2) {
@@ -19075,7 +18050,10 @@ function maybeTypedArrayify(data, type2) {
   return type2 === void 0 ? arrayify2(data) : isArrowVector(data) ? maybeTypedArrowify(data, type2) : data instanceof type2 ? data : type2.from(data, isNumberType(type2) && !isNumberArray2(data) ? coerceNumber : void 0);
 }
 function maybeTypedArrowify(vector2, type2) {
-  return vector2 == null ? vector2 : (type2 === void 0 || type2 === Array) && isArrowDateType(vector2.type) ? coerceDates(vector2.toArray()) : maybeTypedArrayify(vector2.toArray(), type2);
+  return vector2 == null ? vector2 : (type2 === void 0 || type2 === Array) && isArrowDateType(vector2.type) ? coerceDates(vectorToArray(vector2)) : maybeTypedArrayify(vectorToArray(vector2), type2);
+}
+function vectorToArray(vector2) {
+  return vector2.nullCount ? vector2.toJSON() : vector2.toArray();
 }
 var singleton = [null];
 var field = (name) => (d) => {
@@ -19109,38 +18087,43 @@ function coerceDate(x4) {
   return x4 instanceof Date && !isNaN(x4) ? x4 : typeof x4 === "string" ? parse(x4) : x4 == null || isNaN(x4 = Number(x4)) ? void 0 : new Date(x4);
 }
 function maybeColorChannel(value, defaultValue) {
-  if (value === void 0)
-    value = defaultValue;
+  if (value === void 0) value = defaultValue;
   return value === null ? [void 0, "none"] : isColor(value) ? [void 0, value] : [value, void 0];
 }
 function maybeNumberChannel(value, defaultValue) {
-  if (value === void 0)
-    value = defaultValue;
+  if (value === void 0) value = defaultValue;
   return value === null || typeof value === "number" ? [void 0, value] : [value, void 0];
 }
 function maybeKeyword(input, name, allowed) {
-  if (input != null)
-    return keyword(input, name, allowed);
+  if (input != null) return keyword(input, name, allowed);
 }
 function keyword(input, name, allowed) {
   const i = `${input}`.toLowerCase();
-  if (!allowed.includes(i))
-    throw new Error(`invalid ${name}: ${input}`);
+  if (!allowed.includes(i)) throw new Error(`invalid ${name}: ${input}`);
   return i;
 }
 function dataify(data) {
   return isArrowTable(data) ? data : arrayify2(data);
 }
 function arrayify2(values2) {
-  if (values2 == null || isArray(values2))
-    return values2;
-  if (isArrowVector(values2))
-    return maybeTypedArrowify(values2);
-  switch (values2.type) {
+  if (values2 == null || isArray(values2)) return values2;
+  if (isArrowVector(values2)) return maybeTypedArrowify(values2);
+  if (isGeoJSON(values2)) {
+    switch (values2.type) {
+      case "FeatureCollection":
+        return values2.features;
+      case "GeometryCollection":
+        return values2.geometries;
+      default:
+        return [values2];
+    }
+  }
+  return Array.from(values2);
+}
+function isGeoJSON(x4) {
+  switch (x4?.type) {
     case "FeatureCollection":
-      return values2.features;
     case "GeometryCollection":
-      return values2.geometries;
     case "Feature":
     case "LineString":
     case "MultiLineString":
@@ -19149,9 +18132,10 @@ function arrayify2(values2) {
     case "Point":
     case "Polygon":
     case "Sphere":
-      return [values2];
+      return true;
+    default:
+      return false;
   }
-  return Array.from(values2);
 }
 function map4(values2, f, type2 = Array) {
   return values2 == null ? values2 : values2 instanceof type2 ? values2.map(f) : type2.from(values2, f);
@@ -19194,10 +18178,8 @@ function maybeTuple(x4, y4) {
   return x4 === void 0 && y4 === void 0 ? [first, second2] : [x4, y4];
 }
 function maybeZ({ z, fill, stroke } = {}) {
-  if (z === void 0)
-    [z] = maybeColorChannel(fill);
-  if (z === void 0)
-    [z] = maybeColorChannel(stroke);
+  if (z === void 0) [z] = maybeColorChannel(fill);
+  if (z === void 0) [z] = maybeColorChannel(stroke);
   return z;
 }
 function lengthof(data) {
@@ -19206,8 +18188,7 @@ function lengthof(data) {
 function range4(data) {
   const n = lengthof(data);
   const r = new Uint32Array(n);
-  for (let i = 0; i < n; ++i)
-    r[i] = i;
+  for (let i = 0; i < n; ++i) r[i] = i;
   return r;
 }
 function take(values2, index3) {
@@ -19223,8 +18204,7 @@ function keyof2(value) {
   return value !== null && typeof value === "object" ? value.valueOf() : value;
 }
 function maybeInput(key, options) {
-  if (options[key] !== void 0)
-    return options[key];
+  if (options[key] !== void 0) return options[key];
   switch (key) {
     case "x1":
     case "x2":
@@ -19272,22 +18252,16 @@ function maybeIntervalTransform(interval2, type2) {
   return i && ((v2) => defined(v2) ? i.floor(v2) : v2);
 }
 function maybeInterval(interval2, type2) {
-  if (interval2 == null)
-    return;
-  if (typeof interval2 === "number")
-    return numberInterval(interval2);
-  if (typeof interval2 === "string")
-    return (type2 === "time" ? timeInterval2 : utcInterval)(interval2);
-  if (typeof interval2.floor !== "function")
-    throw new Error("invalid interval; missing floor method");
-  if (typeof interval2.offset !== "function")
-    throw new Error("invalid interval; missing offset method");
+  if (interval2 == null) return;
+  if (typeof interval2 === "number") return numberInterval(interval2);
+  if (typeof interval2 === "string") return (type2 === "time" ? timeInterval2 : utcInterval)(interval2);
+  if (typeof interval2.floor !== "function") throw new Error("invalid interval; missing floor method");
+  if (typeof interval2.offset !== "function") throw new Error("invalid interval; missing offset method");
   return interval2;
 }
 function numberInterval(interval2) {
   interval2 = +interval2;
-  if (0 < interval2 && interval2 < 1 && Number.isInteger(1 / interval2))
-    interval2 = -1 / interval2;
+  if (0 < interval2 && interval2 < 1 && Number.isInteger(1 / interval2)) interval2 = -1 / interval2;
   const n = Math.abs(interval2);
   return interval2 < 0 ? {
     floor: (d) => Math.floor(d * n) / n,
@@ -19301,14 +18275,12 @@ function numberInterval(interval2) {
 }
 function maybeRangeInterval(interval2, type2) {
   interval2 = maybeInterval(interval2, type2);
-  if (interval2 && typeof interval2.range !== "function")
-    throw new Error("invalid interval: missing range method");
+  if (interval2 && typeof interval2.range !== "function") throw new Error("invalid interval: missing range method");
   return interval2;
 }
 function maybeNiceInterval(interval2, type2) {
   interval2 = maybeRangeInterval(interval2, type2);
-  if (interval2 && typeof interval2.ceil !== "function")
-    throw new Error("invalid interval: missing ceil method");
+  if (interval2 && typeof interval2.ceil !== "function") throw new Error("invalid interval: missing ceil method");
   return interval2;
 }
 function isTimeInterval(t) {
@@ -19327,11 +18299,9 @@ function numberChannel(source) {
   };
 }
 function isTuples(data) {
-  if (!isIterable(data))
-    return false;
+  if (!isIterable(data)) return false;
   for (const d of data) {
-    if (d == null)
-      continue;
+    if (d == null) continue;
     return typeof d === "object" && "0" in d && "1" in d;
   }
 }
@@ -19340,66 +18310,55 @@ function isIterable(value) {
 }
 function isTextual(values2) {
   for (const value of values2) {
-    if (value == null)
-      continue;
+    if (value == null) continue;
     return typeof value !== "object" || value instanceof Date;
   }
 }
 function isOrdinal(values2) {
   for (const value of values2) {
-    if (value == null)
-      continue;
+    if (value == null) continue;
     const type2 = typeof value;
     return type2 === "string" || type2 === "boolean";
   }
 }
 function isTemporal(values2) {
   for (const value of values2) {
-    if (value == null)
-      continue;
+    if (value == null) continue;
     return value instanceof Date;
   }
 }
 function isTemporalString(values2) {
   for (const value of values2) {
-    if (value == null)
-      continue;
+    if (value == null) continue;
     return typeof value === "string" && isNaN(value) && parse(value);
   }
 }
 function isNumericString(values2) {
   for (const value of values2) {
-    if (value == null)
-      continue;
-    if (typeof value !== "string")
-      return false;
-    if (!value.trim())
-      continue;
+    if (value == null) continue;
+    if (typeof value !== "string") return false;
+    if (!value.trim()) continue;
     return !isNaN(value);
   }
 }
 function isNumeric(values2) {
   for (const value of values2) {
-    if (value == null)
-      continue;
+    if (value == null) continue;
     return typeof value === "number";
   }
 }
 function isEvery(values2, is) {
   let every2;
   for (const value of values2) {
-    if (value == null)
-      continue;
-    if (!is(value))
-      return false;
+    if (value == null) continue;
+    if (!is(value)) return false;
     every2 = true;
   }
   return every2;
 }
 var namedColors = new Set("none,currentcolor,transparent,aliceblue,antiquewhite,aqua,aquamarine,azure,beige,bisque,black,blanchedalmond,blue,blueviolet,brown,burlywood,cadetblue,chartreuse,chocolate,coral,cornflowerblue,cornsilk,crimson,cyan,darkblue,darkcyan,darkgoldenrod,darkgray,darkgreen,darkgrey,darkkhaki,darkmagenta,darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkseagreen,darkslateblue,darkslategray,darkslategrey,darkturquoise,darkviolet,deeppink,deepskyblue,dimgray,dimgrey,dodgerblue,firebrick,floralwhite,forestgreen,fuchsia,gainsboro,ghostwhite,gold,goldenrod,gray,green,greenyellow,grey,honeydew,hotpink,indianred,indigo,ivory,khaki,lavender,lavenderblush,lawngreen,lemonchiffon,lightblue,lightcoral,lightcyan,lightgoldenrodyellow,lightgray,lightgreen,lightgrey,lightpink,lightsalmon,lightseagreen,lightskyblue,lightslategray,lightslategrey,lightsteelblue,lightyellow,lime,limegreen,linen,magenta,maroon,mediumaquamarine,mediumblue,mediumorchid,mediumpurple,mediumseagreen,mediumslateblue,mediumspringgreen,mediumturquoise,mediumvioletred,midnightblue,mintcream,mistyrose,moccasin,navajowhite,navy,oldlace,olive,olivedrab,orange,orangered,orchid,palegoldenrod,palegreen,paleturquoise,palevioletred,papayawhip,peachpuff,peru,pink,plum,powderblue,purple,rebeccapurple,red,rosybrown,royalblue,saddlebrown,salmon,sandybrown,seagreen,seashell,sienna,silver,skyblue,slateblue,slategray,slategrey,snow,springgreen,steelblue,tan,teal,thistle,tomato,turquoise,violet,wheat,white,whitesmoke,yellow".split(","));
 function isColor(value) {
-  if (typeof value !== "string")
-    return false;
+  if (typeof value !== "string") return false;
   value = value.toLowerCase().trim();
   return /^#[0-9a-f]{3,8}$/.test(value) || // hex rgb, rgba, rrggbb, rrggbbaa
   /^(?:url|var|rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|color-mix)\(.*\)$/.test(value) || // <funciri>, CSS variable, color, etc.
@@ -19439,10 +18398,8 @@ function inherit2(options = {}, ...rest) {
     for (const key in defaults22) {
       if (o[key] === void 0) {
         const value = defaults22[key];
-        if (o === options)
-          o = { ...o, [key]: value };
-        else
-          o[key] = value;
+        if (o === options) o = { ...o, [key]: value };
+        else o[key] = value;
       }
     }
   }
@@ -19454,13 +18411,10 @@ function named2(things) {
   return Object.fromEntries(
     Array.from(things, (thing) => {
       const { name } = thing;
-      if (name == null)
-        throw new Error("missing name");
+      if (name == null) throw new Error("missing name");
       const key = `${name}`;
-      if (key === "__proto__")
-        throw new Error(`illegal name: ${key}`);
-      if (names.has(key))
-        throw new Error(`duplicate name: ${key}`);
+      if (key === "__proto__") throw new Error(`illegal name: ${key}`);
+      if (names.has(key)) throw new Error(`duplicate name: ${key}`);
       names.add(key);
       return [name, thing];
     })
@@ -19470,12 +18424,12 @@ function maybeNamed(things) {
   return isIterable(things) ? named2(things) : things;
 }
 function maybeClip(clip) {
-  if (clip === true)
-    clip = "frame";
-  else if (clip === false)
-    clip = null;
-  else if (clip != null)
+  if (clip === true) clip = "frame";
+  else if (clip === false) clip = null;
+  else if (!isGeoJSON(clip) && clip != null) {
     clip = keyword(clip, "clip", ["frame", "sphere"]);
+    if (clip === "sphere") clip = { type: "Sphere" };
+  }
   return clip;
 }
 function isArrowTable(value) {
@@ -19552,27 +18506,21 @@ function isSymbolObject(value) {
   return value && typeof value.draw === "function";
 }
 function isSymbol(value) {
-  if (isSymbolObject(value))
-    return true;
-  if (typeof value !== "string")
-    return false;
+  if (isSymbolObject(value)) return true;
+  if (typeof value !== "string") return false;
   return symbols.has(value.toLowerCase());
 }
 function maybeSymbol(symbol2) {
-  if (symbol2 == null || isSymbolObject(symbol2))
-    return symbol2;
+  if (symbol2 == null || isSymbolObject(symbol2)) return symbol2;
   const value = symbols.get(`${symbol2}`.toLowerCase());
-  if (value)
-    return value;
+  if (value) return value;
   throw new Error(`invalid symbol: ${symbol2}`);
 }
 function maybeSymbolChannel(symbol2) {
-  if (symbol2 == null || isSymbolObject(symbol2))
-    return [void 0, symbol2];
+  if (symbol2 == null || isSymbolObject(symbol2)) return [void 0, symbol2];
   if (typeof symbol2 === "string") {
     const value = symbols.get(`${symbol2}`.toLowerCase());
-    if (value)
-      return [void 0, value];
+    if (value) return [void 0, value];
   }
   return [symbol2, void 0];
 }
@@ -19580,15 +18528,11 @@ function maybeSymbolChannel(symbol2) {
 // node_modules/@observablehq/plot/src/transforms/basic.js
 function basic({ filter: f1, sort: s1, reverse: r1, transform: t13, initializer: i1, ...options } = {}, transform2) {
   if (t13 === void 0) {
-    if (f1 != null)
-      t13 = filterTransform(f1);
-    if (s1 != null && !isDomainSort(s1))
-      t13 = composeTransform(t13, sortTransform(s1));
-    if (r1)
-      t13 = composeTransform(t13, reverseTransform);
+    if (f1 != null) t13 = filterTransform(f1);
+    if (s1 != null && !isDomainSort(s1)) t13 = composeTransform(t13, sortTransform(s1));
+    if (r1) t13 = composeTransform(t13, reverseTransform);
   }
-  if (transform2 != null && i1 != null)
-    throw new Error("transforms cannot be applied after initializers");
+  if (transform2 != null && i1 != null) throw new Error("transforms cannot be applied after initializers");
   return {
     ...options,
     ...(s1 === null || isDomainSort(s1)) && { sort: s1 },
@@ -19597,12 +18541,9 @@ function basic({ filter: f1, sort: s1, reverse: r1, transform: t13, initializer:
 }
 function initializer({ filter: f1, sort: s1, reverse: r1, initializer: i1, ...options } = {}, initializer2) {
   if (i1 === void 0) {
-    if (f1 != null)
-      i1 = filterTransform(f1);
-    if (s1 != null && !isDomainSort(s1))
-      i1 = composeInitializer(i1, sortTransform(s1));
-    if (r1)
-      i1 = composeInitializer(i1, reverseTransform);
+    if (f1 != null) i1 = filterTransform(f1);
+    if (s1 != null && !isDomainSort(s1)) i1 = composeInitializer(i1, sortTransform(s1));
+    if (r1) i1 = composeInitializer(i1, reverseTransform);
   }
   return {
     ...options,
@@ -19611,20 +18552,16 @@ function initializer({ filter: f1, sort: s1, reverse: r1, initializer: i1, ...op
   };
 }
 function composeTransform(t13, t22) {
-  if (t13 == null)
-    return t22 === null ? void 0 : t22;
-  if (t22 == null)
-    return t13 === null ? void 0 : t13;
+  if (t13 == null) return t22 === null ? void 0 : t22;
+  if (t22 == null) return t13 === null ? void 0 : t13;
   return function(data, facets, plotOptions) {
     ({ data, facets } = t13.call(this, data, facets, plotOptions));
     return t22.call(this, dataify(data), facets, plotOptions);
   };
 }
 function composeInitializer(i1, i2) {
-  if (i1 == null)
-    return i2 === null ? void 0 : i2;
-  if (i2 == null)
-    return i1 === null ? void 0 : i1;
+  if (i1 == null) return i2 === null ? void 0 : i2;
+  if (i2 == null) return i1 === null ? void 0 : i1;
   return function(data, facets, channels, ...args) {
     let c1, d1, f1, c22, d2, f2;
     ({ data: d1 = data, facets: f1 = facets, channels: c1 } = i1.call(this, data, facets, channels, ...args));
@@ -19678,10 +18615,8 @@ function sortValue(value) {
   let channel, order;
   ({ channel, value, order } = { ...maybeValue(value) });
   const negate2 = channel?.startsWith("-");
-  if (negate2)
-    channel = channel.slice(1);
-  if (order === void 0)
-    order = negate2 ? descendingDefined : ascendingDefined2;
+  if (negate2) channel = channel.slice(1);
+  if (order === void 0) order = negate2 ? descendingDefined : ascendingDefined2;
   if (typeof order !== "function") {
     switch (`${order}`.toLowerCase()) {
       case "ascending":
@@ -19699,11 +18634,9 @@ function sortValue(value) {
     if (channel === void 0) {
       V = valueof(data, value);
     } else {
-      if (channels === void 0)
-        throw new Error("channel sort requires an initializer");
+      if (channels === void 0) throw new Error("channel sort requires an initializer");
       V = channels[channel];
-      if (!V)
-        return {};
+      if (!V) return {};
       V = V.value;
     }
     const compareValue2 = (i, j) => order(V[i], V[j]);
@@ -19717,23 +18650,19 @@ function groupZ(outputs, options) {
 }
 function groupX(outputs = { y: "count" }, options = {}) {
   const { x: x4 = identity6 } = options;
-  if (x4 == null)
-    throw new Error("missing channel: x");
+  if (x4 == null) throw new Error("missing channel: x");
   return groupn(x4, null, outputs, options);
 }
 function groupY(outputs = { x: "count" }, options = {}) {
   const { y: y4 = identity6 } = options;
-  if (y4 == null)
-    throw new Error("missing channel: y");
+  if (y4 == null) throw new Error("missing channel: y");
   return groupn(null, y4, outputs, options);
 }
 function group2(outputs = { fill: "count" }, options = {}) {
   let { x: x4, y: y4 } = options;
   [x4, y4] = maybeTuple(x4, y4);
-  if (x4 == null)
-    throw new Error("missing channel: x");
-  if (y4 == null)
-    throw new Error("missing channel: y");
+  if (x4 == null) throw new Error("missing channel: x");
+  if (y4 == null) throw new Error("missing channel: y");
   return groupn(x4, y4, outputs, options);
 }
 function groupn(x4, y4, {
@@ -19786,48 +18715,31 @@ function groupn(x4, y4, {
       const GF2 = F && setGF([]);
       const GS2 = S && setGS([]);
       let i = 0;
-      for (const o of outputs)
-        o.initialize(data);
-      if (sort3)
-        sort3.initialize(data);
-      if (filter4)
-        filter4.initialize(data);
+      for (const o of outputs) o.initialize(data);
+      if (sort3) sort3.initialize(data);
+      if (filter4) filter4.initialize(data);
       for (const facet of facets) {
         const groupFacet = [];
-        for (const o of outputs)
-          o.scope("facet", facet);
-        if (sort3)
-          sort3.scope("facet", facet);
-        if (filter4)
-          filter4.scope("facet", facet);
+        for (const o of outputs) o.scope("facet", facet);
+        if (sort3) sort3.scope("facet", facet);
+        if (filter4) filter4.scope("facet", facet);
         for (const [f, I] of maybeGroup(facet, G)) {
           for (const [y5, gg] of maybeGroup(I, Y3)) {
             for (const [x5, g] of maybeGroup(gg, X3)) {
               const extent3 = { data };
-              if (X3)
-                extent3.x = x5;
-              if (Y3)
-                extent3.y = y5;
-              if (G)
-                extent3.z = f;
-              if (filter4 && !filter4.reduce(g, extent3))
-                continue;
+              if (X3) extent3.x = x5;
+              if (Y3) extent3.y = y5;
+              if (G) extent3.z = f;
+              if (filter4 && !filter4.reduce(g, extent3)) continue;
               groupFacet.push(i++);
               groupData.push(reduceData.reduceIndex(g, data, extent3));
-              if (X3)
-                GX2.push(x5);
-              if (Y3)
-                GY2.push(y5);
-              if (Z)
-                GZ2.push(G === Z ? f : Z[g[0]]);
-              if (F)
-                GF2.push(G === F ? f : F[g[0]]);
-              if (S)
-                GS2.push(G === S ? f : S[g[0]]);
-              for (const o of outputs)
-                o.reduce(g, extent3);
-              if (sort3)
-                sort3.reduce(g, extent3);
+              if (X3) GX2.push(x5);
+              if (Y3) GY2.push(y5);
+              if (Z) GZ2.push(G === Z ? f : Z[g[0]]);
+              if (F) GF2.push(G === F ? f : F[g[0]]);
+              if (S) GS2.push(G === S ? f : S[g[0]]);
+              for (const o of outputs) o.reduce(g, extent3);
+              if (sort3) sort3.reduce(g, extent3);
             }
           }
         }
@@ -19851,16 +18763,13 @@ function hasOutput(outputs, ...names) {
 }
 function maybeOutputs(outputs, inputs, asOutput = maybeOutput) {
   const entries = Object.entries(outputs);
-  if (inputs.title != null && outputs.title === void 0)
-    entries.push(["title", reduceTitle]);
-  if (inputs.href != null && outputs.href === void 0)
-    entries.push(["href", reduceFirst]);
+  if (inputs.title != null && outputs.title === void 0) entries.push(["title", reduceTitle]);
+  if (inputs.href != null && outputs.href === void 0) entries.push(["href", reduceFirst]);
   return entries.filter(([, reduce2]) => reduce2 !== void 0).map(([name, reduce2]) => reduce2 === null ? nullOutput(name) : asOutput(name, reduce2, inputs));
 }
 function maybeOutput(name, reduce2, inputs, asEvaluator = maybeEvaluator) {
   let scale3;
-  if (isObject(reduce2) && "reduce" in reduce2)
-    scale3 = reduce2.scale, reduce2 = reduce2.reduce;
+  if (isObject(reduce2) && "reduce" in reduce2) scale3 = reduce2.scale, reduce2 = reduce2.reduce;
   const evaluator = asEvaluator(name, reduce2, inputs);
   const [output, setOutput] = column(evaluator.label);
   let O;
@@ -19911,16 +18820,11 @@ function maybeGroup(I, X3) {
   return X3 ? group(I, (i) => X3[i]) : [[, I]];
 }
 function maybeReduce(reduce2, value, fallback = invalidReduce) {
-  if (reduce2 == null)
-    return fallback(reduce2);
-  if (typeof reduce2.reduceIndex === "function")
-    return reduce2;
-  if (typeof reduce2.reduce === "function" && isObject(reduce2))
-    return reduceReduce(reduce2);
-  if (typeof reduce2 === "function")
-    return reduceFunction(reduce2);
-  if (/^p\d{2}$/i.test(reduce2))
-    return reduceAccessor(percentile(reduce2));
+  if (reduce2 == null) return fallback(reduce2);
+  if (typeof reduce2.reduceIndex === "function") return reduce2;
+  if (typeof reduce2.reduce === "function" && isObject(reduce2)) return reduceReduce(reduce2);
+  if (typeof reduce2 === "function") return reduceFunction(reduce2);
+  if (/^p\d{2}$/i.test(reduce2)) return reduceAccessor(percentile(reduce2));
   switch (`${reduce2}`.toLowerCase()) {
     case "first":
       return reduceFirst;
@@ -20073,8 +18977,7 @@ var reduceDistinct = {
   label: "Distinct",
   reduceIndex(I, X3) {
     const s2 = new InternSet();
-    for (const i of I)
-      s2.add(X3[i]);
+    for (const i of I) s2.add(X3[i]);
     return s2.size;
   }
 };
@@ -20098,8 +19001,7 @@ var reduceZ = {
   }
 };
 function find3(test) {
-  if (typeof test !== "function")
-    throw new Error(`invalid test function: ${test}`);
+  if (typeof test !== "function") throw new Error(`invalid test function: ${test}`);
   return {
     reduceIndex(I, V, { data }) {
       return V[I.find(isArray(data) ? (i) => test(data[i], i, data) : (i) => test(data.get(i), i, data))];
@@ -20109,8 +19011,7 @@ function find3(test) {
 
 // node_modules/@observablehq/plot/src/channel.js
 function createChannel(data, { scale: scale3, type: type2, value, filter: filter4, hint, label = labelof(value) }, name) {
-  if (hint === void 0 && typeof value?.transform === "function")
-    hint = value.hint;
+  if (hint === void 0 && typeof value?.transform === "function") hint = value.hint;
   return inferChannelScale(name, {
     scale: scale3,
     type: type2,
@@ -20174,27 +19075,21 @@ function inferChannelScale(name, channel) {
 function channelDomain(data, facets, channels, facetChannels, options) {
   const { order: defaultOrder, reverse: defaultReverse, reduce: defaultReduce = true, limit: defaultLimit } = options;
   for (const x4 in options) {
-    if (!registry.has(x4))
-      continue;
+    if (!registry.has(x4)) continue;
     let { value: y4, order = defaultOrder, reverse: reverse3 = defaultReverse, reduce: reduce2 = defaultReduce, limit = defaultLimit } = maybeValue(options[x4]);
     const negate2 = y4?.startsWith("-");
-    if (negate2)
-      y4 = y4.slice(1);
+    if (negate2) y4 = y4.slice(1);
     order = order === void 0 ? negate2 !== (y4 === "width" || y4 === "height") ? descendingGroup : ascendingGroup : maybeOrder(order);
-    if (reduce2 == null || reduce2 === false)
-      continue;
+    if (reduce2 == null || reduce2 === false) continue;
     const X3 = x4 === "fx" || x4 === "fy" ? reindexFacetChannel(facets, facetChannels[x4]) : findScaleChannel(channels, x4);
-    if (!X3)
-      throw new Error(`missing channel for scale: ${x4}`);
+    if (!X3) throw new Error(`missing channel for scale: ${x4}`);
     const XV = X3.value;
     const [lo = 0, hi = Infinity] = isIterable(limit) ? limit : limit < 0 ? [limit] : [0, limit];
     if (y4 == null) {
       X3.domain = () => {
         let domain = Array.from(new InternSet(XV));
-        if (reverse3)
-          domain = domain.reverse();
-        if (lo !== 0 || hi !== Infinity)
-          domain = domain.slice(lo, hi);
+        if (reverse3) domain = domain.reverse();
+        if (lo !== 0 || hi !== Infinity) domain = domain.slice(lo, hi);
         return domain;
       };
     } else {
@@ -20206,12 +19101,9 @@ function channelDomain(data, facets, channels, facetChannels, options) {
           (I) => reducer2.reduceIndex(I, YV),
           (i) => XV[i]
         );
-        if (order)
-          domain.sort(order);
-        if (reverse3)
-          domain.reverse();
-        if (lo !== 0 || hi !== Infinity)
-          domain = domain.slice(lo, hi);
+        if (order) domain.sort(order);
+        if (reverse3) domain.reverse();
+        if (lo !== 0 || hi !== Infinity) domain = domain.slice(lo, hi);
         return domain.map(first);
       };
     }
@@ -20220,20 +19112,17 @@ function channelDomain(data, facets, channels, facetChannels, options) {
 function findScaleChannel(channels, scale3) {
   for (const name in channels) {
     const channel = channels[name];
-    if (channel.scale === scale3)
-      return channel;
+    if (channel.scale === scale3) return channel;
   }
 }
 function reindexFacetChannel(facets, channel) {
   const originalFacets = facets.original;
-  if (originalFacets === facets)
-    return channel;
+  if (originalFacets === facets) return channel;
   const V1 = channel.value;
   const V2 = channel.value = [];
   for (let i = 0; i < originalFacets.length; ++i) {
     const vi = V1[originalFacets[i][0]];
-    for (const j of facets[i])
-      V2[j] = vi;
+    for (const j of facets[i]) V2[j] = vi;
   }
   return channel;
 }
@@ -20244,15 +19133,12 @@ function difference2(channels, k1, k2) {
 }
 function values(channels, name, alias) {
   let channel = channels[name];
-  if (!channel && alias !== void 0)
-    channel = channels[alias];
-  if (channel)
-    return channel.value;
+  if (!channel && alias !== void 0) channel = channels[alias];
+  if (channel) return channel.value;
   throw new Error(`missing channel: ${name}`);
 }
 function maybeOrder(order) {
-  if (order == null || typeof order === "function")
-    return order;
+  if (order == null || typeof order === "function") return order;
   switch (`${order}`.toLowerCase()) {
     case "ascending":
       return ascendingGroup;
@@ -20269,10 +19155,8 @@ function descendingGroup([ak, av], [bk, bv]) {
 }
 function getSource(channels, key) {
   let channel = channels[key];
-  if (!channel)
-    return;
-  while (channel.source)
-    channel = channel.source;
+  if (!channel) return;
+  while (channel.source) channel = channel.source;
   return channel.source === null ? null : channel;
 }
 
@@ -20343,26 +19227,22 @@ var ordinalSchemes = new Map([
 ]);
 function scheme92(scheme28, interpolate) {
   return ({ length: n }) => {
-    if (n === 1)
-      return [scheme28[3][1]];
-    if (n === 2)
-      return [scheme28[3][1], scheme28[3][2]];
+    if (n === 1) return [scheme28[3][1]];
+    if (n === 2) return [scheme28[3][1], scheme28[3][2]];
     n = Math.max(3, Math.floor(n));
     return n > 9 ? quantize_default(interpolate, n) : scheme28[n];
   };
 }
 function scheme112(scheme28, interpolate) {
   return ({ length: n }) => {
-    if (n === 2)
-      return [scheme28[3][0], scheme28[3][2]];
+    if (n === 2) return [scheme28[3][0], scheme28[3][2]];
     n = Math.max(3, Math.floor(n));
     return n > 11 ? quantize_default(interpolate, n) : scheme28[n];
   };
 }
 function scheme11r(scheme28, interpolate) {
   return ({ length: n }) => {
-    if (n === 2)
-      return [scheme28[3][2], scheme28[3][0]];
+    if (n === 2) return [scheme28[3][2], scheme28[3][0]];
     n = Math.max(3, Math.floor(n));
     return n > 11 ? quantize_default((t) => interpolate(1 - t), n) : scheme28[n].slice().reverse();
   };
@@ -20375,8 +19255,7 @@ function schemeicyclical(interpolate) {
 }
 function ordinalScheme(scheme28) {
   const s2 = `${scheme28}`.toLowerCase();
-  if (!ordinalSchemes.has(s2))
-    throw new Error(`unknown ordinal scheme: ${s2}`);
+  if (!ordinalSchemes.has(s2)) throw new Error(`unknown ordinal scheme: ${s2}`);
   return ordinalSchemes.get(s2);
 }
 function ordinalRange(scheme28, length4) {
@@ -20388,14 +19267,10 @@ function maybeBooleanRange(domain, scheme28 = "greys") {
   const range5 = /* @__PURE__ */ new Set();
   const [f, t] = ordinalRange(scheme28, 2);
   for (const value of domain) {
-    if (value == null)
-      continue;
-    if (value === true)
-      range5.add(t);
-    else if (value === false)
-      range5.add(f);
-    else
-      return;
+    if (value == null) continue;
+    if (value === true) range5.add(t);
+    else if (value === false) range5.add(f);
+    else return;
   }
   return [...range5];
 }
@@ -20448,8 +19323,7 @@ var quantitativeSchemes = /* @__PURE__ */ new Map([
 ]);
 function quantitativeScheme(scheme28) {
   const s2 = `${scheme28}`.toLowerCase();
-  if (!quantitativeSchemes.has(s2))
-    throw new Error(`unknown quantitative scheme: ${s2}`);
+  if (!quantitativeSchemes.has(s2)) throw new Error(`unknown quantitative scheme: ${s2}`);
   return quantitativeSchemes.get(s2);
 }
 var divergingSchemes = /* @__PURE__ */ new Set([
@@ -20483,8 +19357,7 @@ var interpolators = /* @__PURE__ */ new Map([
 ]);
 function maybeInterpolator(interpolate) {
   const i = `${interpolate}`.toLowerCase();
-  if (!interpolators.has(i))
-    throw new Error(`unknown interpolator: ${i}`);
+  if (!interpolators.has(i)) throw new Error(`unknown interpolator: ${i}`);
   return interpolators.get(i);
 }
 function createScaleQ(key, scale3, channels, {
@@ -20501,18 +19374,16 @@ function createScaleQ(key, scale3, channels, {
   interpolate = registry.get(key) === color2 ? scheme28 == null && range5 !== void 0 ? rgb_default : quantitativeScheme(scheme28 !== void 0 ? scheme28 : type2 === "cyclical" ? "rainbow" : "turbo") : round2 ? round_default : number_default,
   reverse: reverse3
 }) {
+  domain = maybeRepeat(domain);
   interval2 = maybeRangeInterval(interval2, type2);
-  if (type2 === "cyclical" || type2 === "sequential")
-    type2 = "linear";
-  if (typeof interpolate !== "function")
-    interpolate = maybeInterpolator(interpolate);
+  if (type2 === "cyclical" || type2 === "sequential") type2 = "linear";
+  if (typeof interpolate !== "function") interpolate = maybeInterpolator(interpolate);
   reverse3 = !!reverse3;
   if (range5 !== void 0) {
-    const n = (domain = arrayify2(domain)).length;
-    const m3 = (range5 = arrayify2(range5)).length;
+    const n = domain.length;
+    const m3 = (range5 = maybeRepeat(range5)).length;
     if (n !== m3) {
-      if (interpolate.length === 1)
-        throw new Error("invalid piecewise interpolator");
+      if (interpolate.length === 1) throw new Error("invalid piecewise interpolator");
       interpolate = piecewise(interpolate, range5);
       range5 = void 0;
     }
@@ -20524,8 +19395,7 @@ function createScaleQ(key, scale3, channels, {
     }
     if (range5 === void 0) {
       range5 = Float64Array.from(domain, (_, i) => i / (domain.length - 1));
-      if (range5.length === 2)
-        range5 = unit2;
+      if (range5.length === 2) range5 = unit2;
     }
     scale3.interpolate((range5 === unit2 ? constant2 : interpolatePiecewise)(interpolate));
   } else {
@@ -20536,22 +19406,20 @@ function createScaleQ(key, scale3, channels, {
     if (min4 > 0 || max5 < 0) {
       domain = slice5(domain);
       const o = orderof(domain) || 1;
-      if (o === Math.sign(min4))
-        domain[0] = 0;
-      else
-        domain[domain.length - 1] = 0;
+      if (o === Math.sign(min4)) domain[0] = 0;
+      else domain[domain.length - 1] = 0;
     }
   }
-  if (reverse3)
-    domain = reverse(domain);
+  if (reverse3) domain = reverse(domain);
   scale3.domain(domain).unknown(unknown);
-  if (nice3)
-    scale3.nice(maybeNice(nice3, type2)), domain = scale3.domain();
-  if (range5 !== void 0)
-    scale3.range(range5);
-  if (clamp)
-    scale3.clamp(clamp);
+  if (nice3) scale3.nice(maybeNice(nice3, type2)), domain = scale3.domain();
+  if (range5 !== void 0) scale3.range(range5);
+  if (clamp) scale3.clamp(clamp);
   return { type: type2, domain, range: range5, scale: scale3, interpolate, interval: interval2 };
+}
+function maybeRepeat(values2) {
+  values2 = arrayify2(values2);
+  return values2.length >= 2 ? values2 : [values2[0], values2[0]];
 }
 function maybeNice(nice3, type2) {
   return nice3 === true ? void 0 : typeof nice3 === "number" ? nice3 : maybeNiceInterval(nice3, type2);
@@ -20603,19 +19471,15 @@ function createScaleQuantize(key, channels, {
   let thresholds;
   if (range5 === void 0) {
     thresholds = ticks(min4, max5, n);
-    if (thresholds[0] <= min4)
-      thresholds.splice(0, 1);
-    if (thresholds[thresholds.length - 1] >= max5)
-      thresholds.pop();
+    if (thresholds[0] <= min4) thresholds.splice(0, 1);
+    if (thresholds[thresholds.length - 1] >= max5) thresholds.pop();
     n = thresholds.length + 1;
     range5 = interpolate !== void 0 ? quantize_default(interpolate, n) : registry.get(key) === color2 ? ordinalRange(scheme28, n) : void 0;
   } else {
     thresholds = quantize_default(number_default(min4, max5), n + 1).slice(1, -1);
-    if (min4 instanceof Date)
-      thresholds = thresholds.map((x4) => new Date(x4));
+    if (min4 instanceof Date) thresholds = thresholds.map((x4) => new Date(x4));
   }
-  if (orderof(arrayify2(domain)) < 0)
-    thresholds.reverse();
+  if (orderof(arrayify2(domain)) < 0) thresholds.reverse();
   return createScaleThreshold(key, channels, { domain: thresholds, range: range5, reverse: reverse3, unknown });
 }
 function createScaleThreshold(key, channels, {
@@ -20629,10 +19493,8 @@ function createScaleThreshold(key, channels, {
 }) {
   domain = arrayify2(domain);
   const sign3 = orderof(domain);
-  if (!isNaN(sign3) && !isOrdered(domain, sign3))
-    throw new Error(`the ${key} scale has a non-monotonic domain`);
-  if (reverse3)
-    range5 = reverse(range5);
+  if (!isNaN(sign3) && !isOrdered(domain, sign3)) throw new Error(`the ${key} scale has a non-monotonic domain`);
+  if (reverse3) range5 = reverse(range5);
   return {
     type: "threshold",
     scale: threshold(sign3 < 0 ? reverse(domain) : domain, range5 === void 0 ? [] : range5).unknown(unknown),
@@ -20643,8 +19505,7 @@ function createScaleThreshold(key, channels, {
 function isOrdered(domain, sign3) {
   for (let i = 1, n = domain.length, d = domain[0]; i < n; ++i) {
     const s2 = descending(d, d = domain[i]);
-    if (s2 !== 0 && s2 !== sign3)
-      return false;
+    if (s2 !== 0 && s2 !== sign3) return false;
   }
   return true;
 }
@@ -20666,8 +19527,7 @@ function inferZeroDomain(channels) {
 }
 function inferRadialRange(channels, domain) {
   const hint = channels.find(({ radius: radius2 }) => radius2 !== void 0);
-  if (hint !== void 0)
-    return [0, hint.radius];
+  if (hint !== void 0) return [0, hint.radius];
   const h25 = quantile(channels, 0.5, ({ value }) => value === void 0 ? NaN : quantile(value, 0.25, positive));
   const range5 = domain.map((d) => 3 * Math.sqrt(d / h25));
   const k2 = 30 / max(range5);
@@ -20683,10 +19543,8 @@ function inferLogDomain(channels) {
   for (const { value } of channels) {
     if (value !== void 0) {
       for (let v2 of value) {
-        if (v2 > 0)
-          return inferDomain(channels, positive);
-        if (v2 < 0)
-          return inferDomain(channels, negative);
+        if (v2 > 0) return inferDomain(channels, positive);
+        if (v2 < 0) return inferDomain(channels, negative);
       }
     }
   }
@@ -20695,10 +19553,8 @@ function inferLogDomain(channels) {
 function inferQuantileDomain(channels) {
   const domain = [];
   for (const { value } of channels) {
-    if (value === void 0)
-      continue;
-    for (const v2 of value)
-      domain.push(v2);
+    if (value === void 0) continue;
+    for (const v2 of value) domain.push(v2);
   }
   return domain;
 }
@@ -20716,8 +19572,7 @@ function consumeWarnings() {
   return w;
 }
 function warn(message) {
-  if (message === lastMessage)
-    return;
+  if (message === lastMessage) return;
   lastMessage = message;
   console.warn(message);
   ++warnings;
@@ -20740,10 +19595,8 @@ function createScaleD(key, scale3, transform2, channels, {
   pivot = +pivot;
   domain = arrayify2(domain);
   let [min4, max5] = domain;
-  if (domain.length > 2)
-    warn(`Warning: the diverging ${key} scale domain contains extra elements.`);
-  if (descending(min4, max5) < 0)
-    [min4, max5] = [max5, min4], reverse3 = !reverse3;
+  if (domain.length > 2) warn(`Warning: the diverging ${key} scale domain contains extra elements.`);
+  if (descending(min4, max5) < 0) [min4, max5] = [max5, min4], reverse3 = !reverse3;
   min4 = Math.min(min4, pivot);
   max5 = Math.max(max5, pivot);
   if (typeof interpolate !== "function") {
@@ -20752,22 +19605,17 @@ function createScaleD(key, scale3, transform2, channels, {
   if (range5 !== void 0) {
     interpolate = interpolate.length === 1 ? interpolatePiecewise(interpolate)(...range5) : piecewise(interpolate, range5);
   }
-  if (reverse3)
-    interpolate = flip(interpolate);
+  if (reverse3) interpolate = flip(interpolate);
   if (symmetric) {
     const mid2 = transform2.apply(pivot);
     const mindelta = mid2 - transform2.apply(min4);
     const maxdelta = transform2.apply(max5) - mid2;
-    if (mindelta < maxdelta)
-      min4 = transform2.invert(mid2 - maxdelta);
-    else if (mindelta > maxdelta)
-      max5 = transform2.invert(mid2 + mindelta);
+    if (mindelta < maxdelta) min4 = transform2.invert(mid2 - maxdelta);
+    else if (mindelta > maxdelta) max5 = transform2.invert(mid2 + mindelta);
   }
   scale3.domain([min4, pivot, max5]).unknown(unknown).interpolator(interpolate);
-  if (clamp)
-    scale3.clamp(clamp);
-  if (nice3)
-    scale3.nice(nice3);
+  if (clamp) scale3.clamp(clamp);
+  if (nice3) scale3.nice(nice3);
   return { type: type2, domain: [min4, max5], pivot, interpolate, scale: scale3 };
 }
 function createScaleDiverging(key, channels, options) {
@@ -20854,24 +19702,19 @@ function createScaleUtc(key, channels, options) {
 var ordinalImplicit = Symbol("ordinal");
 function createScaleO(key, scale3, channels, { type: type2, interval: interval2, domain, range: range5, reverse: reverse3, hint }) {
   interval2 = maybeRangeInterval(interval2, type2);
-  if (domain === void 0)
-    domain = inferDomain2(channels, interval2, key);
-  if (type2 === "categorical" || type2 === ordinalImplicit)
-    type2 = "ordinal";
-  if (reverse3)
-    domain = reverse(domain);
+  if (domain === void 0) domain = inferDomain2(channels, interval2, key);
+  if (type2 === "categorical" || type2 === ordinalImplicit) type2 = "ordinal";
+  if (reverse3) domain = reverse(domain);
   domain = scale3.domain(domain).domain();
   if (range5 !== void 0) {
-    if (typeof range5 === "function")
-      range5 = range5(domain);
+    if (typeof range5 === "function") range5 = range5(domain);
     scale3.range(range5);
   }
   return { type: type2, domain, range: range5, scale: scale3, hint, interval: interval2 };
 }
 function createScaleOrdinal(key, channels, { type: type2, interval: interval2, domain, range: range5, scheme: scheme28, unknown, ...options }) {
   interval2 = maybeRangeInterval(interval2, type2);
-  if (domain === void 0)
-    domain = inferDomain2(channels, interval2, key);
+  if (domain === void 0) domain = inferDomain2(channels, interval2, key);
   let hint;
   if (registry.get(key) === symbol) {
     hint = inferSymbolHint(channels);
@@ -20879,8 +19722,7 @@ function createScaleOrdinal(key, channels, { type: type2, interval: interval2, d
   } else if (registry.get(key) === color2) {
     if (range5 === void 0 && (type2 === "ordinal" || type2 === ordinalImplicit)) {
       range5 = maybeBooleanRange(domain, scheme28);
-      if (range5 !== void 0)
-        scheme28 = void 0;
+      if (range5 !== void 0) scheme28 = void 0;
     }
     if (scheme28 === void 0 && range5 === void 0) {
       scheme28 = type2 === "ordinal" ? "turbo" : "observable10";
@@ -20919,8 +19761,7 @@ function createScaleBand(key, channels, {
 }
 function maybeRound(scale3, channels, options, key) {
   let { round: round2 } = options;
-  if (round2 !== void 0)
-    scale3.round(round2 = !!round2);
+  if (round2 !== void 0) scale3.round(round2 = !!round2);
   scale3 = createScaleO(key, scale3, channels, options);
   scale3.round = round2;
   return scale3;
@@ -20928,12 +19769,9 @@ function maybeRound(scale3, channels, options, key) {
 function inferDomain2(channels, interval2, key) {
   const values2 = new InternSet();
   for (const { value, domain } of channels) {
-    if (domain !== void 0)
-      return domain();
-    if (value === void 0)
-      continue;
-    for (const v2 of value)
-      values2.add(v2);
+    if (domain !== void 0) return domain();
+    if (value === void 0) continue;
+    for (const v2 of value) values2.add(v2);
   }
   if (interval2 !== void 0) {
     const [min4, max5] = extent(values2).map(interval2.floor, interval2);
@@ -20948,12 +19786,9 @@ function inferHint(channels, key) {
   let value;
   for (const { hint } of channels) {
     const candidate = hint?.[key];
-    if (candidate === void 0)
-      continue;
-    if (value === void 0)
-      value = candidate;
-    else if (value !== candidate)
-      return;
+    if (candidate === void 0) continue;
+    if (value === void 0) value = candidate;
+    else if (value !== candidate) return;
   }
   return value;
 }
@@ -21014,10 +19849,8 @@ function createScales(channelsByScale, {
         insetLeft = inset !== void 0 ? inset : key === "x" ? globalInsetLeft : 0
         // not fx
       } = scaleOptions || {};
-      if (transform2 == null)
-        transform2 = void 0;
-      else if (typeof transform2 !== "function")
-        throw new Error("invalid scale transform; not a function");
+      if (transform2 == null) transform2 = void 0;
+      else if (typeof transform2 !== "function") throw new Error("invalid scale transform; not a function");
       scale3.percent = !!percent;
       scale3.label = label === void 0 ? inferScaleLabel(channels, scale3) : label;
       scale3.transform = transform2;
@@ -21041,40 +19874,29 @@ function createScaleFunctions(descriptors) {
     scales[key] = exposeScale(descriptor);
     scaleFunctions[key] = scale3;
     scale3.type = type2;
-    if (interval2 != null)
-      scale3.interval = interval2;
-    if (label != null)
-      scale3.label = label;
+    if (interval2 != null) scale3.interval = interval2;
+    if (label != null) scale3.label = label;
   }
   return scaleFunctions;
 }
 function autoScaleRange(scales, dimensions) {
   const { x: x4, y: y4, fx, fy } = scales;
   const superdimensions = fx || fy ? outerDimensions(dimensions) : dimensions;
-  if (fx)
-    autoScaleRangeX(fx, superdimensions);
-  if (fy)
-    autoScaleRangeY(fy, superdimensions);
+  if (fx) autoScaleRangeX(fx, superdimensions);
+  if (fy) autoScaleRangeY(fy, superdimensions);
   const subdimensions = fx || fy ? innerDimensions(scales, dimensions) : dimensions;
-  if (x4)
-    autoScaleRangeX(x4, subdimensions);
-  if (y4)
-    autoScaleRangeY(y4, subdimensions);
+  if (x4) autoScaleRangeX(x4, subdimensions);
+  if (y4) autoScaleRangeY(y4, subdimensions);
 }
 function inferScaleLabel(channels = [], scale3) {
   let label;
   for (const { label: l } of channels) {
-    if (l === void 0)
-      continue;
-    if (label === void 0)
-      label = l;
-    else if (label !== l)
-      return;
+    if (l === void 0) continue;
+    if (label === void 0) label = l;
+    else if (label !== l) return;
   }
-  if (label === void 0)
-    return;
-  if (!isOrdinalScale(scale3) && scale3.percent)
-    label = `${label} (%)`;
+  if (label === void 0) return;
+  if (!isOrdinalScale(scale3) && scale3.percent) label = `${label} (%)`;
   return { inferred: true, toString: () => label };
 }
 function inferScaleOrder(scale3) {
@@ -21123,8 +19945,7 @@ function autoScaleRangeX(scale3, dimensions) {
     const left2 = marginLeft + insetLeft;
     const right2 = width - marginRight - insetRight;
     scale3.range = [left2, Math.max(left2, right2)];
-    if (!isOrdinalScale(scale3))
-      scale3.range = piecewiseRange(scale3);
+    if (!isOrdinalScale(scale3)) scale3.range = piecewiseRange(scale3);
     scale3.scale.range(scale3.range);
   }
   autoScaleRound(scale3);
@@ -21136,10 +19957,8 @@ function autoScaleRangeY(scale3, dimensions) {
     const top2 = marginTop + insetTop;
     const bottom2 = height - marginBottom - insetBottom;
     scale3.range = [Math.max(top2, bottom2), top2];
-    if (!isOrdinalScale(scale3))
-      scale3.range = piecewiseRange(scale3);
-    else
-      scale3.range.reverse();
+    if (!isOrdinalScale(scale3)) scale3.range = piecewiseRange(scale3);
+    else scale3.range.reverse();
     scale3.scale.range(scale3.range);
   }
   autoScaleRound(scale3);
@@ -21160,8 +19979,7 @@ function roundError({ scale: scale3 }) {
 }
 function piecewiseRange(scale3) {
   const length4 = scale3.scale.domain().length + isThresholdScale(scale3);
-  if (!(length4 > 2))
-    return scale3.range;
+  if (!(length4 > 2)) return scale3.range;
   const [start2, end] = scale3.range;
   return Array.from({ length: length4 }, (_, i) => start2 + i / (length4 - 1) * (end - start2));
 }
@@ -21288,51 +20106,34 @@ function maybeScaleType(type2) {
 var typeProjection = { toString: () => "projection" };
 function inferScaleType(key, channels, { type: type2, domain, range: range5, scheme: scheme28, pivot, projection: projection3 }) {
   type2 = maybeScaleType(type2);
-  if (key === "fx" || key === "fy")
-    return "band";
-  if ((key === "x" || key === "y") && projection3 != null)
-    type2 = typeProjection;
+  if (key === "fx" || key === "fy") return "band";
+  if ((key === "x" || key === "y") && projection3 != null) type2 = typeProjection;
   for (const channel of channels) {
     const t = maybeScaleType(channel.type);
-    if (t === void 0)
-      continue;
-    else if (type2 === void 0)
-      type2 = t;
-    else if (type2 !== t)
-      throw new Error(`scale incompatible with channel: ${type2} !== ${t}`);
+    if (t === void 0) continue;
+    else if (type2 === void 0) type2 = t;
+    else if (type2 !== t) throw new Error(`scale incompatible with channel: ${type2} !== ${t}`);
   }
-  if (type2 === typeProjection)
-    return;
-  if (type2 !== void 0)
-    return type2;
-  if (domain === void 0 && !channels.some(({ value }) => value !== void 0))
-    return;
+  if (type2 === typeProjection) return;
+  if (type2 !== void 0) return type2;
+  if (domain === void 0 && !channels.some(({ value }) => value !== void 0)) return;
   const kind = registry.get(key);
-  if (kind === radius)
-    return "sqrt";
-  if (kind === opacity || kind === length3)
-    return "linear";
-  if (kind === symbol)
-    return "ordinal";
-  if ((domain || range5 || []).length > 2)
-    return asOrdinalType(kind);
+  if (kind === radius) return "sqrt";
+  if (kind === opacity || kind === length3) return "linear";
+  if (kind === symbol) return "ordinal";
+  const n = (domain ?? range5)?.length;
+  if (n < 2 || n > 2) return asOrdinalType(kind);
   if (domain !== void 0) {
-    if (isOrdinal(domain))
-      return asOrdinalType(kind);
-    if (isTemporal(domain))
-      return "utc";
+    if (isOrdinal(domain)) return asOrdinalType(kind);
+    if (isTemporal(domain)) return "utc";
   } else {
     const values2 = channels.map(({ value }) => value).filter((value) => value !== void 0);
-    if (values2.some(isOrdinal))
-      return asOrdinalType(kind);
-    if (values2.some(isTemporal))
-      return "utc";
+    if (values2.some(isOrdinal)) return asOrdinalType(kind);
+    if (values2.some(isTemporal)) return "utc";
   }
   if (kind === color2) {
-    if (pivot != null || isDivergingScheme(scheme28))
-      return "diverging";
-    if (isCategoricalScheme(scheme28))
-      return "categorical";
+    if (pivot != null || isDivergingScheme(scheme28)) return "diverging";
+    if (isCategoricalScheme(scheme28)) return "categorical";
   }
   return "linear";
 }
@@ -21356,8 +20157,7 @@ function isBandScale({ type: type2 }) {
   return type2 === "point" || type2 === "band";
 }
 function isCollapsed(scale3) {
-  if (scale3 === void 0)
-    return true;
+  if (scale3 === void 0) return true;
   const domain = scale3.domain();
   const value = scale3(domain[0]);
   for (let i = 1, n = domain.length; i < n; ++i) {
@@ -21370,8 +20170,7 @@ function isCollapsed(scale3) {
 function coerceType(channels, { domain, ...options }, coerceValues) {
   for (const c6 of channels) {
     if (c6.value !== void 0) {
-      if (domain === void 0)
-        domain = c6.value?.domain;
+      if (domain === void 0) domain = c6.value?.domain;
       c6.value = coerceValues(c6.value);
     }
   }
@@ -21386,28 +20185,22 @@ function coerceSymbols(values2) {
 function scale2(options = {}) {
   let scale3;
   for (const key in options) {
-    if (!registry.has(key))
-      continue;
-    if (!isScaleOptions(options[key]))
-      continue;
-    if (scale3 !== void 0)
-      throw new Error("ambiguous scale definition; multiple scales found");
+    if (!registry.has(key)) continue;
+    if (!isScaleOptions(options[key])) continue;
+    if (scale3 !== void 0) throw new Error("ambiguous scale definition; multiple scales found");
     scale3 = exposeScale(normalizeScale(key, options[key]));
   }
-  if (scale3 === void 0)
-    throw new Error("invalid scale definition; no scale found");
+  if (scale3 === void 0) throw new Error("invalid scale definition; no scale found");
   return scale3;
 }
 function exposeScales(scales) {
   return (key) => {
-    if (!registry.has(key = `${key}`))
-      throw new Error(`unknown scale: ${key}`);
+    if (!registry.has(key = `${key}`)) throw new Error(`unknown scale: ${key}`);
     return scales[key];
   };
 }
 function exposeScale({ scale: scale3, type: type2, domain, range: range5, interpolate, interval: interval2, transform: transform2, percent, pivot }) {
-  if (type2 === "identity")
-    return { type: "identity", apply: (d) => d, invert: (d) => d };
+  if (type2 === "identity") return { type: "identity", apply: (d) => d, invert: (d) => d };
   const unknown = scale3.unknown ? scale3.unknown() : void 0;
   return {
     type: type2,
@@ -21477,7 +20270,16 @@ function facetGroups(data, { fx, fy }) {
   );
 }
 function facetTranslator(fx, fy, { marginTop, marginLeft }) {
-  return fx && fy ? ({ x: x4, y: y4 }) => `translate(${fx(x4) - marginLeft},${fy(y4) - marginTop})` : fx ? ({ x: x4 }) => `translate(${fx(x4) - marginLeft},0)` : ({ y: y4 }) => `translate(0,${fy(y4) - marginTop})`;
+  const x4 = fx ? ({ x: x5 }) => fx(x5) - marginLeft : () => 0;
+  const y4 = fy ? ({ y: y5 }) => fy(y5) - marginTop : () => 0;
+  return function(d) {
+    if (this.tagName === "svg") {
+      this.setAttribute("x", x4(d));
+      this.setAttribute("y", y4(d));
+    } else {
+      this.setAttribute("transform", `translate(${x4(d)},${y4(d)})`);
+    }
+  };
 }
 function facetExclude(index3) {
   const ex = [];
@@ -21485,8 +20287,7 @@ function facetExclude(index3) {
   for (const i of index3) {
     let n = 0;
     for (const j of index3) {
-      if (i === j)
-        continue;
+      if (i === j) continue;
       e.set(j, n);
       n += j.length;
     }
@@ -21510,18 +20311,15 @@ var facetAnchors = /* @__PURE__ */ new Map([
   ["empty", facetAnchorEmpty]
 ]);
 function maybeFacetAnchor(facetAnchor) {
-  if (facetAnchor == null)
-    return null;
+  if (facetAnchor == null) return null;
   const anchor = facetAnchors.get(`${facetAnchor}`.toLowerCase());
-  if (anchor)
-    return anchor;
+  if (anchor) return anchor;
   throw new Error(`invalid facet anchor: ${facetAnchor}`);
 }
 var indexCache = /* @__PURE__ */ new WeakMap();
 function facetIndex(V) {
   let I = indexCache.get(V);
-  if (!I)
-    indexCache.set(V, I = new InternMap(map4(V, (v2, i) => [v2, i])));
+  if (!I) indexCache.set(V, I = new InternMap(map4(V, (v2, i) => [v2, i])));
   return I;
 }
 function facetIndexOf(V, v2) {
@@ -21548,40 +20346,28 @@ function facetAnchorRight(facets, { x: X3 }, { x: x4 }) {
   return X3 ? facetIndexOf(X3, x4) === X3.length - 1 : true;
 }
 function facetAnchorTopEmpty(facets, { y: Y3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!Y3)
-    return;
+  if (empty4) return false;
+  if (!Y3) return;
   const i = facetIndexOf(Y3, y4);
-  if (i > 0)
-    return facetEmpty(facets, x4, Y3[i - 1]);
+  if (i > 0) return facetEmpty(facets, x4, Y3[i - 1]);
 }
 function facetAnchorBottomEmpty(facets, { y: Y3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!Y3)
-    return;
+  if (empty4) return false;
+  if (!Y3) return;
   const i = facetIndexOf(Y3, y4);
-  if (i < Y3.length - 1)
-    return facetEmpty(facets, x4, Y3[i + 1]);
+  if (i < Y3.length - 1) return facetEmpty(facets, x4, Y3[i + 1]);
 }
 function facetAnchorLeftEmpty(facets, { x: X3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!X3)
-    return;
+  if (empty4) return false;
+  if (!X3) return;
   const i = facetIndexOf(X3, x4);
-  if (i > 0)
-    return facetEmpty(facets, X3[i - 1], y4);
+  if (i > 0) return facetEmpty(facets, X3[i - 1], y4);
 }
 function facetAnchorRightEmpty(facets, { x: X3 }, { x: x4, y: y4, empty: empty4 }) {
-  if (empty4)
-    return false;
-  if (!X3)
-    return;
+  if (empty4) return false;
+  if (!X3) return;
   const i = facetIndexOf(X3, x4);
-  if (i < X3.length - 1)
-    return facetEmpty(facets, X3[i + 1], y4);
+  if (i < X3.length - 1) return facetEmpty(facets, X3[i + 1], y4);
 }
 function facetAnchorEmpty(facets, channels, { empty: empty4 }) {
   return empty4;
@@ -21607,10 +20393,8 @@ function createProjection({
   insetBottom = globalInset,
   insetLeft = globalInset
 } = {}, dimensions) {
-  if (projection3 == null)
-    return;
-  if (typeof projection3.stream === "function")
-    return projection3;
+  if (projection3 == null) return;
+  if (typeof projection3.stream === "function") return projection3;
   let options;
   let domain;
   let clip = "frame";
@@ -21627,17 +20411,14 @@ function createProjection({
       clip = clip,
       ...options
     } = projection3);
-    if (projection3 == null)
-      return;
+    if (projection3 == null) return;
   }
-  if (typeof projection3 !== "function")
-    ({ type: projection3 } = namedProjection(projection3));
+  if (typeof projection3 !== "function") ({ type: projection3 } = namedProjection(projection3));
   const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
   const dx = width - marginLeft - marginRight - insetLeft - insetRight;
   const dy = height - marginTop - marginBottom - insetTop - insetBottom;
   projection3 = projection3?.({ width: dx, height: dy, clip, ...options });
-  if (projection3 == null)
-    return;
+  if (projection3 == null) return;
   clip = maybePostClip(clip, marginLeft, marginTop, width - marginRight, height - marginBottom);
   let tx = marginLeft + insetLeft;
   let ty = marginTop + insetTop;
@@ -21703,10 +20484,8 @@ function namedProjection(projection3) {
   }
 }
 function maybePostClip(clip, x12, y12, x22, y22) {
-  if (clip === false || clip == null || typeof clip === "number")
-    return (s2) => s2;
-  if (clip === true)
-    clip = "frame";
+  if (clip === false || clip == null || typeof clip === "number") return (s2) => s2;
+  if (clip === true) clip = "frame";
   switch (`${clip}`.toLowerCase()) {
     case "frame":
       return clipRectangle(x12, y12, x22, y22);
@@ -21718,12 +20497,9 @@ function scaleProjection(createProjection2, kx2, ky2) {
   return {
     type: ({ width, height, rotate, precision = 0.15, clip }) => {
       const projection3 = createProjection2();
-      if (precision != null)
-        projection3.precision?.(precision);
-      if (rotate != null)
-        projection3.rotate?.(rotate);
-      if (typeof clip === "number")
-        projection3.clipAngle?.(clip);
+      if (precision != null) projection3.precision?.(precision);
+      if (rotate != null) projection3.rotate?.(rotate);
+      if (typeof clip === "number") projection3.clipAngle?.(clip);
       if (width != null) {
         projection3.scale(Math.min(width / kx2, height / ky2));
         projection3.translate([width / 2, height / 2]);
@@ -21776,17 +20552,13 @@ function project(cx, cy, values2, projection3) {
   }
 }
 function hasProjection({ projection: projection3 } = {}) {
-  if (projection3 == null)
-    return false;
-  if (typeof projection3.stream === "function")
-    return true;
-  if (isObject(projection3))
-    projection3 = projection3.type;
+  if (projection3 == null) return false;
+  if (typeof projection3.stream === "function") return true;
+  if (isObject(projection3)) projection3 = projection3.type;
   return projection3 != null;
 }
 function projectionAspectRatio(projection3) {
-  if (typeof projection3?.stream === "function")
-    return defaultAspectRatio;
+  if (typeof projection3?.stream === "function") return defaultAspectRatio;
   if (isObject(projection3)) {
     let domain, options;
     ({ domain, type: projection3, ...options } = projection3);
@@ -21797,29 +20569,22 @@ function projectionAspectRatio(projection3) {
       return r && isFinite(r) ? r < 0.2 ? 0.2 : r > 5 ? 5 : r : defaultAspectRatio;
     }
   }
-  if (projection3 == null)
-    return;
+  if (projection3 == null) return;
   if (typeof projection3 !== "function") {
     const { aspectRatio } = namedProjection(projection3);
-    if (aspectRatio)
-      return aspectRatio;
+    if (aspectRatio) return aspectRatio;
   }
   return defaultAspectRatio;
 }
 function applyPosition(channels, scales, { projection: projection3 }) {
   const { x: x4, y: y4 } = channels;
   let position3 = {};
-  if (x4)
-    position3.x = x4;
-  if (y4)
-    position3.y = y4;
+  if (x4) position3.x = x4;
+  if (y4) position3.y = y4;
   position3 = valueObject(position3, scales);
-  if (projection3 && x4?.scale === "x" && y4?.scale === "y")
-    project("x", "y", position3, projection3);
-  if (x4)
-    position3.x = coerceNumbers(position3.x);
-  if (y4)
-    position3.y = coerceNumbers(position3.y);
+  if (projection3 && x4?.scale === "x" && y4?.scale === "y") project("x", "y", position3, projection3);
+  if (x4) position3.x = coerceNumbers(position3.x);
+  if (y4) position3.y = coerceNumbers(position3.y);
   return position3;
 }
 function getGeometryChannels(channel) {
@@ -21843,9 +20608,19 @@ function getGeometryChannels(channel) {
     sphere() {
     }
   };
-  for (const object2 of channel.value)
-    stream_default(object2, sink);
+  for (const object2 of channel.value) stream_default(object2, sink);
   return [x4, y4];
+}
+function xyProjection({ x: X3, y: Y3 }) {
+  if (X3 || Y3) {
+    X3 ??= (x4) => x4;
+    Y3 ??= (y4) => y4;
+    return transform_default({
+      point(x4, y4) {
+        this.stream.point(X3(x4), Y3(y4));
+      }
+    });
+  }
 }
 
 // node_modules/@observablehq/plot/src/context.js
@@ -21970,11 +20745,9 @@ function styles(mark, {
     strokeOpacity = null;
   }
   if (isNoneish(defaultFill)) {
-    if (!isNoneish(defaultStroke) && (!isNoneish(fill) || channels?.fill))
-      defaultStroke = "none";
+    if (!isNoneish(defaultStroke) && (!isNoneish(fill) || channels?.fill)) defaultStroke = "none";
   } else {
-    if (isNoneish(defaultStroke) && (!isNoneish(stroke) || channels?.stroke))
-      defaultFill = "none";
+    if (isNoneish(defaultStroke) && (!isNoneish(stroke) || channels?.stroke)) defaultFill = "none";
   }
   const [vfill, cfill] = maybeColorChannel(fill, defaultFill);
   const [vfillOpacity, cfillOpacity] = maybeNumberChannel(fillOpacity, defaultFillOpacity);
@@ -21982,16 +20755,11 @@ function styles(mark, {
   const [vstrokeOpacity, cstrokeOpacity] = maybeNumberChannel(strokeOpacity, defaultStrokeOpacity);
   const [vopacity, copacity] = maybeNumberChannel(opacity2);
   if (!isNone(cstroke)) {
-    if (strokeWidth === void 0)
-      strokeWidth = defaultStrokeWidth;
-    if (strokeLinecap === void 0)
-      strokeLinecap = defaultStrokeLinecap;
-    if (strokeLinejoin === void 0)
-      strokeLinejoin = defaultStrokeLinejoin;
-    if (strokeMiterlimit === void 0 && !isRound(strokeLinejoin))
-      strokeMiterlimit = defaultStrokeMiterlimit;
-    if (!isNone(cfill) && paintOrder === void 0)
-      paintOrder = defaultPaintOrder;
+    if (strokeWidth === void 0) strokeWidth = defaultStrokeWidth;
+    if (strokeLinecap === void 0) strokeLinecap = defaultStrokeLinecap;
+    if (strokeLinejoin === void 0) strokeLinejoin = defaultStrokeLinejoin;
+    if (strokeMiterlimit === void 0 && !isRound(strokeLinejoin)) strokeMiterlimit = defaultStrokeMiterlimit;
+    if (!isNone(cfill) && paintOrder === void 0) paintOrder = defaultPaintOrder;
   }
   const [vstrokeWidth, cstrokeWidth] = maybeNumberChannel(strokeWidth);
   if (defaultFill !== null) {
@@ -22039,12 +20807,10 @@ function applyTitleGroup(selection2, L) {
     selection2.filter(([i]) => nonempty(L[i])).append("title").call(applyTextGroup, L);
 }
 function applyText(selection2, T) {
-  if (T)
-    selection2.text((i) => formatDefault(T[i]));
+  if (T) selection2.text((i) => formatDefault(T[i]));
 }
 function applyTextGroup(selection2, T) {
-  if (T)
-    selection2.text(([i]) => formatDefault(T[i]));
+  if (T) selection2.text(([i]) => formatDefault(T[i]));
 }
 function applyChannelStyles(selection2, { target, tip: tip2 }, {
   ariaLabel: AL,
@@ -22057,24 +20823,15 @@ function applyChannelStyles(selection2, { target, tip: tip2 }, {
   opacity: O,
   href: H
 }) {
-  if (AL)
-    applyAttr(selection2, "aria-label", (i) => AL[i]);
-  if (F)
-    applyAttr(selection2, "fill", (i) => F[i]);
-  if (FO)
-    applyAttr(selection2, "fill-opacity", (i) => FO[i]);
-  if (S)
-    applyAttr(selection2, "stroke", (i) => S[i]);
-  if (SO)
-    applyAttr(selection2, "stroke-opacity", (i) => SO[i]);
-  if (SW)
-    applyAttr(selection2, "stroke-width", (i) => SW[i]);
-  if (O)
-    applyAttr(selection2, "opacity", (i) => O[i]);
-  if (H)
-    applyHref(selection2, (i) => H[i], target);
-  if (!tip2)
-    applyTitle(selection2, T);
+  if (AL) applyAttr(selection2, "aria-label", (i) => AL[i]);
+  if (F) applyAttr(selection2, "fill", (i) => F[i]);
+  if (FO) applyAttr(selection2, "fill-opacity", (i) => FO[i]);
+  if (S) applyAttr(selection2, "stroke", (i) => S[i]);
+  if (SO) applyAttr(selection2, "stroke-opacity", (i) => SO[i]);
+  if (SW) applyAttr(selection2, "stroke-width", (i) => SW[i]);
+  if (O) applyAttr(selection2, "opacity", (i) => O[i]);
+  if (H) applyHref(selection2, (i) => H[i], target);
+  if (!tip2) applyTitle(selection2, T);
 }
 function applyGroupedChannelStyles(selection2, { target, tip: tip2 }, {
   ariaLabel: AL,
@@ -22087,24 +20844,15 @@ function applyGroupedChannelStyles(selection2, { target, tip: tip2 }, {
   opacity: O,
   href: H
 }) {
-  if (AL)
-    applyAttr(selection2, "aria-label", ([i]) => AL[i]);
-  if (F)
-    applyAttr(selection2, "fill", ([i]) => F[i]);
-  if (FO)
-    applyAttr(selection2, "fill-opacity", ([i]) => FO[i]);
-  if (S)
-    applyAttr(selection2, "stroke", ([i]) => S[i]);
-  if (SO)
-    applyAttr(selection2, "stroke-opacity", ([i]) => SO[i]);
-  if (SW)
-    applyAttr(selection2, "stroke-width", ([i]) => SW[i]);
-  if (O)
-    applyAttr(selection2, "opacity", ([i]) => O[i]);
-  if (H)
-    applyHref(selection2, ([i]) => H[i], target);
-  if (!tip2)
-    applyTitleGroup(selection2, T);
+  if (AL) applyAttr(selection2, "aria-label", ([i]) => AL[i]);
+  if (F) applyAttr(selection2, "fill", ([i]) => F[i]);
+  if (FO) applyAttr(selection2, "fill-opacity", ([i]) => FO[i]);
+  if (S) applyAttr(selection2, "stroke", ([i]) => S[i]);
+  if (SO) applyAttr(selection2, "stroke-opacity", ([i]) => SO[i]);
+  if (SW) applyAttr(selection2, "stroke-width", ([i]) => SW[i]);
+  if (O) applyAttr(selection2, "opacity", ([i]) => O[i]);
+  if (H) applyHref(selection2, ([i]) => H[i], target);
+  if (!tip2) applyTitleGroup(selection2, T);
 }
 function groupAesthetics({
   ariaLabel: AL,
@@ -22136,51 +20884,42 @@ function* groupIndex(I, position3, mark, channels) {
   for (const G of Z ? groupZ2(I, Z, z) : [I]) {
     let Ag;
     let Gg;
-    out:
-      for (const i of G) {
-        for (const c6 of C3) {
-          if (!defined(c6[i])) {
-            if (Gg)
-              Gg.push(-1);
-            continue out;
-          }
-        }
-        if (Ag === void 0) {
-          if (Gg)
-            yield Gg;
-          Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
-          continue;
-        }
-        Gg.push(i);
-        for (let j = 0; j < A5.length; ++j) {
-          const k2 = keyof2(A5[j][i]);
-          if (k2 !== Ag[j]) {
-            yield Gg;
-            Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
-            continue out;
-          }
+    out: for (const i of G) {
+      for (const c6 of C3) {
+        if (!defined(c6[i])) {
+          if (Gg) Gg.push(-1);
+          continue out;
         }
       }
-    if (Gg)
-      yield Gg;
+      if (Ag === void 0) {
+        if (Gg) yield Gg;
+        Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
+        continue;
+      }
+      Gg.push(i);
+      for (let j = 0; j < A5.length; ++j) {
+        const k2 = keyof2(A5[j][i]);
+        if (k2 !== Ag[j]) {
+          yield Gg;
+          Ag = A5.map((c6) => keyof2(c6[i])), Gg = [i];
+          continue out;
+        }
+      }
+    }
+    if (Gg) yield Gg;
   }
 }
 function applyClip(selection2, mark, dimensions, context) {
   let clipUrl;
   const { clip = context.clip } = mark;
-  switch (clip) {
-    case "frame": {
-      selection2 = create2("svg:g", context).each(function() {
-        this.appendChild(selection2.node());
-        selection2.node = () => this;
-      });
-      clipUrl = getFrameClip(context, dimensions);
-      break;
-    }
-    case "sphere": {
-      clipUrl = getProjectionClip(context);
-      break;
-    }
+  if (clip === "frame") {
+    selection2 = create2("svg:g", context).each(function() {
+      this.appendChild(selection2.node());
+      selection2.node = () => this;
+    });
+    clipUrl = getFrameClip(context, dimensions);
+  } else if (clip) {
+    clipUrl = getGeoClip(clip, context);
   }
   applyAttr(selection2, "aria-label", mark.ariaLabel);
   applyAttr(selection2, "aria-description", mark.ariaDescription);
@@ -22203,12 +20942,19 @@ var getFrameClip = memoizeClip((clipPath, context, dimensions) => {
   const { width, height, marginLeft, marginRight, marginTop, marginBottom } = dimensions;
   clipPath.append("rect").attr("x", marginLeft).attr("y", marginTop).attr("width", width - marginRight - marginLeft).attr("height", height - marginTop - marginBottom);
 });
-var getProjectionClip = memoizeClip((clipPath, context) => {
-  const { projection: projection3 } = context;
-  if (!projection3)
-    throw new Error(`the "sphere" clip option requires a projection`);
-  clipPath.append("path").attr("d", path_default(projection3)({ type: "Sphere" }));
-});
+var geoClipCache = /* @__PURE__ */ new WeakMap();
+var sphere = { type: "Sphere" };
+function getGeoClip(geo2, context) {
+  let cache, url;
+  if (!(cache = geoClipCache.get(context))) geoClipCache.set(context, cache = /* @__PURE__ */ new WeakMap());
+  if (geo2.type === "Sphere") geo2 = sphere;
+  if (!(url = cache.get(geo2))) {
+    const id2 = getClipId();
+    select_default2(context.ownerSVGElement).append("clipPath").attr("id", id2).append("path").attr("d", context.path()(geo2));
+    cache.set(geo2, url = `url(#${id2})`);
+  }
+  return url;
+}
 function applyIndirectStyles(selection2, mark, dimensions, context) {
   applyClip(selection2, mark, dimensions, context);
   applyAttr(selection2, "class", mark.className);
@@ -22239,45 +20985,35 @@ function applyHref(selection2, href, target) {
       const a4 = this.ownerDocument.createElementNS(namespaces_default.svg, "a");
       a4.setAttribute("fill", "inherit");
       a4.setAttributeNS(namespaces_default.xlink, "href", h);
-      if (target != null)
-        a4.setAttribute("target", target);
+      if (target != null) a4.setAttribute("target", target);
       this.parentNode.insertBefore(a4, this).appendChild(this);
     }
   });
 }
 function applyAttr(selection2, name, value) {
-  if (value != null)
-    selection2.attr(name, value);
+  if (value != null) selection2.attr(name, value);
 }
 function applyStyle(selection2, name, value) {
-  if (value != null)
-    selection2.style(name, value);
+  if (value != null) selection2.style(name, value);
 }
 function applyTransform(selection2, mark, { x: x4, y: y4 }, tx = offset, ty = offset) {
   tx += mark.dx;
   ty += mark.dy;
-  if (x4?.bandwidth)
-    tx += x4.bandwidth() / 2;
-  if (y4?.bandwidth)
-    ty += y4.bandwidth() / 2;
-  if (tx || ty)
-    selection2.attr("transform", `translate(${tx},${ty})`);
+  if (x4?.bandwidth) tx += x4.bandwidth() / 2;
+  if (y4?.bandwidth) ty += y4.bandwidth() / 2;
+  if (tx || ty) selection2.attr("transform", `translate(${tx},${ty})`);
 }
 function impliedString(value, impliedValue) {
-  if ((value = string(value)) !== impliedValue)
-    return value;
+  if ((value = string(value)) !== impliedValue) return value;
 }
 function impliedNumber(value, impliedValue) {
-  if ((value = number5(value)) !== impliedValue)
-    return value;
+  if ((value = number5(value)) !== impliedValue) return value;
 }
 var validClassName = /^-?([_a-z]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])([_a-z0-9-]|[\240-\377]|\\[0-9a-f]{1,6}(\r\n|[ \t\r\n\f])?|\\[^\r\n\f0-9a-f])*$/i;
 function maybeClassName(name) {
-  if (name === void 0)
-    return "plot-d6a7b5";
+  if (name === void 0) return "plot-d6a7b5";
   name = `${name}`;
-  if (!validClassName.test(name))
-    throw new Error(`invalid class name: ${name}`);
+  if (!validClassName.test(name)) throw new Error(`invalid class name: ${name}`);
   return name;
 }
 function applyInlineStyles(selection2, style) {
@@ -22331,10 +21067,8 @@ var Mark = class {
     }
     this.facetAnchor = maybeFacetAnchor(facetAnchor);
     channels = maybeNamed(channels);
-    if (extraChannels !== void 0)
-      channels = { ...maybeChannels(extraChannels), ...channels };
-    if (defaults22 !== void 0)
-      channels = { ...styles(this, options, defaults22), ...channels };
+    if (extraChannels !== void 0) channels = { ...maybeChannels(extraChannels), ...channels };
+    if (defaults22 !== void 0) channels = { ...styles(this, options, defaults22), ...channels };
     this.channels = Object.fromEntries(
       Object.entries(channels).map(([name, channel]) => {
         if (isOptions(channel.value)) {
@@ -22347,10 +21081,8 @@ var Mark = class {
         }
         return [name, channel];
       }).filter(([name, { value, optional: optional2 }]) => {
-        if (value != null)
-          return true;
-        if (optional2)
-          return false;
+        if (value != null) return true;
+        if (optional2) return false;
         throw new Error(`missing channel value: ${name}`);
       })
     );
@@ -22362,14 +21094,12 @@ var Mark = class {
     this.marginLeft = +marginLeft;
     this.clip = maybeClip(clip);
     this.tip = maybeTip(tip2);
-    this.className = className ? maybeClassName(className) : null;
+    this.className = string(className);
     if (this.facet === "super") {
-      if (fx || fy)
-        throw new Error(`super-faceting cannot use fx or fy`);
+      if (fx || fy) throw new Error(`super-faceting cannot use fx or fy`);
       for (const name in this.channels) {
         const { scale: scale3 } = channels[name];
-        if (scale3 !== "x" && scale3 !== "y")
-          continue;
+        if (scale3 !== "x" && scale3 !== "y") continue;
         throw new Error(`super-faceting cannot use x or y`);
       }
     }
@@ -22379,16 +21109,12 @@ var Mark = class {
   }
   initialize(facets, facetChannels, plotOptions) {
     let data = dataify(this.data);
-    if (facets === void 0 && data != null)
-      facets = [range4(data)];
+    if (facets === void 0 && data != null) facets = [range4(data)];
     const originalFacets = facets;
-    if (this.transform != null)
-      ({ facets, data } = this.transform(data, facets, plotOptions)), data = dataify(data);
-    if (facets !== void 0)
-      facets.original = originalFacets;
+    if (this.transform != null) ({ facets, data } = this.transform(data, facets, plotOptions)), data = dataify(data);
+    if (facets !== void 0) facets.original = originalFacets;
     const channels = createChannels(this.channels, data);
-    if (this.sort != null)
-      channelDomain(data, facets, channels, facetChannels, this.sort);
+    if (this.sort != null) channelDomain(data, facets, channels, facetChannels, this.sort);
     return { data, facets, channels };
   }
   filter(index3, channels, values2) {
@@ -22420,8 +21146,7 @@ var Mark = class {
   }
   scale(channels, scales, context) {
     const values2 = valueObject(channels, scales);
-    if (context.projection)
-      this.project(channels, values2, context);
+    if (context.projection) this.project(channels, values2, context);
     return values2;
   }
 };
@@ -22430,14 +21155,10 @@ function marks(...marks2) {
   return marks2;
 }
 function composeRender(r1, r2) {
-  if (r1 == null)
-    return r2 === null ? void 0 : r2;
-  if (r2 == null)
-    return r1 === null ? void 0 : r1;
-  if (typeof r1 !== "function")
-    throw new TypeError(`invalid render transform: ${r1}`);
-  if (typeof r2 !== "function")
-    throw new TypeError(`invalid render transform: ${r2}`);
+  if (r1 == null) return r2 === null ? void 0 : r2;
+  if (r2 == null) return r1 === null ? void 0 : r1;
+  if (typeof r1 !== "function") throw new TypeError(`invalid render transform: ${r1}`);
+  if (typeof r2 !== "function") throw new TypeError(`invalid render transform: ${r2}`);
   return function(i, s2, v2, d, c6, next) {
     return r1.call(this, i, s2, v2, d, c6, (i2, s3, v3, d2, c7) => {
       return r2.call(this, i2, s3, v3, d2, c7, next);
@@ -22448,8 +21169,7 @@ function maybeChannels(channels) {
   return Object.fromEntries(
     Object.entries(maybeNamed(channels)).map(([name, channel]) => {
       channel = typeof channel === "string" ? { value: channel, label: name } : maybeValue(channel);
-      if (channel.filter === void 0 && channel.scale == null)
-        channel = { ...channel, filter: null };
+      if (channel.filter === void 0 && channel.scale == null) channel = { ...channel, filter: null };
       return [name, channel];
     })
   );
@@ -22465,14 +21185,10 @@ function withTip(options, pointer2) {
 function createDimensions(scales, marks2, options = {}) {
   let marginTopDefault = 0.5 - offset, marginRightDefault = 0.5 + offset, marginBottomDefault = 0.5 + offset, marginLeftDefault = 0.5 - offset;
   for (const { marginTop: marginTop2, marginRight: marginRight2, marginBottom: marginBottom2, marginLeft: marginLeft2 } of marks2) {
-    if (marginTop2 > marginTopDefault)
-      marginTopDefault = marginTop2;
-    if (marginRight2 > marginRightDefault)
-      marginRightDefault = marginRight2;
-    if (marginBottom2 > marginBottomDefault)
-      marginBottomDefault = marginBottom2;
-    if (marginLeft2 > marginLeftDefault)
-      marginLeftDefault = marginLeft2;
+    if (marginTop2 > marginTopDefault) marginTopDefault = marginTop2;
+    if (marginRight2 > marginRightDefault) marginRightDefault = marginRight2;
+    if (marginBottom2 > marginBottomDefault) marginBottomDefault = marginBottom2;
+    if (marginLeft2 > marginLeftDefault) marginLeftDefault = marginLeft2;
   }
   let {
     margin,
@@ -22538,8 +21254,7 @@ function autoHeight({ x: x4, y: y4, fy, fx }, { projection: projection3, aspectR
   const ny = y4 ? isOrdinalScale(y4) ? y4.scale.domain().length || 1 : Math.max(7, 17 / nfy) : 1;
   if (aspectRatio != null) {
     aspectRatio = +aspectRatio;
-    if (!(isFinite(aspectRatio) && aspectRatio > 0))
-      throw new Error(`invalid aspectRatio: ${aspectRatio}`);
+    if (!(isFinite(aspectRatio) && aspectRatio > 0)) throw new Error(`invalid aspectRatio: ${aspectRatio}`);
     const ratio = aspectRatioLength("y", y4) / (aspectRatioLength("x", x4) * aspectRatio);
     const fxb = fx ? fx.scale.bandwidth() : 1;
     const fyb = fy ? fy.scale.bandwidth() : 1;
@@ -22549,8 +21264,7 @@ function autoHeight({ x: x4, y: y4, fy, fx }, { projection: projection3, aspectR
   return !!(y4 || fy) * Math.max(1, Math.min(60, ny * nfy)) * 20 + !!fx * 30 + 60;
 }
 function aspectRatioLength(k2, scale3) {
-  if (!scale3)
-    throw new Error(`aspectRatio requires ${k2} scale`);
+  if (!scale3) throw new Error(`aspectRatio requires ${k2} scale`);
   const { type: type2, domain } = scale3;
   let transform2;
   switch (type2) {
@@ -22581,10 +21295,8 @@ function aspectRatioLength(k2, scale3) {
 var states = /* @__PURE__ */ new WeakMap();
 function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, render: render2, ...options } = {}) {
   maxRadius = +maxRadius;
-  if (px != null)
-    x4 ??= null, channels = { ...channels, px: { value: px, scale: "x" } };
-  if (py != null)
-    y4 ??= null, channels = { ...channels, py: { value: py, scale: "y" } };
+  if (px != null) x4 ??= null, channels = { ...channels, px: { value: px, scale: "x" } };
+  if (py != null) y4 ??= null, channels = { ...channels, py: { value: py, scale: "y" } };
   return {
     x: x4,
     y: y4,
@@ -22598,25 +21310,20 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
       const svg2 = context.ownerSVGElement;
       const { data } = context.getMarkState(this);
       let state = states.get(svg2);
-      if (!state)
-        states.set(svg2, state = { sticky: false, roots: [], renders: [] });
+      if (!state) states.set(svg2, state = { sticky: false, roots: [], renders: [] });
       let renderIndex = state.renders.push(render3) - 1;
       const { x: x5, y: y5, fx, fy } = scales;
       let tx = fx ? fx(index3.fx) - dimensions.marginLeft : 0;
       let ty = fy ? fy(index3.fy) - dimensions.marginTop : 0;
-      if (x5?.bandwidth)
-        tx += x5.bandwidth() / 2;
-      if (y5?.bandwidth)
-        ty += y5.bandwidth() / 2;
+      if (x5?.bandwidth) tx += x5.bandwidth() / 2;
+      if (y5?.bandwidth) ty += y5.bandwidth() / 2;
       const faceted = index3.fi != null;
       let facetState;
       if (faceted) {
         let facetStates = state.facetStates;
-        if (!facetStates)
-          state.facetStates = facetStates = /* @__PURE__ */ new Map();
+        if (!facetStates) state.facetStates = facetStates = /* @__PURE__ */ new Map();
         facetState = facetStates.get(this);
-        if (!facetState)
-          facetStates.set(this, facetState = /* @__PURE__ */ new Map());
+        if (!facetState) facetStates.set(this, facetState = /* @__PURE__ */ new Map());
       }
       const [cx, cy] = applyFrameAnchor(this, dimensions);
       const { px: PX, py: PY } = values2;
@@ -22628,10 +21335,8 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
       let f;
       function update(ii, ri) {
         if (faceted) {
-          if (f)
-            f = cancelAnimationFrame(f);
-          if (ii == null)
-            facetState.delete(index3.fi);
+          if (f) f = cancelAnimationFrame(f);
+          if (ii == null) facetState.delete(index3.fi);
           else {
             facetState.set(index3.fi, ri);
             f = requestAnimationFrame(() => {
@@ -22650,13 +21355,11 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
         render3(ii);
       }
       function render3(ii) {
-        if (i === ii && s2 === state.sticky)
-          return;
+        if (i === ii && s2 === state.sticky) return;
         i = ii;
         s2 = context.pointerSticky = state.sticky;
         const I = i == null ? [] : [i];
-        if (faceted)
-          I.fx = index3.fx, I.fy = index3.fy, I.fi = index3.fi;
+        if (faceted) I.fx = index3.fx, I.fy = index3.fy, I.fi = index3.fi;
         const r = next(I, scales, values2, dimensions, context);
         if (g) {
           if (faceted) {
@@ -22679,8 +21382,7 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
         return r;
       }
       function pointermove(event) {
-        if (state.sticky || event.pointerType === "mouse" && event.buttons === 1)
-          return;
+        if (state.sticky || event.pointerType === "mouse" && event.buttons === 1) return;
         let [xp, yp] = pointer_default(event);
         xp -= tx, yp -= ty;
         const kpx = xp < dimensions.marginLeft || xp > dimensions.width - dimensions.marginRight ? 1 : kx2;
@@ -22691,8 +21393,7 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
           const dx = kpx * (px2(j) - xp);
           const dy = kpy * (py2(j) - yp);
           const rj = dx * dx + dy * dy;
-          if (rj <= ri)
-            ii = j, ri = rj;
+          if (rj <= ri) ii = j, ri = rj;
         }
         if (ii != null && (kx2 !== 1 || ky2 !== 1)) {
           const dx = px2(ii) - xp;
@@ -22702,23 +21403,16 @@ function pointerK(kx2, ky2, { x: x4, y: y4, px, py, maxRadius = 40, channels, re
         update(ii, ri);
       }
       function pointerdown(event) {
-        if (event.pointerType !== "mouse")
-          return;
-        if (i == null)
-          return;
-        if (state.sticky && state.roots.some((r) => r?.contains(event.target)))
-          return;
-        if (state.sticky)
-          state.sticky = false, state.renders.forEach((r) => r(null));
-        else
-          state.sticky = true, render3(i);
+        if (event.pointerType !== "mouse") return;
+        if (i == null) return;
+        if (state.sticky && state.roots.some((r) => r?.contains(event.target))) return;
+        if (state.sticky) state.sticky = false, state.renders.forEach((r) => r(null));
+        else state.sticky = true, render3(i);
         event.stopImmediatePropagation();
       }
       function pointerleave(event) {
-        if (event.pointerType !== "mouse")
-          return;
-        if (!state.sticky)
-          update(null);
+        if (event.pointerType !== "mouse") return;
+        if (!state.sticky) update(null);
       }
       svg2.addEventListener("pointerenter", pointermove);
       svg2.addEventListener("pointermove", pointermove);
@@ -22771,8 +21465,7 @@ function legendRamp(color3, options) {
   const context = createContext(options);
   className = maybeClassName(className);
   opacity2 = maybeNumberChannel(opacity2)[1];
-  if (tickFormat2 === null)
-    tickFormat2 = () => null;
+  if (tickFormat2 === null) tickFormat2 = () => null;
   const svg2 = create2("svg", context).attr("class", `${className}-ramp`).attr("font-family", "system-ui, sans-serif").attr("font-size", 10).attr("width", width).attr("height", height).attr("viewBox", `0 0 ${width} ${height}`).call(
     (svg3) => (
       // Warning: if you edit this, change defaultClassName.
@@ -22845,12 +21538,9 @@ function markers(mark, { marker, markerStart = marker, markerMid = marker, marke
   mark.markerEnd = maybeMarker(markerEnd);
 }
 function maybeMarker(marker) {
-  if (marker == null || marker === false)
-    return null;
-  if (marker === true)
-    return markerCircleFill;
-  if (typeof marker === "function")
-    return marker;
+  if (marker == null || marker === false) return null;
+  if (marker === true) return markerCircleFill;
+  if (typeof marker === "function") return marker;
   switch (`${marker}`.toLowerCase()) {
     case "none":
       return null;
@@ -22906,33 +21596,28 @@ function getGroupedOrientation(path2, Z) {
     const I = D3[i];
     if (I.length > 1) {
       const i2 = I[0];
-      if (z !== (z = keyof2(Z[i2])))
-        O[i2] |= START;
+      if (z !== (z = keyof2(Z[i2]))) O[i2] |= START;
     }
   }
   for (let i = n - 1, z = unset; i >= 0; --i) {
     const I = D3[i];
     if (I.length > 1) {
       const i2 = I[0];
-      if (z !== (z = keyof2(Z[i2])))
-        O[i2] |= END;
+      if (z !== (z = keyof2(Z[i2]))) O[i2] |= END;
     }
   }
   return ([i]) => O[i];
 }
 function applyMarkersColor(path2, { markerStart, markerMid, markerEnd, stroke }, strokeof = () => stroke, Z, context) {
-  if (!markerStart && !markerMid && !markerEnd)
-    return;
+  if (!markerStart && !markerMid && !markerEnd) return;
   const iriByMarkerColor = /* @__PURE__ */ new Map();
   const orient = Z && getGroupedOrientation(path2, Z);
   function applyMarker(name, marker, filter4) {
     return function(i) {
-      if (filter4 && !filter4(i))
-        return;
+      if (filter4 && !filter4(i)) return;
       const color3 = strokeof(i);
       let iriByColor = iriByMarkerColor.get(marker);
-      if (!iriByColor)
-        iriByMarkerColor.set(marker, iriByColor = /* @__PURE__ */ new Map());
+      if (!iriByColor) iriByMarkerColor.set(marker, iriByColor = /* @__PURE__ */ new Map());
       let iri = iriByColor.get(color3);
       if (!iri) {
         const node = this.parentNode.insertBefore(marker(color3, context), this);
@@ -22943,14 +21628,10 @@ function applyMarkersColor(path2, { markerStart, markerMid, markerEnd, stroke },
       this.setAttribute(name, iri);
     };
   }
-  if (markerStart)
-    path2.each(applyMarker("marker-start", markerStart, orient && ((i) => orient(i) & START)));
-  if (markerMid && orient)
-    path2.each(applyMarker("marker-start", markerMid, (i) => !(orient(i) & START)));
-  if (markerMid)
-    path2.each(applyMarker("marker-mid", markerMid));
-  if (markerEnd)
-    path2.each(applyMarker("marker-end", markerEnd, orient && ((i) => orient(i) & END)));
+  if (markerStart) path2.each(applyMarker("marker-start", markerStart, orient && ((i) => orient(i) & START)));
+  if (markerMid && orient) path2.each(applyMarker("marker-start", markerMid, (i) => !(orient(i) & START)));
+  if (markerMid) path2.each(applyMarker("marker-mid", markerMid));
+  if (markerEnd) path2.each(applyMarker("marker-end", markerEnd, orient && ((i) => orient(i) & END)));
 }
 
 // node_modules/@observablehq/plot/src/transforms/inset.js
@@ -22975,8 +21656,7 @@ function maybeIntervalValue(value, { interval: interval2 }) {
 function maybeIntervalK(k2, maybeInsetK, options, trivial) {
   const { [k2]: v2, [`${k2}1`]: v1, [`${k2}2`]: v22 } = options;
   const { value, interval: interval2 } = maybeIntervalValue(v2, options);
-  if (value == null || interval2 == null && !trivial)
-    return options;
+  if (value == null || interval2 == null && !trivial) return options;
   const label = labelof(v2);
   if (interval2 == null) {
     let V;
@@ -22990,8 +21670,7 @@ function maybeIntervalK(k2, maybeInsetK, options, trivial) {
   }
   let D1, V1;
   function transform2(data) {
-    if (V1 !== void 0 && data === D1)
-      return V1;
+    if (V1 !== void 0 && data === D1) return V1;
     return V1 = map4(valueof(D1 = data, value), (v3) => interval2.floor(v3));
   }
   return maybeInsetK({
@@ -23004,8 +21683,7 @@ function maybeIntervalK(k2, maybeInsetK, options, trivial) {
 function maybeIntervalMidK(k2, maybeInsetK, options) {
   const { [k2]: v2 } = options;
   const { value, interval: interval2 } = maybeIntervalValue(v2, options);
-  if (value == null || interval2 == null)
-    return options;
+  if (value == null || interval2 == null) return options;
   return maybeInsetK({
     ...options,
     [k2]: {
@@ -23118,11 +21796,9 @@ function ruleY(data, options) {
 function maybeOptionalZero(x4, x12, x22) {
   if (x4 == null) {
     if (x12 === void 0) {
-      if (x22 !== void 0)
-        return [0, x22];
+      if (x22 !== void 0) return [0, x22];
     } else {
-      if (x22 === void 0)
-        return [0, x12];
+      if (x22 === void 0) return [0, x12];
     }
   } else if (x12 === void 0) {
     return x22 === void 0 ? [0, x4] : [x4, x22];
@@ -23210,8 +21886,7 @@ var Text = class extends Mark {
     this.fontVariant = string(fontVariant);
     this.fontWeight = string(fontWeight);
     this.frameAnchor = maybeFrameAnchor(frameAnchor);
-    if (!(this.lineWidth >= 0))
-      throw new Error(`invalid lineWidth: ${lineWidth}`);
+    if (!(this.lineWidth >= 0)) throw new Error(`invalid lineWidth: ${lineWidth}`);
     this.splitLines = splitter2(this);
     this.clipLine = clipper(this);
   }
@@ -23242,8 +21917,7 @@ function maybeTextOverflow(textOverflow) {
   ]).replace(/^(clip|ellipsis)$/, "$1-end");
 }
 function applyMultilineText(selection2, mark, T, TL) {
-  if (!T)
-    return;
+  if (!T) return;
   const { lineAnchor, lineHeight, textOverflow, splitLines, clipLine } = mark;
   selection2.each(function(i) {
     const lines = splitLines(formatDefault(T[i]) ?? "").map(clipLine);
@@ -23253,21 +21927,17 @@ function applyMultilineText(selection2, mark, T, TL) {
       let m3 = 0;
       for (let i2 = 0; i2 < n; ++i2) {
         ++m3;
-        if (!lines[i2])
-          continue;
+        if (!lines[i2]) continue;
         const tspan = this.ownerDocument.createElementNS(namespaces_default.svg, "tspan");
         tspan.setAttribute("x", 0);
-        if (i2 === m3 - 1)
-          tspan.setAttribute("y", `${(y4 + i2) * lineHeight}em`);
-        else
-          tspan.setAttribute("dy", `${m3 * lineHeight}em`);
+        if (i2 === m3 - 1) tspan.setAttribute("y", `${(y4 + i2) * lineHeight}em`);
+        else tspan.setAttribute("dy", `${m3 * lineHeight}em`);
         tspan.textContent = lines[i2];
         this.appendChild(tspan);
         m3 = 0;
       }
     } else {
-      if (y4)
-        this.setAttribute("y", `${y4 * lineHeight}em`);
+      if (y4) this.setAttribute("y", `${y4 * lineHeight}em`);
       this.textContent = lines[0];
     }
     if (textOverflow && !TL && lines[0] !== T[i]) {
@@ -23278,8 +21948,7 @@ function applyMultilineText(selection2, mark, T, TL) {
   });
 }
 function text(data, { x: x4, y: y4, ...options } = {}) {
-  if (options.frameAnchor === void 0)
-    [x4, y4] = maybeTuple(x4, y4);
+  if (options.frameAnchor === void 0) [x4, y4] = maybeTuple(x4, y4);
   return new Text(data, { ...options, x: x4, y: y4 });
 }
 function textX(data, { x: x4 = identity6, ...options } = {}) {
@@ -23319,10 +21988,8 @@ var fontSizes = /* @__PURE__ */ new Set([
   "smaller"
 ]);
 function maybeFontSizeChannel(fontSize) {
-  if (fontSize == null || typeof fontSize === "number")
-    return [void 0, fontSize];
-  if (typeof fontSize !== "string")
-    return [fontSize, void 0];
+  if (fontSize == null || typeof fontSize === "number") return [void 0, fontSize];
+  if (typeof fontSize !== "string") return [fontSize, void 0];
   fontSize = fontSize.trim().toLowerCase();
   return fontSizes.has(fontSize) || /^[+-]?\d*\.?\d+(e[+-]?\d+)?(\w*|%)$/.test(fontSize) ? [void 0, fontSize] : [fontSize, void 0];
 }
@@ -23330,8 +21997,7 @@ function lineWrap(input, maxWidth, widthof) {
   const lines = [];
   let lineStart, lineEnd = 0;
   for (const [wordStart, wordEnd, required2] of lineBreaks(input)) {
-    if (lineStart === void 0)
-      lineStart = wordStart;
+    if (lineStart === void 0) lineStart = wordStart;
     if (lineEnd > lineStart && widthof(input, lineStart, wordEnd) > maxWidth) {
       lines.push(input.slice(lineStart, lineEnd) + (input[lineEnd - 1] === softHyphen ? "-" : ""));
       lineStart = wordStart;
@@ -23359,13 +22025,12 @@ function* lineBreaks(input) {
         break;
       case " ":
         yield [i, j, false];
-        while (input[++j] === " ")
-          ;
+        while (input[++j] === " ") ;
         i = j;
         break;
       case "\r":
-        if (input[j + 1] === "\n")
-          ++k2;
+        if (input[j + 1] === "\n") ++k2;
+      // falls through
       case "\n":
         yield [i, j, true];
         j += k2;
@@ -23475,15 +22140,13 @@ function monospaceWidth(text2, start2 = 0, end = text2.length) {
   return sum4;
 }
 function splitter2({ monospace, lineWidth, textOverflow }) {
-  if (textOverflow != null || lineWidth == Infinity)
-    return (text2) => text2.split(/\r\n?|\n/g);
+  if (textOverflow != null || lineWidth == Infinity) return (text2) => text2.split(/\r\n?|\n/g);
   const widthof = monospace ? monospaceWidth : defaultWidth;
   const maxWidth = lineWidth * 100;
   return (text2) => lineWrap(text2, maxWidth, widthof);
 }
 function clipper({ monospace, lineWidth, textOverflow }) {
-  if (textOverflow == null || lineWidth == Infinity)
-    return (text2) => text2;
+  if (textOverflow == null || lineWidth == Infinity) return (text2) => text2;
   const widthof = monospace ? monospaceWidth : defaultWidth;
   const maxWidth = lineWidth * 100;
   switch (textOverflow) {
@@ -23508,8 +22171,7 @@ function cut(text2, width, widthof, inset) {
     const l = widthof(text2, i, j);
     if (w + l > width) {
       w += inset;
-      while (w > width && i > 0)
-        j = i, i = I.pop(), w -= widthof(text2, i, j);
+      while (w > width && i > 0) j = i, i = I.pop(), w -= widthof(text2, i, j);
       return [i, width - w];
     }
     w += l;
@@ -23526,8 +22188,7 @@ function clipEnd(text2, width, widthof, ellipsis2) {
 function clipMiddle(text2, width, widthof, ellipsis2) {
   text2 = text2.trim();
   const w = widthof(text2);
-  if (w <= width)
-    return text2;
+  if (w <= width) return text2;
   const e = widthof(ellipsis2) / 2;
   const [i, ei] = cut(text2, width / 2, widthof, e);
   const [j] = cut(text2, w - width / 2 - ei + e, widthof, -e);
@@ -23536,8 +22197,7 @@ function clipMiddle(text2, width, widthof, ellipsis2) {
 function clipStart(text2, width, widthof, ellipsis2) {
   text2 = text2.trim();
   const w = widthof(text2);
-  if (w <= width)
-    return text2;
+  if (w <= width) return text2;
   const e = widthof(ellipsis2);
   const [j] = cut(text2, w - width + e, widthof, -e);
   return j < 0 ? ellipsis2 : ellipsis2 + text2.slice(readCharacter(text2, j)).trimStart();
@@ -23546,10 +22206,8 @@ var reCombiner = /[\p{Combining_Mark}\p{Emoji_Modifier}]+/uy;
 var rePictographic = /\p{Extended_Pictographic}/uy;
 function readCharacter(text2, i) {
   i += isSurrogatePair(text2, i) ? 2 : 1;
-  if (isCombiner(text2, i))
-    i = reCombiner.lastIndex;
-  if (isZeroWidthJoiner(text2, i))
-    return readCharacter(text2, i + 1);
+  if (isCombiner(text2, i)) i = reCombiner.lastIndex;
+  if (isZeroWidthJoiner(text2, i)) return readCharacter(text2, i + 1);
   return i;
 }
 function isAscii(text2, i) {
@@ -23609,11 +22267,9 @@ function isShapeObject(value) {
   return value && typeof value.draw === "function";
 }
 function maybeShape(shape) {
-  if (isShapeObject(shape))
-    return shape;
+  if (isShapeObject(shape)) return shape;
   const value = shapes.get(`${shape}`.toLowerCase());
-  if (value)
-    return value;
+  if (value) return value;
   throw new Error(`invalid shape: ${shape}`);
 }
 var Vector = class extends Mark {
@@ -23665,8 +22321,7 @@ var Vector = class extends Mark {
 };
 function vector(data, options = {}) {
   let { x: x4, y: y4, ...rest } = options;
-  if (options.frameAnchor === void 0)
-    [x4, y4] = maybeTuple(x4, y4);
+  if (options.frameAnchor === void 0) [x4, y4] = maybeTuple(x4, y4);
   return new Vector(data, { ...rest, x: x4, y: y4 });
 }
 function vectorX(data, options = {}) {
@@ -23692,10 +22347,8 @@ function spike(data, options = {}) {
 
 // node_modules/@observablehq/plot/src/marks/axis.js
 function maybeData(data, options) {
-  if (arguments.length < 2 && !isIterable(data))
-    options = data, data = null;
-  if (options === void 0)
-    options = {};
+  if (arguments.length < 2 && !isIterable(data)) options = data, data = null;
+  if (options === void 0) options = {};
   return [data, options];
 }
 function maybeAnchor2({ anchor } = {}, anchors) {
@@ -23754,13 +22407,13 @@ function axisKy(k2, anchor, data, {
   labelAnchor,
   labelArrow,
   labelOffset,
+  ariaLabel = `${k2}-axis`,
   ...options
 }) {
   tickSize = number5(tickSize);
   tickPadding = number5(tickPadding);
   tickRotate = number5(tickRotate);
-  if (labelAnchor !== void 0)
-    labelAnchor = keyword(labelAnchor, "labelAnchor", ["center", "top", "bottom"]);
+  if (labelAnchor !== void 0) labelAnchor = keyword(labelAnchor, "labelAnchor", ["center", "top", "bottom"]);
   labelArrow = maybeLabelArrow(labelArrow);
   return marks(
     tickSize && !isNoneish(stroke) ? axisTickKy(k2, anchor, data, {
@@ -23771,6 +22424,7 @@ function axisKy(k2, anchor, data, {
       tickPadding,
       tickRotate,
       x: x4,
+      ariaLabel,
       ...options
     }) : null,
     !isNoneish(fill) ? axisTextKy(k2, anchor, data, {
@@ -23788,6 +22442,7 @@ function axisKy(k2, anchor, data, {
       marginRight,
       marginBottom,
       marginLeft,
+      ariaLabel,
       ...options
     }) : null,
     !isNoneish(fill) && label !== null ? text(
@@ -23810,7 +22465,7 @@ function axisKy(k2, anchor, data, {
         }
         this.dy = cla === "top" ? 3 - marginTop2 : cla === "bottom" ? marginBottom2 - 3 : 0;
         this.dx = anchor === "right" ? clo : -clo;
-        this.ariaLabel = `${k2}-axis label`;
+        this.ariaLabel = `${ariaLabel} label`;
         return {
           facets: [[0]],
           channels: { text: { value: [formatAxisLabel(k2, scale3, { anchor, label, labelAnchor: cla, labelArrow })] } }
@@ -23844,13 +22499,13 @@ function axisKx(k2, anchor, data, {
   labelAnchor,
   labelArrow,
   labelOffset,
+  ariaLabel = `${k2}-axis`,
   ...options
 }) {
   tickSize = number5(tickSize);
   tickPadding = number5(tickPadding);
   tickRotate = number5(tickRotate);
-  if (labelAnchor !== void 0)
-    labelAnchor = keyword(labelAnchor, "labelAnchor", ["center", "left", "right"]);
+  if (labelAnchor !== void 0) labelAnchor = keyword(labelAnchor, "labelAnchor", ["center", "left", "right"]);
   labelArrow = maybeLabelArrow(labelArrow);
   return marks(
     tickSize && !isNoneish(stroke) ? axisTickKx(k2, anchor, data, {
@@ -23861,6 +22516,7 @@ function axisKx(k2, anchor, data, {
       tickPadding,
       tickRotate,
       y: y4,
+      ariaLabel,
       ...options
     }) : null,
     !isNoneish(fill) ? axisTextKx(k2, anchor, data, {
@@ -23878,6 +22534,7 @@ function axisKx(k2, anchor, data, {
       marginRight,
       marginBottom,
       marginLeft,
+      ariaLabel,
       ...options
     }) : null,
     !isNoneish(fill) && label !== null ? text(
@@ -23897,7 +22554,7 @@ function axisKx(k2, anchor, data, {
         this.lineAnchor = anchor;
         this.dy = anchor === "top" ? -clo : clo;
         this.dx = cla === "right" ? marginRight2 - 3 : cla === "left" ? 3 - marginLeft2 : 0;
-        this.ariaLabel = `${k2}-axis label`;
+        this.ariaLabel = `${ariaLabel} label`;
         return {
           facets: [[0]],
           channels: { text: { value: [formatAxisLabel(k2, scale3, { anchor, label, labelAnchor: cla, labelArrow })] } }
@@ -23918,6 +22575,7 @@ function axisTickKy(k2, anchor, data, {
   insetRight = inset,
   dx = 0,
   y: y4 = k2 === "y" ? void 0 : null,
+  ariaLabel,
   ...options
 }) {
   return axisMark(
@@ -23925,7 +22583,7 @@ function axisTickKy(k2, anchor, data, {
     k2,
     data,
     {
-      ariaLabel: `${k2}-axis tick`,
+      ariaLabel: `${ariaLabel} tick`,
       ariaHidden: true
     },
     {
@@ -23955,6 +22613,7 @@ function axisTickKx(k2, anchor, data, {
   insetBottom = inset,
   dy = 0,
   x: x4 = k2 === "x" ? void 0 : null,
+  ariaLabel,
   ...options
 }) {
   return axisMark(
@@ -23962,7 +22621,7 @@ function axisTickKx(k2, anchor, data, {
     k2,
     data,
     {
-      ariaLabel: `${k2}-axis tick`,
+      ariaLabel: `${ariaLabel} tick`,
       ariaHidden: true
     },
     {
@@ -23994,6 +22653,7 @@ function axisTextKy(k2, anchor, data, {
   insetLeft = inset,
   insetRight = inset,
   dx = 0,
+  ariaLabel,
   y: y4 = k2 === "y" ? void 0 : null,
   ...options
 }) {
@@ -24001,7 +22661,7 @@ function axisTextKy(k2, anchor, data, {
     textY,
     k2,
     data,
-    { ariaLabel: `${k2}-axis tick label` },
+    { ariaLabel: `${ariaLabel} tick label` },
     {
       facetAnchor,
       frameAnchor,
@@ -24015,10 +22675,8 @@ function axisTextKy(k2, anchor, data, {
       dx: anchor === "left" ? +dx - tickSize - tickPadding + +insetLeft : +dx + +tickSize + +tickPadding - insetRight
     },
     function(scale3, data2, ticks2, tickFormat2, channels) {
-      if (fontVariant === void 0)
-        this.fontVariant = inferFontVariant3(scale3);
-      if (text2 === void 0)
-        channels.text = inferTextChannel(scale3, data2, ticks2, tickFormat2, anchor);
+      if (fontVariant === void 0) this.fontVariant = inferFontVariant3(scale3);
+      if (text2 === void 0) channels.text = inferTextChannel(scale3, data2, ticks2, tickFormat2, anchor);
     }
   );
 }
@@ -24037,13 +22695,14 @@ function axisTextKx(k2, anchor, data, {
   insetBottom = inset,
   dy = 0,
   x: x4 = k2 === "x" ? void 0 : null,
+  ariaLabel,
   ...options
 }) {
   return axisMark(
     textX,
     k2,
     data,
-    { ariaLabel: `${k2}-axis tick label` },
+    { ariaLabel: `${ariaLabel} tick label` },
     {
       facetAnchor,
       frameAnchor,
@@ -24057,10 +22716,8 @@ function axisTextKx(k2, anchor, data, {
       dy: anchor === "bottom" ? +dy + +tickSize + +tickPadding - insetBottom : +dy - tickSize - tickPadding + +insetTop
     },
     function(scale3, data2, ticks2, tickFormat2, channels) {
-      if (fontVariant === void 0)
-        this.fontVariant = inferFontVariant3(scale3);
-      if (text2 === void 0)
-        channels.text = inferTextChannel(scale3, data2, ticks2, tickFormat2, anchor);
+      if (fontVariant === void 0) this.fontVariant = inferFontVariant3(scale3);
+      if (text2 === void 0) channels.text = inferTextChannel(scale3, data2, ticks2, tickFormat2, anchor);
     }
   );
 }
@@ -24085,18 +22742,22 @@ function gridKy(k2, anchor, data, {
   x: x4 = null,
   x1: x12 = anchor === "left" ? x4 : null,
   x2: x22 = anchor === "right" ? x4 : null,
+  ariaLabel = `${k2}-grid`,
+  ariaHidden = true,
   ...options
 }) {
-  return axisMark(ruleY, k2, data, { ariaLabel: `${k2}-grid`, ariaHidden: true }, { y: y4, x1: x12, x2: x22, ...gridDefaults(options) });
+  return axisMark(ruleY, k2, data, { ariaLabel, ariaHidden }, { y: y4, x1: x12, x2: x22, ...gridDefaults(options) });
 }
 function gridKx(k2, anchor, data, {
   x: x4 = k2 === "x" ? void 0 : null,
   y: y4 = null,
   y1: y12 = anchor === "top" ? y4 : null,
   y2: y22 = anchor === "bottom" ? y4 : null,
+  ariaLabel = `${k2}-grid`,
+  ariaHidden = true,
   ...options
 }) {
-  return axisMark(ruleX, k2, data, { ariaLabel: `${k2}-grid`, ariaHidden: true }, { x: x4, y1: y12, y2: y22, ...gridDefaults(options) });
+  return axisMark(ruleX, k2, data, { ariaLabel, ariaHidden }, { x: x4, y1: y12, y2: y22, ...gridDefaults(options) });
 }
 function gridDefaults({
   color: color3 = "currentColor",
@@ -24146,14 +22807,11 @@ function axisMark(mark, k2, data, properties, options, initialize) {
   function axisInitializer(data2, facets, _channels, scales, dimensions, context) {
     const initializeFacets = data2 == null && (k2 === "fx" || k2 === "fy");
     const { [k2]: scale3 } = scales;
-    if (!scale3)
-      throw new Error(`missing scale: ${k2}`);
+    if (!scale3) throw new Error(`missing scale: ${k2}`);
     const domain = scale3.domain();
     let { interval: interval2, ticks: ticks2, tickFormat: tickFormat2, tickSpacing = k2 === "x" ? 80 : 35 } = options;
-    if (typeof ticks2 === "string" && hasTemporalDomain(scale3))
-      interval2 = ticks2, ticks2 = void 0;
-    if (ticks2 === void 0)
-      ticks2 = maybeRangeInterval(interval2, scale3.type) ?? inferTickCount(scale3, tickSpacing);
+    if (typeof ticks2 === "string" && hasTemporalDomain(scale3)) interval2 = ticks2, ticks2 = void 0;
+    if (ticks2 === void 0) ticks2 = maybeRangeInterval(interval2, scale3.type) ?? inferTickCount(scale3, tickSpacing);
     if (data2 == null) {
       if (isIterable(ticks2)) {
         data2 = arrayify2(ticks2);
@@ -24170,13 +22828,11 @@ function axisMark(mark, k2, data, properties, options, initialize) {
           data2 = domain;
           const n = data2.length;
           interval3 = generalizeTimeInterval(interval3, n / ticks2) ?? interval3;
-          if (interval3 !== scale3.interval)
-            data2 = inclusiveRange(interval3, ...extent(data2));
+          if (interval3 !== scale3.interval) data2 = inclusiveRange(interval3, ...extent(data2));
         }
         if (interval3 === scale3.interval) {
           const n = Math.round(data2.length / ticks2);
-          if (n > 1)
-            data2 = data2.filter((d, i) => i % n === 0);
+          if (n > 1) data2 = data2.filter((d, i) => i % n === 0);
         }
       } else if (scale3.ticks) {
         data2 = scale3.ticks(ticks2);
@@ -24186,8 +22842,7 @@ function axisMark(mark, k2, data, properties, options, initialize) {
       if (!scale3.ticks && data2.length && data2 !== domain) {
         const domainSet = new InternSet(domain);
         data2 = data2.filter((d) => domainSet.has(d));
-        if (!data2.length)
-          warn(`Warning: the ${k2}-axis ticks appear to not align with the scale domain, resulting in no ticks. Try different ticks?`);
+        if (!data2.length) warn(`Warning: the ${k2}-axis ticks appear to not align with the scale domain, resulting in no ticks. Try different ticks?`);
       }
       if (k2 === "y" || k2 === "x") {
         facets = [range4(data2)];
@@ -24201,8 +22856,7 @@ function axisMark(mark, k2, data, properties, options, initialize) {
         return [name, { ...channel, value: valueof(data2, channel.value) }];
       })
     );
-    if (initializeFacets)
-      facets = context.filterFacets(data2, initializedChannels);
+    if (initializeFacets) facets = context.filterFacets(data2, initializedChannels);
     return { data: data2, facets, channels: initializedChannels };
   }
   const basicInitializer = initializer(options).initializer;
@@ -24213,10 +22867,8 @@ function axisMark(mark, k2, data, properties, options, initialize) {
   } else {
     channels = {};
   }
-  if (properties !== void 0)
-    Object.assign(m3, properties);
-  if (m3.clip === void 0)
-    m3.clip = false;
+  if (properties !== void 0) Object.assign(m3, properties);
+  if (m3.clip === void 0) m3.clip = false;
   return m3;
 }
 function inferTickCount(scale3, tickSpacing) {
@@ -24227,7 +22879,7 @@ function inferTextChannel(scale3, data, ticks2, tickFormat2, anchor) {
   return { value: inferTickFormat(scale3, data, ticks2, tickFormat2, anchor) };
 }
 function inferTickFormat(scale3, data, ticks2, tickFormat2, anchor) {
-  return typeof tickFormat2 === "function" && !(scale3.type === "log" && scale3.tickFormat) ? tickFormat2 : tickFormat2 === void 0 && data && isTemporal(data) ? inferTimeFormat(scale3.type, data, anchor) ?? formatDefault : scale3.tickFormat ? scale3.tickFormat(typeof ticks2 === "number" ? ticks2 : null, tickFormat2) : tickFormat2 === void 0 ? formatDefault : typeof tickFormat2 === "string" ? (isTemporal(scale3.domain()) ? utcFormat : format)(tickFormat2) : constant2(tickFormat2);
+  return typeof tickFormat2 === "function" && !(scale3.type === "log" && scale3.tickFormat) ? tickFormat2 : tickFormat2 === void 0 && data && isTemporal(data) ? inferTimeFormat(scale3.type, data, anchor) ?? formatDefault : scale3.tickFormat ? scale3.tickFormat(typeof ticks2 === "number" ? ticks2 : null, tickFormat2) : typeof tickFormat2 === "string" && scale3.domain().length > 0 ? (isTemporal(scale3.domain()) ? utcFormat : format)(tickFormat2) : tickFormat2 === void 0 ? formatDefault : constant2(tickFormat2);
 }
 function inclusiveRange(interval2, min4, max5) {
   return interval2.range(min4, interval2.offset(interval2.floor(max5)));
@@ -24260,13 +22912,10 @@ function inferFontVariant3(scale3) {
   return scale3.bandwidth && !scale3.interval ? void 0 : "tabular-nums";
 }
 function formatAxisLabel(k2, scale3, { anchor, label = scale3.label, labelAnchor, labelArrow } = {}) {
-  if (label == null || label.inferred && hasTemporalDomain(scale3) && /^(date|time|year)$/i.test(label))
-    return;
+  if (label == null || label.inferred && hasTemporalDomain(scale3) && /^(date|time|year)$/i.test(label)) return;
   label = String(label);
-  if (labelArrow === "auto")
-    labelArrow = (!scale3.bandwidth || scale3.interval) && !/[↑↓→←]/.test(label);
-  if (!labelArrow)
-    return label;
+  if (labelArrow === "auto") labelArrow = (!scale3.bandwidth || scale3.interval) && !/[↑↓→←]/.test(label);
+  if (!labelArrow) return label;
   if (labelArrow === true) {
     const order = inferScaleOrder(scale3);
     if (order)
@@ -24293,11 +22942,9 @@ function hasTemporalDomain(scale3) {
 
 // node_modules/@observablehq/plot/src/legends/swatches.js
 function maybeScale(scale3, key) {
-  if (key == null)
-    return key;
+  if (key == null) return key;
   const s2 = scale3(key);
-  if (!s2)
-    throw new Error(`scale not found: ${key}`);
+  if (!s2) throw new Error(`scale not found: ${key}`);
   return s2;
 }
 function legendSwatches(color3, { opacity: opacity2, ...options } = {}) {
@@ -24435,10 +23082,8 @@ function legend(options = {}) {
 }
 function exposeLegends(scales, context, defaults22 = {}) {
   return (key, options) => {
-    if (!legendRegistry.has(key))
-      throw new Error(`unknown legend type: ${key}`);
-    if (!(key in scales))
-      return;
+    if (!legendRegistry.has(key)) throw new Error(`unknown legend type: ${key}`);
+    if (!(key in scales)) return;
     return legendRegistry.get(key)(scales[key], legendOptions(context, defaults22[key], options), (key2) => scales[key2]);
   };
 }
@@ -24446,10 +23091,8 @@ function legendOptions({ className, ...context }, { label, ticks: ticks2, tickFo
   return inherit2(options, { className, ...context }, { label, ticks: ticks2, tickFormat: tickFormat2 });
 }
 function legendColor(color3, { legend: legend2 = true, ...options }) {
-  if (legend2 === true)
-    legend2 = color3.type === "ordinal" ? "swatches" : "ramp";
-  if (color3.domain === void 0)
-    return;
+  if (legend2 === true) legend2 = color3.type === "ordinal" ? "swatches" : "ramp";
+  if (color3.domain === void 0) return;
   switch (`${legend2}`.toLowerCase()) {
     case "swatches":
       return legendSwatches(color3, options);
@@ -24460,12 +23103,9 @@ function legendColor(color3, { legend: legend2 = true, ...options }) {
   }
 }
 function legendOpacity({ type: type2, interpolate, ...scale3 }, { legend: legend2 = true, color: color3 = rgb(0, 0, 0), ...options }) {
-  if (!interpolate)
-    throw new Error(`${type2} opacity scales are not supported`);
-  if (legend2 === true)
-    legend2 = "ramp";
-  if (`${legend2}`.toLowerCase() !== "ramp")
-    throw new Error(`${legend2} opacity legends are not supported`);
+  if (!interpolate) throw new Error(`${type2} opacity scales are not supported`);
+  if (legend2 === true) legend2 = "ramp";
+  if (`${legend2}`.toLowerCase() !== "ramp") throw new Error(`${legend2} opacity legends are not supported`);
   return legendColor({ type: type2, ...scale3, interpolate: interpolateOpacity(color3) }, { legend: legend2, ...options });
 }
 function interpolateOpacity(color3) {
@@ -24478,37 +23118,33 @@ function createLegends(scales, context, options) {
     const o = options[key];
     if (o?.legend && key in scales) {
       const legend2 = value(scales[key], legendOptions(context, scales[key], o), (key2) => scales[key2]);
-      if (legend2 != null)
-        legends.push(legend2);
+      if (legend2 != null) legends.push(legend2);
     }
   }
   return legends;
 }
 
 // node_modules/@observablehq/plot/src/transforms/identity.js
-function maybeIdentityX(options = {}) {
-  return hasX(options) ? options : { ...options, x: identity6 };
+function maybeIdentityX(options = {}, k2 = "x") {
+  return hasX(options) ? options : { ...options, [k2]: identity6 };
 }
-function maybeIdentityY(options = {}) {
-  return hasY(options) ? options : { ...options, y: identity6 };
+function maybeIdentityY(options = {}, k2 = "y") {
+  return hasY(options) ? options : { ...options, [k2]: identity6 };
 }
 
 // node_modules/@observablehq/plot/src/transforms/exclusiveFacets.js
 function exclusiveFacets(data, facets) {
-  if (facets.length === 1)
-    return { data, facets };
+  if (facets.length === 1) return { data, facets };
   const n = lengthof(data);
   const O = new Uint8Array(n);
   let overlaps = 0;
   for (const facet of facets) {
     for (const i of facet) {
-      if (O[i])
-        ++overlaps;
+      if (O[i]) ++overlaps;
       O[i] = 1;
     }
   }
-  if (overlaps === 0)
-    return { data, facets };
+  if (overlaps === 0) return { data, facets };
   data = slice5(data);
   const R = data[reindex] = new Uint32Array(n + overlaps);
   facets = facets.map((facet) => slice5(facet, Uint32Array));
@@ -24517,10 +23153,8 @@ function exclusiveFacets(data, facets) {
   for (const facet of facets) {
     for (let k2 = 0, m3 = facet.length; k2 < m3; ++k2) {
       const i = facet[k2];
-      if (O[i])
-        facet[k2] = j, data[j] = data[i], R[j] = i, ++j;
-      else
-        R[i] = i;
+      if (O[i]) facet[k2] = j, data[j] = data[i], R[j] = i, ++j;
+      else R[i] = i;
       O[i] = 1;
     }
   }
@@ -24529,58 +23163,50 @@ function exclusiveFacets(data, facets) {
 
 // node_modules/@observablehq/plot/src/transforms/stack.js
 function stackX(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions(stackOptions);
+  if (arguments.length === 1) [stackOptions, options] = mergeOptions(stackOptions);
   const { y1: y12, y: y4 = y12, x: x4, ...rest } = options;
   const [transform2, Y3, x12, x22] = stack(y4, x4, "y", "x", stackOptions, rest);
   return { ...transform2, y1: y12, y: Y3, x1: x12, x2: x22, x: mid(x12, x22) };
 }
 function stackX1(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions(stackOptions);
+  if (arguments.length === 1) [stackOptions, options] = mergeOptions(stackOptions);
   const { y1: y12, y: y4 = y12, x: x4 } = options;
   const [transform2, Y3, X3] = stack(y4, x4, "y", "x", stackOptions, options);
   return { ...transform2, y1: y12, y: Y3, x: X3 };
 }
 function stackX2(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions(stackOptions);
+  if (arguments.length === 1) [stackOptions, options] = mergeOptions(stackOptions);
   const { y1: y12, y: y4 = y12, x: x4 } = options;
   const [transform2, Y3, , X3] = stack(y4, x4, "y", "x", stackOptions, options);
   return { ...transform2, y1: y12, y: Y3, x: X3 };
 }
 function stackY(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions(stackOptions);
+  if (arguments.length === 1) [stackOptions, options] = mergeOptions(stackOptions);
   const { x1: x12, x: x4 = x12, y: y4, ...rest } = options;
   const [transform2, X3, y12, y22] = stack(x4, y4, "x", "y", stackOptions, rest);
   return { ...transform2, x1: x12, x: X3, y1: y12, y2: y22, y: mid(y12, y22) };
 }
 function stackY1(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions(stackOptions);
+  if (arguments.length === 1) [stackOptions, options] = mergeOptions(stackOptions);
   const { x1: x12, x: x4 = x12, y: y4 } = options;
   const [transform2, X3, Y3] = stack(x4, y4, "x", "y", stackOptions, options);
   return { ...transform2, x1: x12, x: X3, y: Y3 };
 }
 function stackY2(stackOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [stackOptions, options] = mergeOptions(stackOptions);
+  if (arguments.length === 1) [stackOptions, options] = mergeOptions(stackOptions);
   const { x1: x12, x: x4 = x12, y: y4 } = options;
   const [transform2, X3, , Y3] = stack(x4, y4, "x", "y", stackOptions, options);
   return { ...transform2, x1: x12, x: X3, y: Y3 };
 }
 function maybeStackX({ x: x4, x1: x12, x2: x22, ...options } = {}) {
   options = withTip(options, "y");
-  if (x12 === void 0 && x22 === void 0)
-    return stackX({ x: x4, ...options });
+  if (x12 === void 0 && x22 === void 0) return stackX({ x: x4, ...options });
   [x12, x22] = maybeZero(x4, x12, x22);
   return { ...options, x1: x12, x2: x22 };
 }
 function maybeStackY({ y: y4, y1: y12, y2: y22, ...options } = {}) {
   options = withTip(options, "x");
-  if (y12 === void 0 && y22 === void 0)
-    return stackY({ y: y4, ...options });
+  if (y12 === void 0 && y22 === void 0) return stackY({ y: y4, ...options });
   [y12, y22] = maybeZero(y4, y12, y22);
   return { ...options, y1: y12, y2: y22 };
 }
@@ -24590,8 +23216,7 @@ function mergeOptions(options) {
 }
 var lengthy = { length: true };
 function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: reverse3 }, options) {
-  if (y4 === null)
-    throw new Error(`stack requires ${ky2}`);
+  if (y4 === null) throw new Error(`stack requires ${ky2}`);
   const z = maybeZ(options);
   const [X3, setX] = maybeColumn(x4);
   const [Y13, setY1] = column(y4);
@@ -24612,28 +23237,21 @@ function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: rever
       const facetstacks = [];
       for (const facet of facets) {
         const stacks = X4 ? Array.from(group(facet, (i) => X4[i]).values()) : [facet];
-        if (compare)
-          for (const stack2 of stacks)
-            stack2.sort(compare);
+        if (compare) for (const stack2 of stacks) stack2.sort(compare);
         for (const stack2 of stacks) {
           let yn = 0;
           let yp = 0;
-          if (reverse3)
-            stack2.reverse();
+          if (reverse3) stack2.reverse();
           for (const i of stack2) {
             const y5 = Y3[i];
-            if (y5 < 0)
-              yn = Y24[i] = (Y14[i] = yn) + y5;
-            else if (y5 > 0)
-              yp = Y24[i] = (Y14[i] = yp) + y5;
-            else
-              Y24[i] = Y14[i] = yp;
+            if (y5 < 0) yn = Y24[i] = (Y14[i] = yn) + y5;
+            else if (y5 > 0) yp = Y24[i] = (Y14[i] = yp) + y5;
+            else Y24[i] = Y14[i] = yp;
           }
         }
         facetstacks.push(stacks);
       }
-      if (offset2)
-        offset2(facetstacks, Y14, Y24, Z);
+      if (offset2) offset2(facetstacks, Y14, Y24, Z);
       return { data, facets };
     }),
     X3,
@@ -24642,10 +23260,8 @@ function stack(x4, y4 = one2, kx2, ky2, { offset: offset2, order, reverse: rever
   ];
 }
 function maybeOffset(offset2) {
-  if (offset2 == null)
-    return;
-  if (typeof offset2 === "function")
-    return offset2;
+  if (offset2 == null) return;
+  if (typeof offset2 === "function") return offset2;
   switch (`${offset2}`.toLowerCase()) {
     case "expand":
     case "normalize":
@@ -24662,10 +23278,8 @@ function extent2(stack2, Y23) {
   let min4 = 0, max5 = 0;
   for (const i of stack2) {
     const y4 = Y23[i];
-    if (y4 < min4)
-      min4 = y4;
-    if (y4 > max5)
-      max5 = y4;
+    if (y4 < min4) min4 = y4;
+    if (y4 > max5) max5 = y4;
   }
   return [min4, max5];
 }
@@ -24715,8 +23329,7 @@ function offsetWiggle(facetstacks, Y13, Y23, Z) {
         Y23[i] += y4;
       }
       const s1 = sum(Fi);
-      if (s1)
-        y4 -= sum(Fi, (d, i) => (Df[i] / 2 + Cf1[i]) * d) / s1;
+      if (s1) y4 -= sum(Fi, (d, i) => (Df[i] / 2 + Cf1[i]) * d) / s1;
     }
     offsetZero(stacks, Y13, Y23);
   }
@@ -24733,8 +23346,7 @@ function offsetZero(stacks, Y13, Y23) {
 }
 function offsetCenterFacets(facetstacks, Y13, Y23) {
   const n = facetstacks.length;
-  if (n === 1)
-    return;
+  if (n === 1) return;
   const facets = facetstacks.map((stacks) => stacks.flat());
   const m3 = facets.map((I) => (min(I, (i) => Y13[i]) + max(I, (i) => Y23[i])) / 2);
   const m0 = min(m3);
@@ -24747,10 +23359,8 @@ function offsetCenterFacets(facetstacks, Y13, Y23) {
   }
 }
 function maybeOrder2(order, offset2, ky2) {
-  if (order === void 0 && offset2 === offsetWiggle)
-    return orderInsideOut(ascendingDefined2);
-  if (order == null)
-    return;
+  if (order === void 0 && offset2 === offsetWiggle) return orderInsideOut(ascendingDefined2);
+  if (order == null) return;
   if (typeof order === "string") {
     const negate2 = order.startsWith("-");
     const compare = negate2 ? descendingDefined : ascendingDefined2;
@@ -24769,10 +23379,8 @@ function maybeOrder2(order, offset2, ky2) {
     }
     return orderAccessor(field(order));
   }
-  if (typeof order === "function")
-    return (order.length === 1 ? orderAccessor : orderComparator)(order);
-  if (isArray(order))
-    return orderGiven(order);
+  if (typeof order === "function") return (order.length === 1 ? orderAccessor : orderComparator)(order);
+  if (isArray(order)) return orderGiven(order);
   throw new Error(`invalid order: ${order}`);
 }
 function orderY(compare) {
@@ -24844,8 +23452,7 @@ function orderGiven(domain) {
 }
 function orderZDomain(compare, domain) {
   return (data, X3, Y3, Z) => {
-    if (!Z)
-      throw new Error("missing channel: z");
+    if (!Z) throw new Error("missing channel: z");
     const map6 = new InternMap(domain(data, X3, Y3, Z).map((d, i) => [d, i]));
     return (i, j) => compare(map6.get(Z[i]), map6.get(Z[j]));
   };
@@ -24879,10 +23486,8 @@ var Rect = class extends Mark {
     const { projection: projection3 } = context;
     const { insetTop, insetRight, insetBottom, insetLeft } = this;
     const { rx, ry, rx1y1, rx1y2, rx2y1, rx2y2 } = this;
-    if ((X13 || X23) && !projection3 && isCollapsed(x4))
-      X13 = X23 = null;
-    if ((Y13 || Y23) && !projection3 && isCollapsed(y4))
-      Y13 = Y23 = null;
+    if ((X13 || X23) && !projection3 && isCollapsed(x4)) X13 = X23 = null;
+    if ((Y13 || Y23) && !projection3 && isCollapsed(y4)) Y13 = Y23 = null;
     const bx = x4?.bandwidth ? x4.bandwidth() : 0;
     const by = y4?.bandwidth ? y4.bandwidth() : 0;
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, {}, 0, 0).call(
@@ -24944,14 +23549,10 @@ function rectRadii(mark, {
 }
 function applyRoundedRect(selection2, X13, Y13, X23, Y23, mark) {
   const { rx1y1: r11, rx1y2: r12, rx2y1: r21, rx2y2: r22 } = mark;
-  if (typeof X13 !== "function")
-    X13 = constant2(X13);
-  if (typeof Y13 !== "function")
-    Y13 = constant2(Y13);
-  if (typeof X23 !== "function")
-    X23 = constant2(X23);
-  if (typeof Y23 !== "function")
-    Y23 = constant2(Y23);
+  if (typeof X13 !== "function") X13 = constant2(X13);
+  if (typeof Y13 !== "function") Y13 = constant2(Y13);
+  if (typeof X23 !== "function") X23 = constant2(X23);
+  if (typeof Y23 !== "function") Y23 = constant2(Y23);
   const rx = Math.max(Math.abs(r11 + r21), Math.abs(r12 + r22));
   const ry = Math.max(Math.abs(r11 + r12), Math.abs(r21 + r22));
   selection2.attr("d", (i) => {
@@ -24983,13 +23584,11 @@ function rect(data, options) {
   return new Rect(data, maybeTrivialIntervalX(maybeTrivialIntervalY(options)));
 }
 function rectX(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, y: indexOf, x2: identity6, interval: 1 };
+  if (!hasXY(options)) options = { ...options, y: indexOf, x2: identity6, interval: 1 };
   return new Rect(data, maybeStackX(maybeTrivialIntervalY(maybeIdentityX(options))));
 }
 function rectY(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, x: indexOf, y2: identity6, interval: 1 };
+  if (!hasXY(options)) options = { ...options, x: indexOf, y2: identity6, interval: 1 };
   return new Rect(data, maybeStackY(maybeTrivialIntervalX(maybeIdentityY(options))));
 }
 
@@ -25013,8 +23612,7 @@ var Frame = class extends Mark {
     super(singleton, void 0, options, anchor == null ? defaults5 : lineDefaults);
     this.anchor = maybeKeyword(anchor, "anchor", ["top", "right", "bottom", "left"]);
     rectInsets(this, options);
-    if (!anchor)
-      rectRadii(this, options);
+    if (!anchor) rectRadii(this, options);
   }
   render(index3, scales, channels, dimensions, context) {
     const { marginTop, marginRight, marginBottom, marginLeft, width, height } = dimensions;
@@ -25042,10 +23640,8 @@ var defaults6 = {
 var ignoreChannels = /* @__PURE__ */ new Set(["geometry", "href", "src", "ariaLabel", "scales"]);
 var Tip = class extends Mark {
   constructor(data, options = {}) {
-    if (options.tip)
-      options = { ...options, tip: false };
-    if (options.title === void 0 && isIterable(data) && isTextual(data))
-      options = { ...options, title: identity6 };
+    if (options.tip) options = { ...options, tip: false };
+    if (options.title === void 0 && isIterable(data) && isTextual(data)) options = { ...options, title: identity6 };
     const {
       x: x4,
       y: y4,
@@ -25105,9 +23701,7 @@ var Tip = class extends Mark {
     this.fontStyle = string(fontStyle);
     this.fontVariant = string(fontVariant);
     this.fontWeight = string(fontWeight);
-    for (const key in defaults6)
-      if (key in this.channels)
-        this[key] = defaults6[key];
+    for (const key in defaults6) if (key in this.channels) this[key] = defaults6[key];
     this.splitLines = splitter2(this);
     this.clipLine = clipper(this);
     this.format = typeof format3 === "string" || typeof format3 === "function" ? { title: format3 } : { ...format3 };
@@ -25151,10 +23745,8 @@ var Tip = class extends Mark {
             const labels = /* @__PURE__ */ new Set();
             for (const line2 of lines) {
               const { label = "" } = line2;
-              if (label && labels.has(label))
-                continue;
-              else
-                labels.add(label);
+              if (label && labels.has(label)) continue;
+              else labels.add(label);
               renderLine(that, line2);
             }
           }
@@ -25172,8 +23764,7 @@ var Tip = class extends Mark {
         title = value.trim();
         value = "";
       } else {
-        if (label || !value && !swatch)
-          value = " " + value;
+        if (label || !value && !swatch) value = " " + value;
         const [k2] = cut(value, w - widthof(label), widthof, ee);
         if (k2 >= 0) {
           title = value.trim();
@@ -25181,14 +23772,10 @@ var Tip = class extends Mark {
         }
       }
       const line2 = selection2.append("tspan").attr("x", 0).attr("dy", `${lineHeight}em`).text("\u200B");
-      if (label)
-        line2.append("tspan").attr("font-weight", "bold").text(label);
-      if (value)
-        line2.append(() => document2.createTextNode(value));
-      if (swatch)
-        line2.append("tspan").text(" \u25A0").attr("fill", color3).attr("fill-opacity", opacity2).style("user-select", "none");
-      if (title)
-        line2.append("title").text(title);
+      if (label) line2.append("tspan").attr("font-weight", "bold").text(label);
+      if (value) line2.append(() => document2.createTextNode(value));
+      if (swatch) line2.append("tspan").text(" \u25A0").attr("fill", color3).attr("fill-opacity", opacity2).style("user-select", "none");
+      if (title) line2.append("title").text(title);
     }
     function postrender() {
       const { width, height } = dimensions.facet ?? dimensions;
@@ -25208,9 +23795,7 @@ var Tip = class extends Mark {
         const path2 = this.firstChild;
         const text2 = this.lastChild;
         path2.setAttribute("d", getPath(a4, m3, r, w, h));
-        if (tx)
-          for (const t of text2.childNodes)
-            t.setAttribute("x", -tx);
+        if (tx) for (const t of text2.childNodes) t.setAttribute("x", -tx);
         text2.setAttribute("y", `${+getLineOffset(a4, text2.childNodes.length, lineHeight).toFixed(6)}em`);
         text2.setAttribute("transform", `translate(${getTextTranslate(a4, m3, r, w, h)})`);
       });
@@ -25218,17 +23803,14 @@ var Tip = class extends Mark {
     }
     if (index3.length) {
       g.attr("visibility", "hidden");
-      if (svg2.isConnected)
-        Promise.resolve().then(postrender);
-      else if (typeof requestAnimationFrame !== "undefined")
-        requestAnimationFrame(postrender);
+      if (svg2.isConnected) Promise.resolve().then(postrender);
+      else if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(postrender);
     }
     return g.node();
   }
 };
 function tip(data, { x: x4, y: y4, ...options } = {}) {
-  if (options.frameAnchor === void 0)
-    [x4, y4] = maybeTuple(x4, y4);
+  if (options.frameAnchor === void 0) [x4, y4] = maybeTuple(x4, y4);
   return new Tip(data, { ...options, x: x4, y: y4 });
 }
 function getLineOffset(anchor, length4, lineHeight) {
@@ -25294,27 +23876,21 @@ function getSourceChannels(channels, scales) {
       sources[key] = true;
     } else {
       const source = getSource(channels, key);
-      if (source)
-        sources[key] = source;
+      if (source) sources[key] = source;
     }
   }
   for (const key in channels) {
-    if (key in sources || key in format3 || ignoreChannels.has(key))
-      continue;
-    if ((key === "x" || key === "y") && channels.geometry)
-      continue;
+    if (key in sources || key in format3 || ignoreChannels.has(key)) continue;
+    if ((key === "x" || key === "y") && channels.geometry) continue;
     const source = getSource(channels, key);
     if (source) {
-      if (source.scale == null && source.defaultScale === "color")
-        continue;
+      if (source.scale == null && source.defaultScale === "color") continue;
       sources[key] = source;
     }
   }
   if (this.facet) {
-    if (scales.fx && !("fx" in format3))
-      sources.fx = true;
-    if (scales.fy && !("fy" in format3))
-      sources.fy = true;
+    if (scales.fx && !("fx" in format3)) sources.fx = true;
+    if (scales.fy && !("fy" in format3)) sources.fy = true;
   }
   for (const key in sources) {
     const format4 = this.format[key];
@@ -25329,12 +23905,10 @@ function getSourceChannels(channels, scales) {
   return sources;
 }
 function maybeExpandPairedFormat(format3, channels, key) {
-  if (!(key in format3))
-    return format3;
+  if (!(key in format3)) return format3;
   const key1 = `${key}1`;
   const key2 = `${key}2`;
-  if ((key1 in format3 || !(key1 in channels)) && (key2 in format3 || !(key2 in channels)))
-    return format3;
+  if ((key1 in format3 || !(key1 in channels)) && (key2 in format3 || !(key2 in channels))) return format3;
   const entries = Object.entries(format3);
   const value = format3[key];
   entries.splice(entries.findIndex(([name]) => name === key) + 1, 0, [key1, value], [key2, value]);
@@ -25352,10 +23926,8 @@ function* formatChannels(i, index3, channels, scales, values2) {
       };
       continue;
     }
-    if (key === "x1" && "x2" in channels)
-      continue;
-    if (key === "y1" && "y2" in channels)
-      continue;
+    if (key === "x1" && "x2" in channels) continue;
+    if (key === "y1" && "y2" in channels) continue;
     const channel = channels[key];
     if (key === "x2" && "x1" in channels) {
       yield {
@@ -25370,8 +23942,7 @@ function* formatChannels(i, index3, channels, scales, values2) {
     } else {
       const value = channel.value[i];
       const scale3 = channel.scale;
-      if (!defined(value) && scale3 == null)
-        continue;
+      if (!defined(value) && scale3 == null) continue;
       yield {
         label: formatLabel(scales, channels, key),
         value: this.format[key](value, i),
@@ -25405,29 +23976,24 @@ function plot(options = {}) {
   const facetStateByMark = /* @__PURE__ */ new Map();
   for (const mark of marks2) {
     const facetState = maybeMarkFacet(mark, topFacetState, options);
-    if (facetState)
-      facetStateByMark.set(mark, facetState);
+    if (facetState) facetStateByMark.set(mark, facetState);
   }
   const channelsByScale = /* @__PURE__ */ new Map();
-  if (topFacetState)
-    addScaleChannels(channelsByScale, [topFacetState], options);
+  if (topFacetState) addScaleChannels(channelsByScale, [topFacetState], options);
   addScaleChannels(channelsByScale, facetStateByMark, options);
   const axes = flatMarks(inferAxes(marks2, channelsByScale, options));
   for (const mark of axes) {
     const facetState = maybeMarkFacet(mark, topFacetState, options);
-    if (facetState)
-      facetStateByMark.set(mark, facetState);
+    if (facetState) facetStateByMark.set(mark, facetState);
   }
   marks2.unshift(...axes);
   let facets = createFacets(channelsByScale, options);
   if (facets !== void 0) {
     const topFacetsIndex = topFacetState ? facetFilter(facets, topFacetState) : void 0;
     for (const mark of marks2) {
-      if (mark.facet === null || mark.facet === "super")
-        continue;
+      if (mark.facet === null || mark.facet === "super") continue;
       const facetState = facetStateByMark.get(mark);
-      if (facetState === void 0)
-        continue;
+      if (facetState === void 0) continue;
       facetState.facetsIndex = mark.fx != null || mark.fy != null ? facetFilter(facets, facetState) : topFacetsIndex;
     }
     const nonEmpty = /* @__PURE__ */ new Set();
@@ -25444,8 +24010,7 @@ function plot(options = {}) {
     for (const mark of marks2) {
       if (mark.facet === "exclude") {
         const facetState = facetStateByMark.get(mark);
-        if (facetState !== void 0)
-          facetState.facetsIndex = facetExclude(facetState.facetsIndex);
+        if (facetState !== void 0) facetState.facetsIndex = facetExclude(facetState.facetsIndex);
       }
     }
   }
@@ -25456,8 +24021,7 @@ function plot(options = {}) {
   }
   const stateByMark = /* @__PURE__ */ new Map();
   for (const mark of marks2) {
-    if (stateByMark.has(mark))
-      throw new Error("duplicate mark; each mark must be unique");
+    if (stateByMark.has(mark)) throw new Error("duplicate mark; each mark must be unique");
     const { facetsIndex, channels: facetChannels } = facetStateByMark.get(mark) ?? {};
     const { data, facets: facets2, channels } = mark.initialize(facetsIndex, facetChannels, options);
     applyScaleTransforms(channels, options);
@@ -25477,6 +24041,9 @@ function plot(options = {}) {
   context.ownerSVGElement = svg2;
   context.className = className;
   context.projection = createProjection(options, subdimensions);
+  context.path = function() {
+    return path_default(this.projection ?? xyProjection(scales));
+  };
   context.filterFacets = (data, channels) => {
     return facetFilter(facets, { channels, groups: facetGroups(data, channels) });
   };
@@ -25486,10 +24053,9 @@ function plot(options = {}) {
     return { ...state, channels: { ...state.channels, ...facetState?.channels } };
   };
   context.dispatchValue = (value) => {
-    if (figure.value === value)
-      return;
+    if (figure.value === value) return;
     figure.value = value;
-    figure.dispatchEvent(new Event("input", { bubbles: true }));
+    figure.dispatchEvent(new context.document.defaultView.Event("input", { bubbles: true }));
   };
   const newByScale = /* @__PURE__ */ new Set();
   for (const [mark, state] of stateByMark) {
@@ -25513,8 +24079,7 @@ function plot(options = {}) {
             newByScale.add(scale3);
           }
         }
-        if (fx2 != null || fy2 != null)
-          facetStateByMark.set(mark, true);
+        if (fx2 != null || fy2 != null) facetStateByMark.set(mark, true);
       }
     }
   }
@@ -25563,32 +24128,26 @@ function plot(options = {}) {
       if (indexes2) {
         index3 = indexes2[0];
         index3 = mark.filter(index3, channels, values2);
-        if (index3.length === 0)
-          continue;
+        if (index3.length === 0) continue;
       }
       const node = mark.render(index3, scales, values2, superdimensions, context);
-      if (node == null)
-        continue;
+      if (node == null) continue;
       svg2.appendChild(node);
     } else {
       let g;
       for (const f of facets) {
-        if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty))
-          continue;
+        if (!(mark.facetAnchor?.(facets, facetDomains, f) ?? !f.empty)) continue;
         let index3 = null;
         if (indexes2) {
           const faceted = facetStateByMark.has(mark);
           index3 = indexes2[faceted ? f.i : 0];
           index3 = mark.filter(index3, channels, values2);
-          if (index3.length === 0)
-            continue;
-          if (!faceted && index3 === indexes2[0])
-            index3 = subarray(index3);
+          if (index3.length === 0) continue;
+          if (!faceted && index3 === indexes2[0]) index3 = subarray(index3);
           index3.fx = f.x, index3.fy = f.y, index3.fi = f.i;
         }
         const node = mark.render(index3, scales, values2, subdimensions, context);
-        if (node == null)
-          continue;
+        if (node == null) continue;
         (g ??= select_default2(svg2).append("g")).append(() => node).datum(f);
         for (const name of ["aria-label", "aria-description", "aria-hidden", "transform"]) {
           if (node.hasAttribute(name)) {
@@ -25597,7 +24156,7 @@ function plot(options = {}) {
           }
         }
       }
-      g?.selectChildren().attr("transform", facetTranslate);
+      g?.selectChildren().each(facetTranslate);
     }
   }
   const legends = createLegends(scaleDescriptors, context, options);
@@ -25606,15 +24165,11 @@ function plot(options = {}) {
     figure = document2.createElement("figure");
     figure.className = `${className}-figure`;
     figure.style.maxWidth = "initial";
-    if (title != null)
-      figure.append(createTitleElement(document2, title, "h2"));
-    if (subtitle != null)
-      figure.append(createTitleElement(document2, subtitle, "h3"));
+    if (title != null) figure.append(createTitleElement(document2, title, "h2"));
+    if (subtitle != null) figure.append(createTitleElement(document2, subtitle, "h3"));
     figure.append(...legends, svg2);
-    if (caption != null)
-      figure.append(createFigcaption(document2, caption));
-    if ("value" in svg2)
-      figure.value = svg2.value, delete svg2.value;
+    if (caption != null) figure.append(createFigcaption(document2, caption));
+    if ("value" in svg2) figure.value = svg2.value, delete svg2.value;
   }
   figure.scale = exposeScales(scales.scales);
   figure.legend = exposeLegends(scaleDescriptors, context, options);
@@ -25625,8 +24180,7 @@ function plot(options = {}) {
   return figure;
 }
 function createTitleElement(document2, contents, tag) {
-  if (contents.ownerDocument)
-    return contents;
+  if (contents.ownerDocument) return contents;
   const e = document2.createElement(tag);
   e.append(contents);
   return e;
@@ -25644,8 +24198,7 @@ function markify(mark) {
 }
 var Render = class extends Mark {
   constructor(render2) {
-    if (typeof render2 !== "function")
-      throw new TypeError("invalid mark; missing render function");
+    if (typeof render2 !== "function") throw new TypeError("invalid mark; missing render function");
     super();
     this.render = render2;
   }
@@ -25653,22 +24206,19 @@ var Render = class extends Mark {
   }
 };
 function applyScaleTransforms(channels, options) {
-  for (const name in channels)
-    applyScaleTransform(channels[name], options);
+  for (const name in channels) applyScaleTransform(channels[name], options);
   return channels;
 }
 function applyScaleTransform(channel, options) {
   const { scale: scale3, transform: t = true } = channel;
-  if (scale3 == null || !t)
-    return;
+  if (scale3 == null || !t) return;
   const {
     type: type2,
     percent,
     interval: interval2,
     transform: transform2 = percent ? (x4) => x4 == null ? NaN : x4 * 100 : maybeIntervalTransform(interval2, type2)
   } = options[scale3] ?? {};
-  if (transform2 == null)
-    return;
+  if (transform2 == null) return;
   channel.value = map4(channel.value, transform2);
   channel.transform = false;
 }
@@ -25689,10 +24239,8 @@ function addScaleChannels(channelsByScale, stateByMark, options, filter4 = yes) 
             const gy = options.y?.domain === void 0;
             if (gx || gy) {
               const [x4, y4] = getGeometryChannels(channel);
-              if (gx)
-                addScaleChannel(channelsByScale, "x", x4);
-              if (gy)
-                addScaleChannel(channelsByScale, "y", y4);
+              if (gx) addScaleChannel(channelsByScale, "x", x4);
+              if (gy) addScaleChannel(channelsByScale, "y", y4);
             }
           }
         } else {
@@ -25705,52 +24253,38 @@ function addScaleChannels(channelsByScale, stateByMark, options, filter4 = yes) 
 }
 function addScaleChannel(channelsByScale, scale3, channel) {
   const scaleChannels = channelsByScale.get(scale3);
-  if (scaleChannels !== void 0)
-    scaleChannels.push(channel);
-  else
-    channelsByScale.set(scale3, [channel]);
+  if (scaleChannels !== void 0) scaleChannels.push(channel);
+  else channelsByScale.set(scale3, [channel]);
 }
 function maybeTopFacet(facet, options) {
-  if (facet == null)
-    return;
+  if (facet == null) return;
   const { x: x4, y: y4 } = facet;
-  if (x4 == null && y4 == null)
-    return;
+  if (x4 == null && y4 == null) return;
   const data = dataify(facet.data);
-  if (data == null)
-    throw new Error("missing facet data");
+  if (data == null) throw new Error("missing facet data");
   const channels = {};
-  if (x4 != null)
-    channels.fx = createChannel(data, { value: x4, scale: "fx" });
-  if (y4 != null)
-    channels.fy = createChannel(data, { value: y4, scale: "fy" });
+  if (x4 != null) channels.fx = createChannel(data, { value: x4, scale: "fx" });
+  if (y4 != null) channels.fy = createChannel(data, { value: y4, scale: "fy" });
   applyScaleTransforms(channels, options);
   const groups2 = facetGroups(data, channels);
   return { channels, groups: groups2, data: facet.data };
 }
 function maybeMarkFacet(mark, topFacetState, options) {
-  if (mark.facet === null || mark.facet === "super")
-    return;
+  if (mark.facet === null || mark.facet === "super") return;
   const { fx, fy } = mark;
   if (fx != null || fy != null) {
     const data2 = dataify(mark.data ?? fx ?? fy);
-    if (data2 === void 0)
-      throw new Error(`missing facet data in ${mark.ariaLabel}`);
-    if (data2 === null)
-      return;
+    if (data2 === void 0) throw new Error(`missing facet data in ${mark.ariaLabel}`);
+    if (data2 === null) return;
     const channels2 = {};
-    if (fx != null)
-      channels2.fx = createChannel(data2, { value: fx, scale: "fx" });
-    if (fy != null)
-      channels2.fy = createChannel(data2, { value: fy, scale: "fy" });
+    if (fx != null) channels2.fx = createChannel(data2, { value: fx, scale: "fx" });
+    if (fy != null) channels2.fy = createChannel(data2, { value: fy, scale: "fy" });
     applyScaleTransforms(channels2, options);
     return { channels: channels2, groups: facetGroups(data2, channels2) };
   }
-  if (topFacetState === void 0)
-    return;
+  if (topFacetState === void 0) return;
   const { channels, groups: groups2, data } = topFacetState;
-  if (mark.facet !== "auto" || mark.data === data)
-    return { channels, groups: groups2 };
+  if (mark.facet !== "auto" || mark.data === data) return { channels, groups: groups2 };
   if (data.length > 0 && (groups2.size > 1 || groups2.size === 1 && channels.fx && channels.fy && [...groups2][0][1].size > 1) && lengthof(dataify(mark.data)) === lengthof(data)) {
     warn(
       `Warning: the ${mark.ariaLabel} mark appears to use faceted data, but isn\u2019t faceted. The mark data has the same length as the facet data and the mark facet option is "auto", but the mark data and facet data are distinct. If this mark should be faceted, set the mark facet option to true; otherwise, suppress this warning by setting the mark facet option to false.`
@@ -25767,16 +24301,13 @@ function inferTips(marks2) {
   for (const mark of marks2) {
     let tipOptions = mark.tip;
     if (tipOptions) {
-      if (tipOptions === true)
-        tipOptions = {};
-      else if (typeof tipOptions === "string")
-        tipOptions = { pointer: tipOptions };
+      if (tipOptions === true) tipOptions = {};
+      else if (typeof tipOptions === "string") tipOptions = { pointer: tipOptions };
       let { pointer: p, preferredAnchor: a4 } = tipOptions;
       p = /^x$/i.test(p) ? pointerX : /^y$/i.test(p) ? pointerY : pointer;
       tipOptions = p(derive(mark, tipOptions));
       tipOptions.title = null;
-      if (a4 === void 0)
-        tipOptions.preferredAnchor = p === pointerY ? "left" : "bottom";
+      if (a4 === void 0) tipOptions.preferredAnchor = p === pointerY ? "left" : "bottom";
       const t = tip(mark.data, tipOptions);
       t.facet = mark.facet;
       t.facetAnchor = mark.facetAnchor;
@@ -25801,30 +24332,18 @@ function inferAxes(marks2, channelsByScale, options) {
     fx: { axis: fxAxis = facetAxis, grid: fxGrid = fxAxis === null ? null : facetGrid } = fx,
     fy: { axis: fyAxis = facetAxis, grid: fyGrid = fyAxis === null ? null : facetGrid } = fy
   } = options;
-  if (projection3 || !isScaleOptions(x4) && !hasPositionChannel("x", marks2))
-    xAxis = xGrid = null;
-  if (projection3 || !isScaleOptions(y4) && !hasPositionChannel("y", marks2))
-    yAxis = yGrid = null;
-  if (!channelsByScale.has("fx"))
-    fxAxis = fxGrid = null;
-  if (!channelsByScale.has("fy"))
-    fyAxis = fyGrid = null;
-  if (xAxis === void 0)
-    xAxis = !hasAxis(marks2, "x");
-  if (yAxis === void 0)
-    yAxis = !hasAxis(marks2, "y");
-  if (fxAxis === void 0)
-    fxAxis = !hasAxis(marks2, "fx");
-  if (fyAxis === void 0)
-    fyAxis = !hasAxis(marks2, "fy");
-  if (xAxis === true)
-    xAxis = "bottom";
-  if (yAxis === true)
-    yAxis = "left";
-  if (fxAxis === true)
-    fxAxis = xAxis === "top" || xAxis === null ? "bottom" : "top";
-  if (fyAxis === true)
-    fyAxis = yAxis === "right" || yAxis === null ? "left" : "right";
+  if (projection3 || !isScaleOptions(x4) && !hasPositionChannel("x", marks2)) xAxis = xGrid = null;
+  if (projection3 || !isScaleOptions(y4) && !hasPositionChannel("y", marks2)) yAxis = yGrid = null;
+  if (!channelsByScale.has("fx")) fxAxis = fxGrid = null;
+  if (!channelsByScale.has("fy")) fyAxis = fyGrid = null;
+  if (xAxis === void 0) xAxis = !hasAxis(marks2, "x");
+  if (yAxis === void 0) yAxis = !hasAxis(marks2, "y");
+  if (fxAxis === void 0) fxAxis = !hasAxis(marks2, "fx");
+  if (fyAxis === void 0) fyAxis = !hasAxis(marks2, "fy");
+  if (xAxis === true) xAxis = "bottom";
+  if (yAxis === true) yAxis = "left";
+  if (fxAxis === true) fxAxis = xAxis === "top" || xAxis === null ? "bottom" : "top";
+  if (fyAxis === true) fyAxis = yAxis === "right" || yAxis === null ? "left" : "right";
   const axes = [];
   maybeGrid(axes, fyGrid, gridFy, fy);
   maybeAxis(axes, fyAxis, axisFy, "right", "left", facet, fy);
@@ -25837,20 +24356,16 @@ function inferAxes(marks2, channelsByScale, options) {
   return axes;
 }
 function maybeAxis(axes, axis2, axisType, primary, secondary, defaults22, options) {
-  if (!axis2)
-    return;
+  if (!axis2) return;
   const both = isBoth(axis2);
   options = axisOptions(both ? primary : axis2, defaults22, options);
   const { line: line2 } = options;
-  if ((axisType === axisY || axisType === axisX) && line2 && !isNone(line2))
-    axes.push(frame2(lineOptions(options)));
+  if ((axisType === axisY || axisType === axisX) && line2 && !isNone(line2)) axes.push(frame2(lineOptions(options)));
   axes.push(axisType(options));
-  if (both)
-    axes.push(axisType({ ...options, anchor: secondary, label: null }));
+  if (both) axes.push(axisType({ ...options, anchor: secondary, label: null }));
 }
 function maybeGrid(axes, grid, gridType, options) {
-  if (!grid || isNone(grid))
-    return;
+  if (!grid || isNone(grid)) return;
   axes.push(gridType(gridOptions(grid, options)));
 }
 function isBoth(value) {
@@ -25966,12 +24481,10 @@ function actualDimensions({ fx, fy }, dimensions) {
 }
 function outerRange(scale3) {
   const domain = scale3.domain();
-  if (domain.length === 0)
-    return [0, scale3.bandwidth()];
+  if (domain.length === 0) return [0, scale3.bandwidth()];
   let x12 = scale3(domain[0]);
   let x22 = scale3(domain[domain.length - 1]);
-  if (x22 < x12)
-    [x12, x22] = [x22, x12];
+  if (x22 < x12) [x12, x22] = [x22, x12];
   return [x12, x22 + scale3.bandwidth()];
 }
 
@@ -25999,11 +24512,9 @@ var curves = /* @__PURE__ */ new Map([
   ["step-before", stepBefore]
 ]);
 function maybeCurve(curve = linear_default, tension) {
-  if (typeof curve === "function")
-    return curve;
+  if (typeof curve === "function") return curve;
   const c6 = curves.get(`${curve}`.toLowerCase());
-  if (!c6)
-    throw new Error(`unknown curve: ${curve}`);
+  if (!c6) throw new Error(`unknown curve: ${curve}`);
   if (tension !== void 0) {
     if ("beta" in c6) {
       return c6.beta(tension);
@@ -26039,16 +24550,12 @@ function bin2(outputs = { fill: "count" }, options = {}) {
   return binn(x4, y4, null, null, outputs, maybeInsetX(maybeInsetY(options)));
 }
 function maybeDenseInterval(bin3, k2, options = {}) {
-  if (options?.interval == null)
-    return options;
+  if (options?.interval == null) return options;
   const { reduce: reduce2 = reduceFirst } = options;
   const outputs = { filter: null };
-  if (options[k2] != null)
-    outputs[k2] = reduce2;
-  if (options[`${k2}1`] != null)
-    outputs[`${k2}1`] = reduce2;
-  if (options[`${k2}2`] != null)
-    outputs[`${k2}2`] = reduce2;
+  if (options[k2] != null) outputs[k2] = reduce2;
+  if (options[`${k2}1`] != null) outputs[`${k2}1`] = reduce2;
+  if (options[`${k2}2`] != null) outputs[`${k2}2`] = reduce2;
   return bin3(outputs, options);
 }
 function maybeDenseIntervalX(options = {}) {
@@ -26073,10 +24580,8 @@ function binn(bx, by, gx, gy, {
   reduceData = maybeBinReduce(reduceData, identity6);
   sort3 = sort3 == null ? void 0 : maybeBinOutput("sort", sort3, inputs);
   filter4 = filter4 == null ? void 0 : maybeBinEvaluator("filter", filter4, inputs);
-  if (gx != null && hasOutput(outputs, "x", "x1", "x2"))
-    gx = null;
-  if (gy != null && hasOutput(outputs, "y", "y1", "y2"))
-    gy = null;
+  if (gx != null && hasOutput(outputs, "x", "x1", "x2")) gx = null;
+  if (gy != null && hasOutput(outputs, "y", "y1", "y2")) gy = null;
   const [BX1, setBX1] = maybeColumn(bx);
   const [BX2, setBX2] = maybeColumn(bx);
   const [BY1, setBY1] = maybeColumn(by);
@@ -26128,45 +24633,29 @@ function binn(bx, by, gx, gy, {
       const BY22 = by && setBY2([]);
       const bin3 = bing(bx, by, data);
       let i = 0;
-      for (const o of outputs)
-        o.initialize(data);
-      if (sort3)
-        sort3.initialize(data);
-      if (filter4)
-        filter4.initialize(data);
+      for (const o of outputs) o.initialize(data);
+      if (sort3) sort3.initialize(data);
+      if (filter4) filter4.initialize(data);
       for (const facet of facets) {
         const groupFacet = [];
-        for (const o of outputs)
-          o.scope("facet", facet);
-        if (sort3)
-          sort3.scope("facet", facet);
-        if (filter4)
-          filter4.scope("facet", facet);
+        for (const o of outputs) o.scope("facet", facet);
+        if (sort3) sort3.scope("facet", facet);
+        if (filter4) filter4.scope("facet", facet);
         for (const [f, I] of maybeGroup(facet, G)) {
           for (const [k3, g] of maybeGroup(I, K2)) {
             for (const [b, extent3] of bin3(g)) {
-              if (G)
-                extent3.z = f;
-              if (filter4 && !filter4.reduce(b, extent3))
-                continue;
+              if (G) extent3.z = f;
+              if (filter4 && !filter4.reduce(b, extent3)) continue;
               groupFacet.push(i++);
               groupData.push(reduceData.reduceIndex(b, data, extent3));
-              if (K2)
-                GK2.push(k3);
-              if (Z)
-                GZ2.push(G === Z ? f : Z[(b.length > 0 ? b : g)[0]]);
-              if (F)
-                GF2.push(G === F ? f : F[(b.length > 0 ? b : g)[0]]);
-              if (S)
-                GS2.push(G === S ? f : S[(b.length > 0 ? b : g)[0]]);
-              if (BX12)
-                BX12.push(extent3.x1), BX22.push(extent3.x2);
-              if (BY12)
-                BY12.push(extent3.y1), BY22.push(extent3.y2);
-              for (const o of outputs)
-                o.reduce(b, extent3);
-              if (sort3)
-                sort3.reduce(b, extent3);
+              if (K2) GK2.push(k3);
+              if (Z) GZ2.push(G === Z ? f : Z[(b.length > 0 ? b : g)[0]]);
+              if (F) GF2.push(G === F ? f : F[(b.length > 0 ? b : g)[0]]);
+              if (S) GS2.push(G === S ? f : S[(b.length > 0 ? b : g)[0]]);
+              if (BX12) BX12.push(extent3.x1), BX22.push(extent3.x2);
+              if (BY12) BY12.push(extent3.y1), BY22.push(extent3.y2);
+              for (const o of outputs) o.reduce(b, extent3);
+              if (sort3) sort3.reduce(b, extent3);
             }
           }
         }
@@ -26186,16 +24675,11 @@ function mergeOptions2({ cumulative, domain, thresholds, interval: interval2, ..
 }
 function maybeBinValue(value, { cumulative, domain, thresholds, interval: interval2 }, defaultValue) {
   value = { ...maybeValue(value) };
-  if (value.domain === void 0)
-    value.domain = domain;
-  if (value.cumulative === void 0)
-    value.cumulative = cumulative;
-  if (value.thresholds === void 0)
-    value.thresholds = thresholds;
-  if (value.interval === void 0)
-    value.interval = interval2;
-  if (value.value === void 0)
-    value.value = defaultValue;
+  if (value.domain === void 0) value.domain = domain;
+  if (value.cumulative === void 0) value.cumulative = cumulative;
+  if (value.thresholds === void 0) value.thresholds = thresholds;
+  if (value.interval === void 0) value.interval = interval2;
+  if (value.value === void 0) value.value = defaultValue;
   value.thresholds = maybeThresholds(value.thresholds, value.interval);
   return value;
 }
@@ -26207,8 +24691,7 @@ function maybeBinValueTuple(options) {
   return { x: x4, y: y4 };
 }
 function maybeBin(options) {
-  if (options == null)
-    return;
+  if (options == null) return;
   const { value, cumulative, domain = extent, thresholds } = options;
   const bin3 = (data) => {
     let V = valueof(data, value);
@@ -26217,8 +24700,7 @@ function maybeBin(options) {
       V = map4(V, coerceDate, Float64Array);
       let [min4, max5] = typeof domain === "function" ? domain(V) : domain;
       let t = typeof thresholds === "function" && !isInterval(thresholds) ? thresholds(V, min4, max5) : thresholds;
-      if (typeof t === "number")
-        t = utcTickInterval(min4, max5, t);
+      if (typeof t === "number") t = utcTickInterval(min4, max5, t);
       if (isInterval(t)) {
         if (domain === extent) {
           min4 = t.floor(min4);
@@ -26238,26 +24720,20 @@ function maybeBin(options) {
             if (step > 0) {
               let r0 = Math.round(min4 / step);
               let r1 = Math.round(max5 / step);
-              if (!(r0 * step <= min4))
-                --r0;
-              if (!(r1 * step > max5))
-                ++r1;
+              if (!(r0 * step <= min4)) --r0;
+              if (!(r1 * step > max5)) ++r1;
               let n = r1 - r0 + 1;
               t = new Float64Array(n);
-              for (let i = 0; i < n; ++i)
-                t[i] = (r0 + i) * step;
+              for (let i = 0; i < n; ++i) t[i] = (r0 + i) * step;
             } else if (step < 0) {
               step = -step;
               let r0 = Math.round(min4 * step);
               let r1 = Math.round(max5 * step);
-              if (!(r0 / step <= min4))
-                --r0;
-              if (!(r1 / step > max5))
-                ++r1;
+              if (!(r0 / step <= min4)) --r0;
+              if (!(r1 / step > max5)) ++r1;
               let n = r1 - r0 + 1;
               t = new Float64Array(n);
-              for (let i = 0; i < n; ++i)
-                t[i] = (r0 + i) / step;
+              for (let i = 0; i < n; ++i) t[i] = (r0 + i) / step;
             } else {
               t = [min4];
             }
@@ -26277,11 +24753,8 @@ function maybeBin(options) {
       T = t;
     }
     const E2 = [];
-    if (T.length === 1)
-      E2.push([T[0], T[0]]);
-    else
-      for (let i = 1; i < T.length; ++i)
-        E2.push([T[i - 1], T[i]]);
+    if (T.length === 1) E2.push([T[0], T[0]]);
+    else for (let i = 1; i < T.length; ++i) E2.push([T[i - 1], T[i]]);
     E2.bin = (cumulative < 0 ? bin1cn : cumulative > 0 ? bin1cp : bin1)(E2, T, V);
     return E2;
   };
@@ -26371,8 +24844,7 @@ function bin1(E2, T, V) {
   T = coerceNumbers(T);
   return (I) => {
     const B3 = E2.map(() => []);
-    for (const i of I)
-      B3[bisect_default(T, V[i]) - 1]?.push(i);
+    for (const i of I) B3[bisect_default(T, V[i]) - 1]?.push(i);
     return B3;
   };
 }
@@ -26383,8 +24855,7 @@ function bin1cp(E2, T, V) {
     for (let i = 1, n = B3.length; i < n; ++i) {
       const C3 = B3[i - 1];
       const b = B3[i];
-      for (const j of C3)
-        b.push(j);
+      for (const j of C3) b.push(j);
     }
     return B3;
   };
@@ -26396,8 +24867,7 @@ function bin1cn(E2, T, V) {
     for (let i = B3.length - 2; i >= 0; --i) {
       const C3 = B3[i + 1];
       const b = B3[i];
-      for (const j of C3)
-        b.push(j);
+      for (const j of C3) b.push(j);
     }
     return B3;
   };
@@ -26477,17 +24947,16 @@ var Area = class extends Mark {
   }
 };
 function area(data, options) {
-  if (options === void 0)
-    return areaY(data, { x: first, y: second2 });
+  if (options === void 0) return areaY(data, { x: first, y: second2 });
   return new Area(data, options);
 }
 function areaX(data, options) {
   const { y: y4 = indexOf, ...rest } = maybeDenseIntervalY(options);
-  return new Area(data, maybeStackX(maybeIdentityX({ ...rest, y1: y4, y2: void 0 })));
+  return new Area(data, maybeStackX(maybeIdentityX({ ...rest, y1: y4, y2: void 0 }, y4 === indexOf ? "x2" : "x")));
 }
 function areaY(data, options) {
   const { x: x4 = indexOf, ...rest } = maybeDenseIntervalX(options);
-  return new Area(data, maybeStackY(maybeIdentityY({ ...rest, x1: x4, x2: void 0 })));
+  return new Area(data, maybeStackY(maybeIdentityY({ ...rest, x1: x4, x2: void 0 }, x4 === indexOf ? "y2" : "y")));
 }
 
 // node_modules/@observablehq/plot/src/marks/link.js
@@ -26525,7 +24994,7 @@ var Link = class extends Mark {
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, scales).call(
       (g) => g.selectAll().data(index3).enter().append("path").call(applyDirectStyles, this).attr(
         "d",
-        curve === curveAuto && context.projection ? sphereLink(context.projection, X13, Y13, X23, Y23) : (i) => {
+        curve === curveAuto && context.projection ? sphereLink(context.path(), X13, Y13, X23, Y23) : (i) => {
           const p = pathRound();
           const c6 = curve(p);
           c6.lineStart();
@@ -26538,8 +25007,7 @@ var Link = class extends Mark {
     ).node();
   }
 };
-function sphereLink(projection3, X13, Y13, X23, Y23) {
-  const path2 = path_default(projection3);
+function sphereLink(path2, X13, Y13, X23, Y23) {
   X13 = coerceNumbers(X13);
   Y13 = coerceNumbers(Y13);
   X23 = coerceNumbers(X23);
@@ -26560,11 +25028,9 @@ function link3(data, { x: x4, x1: x12, x2: x22, y: y4, y1: y12, y2: y22, ...opti
 function maybeSameValue(x4, x12, x22) {
   if (x4 === void 0) {
     if (x12 === void 0) {
-      if (x22 !== void 0)
-        return [x22];
+      if (x22 !== void 0) return [x22];
     } else {
-      if (x22 === void 0)
-        return [x12];
+      if (x22 === void 0) return [x12];
     }
   } else if (x12 === void 0) {
     return x22 === void 0 ? [x4] : [x4, x22];
@@ -26627,8 +25093,7 @@ var Arrow = class extends Mark {
       (g) => g.selectAll().data(index3).enter().append("path").call(applyDirectStyles, this).attr("d", (i) => {
         let x12 = X13[i], y12 = Y13[i], x22 = X23[i], y22 = Y23[i];
         const lineLength = Math.hypot(x22 - x12, y22 - y12);
-        if (lineLength <= insetStart + insetEnd)
-          return null;
+        if (lineLength <= insetStart + insetEnd) return null;
         let lineAngle = Math.atan2(y22 - y12, x22 - x12);
         const headLength2 = Math.min(wingScale * sw(i), lineLength / 3);
         const bendAngle = this.sweep(x12, y12, x22, y22) * bend * radians3;
@@ -26647,10 +25112,8 @@ var Arrow = class extends Mark {
             }
           } else {
             const dx = x22 - x12, dy = y22 - y12, d = Math.hypot(dx, dy);
-            if (insetStart)
-              x12 += dx / d * insetStart, y12 += dy / d * insetStart;
-            if (insetEnd)
-              x22 -= dx / d * insetEnd, y22 -= dy / d * insetEnd;
+            if (insetStart) x12 += dx / d * insetStart, y12 += dy / d * insetStart;
+            if (insetEnd) x22 -= dx / d * insetEnd, y22 -= dy / d * insetEnd;
           }
         }
         const endAngle = lineAngle + bendAngle;
@@ -26668,10 +25131,8 @@ var Arrow = class extends Mark {
   }
 };
 function maybeSweep(sweep = 1) {
-  if (typeof sweep === "number")
-    return constant2(Math.sign(sweep));
-  if (typeof sweep === "function")
-    return (x12, y12, x22, y22) => Math.sign(sweep(x12, y12, x22, y22));
+  if (typeof sweep === "number") return constant2(Math.sign(sweep));
+  if (typeof sweep === "function") return (x12, y12, x22, y22) => Math.sign(sweep(x12, y12, x22, y22));
   switch (keyword(sweep, "sweep", ["+x", "-x", "+y", "-y"])) {
     case "+x":
       return (x12, y12, x22) => ascending(x12, x22);
@@ -26797,13 +25258,11 @@ var BarY = class extends AbstractBar {
   }
 };
 function barX(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, y: indexOf, x2: identity6 };
+  if (!hasXY(options)) options = { ...options, y: indexOf, x2: identity6 };
   return new BarX(data, maybeStackX(maybeIntervalX(maybeIdentityX(options))));
 }
 function barY(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, x: indexOf, y2: identity6 };
+  if (!hasXY(options)) options = { ...options, x: indexOf, y2: identity6 };
   return new BarY(data, maybeStackY(maybeIntervalY(maybeIdentityY(options))));
 }
 
@@ -26832,13 +25291,11 @@ function cell(data, { x: x4, y: y4, ...options } = {}) {
   return new Cell(data, { ...options, x: x4, y: y4 });
 }
 function cellX(data, { x: x4 = indexOf, fill, stroke, ...options } = {}) {
-  if (fill === void 0 && maybeColorChannel(stroke)[0] === void 0)
-    fill = identity6;
+  if (fill === void 0 && maybeColorChannel(stroke)[0] === void 0) fill = identity6;
   return new Cell(data, { ...options, x: x4, fill, stroke });
 }
 function cellY(data, { y: y4 = indexOf, fill, stroke, ...options } = {}) {
-  if (fill === void 0 && maybeColorChannel(stroke)[0] === void 0)
-    fill = identity6;
+  if (fill === void 0 && maybeColorChannel(stroke)[0] === void 0) fill = identity6;
   return new Cell(data, { ...options, y: y4, fill, stroke });
 }
 
@@ -26891,8 +25348,7 @@ var Dot = class extends Mark {
     const [cx, cy] = applyFrameAnchor(this, dimensions);
     const circle2 = symbol2 === circle_default3;
     const size = R ? void 0 : r * r * Math.PI;
-    if (negative(r))
-      index3 = [];
+    if (negative(r)) index3 = [];
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, { x: X3 && x4, y: Y3 && y4 }).call(
       (g) => g.selectAll().data(index3).enter().append(circle2 ? "circle" : "path").call(applyDirectStyles, this).call(
         circle2 ? (selection2) => {
@@ -26927,8 +25383,7 @@ var Dot = class extends Mark {
   }
 };
 function dot(data, { x: x4, y: y4, ...options } = {}) {
-  if (options.frameAnchor === void 0)
-    [x4, y4] = maybeTuple(x4, y4);
+  if (options.frameAnchor === void 0) [x4, y4] = maybeTuple(x4, y4);
   return new Dot(data, { ...options, x: x4, y: y4 });
 }
 function dotX(data, { x: x4 = identity6, ...options } = {}) {
@@ -26985,13 +25440,12 @@ var Line = class extends Mark {
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, scales).call(
       (g) => g.selectAll().data(groupIndex(index3, [X3, Y3], this, channels)).enter().append("path").call(applyDirectStyles, this).call(applyGroupedChannelStyles, this, channels).call(applyGroupedMarkers, this, channels, context).attr(
         "d",
-        curve === curveAuto && context.projection ? sphereLine(context.projection, X3, Y3) : line_default2().curve(curve).defined((i) => i >= 0).x((i) => X3[i]).y((i) => Y3[i])
+        curve === curveAuto && context.projection ? sphereLine(context.path(), X3, Y3) : line_default2().curve(curve).defined((i) => i >= 0).x((i) => X3[i]).y((i) => Y3[i])
       )
     ).node();
   }
 };
-function sphereLine(projection3, X3, Y3) {
-  const path2 = path_default(projection3);
+function sphereLine(path2, X3, Y3) {
   X3 = coerceNumbers(X3);
   Y3 = coerceNumbers(Y3);
   return (I) => {
@@ -27044,16 +25498,11 @@ function autoSpec(data, options) {
   if (sizeReduce === void 0 && sizeValue == null && colorReduce == null && xReduce == null && yReduce == null && (xValue == null || isOrdinal(X3)) && (yValue == null || isOrdinal(Y3))) {
     sizeReduce = "count";
   }
-  if (xZero === void 0)
-    xZero = isZeroReducer(xReduce) ? true : void 0;
-  if (yZero === void 0)
-    yZero = isZeroReducer(yReduce) ? true : void 0;
-  if (xValue == null && yValue == null)
-    throw new Error("must specify x or y");
-  if (xReduce != null && yValue == null)
-    throw new Error("reducing x requires y");
-  if (yReduce != null && xValue == null)
-    throw new Error("reducing y requires x");
+  if (xZero === void 0) xZero = isZeroReducer(xReduce) ? true : void 0;
+  if (yZero === void 0) yZero = isZeroReducer(yReduce) ? true : void 0;
+  if (xValue == null && yValue == null) throw new Error("must specify x or y");
+  if (xReduce != null && yValue == null) throw new Error("reducing x requires y");
+  if (yReduce != null && xValue == null) throw new Error("reducing y requires x");
   if (mark === void 0) {
     mark = sizeValue != null || sizeReduce != null ? "dot" : isZeroReducer(xReduce) || isZeroReducer(yReduce) || colorReduce != null ? "bar" : xValue != null && yValue != null ? isOrdinal(X3) || isOrdinal(Y3) || xReduce == null && yReduce == null && !isMonotonic(X3) && !isMonotonic(Y3) ? "dot" : "line" : xValue != null || yValue != null ? "rule" : null;
   }
@@ -27068,14 +25517,12 @@ function autoSpec(data, options) {
     case "line":
       markImpl = X3 && Y3 || xReduce != null || yReduce != null ? yZero || yReduce != null || X3 && isMonotonic(X3) ? lineY : xZero || xReduce != null || Y3 && isMonotonic(Y3) ? lineX : line : X3 ? lineX : lineY;
       colorMode = "stroke";
-      if (isHighCardinality(C3))
-        Z = null;
+      if (isHighCardinality(C3)) Z = null;
       break;
     case "area":
       markImpl = !(yZero || yReduce != null) && (xZero || xReduce != null || Y3 && isMonotonic(Y3)) ? areaX : areaY;
       colorMode = "fill";
-      if (isHighCardinality(C3))
-        Z = null;
+      if (isHighCardinality(C3)) Z = null;
       break;
     case "rule":
       markImpl = X3 ? ruleX : ruleY;
@@ -27120,10 +25567,8 @@ function autoSpec(data, options) {
       transformImpl = isOrdinal(Y3) ? groupY : binY;
     }
   }
-  if (transformImpl === bin2 || transformImpl === binX)
-    markOptions2.x = { value: X3, ...xOptions };
-  if (transformImpl === bin2 || transformImpl === binY)
-    markOptions2.y = { value: Y3, ...yOptions };
+  if (transformImpl === bin2 || transformImpl === binX) markOptions2.x = { value: X3, ...xOptions };
+  if (transformImpl === bin2 || transformImpl === binY) markOptions2.y = { value: Y3, ...yOptions };
   if (xZero === void 0)
     xZero = X3 && !(transformImpl === bin2 || transformImpl === binX) && (markImpl === barX || markImpl === areaX || markImpl === rectX || markImpl === ruleY);
   if (yZero === void 0)
@@ -27182,43 +25627,32 @@ function isMonotonic(values2) {
   let previous;
   let previousOrder;
   for (const value of values2) {
-    if (value == null)
-      continue;
+    if (value == null) continue;
     if (previous === void 0) {
       previous = value;
       continue;
     }
     const order = Math.sign(ascending(previous, value));
-    if (!order)
-      continue;
-    if (previousOrder !== void 0 && order !== previousOrder)
-      return false;
+    if (!order) continue;
+    if (previousOrder !== void 0 && order !== previousOrder) return false;
     previous = value;
     previousOrder = order;
   }
   return true;
 }
 function normalizeOptions({ x: x4, y: y4, color: color3, size, fx, fy, mark } = {}) {
-  if (!isOptions(x4))
-    x4 = makeOptions(x4);
-  if (!isOptions(y4))
-    y4 = makeOptions(y4);
-  if (!isOptions(color3))
-    color3 = isColor(color3) ? { color: color3 } : makeOptions(color3);
-  if (!isOptions(size))
-    size = makeOptions(size);
-  if (isOptions(fx))
-    ({ value: fx } = makeOptions(fx));
-  if (isOptions(fy))
-    ({ value: fy } = makeOptions(fy));
-  if (mark != null)
-    mark = `${mark}`.toLowerCase();
+  if (!isOptions(x4)) x4 = makeOptions(x4);
+  if (!isOptions(y4)) y4 = makeOptions(y4);
+  if (!isOptions(color3)) color3 = isColor(color3) ? { color: color3 } : makeOptions(color3);
+  if (!isOptions(size)) size = makeOptions(size);
+  if (isOptions(fx)) ({ value: fx } = makeOptions(fx));
+  if (isOptions(fy)) ({ value: fy } = makeOptions(fy));
+  if (mark != null) mark = `${mark}`.toLowerCase();
   return { x: x4, y: y4, color: color3, size, fx, fy, mark };
 }
 function materializeValue(data, options) {
   const V = valueof(data, options.value);
-  if (V)
-    V.label = labelof(options.value);
+  if (V) V.label = labelof(options.value);
   return V;
 }
 function makeOptions(value) {
@@ -27231,14 +25665,10 @@ function isSelectReducer(reduce2) {
   return /^(?:first|last|mode)$/i.test(reduce2);
 }
 function isReducer(reduce2) {
-  if (reduce2 == null)
-    return false;
-  if (typeof reduce2.reduceIndex === "function")
-    return true;
-  if (typeof reduce2.reduce === "function" && isObject(reduce2))
-    return true;
-  if (/^p\d{2}$/i.test(reduce2))
-    return true;
+  if (reduce2 == null) return false;
+  if (typeof reduce2.reduceIndex === "function") return true;
+  if (typeof reduce2.reduce === "function" && isObject(reduce2)) return true;
+  if (/^p\d{2}$/i.test(reduce2)) return true;
   switch (`${reduce2}`.toLowerCase()) {
     case "first":
     case "last":
@@ -27247,11 +25677,14 @@ function isReducer(reduce2) {
     case "sum":
     case "proportion":
     case "proportion-facet":
+    // TODO remove me?
     case "deviation":
     case "min":
     case "min-index":
+    // TODO remove me?
     case "max":
     case "max-index":
+    // TODO remove me?
     case "mean":
     case "median":
     case "variance":
@@ -27290,36 +25723,27 @@ var implNames = Object.fromEntries(Object.entries(impls).map(([name, impl]) => [
 // node_modules/@observablehq/plot/src/transforms/map.js
 function mapX(mapper, options = {}) {
   let { x: x4, x1: x12, x2: x22 } = options;
-  if (x4 === void 0 && x12 === void 0 && x22 === void 0)
-    options = { ...options, x: x4 = identity6 };
+  if (x4 === void 0 && x12 === void 0 && x22 === void 0) options = { ...options, x: x4 = identity6 };
   const outputs = {};
-  if (x4 != null)
-    outputs.x = mapper;
-  if (x12 != null)
-    outputs.x1 = mapper;
-  if (x22 != null)
-    outputs.x2 = mapper;
+  if (x4 != null) outputs.x = mapper;
+  if (x12 != null) outputs.x1 = mapper;
+  if (x22 != null) outputs.x2 = mapper;
   return map5(outputs, options);
 }
 function mapY(mapper, options = {}) {
   let { y: y4, y1: y12, y2: y22 } = options;
-  if (y4 === void 0 && y12 === void 0 && y22 === void 0)
-    options = { ...options, y: y4 = identity6 };
+  if (y4 === void 0 && y12 === void 0 && y22 === void 0) options = { ...options, y: y4 = identity6 };
   const outputs = {};
-  if (y4 != null)
-    outputs.y = mapper;
-  if (y12 != null)
-    outputs.y1 = mapper;
-  if (y22 != null)
-    outputs.y2 = mapper;
+  if (y4 != null) outputs.y = mapper;
+  if (y12 != null) outputs.y1 = mapper;
+  if (y22 != null) outputs.y2 = mapper;
   return map5(outputs, options);
 }
 function map5(outputs = {}, options = {}) {
   const z = maybeZ(options);
   const channels = Object.entries(outputs).map(([key, map6]) => {
     const input = maybeInput(key, options);
-    if (input == null)
-      throw new Error(`missing channel: ${key}`);
+    if (input == null) throw new Error(`missing channel: ${key}`);
     const [output, setOutput] = column(input);
     return { key, input, output, setOutput, map: maybeMap(map6) };
   });
@@ -27339,14 +25763,10 @@ function map5(outputs = {}, options = {}) {
   };
 }
 function maybeMap(map6) {
-  if (map6 == null)
-    throw new Error("missing map");
-  if (typeof map6.mapIndex === "function")
-    return map6;
-  if (typeof map6.map === "function" && isObject(map6))
-    return mapMap(map6);
-  if (typeof map6 === "function")
-    return mapFunction(taker(map6));
+  if (map6 == null) throw new Error("missing map");
+  if (typeof map6.mapIndex === "function") return map6;
+  if (typeof map6.map === "function" && isObject(map6)) return mapMap(map6);
+  if (typeof map6 === "function") return mapFunction(taker(map6));
   switch (`${map6}`.toLowerCase()) {
     case "cumsum":
       return mapCumsum;
@@ -27369,42 +25789,35 @@ function mapFunction(f) {
   return {
     mapIndex(I, S, T) {
       const M2 = f(I, S);
-      if (M2.length !== I.length)
-        throw new Error("map function returned a mismatched length");
-      for (let i = 0, n = I.length; i < n; ++i)
-        T[I[i]] = M2[i];
+      if (M2.length !== I.length) throw new Error("map function returned a mismatched length");
+      for (let i = 0, n = I.length; i < n; ++i) T[I[i]] = M2[i];
     }
   };
 }
 var mapCumsum = {
   mapIndex(I, S, T) {
     let sum4 = 0;
-    for (const i of I)
-      T[i] = sum4 += S[i];
+    for (const i of I) T[i] = sum4 += S[i];
   }
 };
 
 // node_modules/@observablehq/plot/src/transforms/window.js
 function windowX(windowOptions = {}, options) {
-  if (arguments.length === 1)
-    options = windowOptions;
+  if (arguments.length === 1) options = windowOptions;
   return mapX(window2(windowOptions), options);
 }
 function windowY(windowOptions = {}, options) {
-  if (arguments.length === 1)
-    options = windowOptions;
+  if (arguments.length === 1) options = windowOptions;
   return mapY(window2(windowOptions), options);
 }
 function window2(options = {}) {
-  if (typeof options === "number")
-    options = { k: options };
+  if (typeof options === "number") options = { k: options };
   let { k: k2, reduce: reduce2, shift, anchor, strict } = options;
   if (anchor === void 0 && shift !== void 0) {
     anchor = maybeShift(shift);
     warn(`Warning: the shift option is deprecated; please use anchor "${anchor}" instead.`);
   }
-  if (!((k2 = Math.floor(k2)) > 0))
-    throw new Error(`invalid k: ${k2}`);
+  if (!((k2 = Math.floor(k2)) > 0)) throw new Error(`invalid k: ${k2}`);
   return maybeReduce2(reduce2)(k2, maybeAnchor3(anchor, k2), strict);
 }
 function maybeAnchor3(anchor = "middle", k2) {
@@ -27431,8 +25844,7 @@ function maybeShift(shift) {
 }
 function maybeReduce2(reduce2 = "mean") {
   if (typeof reduce2 === "string") {
-    if (/^p\d{2}$/i.test(reduce2))
-      return reduceAccessor2(percentile(reduce2));
+    if (/^p\d{2}$/i.test(reduce2)) return reduceAccessor2(percentile(reduce2));
     switch (reduce2.toLowerCase()) {
       case "deviation":
         return reduceAccessor2(deviation);
@@ -27460,8 +25872,7 @@ function maybeReduce2(reduce2 = "mean") {
         return reduceLast2;
     }
   }
-  if (typeof reduce2 !== "function")
-    throw new Error(`invalid reduce: ${reduce2}`);
+  if (typeof reduce2 !== "function") throw new Error(`invalid reduce: ${reduce2}`);
   return reduceArray(taker(reduce2));
 }
 function reduceAccessor2(f) {
@@ -27469,15 +25880,11 @@ function reduceAccessor2(f) {
     mapIndex(I, S, T) {
       const v2 = (i) => S[i] == null ? NaN : +S[i];
       let nans = 0;
-      for (let i = 0; i < k2 - 1; ++i)
-        if (isNaN(v2(i)))
-          ++nans;
+      for (let i = 0; i < k2 - 1; ++i) if (isNaN(v2(i))) ++nans;
       for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
-        if (isNaN(v2(i + k2 - 1)))
-          ++nans;
+        if (isNaN(v2(i + k2 - 1))) ++nans;
         T[I[i + s2]] = nans === 0 ? f(subarray(I, i, i + k2), v2) : NaN;
-        if (isNaN(v2(i)))
-          --nans;
+        if (isNaN(v2(i))) --nans;
       }
     }
   } : {
@@ -27496,12 +25903,10 @@ function reduceArray(f) {
   return (k2, s2, strict) => strict ? {
     mapIndex(I, S, T) {
       let count3 = 0;
-      for (let i = 0; i < k2 - 1; ++i)
-        count3 += defined(S[I[i]]);
+      for (let i = 0; i < k2 - 1; ++i) count3 += defined(S[I[i]]);
       for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
         count3 += defined(S[I[i + k2 - 1]]);
-        if (count3 === k2)
-          T[I[i + s2]] = f(subarray(I, i, i + k2), S);
+        if (count3 === k2) T[I[i + s2]] = f(subarray(I, i, i + k2), S);
         count3 -= defined(S[I[i]]);
       }
     }
@@ -27523,23 +25928,17 @@ function reduceSum2(k2, s2, strict) {
       let sum4 = 0;
       for (let i = 0; i < k2 - 1; ++i) {
         const v2 = S[I[i]];
-        if (v2 === null || isNaN(v2))
-          ++nans;
-        else
-          sum4 += +v2;
+        if (v2 === null || isNaN(v2)) ++nans;
+        else sum4 += +v2;
       }
       for (let i = 0, n = I.length - k2 + 1; i < n; ++i) {
         const a4 = S[I[i]];
         const b = S[I[i + k2 - 1]];
-        if (b === null || isNaN(b))
-          ++nans;
-        else
-          sum4 += +b;
+        if (b === null || isNaN(b)) ++nans;
+        else sum4 += +b;
         T[I[i + s2]] = nans === 0 ? sum4 : NaN;
-        if (a4 === null || isNaN(a4))
-          --nans;
-        else
-          sum4 -= +a4;
+        if (a4 === null || isNaN(a4)) --nans;
+        else sum4 -= +a4;
       }
     }
   } : {
@@ -27576,17 +25975,14 @@ function reduceMean(k2, s2, strict) {
         const n = I.length;
         for (let i = 0, j = Math.min(n, k2 - s2 - 1); i < j; ++i) {
           let v2 = S[I[i]];
-          if (v2 !== null && !isNaN(v2 = +v2))
-            sum4 += v2, ++count3;
+          if (v2 !== null && !isNaN(v2 = +v2)) sum4 += v2, ++count3;
         }
         for (let i = -s2, j = n - s2; i < j; ++i) {
           let a4 = S[I[i + k2 - 1]];
           let b = S[I[i]];
-          if (a4 !== null && !isNaN(a4 = +a4))
-            sum4 += a4, ++count3;
+          if (a4 !== null && !isNaN(a4 = +a4)) sum4 += a4, ++count3;
           T[I[i + s2]] = sum4 / count3;
-          if (b !== null && !isNaN(b = +b))
-            sum4 -= b, --count3;
+          if (b !== null && !isNaN(b = +b)) sum4 -= b, --count3;
         }
       }
     };
@@ -27595,29 +25991,25 @@ function reduceMean(k2, s2, strict) {
 function firstDefined(S, I, i, k2) {
   for (let j = i + k2; i < j; ++i) {
     const v2 = S[I[i]];
-    if (defined(v2))
-      return v2;
+    if (defined(v2)) return v2;
   }
 }
 function lastDefined(S, I, i, k2) {
   for (let j = i + k2 - 1; j >= i; --j) {
     const v2 = S[I[j]];
-    if (defined(v2))
-      return v2;
+    if (defined(v2)) return v2;
   }
 }
 function firstNumber(S, I, i, k2) {
   for (let j = i + k2; i < j; ++i) {
     let v2 = S[I[i]];
-    if (v2 !== null && !isNaN(v2 = +v2))
-      return v2;
+    if (v2 !== null && !isNaN(v2 = +v2)) return v2;
   }
 }
 function lastNumber(S, I, i, k2) {
   for (let j = i + k2 - 1; j >= i; --j) {
     let v2 = S[I[j]];
-    if (v2 !== null && !isNaN(v2 = +v2))
-      return v2;
+    if (v2 !== null && !isNaN(v2 = +v2)) return v2;
   }
 }
 function reduceDifference(k2, s2, strict) {
@@ -27903,14 +26295,12 @@ var defaults15 = {
 };
 function number6(input, name) {
   const x4 = +input;
-  if (isNaN(x4))
-    throw new Error(`invalid ${name}: ${input}`);
+  if (isNaN(x4)) throw new Error(`invalid ${name}: ${input}`);
   return x4;
 }
 function integer(input, name) {
   const x4 = Math.floor(input);
-  if (isNaN(x4))
-    throw new Error(`invalid ${name}: ${input}`);
+  if (isNaN(x4)) throw new Error(`invalid ${name}: ${input}`);
   return x4;
 }
 var AbstractRaster = class extends Mark {
@@ -27928,27 +26318,17 @@ var AbstractRaster = class extends Mark {
       blur: blur3 = 0,
       interpolate
     } = options;
-    if (width != null)
-      width = integer(width, "width");
-    if (height != null)
-      height = integer(height, "height");
-    if (x12 != null)
-      x12 = number6(x12, "x1");
-    if (y12 != null)
-      y12 = number6(y12, "y1");
-    if (x22 != null)
-      x22 = number6(x22, "x2");
-    if (y22 != null)
-      y22 = number6(y22, "y2");
-    if (x4 == null && (x12 == null || x22 == null))
-      throw new Error("missing x");
-    if (y4 == null && (y12 == null || y22 == null))
-      throw new Error("missing y");
+    if (width != null) width = integer(width, "width");
+    if (height != null) height = integer(height, "height");
+    if (x12 != null) x12 = number6(x12, "x1");
+    if (y12 != null) y12 = number6(y12, "y1");
+    if (x22 != null) x22 = number6(x22, "x2");
+    if (y22 != null) y22 = number6(y22, "y2");
+    if (x4 == null && (x12 == null || x22 == null)) throw new Error("missing x");
+    if (y4 == null && (y12 == null || y22 == null)) throw new Error("missing y");
     if (data != null && width != null && height != null) {
-      if (x4 === void 0 && x12 != null && x22 != null)
-        x4 = denseX(x12, x22, width, height);
-      if (y4 === void 0 && y12 != null && y22 != null)
-        y4 = denseY(y12, y22, width, height);
+      if (x4 === void 0 && x12 != null && x22 != null) x4 = denseX(x12, x22, width, height);
+      if (y4 === void 0 && y12 != null && y22 != null) y4 = denseY(y12, y22, width, height);
     }
     super(
       data,
@@ -27976,10 +26356,8 @@ var Raster = class extends AbstractRaster {
     const { imageRendering } = options;
     if (data == null) {
       const { fill, fillOpacity } = options;
-      if (maybeNumberChannel(fillOpacity)[0] !== void 0)
-        options = sampler("fillOpacity", options);
-      if (maybeColorChannel(fill)[0] !== void 0)
-        options = sampler("fill", options);
+      if (maybeNumberChannel(fillOpacity)[0] !== void 0) options = sampler("fillOpacity", options);
+      if (maybeColorChannel(fill)[0] !== void 0) options = sampler("fill", options);
     }
     super(data, void 0, options, defaults15);
     this.imageRendering = impliedString(imageRendering, "auto");
@@ -28004,12 +26382,9 @@ var Raster = class extends AbstractRaster {
       const ky2 = h / dy;
       const IX = map4(X3, (x4) => (x4 - x12) * kx2, Float64Array);
       const IY = map4(Y3, (y4) => (y4 - y12) * ky2, Float64Array);
-      if (F)
-        F = this.interpolate(index3, w, h, IX, IY, F);
-      if (FO)
-        FO = this.interpolate(index3, w, h, IX, IY, FO);
-    } else if (this.data == null && index3)
-      offset2 = index3.fi * n;
+      if (F) F = this.interpolate(index3, w, h, IX, IY, F);
+      if (FO) FO = this.interpolate(index3, w, h, IX, IY, FO);
+    } else if (this.data == null && index3) offset2 = index3.fi * n;
     const canvas = document2.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
@@ -28028,15 +26403,13 @@ var Raster = class extends AbstractRaster {
         }
         ({ r, g, b } = rgb(fi));
       }
-      if (FO)
-        a4 = FO[i + offset2] * 255;
+      if (FO) a4 = FO[i + offset2] * 255;
       imageData[j + 0] = r;
       imageData[j + 1] = g;
       imageData[j + 2] = b;
       imageData[j + 3] = a4;
     }
-    if (this.blur > 0)
-      blurImage(image2, this.blur);
+    if (this.blur > 0) blurImage(image2, this.blur);
     context2d.putImageData(image2, 0, 0);
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, scales).call(
       (g2) => g2.append("image").attr("transform", `translate(${x12},${y12}) scale(${Math.sign(x22 - x12)},${Math.sign(y22 - y12)})`).attr("width", Math.abs(dx)).attr("height", Math.abs(dy)).attr("preserveAspectRatio", "none").call(applyAttr, "image-rendering", this.imageRendering).call(applyDirectStyles, this).attr("xlink:href", canvas.toDataURL())
@@ -28044,13 +26417,11 @@ var Raster = class extends AbstractRaster {
   }
 };
 function maybeTuples(k2, data, options) {
-  if (arguments.length < 3)
-    options = data, data = null;
+  if (arguments.length < 3) options = data, data = null;
   let { x: x4, y: y4, [k2]: z, ...rest } = options;
   if (x4 === void 0 && y4 === void 0 && isTuples(data)) {
     x4 = first, y4 = second2;
-    if (z === void 0)
-      z = third;
+    if (z === void 0) z = third;
   }
   return [data, { ...rest, x: x4, y: y4, [k2]: z }];
 }
@@ -28072,26 +26443,19 @@ function renderBounds({ x1: x12, y1: y12, x2: x22, y2: y22 }, dimensions, { proj
 }
 function rasterBounds({ x1: x12, y1: y12, x2: x22, y2: y22 }, scales, dimensions, context) {
   const channels = {};
-  if (x12)
-    channels.x1 = x12;
-  if (y12)
-    channels.y1 = y12;
-  if (x22)
-    channels.x2 = x22;
-  if (y22)
-    channels.y2 = y22;
+  if (x12) channels.x1 = x12;
+  if (y12) channels.y1 = y12;
+  if (x22) channels.x2 = x22;
+  if (y22) channels.y2 = y22;
   return renderBounds(valueObject(channels, scales), dimensions, context);
 }
 function sampler(name, options = {}) {
   const { [name]: value } = options;
-  if (typeof value !== "function")
-    throw new Error(`invalid ${name}: not a function`);
+  if (typeof value !== "function") throw new Error(`invalid ${name}: not a function`);
   return initializer({ ...options, [name]: void 0 }, function(data, facets, channels, scales, dimensions, context) {
     const { x: x4, y: y4 } = scales;
-    if (!x4)
-      throw new Error("missing scale: x");
-    if (!y4)
-      throw new Error("missing scale: y");
+    if (!x4) throw new Error("missing scale: x");
+    if (!y4) throw new Error("missing scale: y");
     const [x12, y12, x22, y22] = rasterBounds(channels, scales, dimensions, context);
     const dx = x22 - x12;
     const dy = y22 - y12;
@@ -28112,10 +26476,8 @@ function sampler(name, options = {}) {
   });
 }
 function maybeInterpolate(interpolate) {
-  if (typeof interpolate === "function")
-    return interpolate;
-  if (interpolate == null)
-    return interpolateNone;
+  if (typeof interpolate === "function") return interpolate;
+  if (interpolate == null) return interpolateNone;
   switch (`${interpolate}`.toLowerCase()) {
     case "none":
       return interpolateNone;
@@ -28131,8 +26493,7 @@ function maybeInterpolate(interpolate) {
 function interpolateNone(index3, width, height, X3, Y3, V) {
   const W = new Array(width * height);
   for (const i of index3) {
-    if (X3[i] < 0 || X3[i] >= width || Y3[i] < 0 || Y3[i] >= height)
-      continue;
+    if (X3[i] < 0 || X3[i] >= width || Y3[i] < 0 || Y3[i] >= height) continue;
     W[Math.floor(Y3[i]) * width + Math.floor(X3[i])] = V[i];
   }
   return W;
@@ -28162,27 +26523,22 @@ function interpolatorBarycentric({ random = lcg(42) } = {}) {
       const y12 = Math.min(Ay, By, Cy);
       const y22 = Math.max(Ay, By, Cy);
       const z = (By - Cy) * (Ax - Cx) + (Ay - Cy) * (Cx - Bx);
-      if (!z)
-        continue;
+      if (!z) continue;
       const va = V[index3[ta]];
       const vb = V[index3[tb]];
       const vc = V[index3[tc]];
       for (let x4 = Math.floor(x12); x4 < x22; ++x4) {
         for (let y4 = Math.floor(y12); y4 < y22; ++y4) {
-          if (x4 < 0 || x4 >= width || y4 < 0 || y4 >= height)
-            continue;
+          if (x4 < 0 || x4 >= width || y4 < 0 || y4 >= height) continue;
           const xp = x4 + 0.5;
           const yp = y4 + 0.5;
           const s2 = Math.sign(z);
           const ga = (By - Cy) * (xp - Cx) + (yp - Cy) * (Cx - Bx);
-          if (ga * s2 < 0)
-            continue;
+          if (ga * s2 < 0) continue;
           const gb = (Cy - Ay) * (xp - Cx) + (yp - Cy) * (Ax - Cx);
-          if (gb * s2 < 0)
-            continue;
+          if (gb * s2 < 0) continue;
           const gc = z - (ga + gb);
-          if (gc * s2 < 0)
-            continue;
+          if (gc * s2 < 0) continue;
           const i2 = x4 + width * y4;
           W[i2] = mix(va, ga / z, vb, gb / z, vc, gc / z, x4, y4);
           S[i2] = 1;
@@ -28268,8 +26624,7 @@ function interpolateNearest(index3, width, height, X3, Y3, V) {
     ix = iy;
     for (let x4 = 0.5; x4 < width; ++x4, ++k2) {
       ix = delaunay.find(x4, y4, ix);
-      if (x4 === 0.5)
-        iy = ix;
+      if (x4 === 0.5) iy = ix;
       W[k2] = V[index3[ix]];
     }
   }
@@ -28290,8 +26645,7 @@ function interpolatorRandomWalk({ random = lcg(42), minDistance = 0.5, maxSteps 
         let cx = x4;
         let cy = y4;
         iw = ix = delaunay.find(cx, cy, ix);
-        if (x4 === 0.5)
-          iy = ix;
+        if (x4 === 0.5) iy = ix;
         let distance;
         let step = 0;
         while ((distance = Math.hypot(X3[index3[iw]] - cx, Y3[index3[iw]] - cy)) > minDistance && step < maxSteps) {
@@ -28326,8 +26680,7 @@ function denseX(x12, x22, width) {
       const X3 = new Float64Array(n);
       const kx2 = (x22 - x12) / width;
       const x06 = x12 + kx2 / 2;
-      for (let i = 0; i < n; ++i)
-        X3[i] = i % width * kx2 + x06;
+      for (let i = 0; i < n; ++i) X3[i] = i % width * kx2 + x06;
       return X3;
     }
   };
@@ -28339,8 +26692,7 @@ function denseY(y12, y22, width, height) {
       const Y3 = new Float64Array(n);
       const ky2 = (y22 - y12) / height;
       const y06 = y12 + ky2 / 2;
-      for (let i = 0; i < n; ++i)
-        Y3[i] = Math.floor(i / width) % height * ky2 + y06;
+      for (let i = 0; i < n; ++i) Y3[i] = Math.floor(i / width) % height * ky2 + y06;
       return Y3;
     }
   };
@@ -28360,8 +26712,7 @@ var Contour = class extends AbstractRaster {
     if (value === void 0) {
       for (const key in channels) {
         if (channels[key].value != null) {
-          if (value !== void 0)
-            throw new Error("ambiguous contour value");
+          if (value !== void 0) throw new Error("ambiguous contour value");
           value = options[key];
           options[key] = "value";
         }
@@ -28376,24 +26727,20 @@ var Contour = class extends AbstractRaster {
       }
     }
     if (data == null) {
-      if (value == null)
-        throw new Error("missing contour value");
+      if (value == null) throw new Error("missing contour value");
       options = sampler("value", { value, ...options });
       value = null;
     } else {
       let { interpolate } = options;
-      if (value === void 0)
-        value = identity6;
-      if (interpolate === void 0)
-        options.interpolate = "nearest";
+      if (value === void 0) value = identity6;
+      if (interpolate === void 0) options.interpolate = "nearest";
     }
     super(data, { value: { value, optional: true } }, contourGeometry(options), defaults16);
     const contourChannels = { geometry: { value: identity6 } };
     for (const key in this.channels) {
       const channel = this.channels[key];
       const { scale: scale3 } = channel;
-      if (scale3 === "x" || scale3 === "y" || key === "value")
-        continue;
+      if (scale3 === "x" || scale3 === "y" || key === "value") continue;
       contourChannels[key] = channel;
       delete this.channels[key];
     }
@@ -28435,17 +26782,13 @@ function contourGeometry({ thresholds, interval: interval2, ...options }) {
     } else if (facets) {
       const n = w * h;
       const m3 = facets.length;
-      for (let i = 0; i < m3; ++i)
-        VV.push(V.slice(i * n, i * n + n));
+      for (let i = 0; i < m3; ++i) VV.push(V.slice(i * n, i * n + n));
     } else {
       VV.push(V);
     }
-    if (this.blur > 0)
-      for (const V2 of VV)
-        blur2({ data: V2, width: w, height: h }, this.blur);
+    if (this.blur > 0) for (const V2 of VV) blur2({ data: V2, width: w, height: h }, this.blur);
     const T = maybeTicks(thresholds, V, ...finiteExtent(VV));
-    if (T === null)
-      throw new Error(`unsupported thresholds: ${thresholds}`);
+    if (T === null) throw new Error(`unsupported thresholds: ${thresholds}`);
     const { contour: contour2 } = contours_default().size([w, h]).smooth(this.smooth);
     const contourData = [];
     const contourFacets = [];
@@ -28470,17 +26813,12 @@ function contourGeometry({ thresholds, interval: interval2, ...options }) {
   });
 }
 function maybeTicks(thresholds, V, min4, max5) {
-  if (typeof thresholds?.range === "function")
-    return thresholds.range(thresholds.floor(min4), max5);
-  if (typeof thresholds === "function")
-    thresholds = thresholds(V, min4, max5);
-  if (typeof thresholds !== "number")
-    return arrayify2(thresholds);
+  if (typeof thresholds?.range === "function") return thresholds.range(thresholds.floor(min4), max5);
+  if (typeof thresholds === "function") thresholds = thresholds(V, min4, max5);
+  if (typeof thresholds !== "number") return arrayify2(thresholds);
   const tz = ticks(...nice(min4, max5, thresholds), thresholds);
-  while (tz[tz.length - 1] >= max5)
-    tz.pop();
-  while (tz[1] < min4)
-    tz.shift();
+  while (tz[tz.length - 1] >= max5) tz.pop();
+  while (tz[1] < min4) tz.shift();
   return tz;
 }
 function contour() {
@@ -28507,16 +26845,11 @@ function crosshairK(pointer2, data, options = {}) {
   const { x: x4, y: y4, maxRadius } = options;
   const p = pointer2({ px: x4, py: y4, maxRadius });
   const M2 = [];
-  if (x4 != null)
-    M2.push(ruleX(data, ruleOptions("x", { ...p, inset: -6 }, options)));
-  if (y4 != null)
-    M2.push(ruleY(data, ruleOptions("y", { ...p, inset: -6 }, options)));
-  if (x4 != null)
-    M2.push(text(data, textOptions("x", { ...p, dy: 9, frameAnchor: "bottom", lineAnchor: "top" }, options)));
-  if (y4 != null)
-    M2.push(text(data, textOptions("y", { ...p, dx: -9, frameAnchor: "left", textAnchor: "end" }, options)));
-  for (const m3 of M2)
-    m3.ariaLabel = `crosshair ${m3.ariaLabel}`;
+  if (x4 != null) M2.push(ruleX(data, ruleOptions("x", { ...p, inset: -6 }, options)));
+  if (y4 != null) M2.push(ruleY(data, ruleOptions("y", { ...p, inset: -6 }, options)));
+  if (x4 != null) M2.push(text(data, textOptions("x", { ...p, dy: 9, frameAnchor: "bottom", lineAnchor: "top" }, options)));
+  if (y4 != null) M2.push(text(data, textOptions("y", { ...p, dx: -9, frameAnchor: "left", textAnchor: "end" }, options)));
+  for (const m3 of M2) m3.ariaLabel = `crosshair ${m3.ariaLabel}`;
   return marks(...M2);
 }
 function markOptions(k2, { channels: pointerChannels, ...pointerOptions }, { facet, facetAnchor, fx, fy, [k2]: p, channels, transform: transform2, initializer: initializer2 }) {
@@ -28533,8 +26866,7 @@ function markOptions(k2, { channels: pointerChannels, ...pointerOptions }, { fac
   };
 }
 function pxpy(k2, i) {
-  if (i == null)
-    return i;
+  if (i == null) return i;
   return function(data, facets, { x: x12, y: y12, px, py, ...c1 }, ...args) {
     const { channels: { x: x4, y: y4, ...c6 } = {}, ...rest } = i.call(this, data, facets, { ...c1, x: px, y: py }, ...args);
     return {
@@ -28646,8 +26978,7 @@ var DelaunayLink = class extends Mark {
       let i = -1;
       const newIndex = [];
       const newChannels = {};
-      for (const k2 in channels)
-        newChannels[k2] = [];
+      for (const k2 in channels) newChannels[k2] = [];
       const X13 = [];
       const X23 = [];
       const Y13 = [];
@@ -28660,14 +26991,12 @@ var DelaunayLink = class extends Mark {
         Y13[i] = yi(ti);
         X23[i] = xi(tj);
         Y23[i] = yi(tj);
-        for (const k2 in channels)
-          newChannels[k2].push(channels[k2][tj]);
+        for (const k2 in channels) newChannels[k2].push(channels[k2][tj]);
       }
       const { halfedges, hull: hull2, triangles } = Delaunay.from(index4, xi, yi);
       for (let i2 = 0; i2 < halfedges.length; ++i2) {
         const j = halfedges[i2];
-        if (j > i2)
-          link4(triangles[i2], triangles[j]);
+        if (j > i2) link4(triangles[i2], triangles[j]);
       }
       for (let i2 = 0; i2 < hull2.length; ++i2) {
         link4(hull2[i2], hull2[(i2 + 1) % hull2.length]);
@@ -28753,10 +27082,8 @@ var Voronoi2 = class extends Mark {
         const xi = X3 ? (i) => X3[i] : constant2(cx);
         const yi = Y3 ? (i) => Y3[i] : constant2(cy);
         for (let I of facets) {
-          if (X3)
-            I = I.filter((i) => defined(xi(i)));
-          if (Y3)
-            I = I.filter((i) => defined(yi(i)));
+          if (X3) I = I.filter((i) => defined(xi(i)));
+          if (Y3) I = I.filter((i) => defined(yi(i)));
           for (const [, J] of maybeGroup(I, Z)) {
             const delaunay = Delaunay.from(J, xi, yi);
             const voronoi2 = voronoiof(delaunay, dimensions);
@@ -28833,10 +27160,8 @@ var Density = class extends Mark {
       densityInitializer({ ...options, fill, stroke }, fillDensity, strokeDensity),
       defaults17
     );
-    if (fillDensity)
-      this.fill = void 0;
-    if (strokeDensity)
-      this.stroke = void 0;
+    if (fillDensity) this.fill = void 0;
+    if (strokeDensity) this.stroke = void 0;
     this.z = z;
   }
   filter(index3) {
@@ -28888,8 +27213,7 @@ function densityInitializer(options, fillDensity, strokeDensity) {
       for (const facetContours of facetsContours) {
         for (const [, contour2] of facetContours) {
           const max5 = contour2.max;
-          if (max5 > maxValue)
-            maxValue = max5;
+          if (max5 > maxValue) maxValue = max5;
         }
       }
       T = Float64Array.from({ length: thresholds - 1 }, (_, i) => maxValue * k2 * (i + 1) / thresholds);
@@ -28903,20 +27227,16 @@ function densityInitializer(options, fillDensity, strokeDensity) {
         for (const t of T) {
           newFacet.push(contours.length);
           contours.push(contour2(t / k2));
-          if (FD)
-            FD.push(t);
-          if (SD)
-            SD.push(t);
+          if (FD) FD.push(t);
+          if (SD) SD.push(t);
           for (const key in newChannels) {
             newChannels[key].value.push(channels[key].value[index3[0]]);
           }
         }
       }
     }
-    if (FD)
-      FD.push(0);
-    if (SD)
-      SD.push(0);
+    if (FD) FD.push(0);
+    if (SD) SD.push(0);
     return {
       data,
       facets: newFacets,
@@ -28966,10 +27286,8 @@ function differenceK(k2, data, {
   [x12, x22] = memoTuple(x4, x12, x22);
   [y12, y22] = memoTuple(y4, y12, y22);
   if (x12 === x22 && y12 === y22) {
-    if (k2 === "y")
-      y12 = memo(0);
-    else
-      x12 = memo(0);
+    if (k2 === "y") y12 = memo(0);
+    else x12 = memo(0);
   }
   ({ tip: tip2 } = withTip({ tip: tip2 }, k2 === "y" ? "x" : "y"));
   return marks(
@@ -29069,21 +27387,17 @@ function centroid({ geometry = identity6, ...options } = {}) {
     // Suppress defaults for x and y since they will be computed by the initializer.
     // Propagate the (memoized) geometry channel in case it’s still needed.
     { ...options, x: null, y: null, geometry: { transform: getG } },
-    (data, facets, channels, scales, dimensions, { projection: projection3 }) => {
+    (data, facets, channels, scales, dimensions, context) => {
       const G = getG(data);
       const n = G.length;
       const X3 = new Float64Array(n);
       const Y3 = new Float64Array(n);
-      const path2 = path_default(projection3);
-      for (let i = 0; i < n; ++i)
-        [X3[i], Y3[i]] = path2.centroid(G[i]);
+      const { centroid: centroid2 } = context.path();
+      for (let i = 0; i < n; ++i) [X3[i], Y3[i]] = centroid2(G[i]);
       return {
         data,
         facets,
-        channels: {
-          x: { value: X3, scale: projection3 == null ? "x" : null, source: null },
-          y: { value: Y3, scale: projection3 == null ? "y" : null, source: null }
-        }
+        channels: { x: { value: X3, scale: null, source: null }, y: { value: Y3, scale: null, source: null } }
       };
     }
   );
@@ -29127,36 +27441,21 @@ var Geo = class extends Mark {
   }
   render(index3, scales, channels, dimensions, context) {
     const { geometry: G, r: R } = channels;
-    const path2 = path_default(context.projection ?? scaleProjection2(scales));
+    const path2 = context.path();
     const { r } = this;
-    if (negative(r))
-      index3 = [];
-    else if (r !== void 0)
-      path2.pointRadius(r);
+    if (negative(r)) index3 = [];
+    else if (r !== void 0) path2.pointRadius(r);
     return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(applyTransform, this, scales).call((g) => {
       g.selectAll().data(index3).enter().append("path").call(applyDirectStyles, this).attr("d", R ? (i) => path2.pointRadius(R[i])(G[i]) : (i) => path2(G[i])).call(applyChannelStyles, this, channels);
     }).node();
   }
 };
-function scaleProjection2({ x: X3, y: Y3 }) {
-  if (X3 || Y3) {
-    X3 ??= (x4) => x4;
-    Y3 ??= (y4) => y4;
-    return transform_default({
-      point(x4, y4) {
-        this.stream.point(X3(x4), Y3(y4));
-      }
-    });
-  }
-}
 function geo(data, options = {}) {
-  if (options.tip && options.x === void 0 && options.y === void 0)
-    options = centroid(options);
-  else if (options.geometry === void 0)
-    options = { ...options, geometry: identity6 };
+  if (options.tip && options.x === void 0 && options.y === void 0) options = centroid(options);
+  else if (options.geometry === void 0) options = { ...options, geometry: identity6 };
   return new Geo(data, options);
 }
-function sphere({ strokeWidth = 1.5, ...options } = {}) {
+function sphere2({ strokeWidth = 1.5, ...options } = {}) {
   return geo({ type: "Sphere" }, { strokeWidth, ...options });
 }
 function graticule2({ strokeOpacity = 0.1, ...options } = {}) {
@@ -29170,18 +27469,13 @@ function hexbin(outputs = { fill: "count" }, { binWidth, ...options } = {}) {
   const { z } = options;
   binWidth = binWidth === void 0 ? 20 : number5(binWidth);
   outputs = maybeGroupOutputs(outputs, options);
-  if (hasOutput(outputs, "fill"))
-    options.channels = { ...options.channels, fill: { value: [] } };
-  if (options.symbol === void 0)
-    options.symbol = "hexagon";
-  if (options.r === void 0 && !hasOutput(outputs, "r"))
-    options.r = binWidth / 2;
+  if (hasOutput(outputs, "fill")) options.channels = { ...options.channels, fill: { value: [] } };
+  if (options.symbol === void 0) options.symbol = "hexagon";
+  if (options.r === void 0 && !hasOutput(outputs, "r")) options.r = binWidth / 2;
   return initializer(options, (data, facets, channels, scales, _, context) => {
     let { x: X3, y: Y3, z: Z, fill: F, stroke: S, symbol: Q } = channels;
-    if (X3 === void 0)
-      throw new Error("missing channel: x");
-    if (Y3 === void 0)
-      throw new Error("missing channel: y");
+    if (X3 === void 0) throw new Error("missing channel: x");
+    if (Y3 === void 0) throw new Error("missing channel: y");
     ({ x: X3, y: Y3 } = applyPosition(channels, scales, context));
     Z = Z ? Z.value : valueof(data, z);
     F = F?.value;
@@ -29196,27 +27490,20 @@ function hexbin(outputs = { fill: "count" }, { binWidth, ...options } = {}) {
     const BX = [];
     const BY = [];
     let i = -1;
-    for (const o of outputs)
-      o.initialize(data);
+    for (const o of outputs) o.initialize(data);
     for (const facet of facets) {
       const binFacet = [];
-      for (const o of outputs)
-        o.scope("facet", facet);
+      for (const o of outputs) o.scope("facet", facet);
       for (const [f, I] of maybeGroup(facet, G)) {
         for (const { index: b, extent: extent3 } of hbin(data, I, X3, Y3, binWidth)) {
           binFacet.push(++i);
           BX.push(extent3.x);
           BY.push(extent3.y);
-          if (Z)
-            GZ.push(G === Z ? f : Z[b[0]]);
-          if (F)
-            GF.push(G === F ? f : F[b[0]]);
-          if (S)
-            GS.push(G === S ? f : S[b[0]]);
-          if (Q)
-            GQ.push(G === Q ? f : Q[b[0]]);
-          for (const o of outputs)
-            o.reduce(b, extent3);
+          if (Z) GZ.push(G === Z ? f : Z[b[0]]);
+          if (F) GF.push(G === F ? f : F[b[0]]);
+          if (S) GS.push(G === S ? f : S[b[0]]);
+          if (Q) GQ.push(G === Q ? f : Q[b[0]]);
+          for (const o of outputs) o.reduce(b, extent3);
         }
       }
       binFacets.push(binFacet);
@@ -29250,13 +27537,11 @@ function hbin(data, I, X3, Y3, dx) {
   const bins = /* @__PURE__ */ new Map();
   for (const i of I) {
     let px = X3[i], py = Y3[i];
-    if (isNaN(px) || isNaN(py))
-      continue;
+    if (isNaN(px) || isNaN(py)) continue;
     let pj = Math.round(py = (py - oy) / dy), pi7 = Math.round(px = (px - ox) / dx - (pj & 1) / 2), py1 = py - pj;
     if (Math.abs(py1) * 3 > 1) {
       let px1 = px - pi7, pi22 = pi7 + (px < pi7 ? -1 : 1) / 2, pj2 = pj + (py < pj ? -1 : 1), px2 = px - pi22, py2 = py - pj2;
-      if (px1 * px1 + py1 * py1 > px2 * px2 + py2 * py2)
-        pi7 = pi22 + (pj & 1 ? 1 : -1) / 2, pj = pj2;
+      if (px1 * px1 + py1 * py1 > px2 * px2 + py2 * py2) pi7 = pi22 + (pj & 1 ? 1 : -1) / 2, pj = pj2;
     }
     const key = `${pi7},${pj}`;
     let bin3 = bins.get(key);
@@ -29319,14 +27604,10 @@ function maybePathChannel(value) {
 var Image2 = class extends Mark {
   constructor(data, options = {}) {
     let { x: x4, y: y4, r, width, height, rotate, src, preserveAspectRatio, crossOrigin, frameAnchor, imageRendering } = options;
-    if (r == null)
-      r = void 0;
-    if (r === void 0 && width === void 0 && height === void 0)
-      width = height = 16;
-    else if (width === void 0 && height !== void 0)
-      width = height;
-    else if (height === void 0 && width !== void 0)
-      height = width;
+    if (r == null) r = void 0;
+    if (r === void 0 && width === void 0 && height === void 0) width = height = 16;
+    else if (width === void 0 && height !== void 0) width = height;
+    else if (height === void 0 && width !== void 0) height = width;
     const [vs, cs] = maybePathChannel(src);
     const [vr, cr] = maybeNumberChannel(r);
     const [vw, cw] = maybeNumberChannel(width, cr !== void 0 ? cr * 2 : void 0);
@@ -29370,8 +27651,7 @@ function position2(X3, W, R, x4, w, r) {
   return W && X3 ? (i) => X3[i] - W[i] / 2 : W ? (i) => x4 - W[i] / 2 : X3 && w !== void 0 ? (i) => X3[i] - w / 2 : w !== void 0 ? x4 - w / 2 : R && X3 ? (i) => X3[i] - R[i] : R ? (i) => x4 - R[i] : X3 ? (i) => X3[i] - r : x4 - r;
 }
 function image(data, { x: x4, y: y4, ...options } = {}) {
-  if (options.frameAnchor === void 0)
-    [x4, y4] = maybeTuple(x4, y4);
+  if (options.frameAnchor === void 0) [x4, y4] = maybeTuple(x4, y4);
   return new Image2(data, { ...options, x: x4, y: y4 });
 }
 
@@ -29382,16 +27662,13 @@ function ibetainv(p, a4, b) {
   var b12 = b - 1;
   var j = 0;
   var lna, lnb, pp, t, u4, err, x4, al, h, w, afac;
-  if (p <= 0)
-    return 0;
-  if (p >= 1)
-    return 1;
+  if (p <= 0) return 0;
+  if (p >= 1) return 1;
   if (a4 >= 1 && b >= 1) {
     pp = p < 0.5 ? p : 1 - p;
     t = Math.sqrt(-2 * Math.log(pp));
     x4 = (2.30753 + t * 0.27061) / (1 + t * (0.99229 + t * 0.04481)) - t;
-    if (p < 0.5)
-      x4 = -x4;
+    if (p < 0.5) x4 = -x4;
     al = (x4 * x4 - 3) / 6;
     h = 2 / (1 / (2 * a4 - 1) + 1 / (2 * b - 1));
     w = x4 * Math.sqrt(al + h) / h - (1 / (2 * b - 1) - 1 / (2 * a4 - 1)) * (al + 5 / 6 - 2 / (3 * h));
@@ -29402,32 +27679,25 @@ function ibetainv(p, a4, b) {
     t = Math.exp(a4 * lna) / a4;
     u4 = Math.exp(b * lnb) / b;
     w = t + u4;
-    if (p < t / w)
-      x4 = Math.pow(a4 * w * p, 1 / a4);
-    else
-      x4 = 1 - Math.pow(b * w * (1 - p), 1 / b);
+    if (p < t / w) x4 = Math.pow(a4 * w * p, 1 / a4);
+    else x4 = 1 - Math.pow(b * w * (1 - p), 1 / b);
   }
   afac = -gammaln(a4) - gammaln(b) + gammaln(a4 + b);
   for (; j < 10; j++) {
-    if (x4 === 0 || x4 === 1)
-      return x4;
+    if (x4 === 0 || x4 === 1) return x4;
     err = ibeta(x4, a4, b) - p;
     t = Math.exp(a1 * Math.log(x4) + b12 * Math.log(1 - x4) + afac);
     u4 = err / t;
     x4 -= t = u4 / (1 - 0.5 * Math.min(1, u4 * (a1 / x4 - b12 / (1 - x4))));
-    if (x4 <= 0)
-      x4 = 0.5 * (x4 + t);
-    if (x4 >= 1)
-      x4 = 0.5 * (x4 + t + 1);
-    if (Math.abs(t) < EPS * x4 && j > 0)
-      break;
+    if (x4 <= 0) x4 = 0.5 * (x4 + t);
+    if (x4 >= 1) x4 = 0.5 * (x4 + t + 1);
+    if (Math.abs(t) < EPS * x4 && j > 0) break;
   }
   return x4;
 }
 function ibeta(x4, a4, b) {
   var bt = x4 === 0 || x4 === 1 ? 0 : Math.exp(gammaln(a4 + b) - gammaln(a4) - gammaln(b) + a4 * Math.log(x4) + b * Math.log(1 - x4));
-  if (x4 < 0 || x4 > 1)
-    return false;
+  if (x4 < 0 || x4 > 1) return false;
   if (x4 < (a4 + 1) / (a4 + b + 2))
     return bt * betacf(x4, a4, b) / a4;
   return 1 - bt * betacf(1 - x4, b, a4) / b;
@@ -29441,33 +27711,27 @@ function betacf(x4, a4, b) {
   var c6 = 1;
   var d = 1 - qab * x4 / qap;
   var m22, aa2, del, h;
-  if (Math.abs(d) < fpmin)
-    d = fpmin;
+  if (Math.abs(d) < fpmin) d = fpmin;
   d = 1 / d;
   h = d;
   for (; m3 <= 100; m3++) {
     m22 = 2 * m3;
     aa2 = m3 * (b - m3) * x4 / ((qam + m22) * (a4 + m22));
     d = 1 + aa2 * d;
-    if (Math.abs(d) < fpmin)
-      d = fpmin;
+    if (Math.abs(d) < fpmin) d = fpmin;
     c6 = 1 + aa2 / c6;
-    if (Math.abs(c6) < fpmin)
-      c6 = fpmin;
+    if (Math.abs(c6) < fpmin) c6 = fpmin;
     d = 1 / d;
     h *= d * c6;
     aa2 = -(a4 + m3) * (qab + m3) * x4 / ((a4 + m22) * (qap + m22));
     d = 1 + aa2 * d;
-    if (Math.abs(d) < fpmin)
-      d = fpmin;
+    if (Math.abs(d) < fpmin) d = fpmin;
     c6 = 1 + aa2 / c6;
-    if (Math.abs(c6) < fpmin)
-      c6 = fpmin;
+    if (Math.abs(c6) < fpmin) c6 = fpmin;
     d = 1 / d;
     del = d * c6;
     h *= del;
-    if (Math.abs(del - 1) < 3e-7)
-      break;
+    if (Math.abs(del - 1) < 3e-7) break;
   }
   return h;
 }
@@ -29485,8 +27749,7 @@ function gammaln(x4) {
   var xx, y4, tmp2;
   tmp2 = (y4 = xx = x4) + 5.5;
   tmp2 -= (xx + 0.5) * Math.log(tmp2);
-  for (; j < 6; j++)
-    ser += cof[j] / ++y4;
+  for (; j < 6; j++) ser += cof[j] / ++y4;
   return Math.log(2.506628274631 * ser / xx) - tmp2;
 }
 function qt(p, dof) {
@@ -29522,10 +27785,8 @@ var LinearRegression = class extends Mark {
     this.z = z;
     this.ci = +ci;
     this.precision = +precision;
-    if (!(0 <= this.ci && this.ci < 1))
-      throw new Error(`invalid ci; not in [0, 1): ${ci}`);
-    if (!(this.precision > 0))
-      throw new Error(`invalid precision: ${precision}`);
+    if (!(0 <= this.ci && this.ci < 1)) throw new Error(`invalid ci; not in [0, 1): ${ci}`);
+    if (!(this.precision > 0)) throw new Error(`invalid precision: ${precision}`);
   }
   render(index3, scales, channels, dimensions, context) {
     const { x: X3, y: Y3, z: Z } = channels;
@@ -29635,10 +27896,8 @@ function treeNode({
 } = {}) {
   treeAnchor = maybeTreeAnchor(treeAnchor);
   treeSort = maybeTreeSort(treeSort);
-  if (treeFilter != null)
-    treeFilter = maybeNodeValue(treeFilter);
-  if (frameAnchor === void 0)
-    frameAnchor = treeAnchor.frameAnchor;
+  if (treeFilter != null) treeFilter = maybeNodeValue(treeFilter);
+  if (frameAnchor === void 0) frameAnchor = treeAnchor.frameAnchor;
   const normalize4 = normalizer(delimiter);
   const outputs = treeOutputs(options, maybeNodeValue);
   const [X3, setX] = column();
@@ -29657,26 +27916,20 @@ function treeNode({
       const rootof = stratify_default().path((i) => P[i]);
       const setData = isArray(data) ? (node) => node.data = data[node.data] : (node) => node.data = data.get(node.data);
       const layout = treeLayout();
-      if (layout.nodeSize)
-        layout.nodeSize([1, 1]);
-      if (layout.separation && treeSeparation !== void 0)
-        layout.separation(treeSeparation ?? one2);
-      for (const o of outputs)
-        o[output_values] = o[output_setValues]([]);
+      if (layout.nodeSize) layout.nodeSize([1, 1]);
+      if (layout.separation && treeSeparation !== void 0) layout.separation(treeSeparation ?? one2);
+      for (const o of outputs) o[output_values] = o[output_setValues]([]);
       for (const facet of facets) {
         const treeFacet = [];
         const root3 = rootof(facet.filter((i) => P[i] != null)).each(setData);
-        if (treeSort != null)
-          root3.sort(treeSort);
+        if (treeSort != null) root3.sort(treeSort);
         layout(root3);
         for (const node of root3.descendants()) {
-          if (treeFilter != null && !treeFilter(node))
-            continue;
+          if (treeFilter != null && !treeFilter(node)) continue;
           treeFacet.push(++treeIndex);
           treeData[treeIndex] = node.data;
           treeAnchor.position(node, treeIndex, X4, Y4);
-          for (const o of outputs)
-            o[output_values][treeIndex] = o[output_evaluate](node);
+          for (const o of outputs) o[output_values][treeIndex] = o[output_evaluate](node);
         }
         treeFacets.push(treeFacet);
       }
@@ -29703,8 +27956,7 @@ function treeLink({
 } = {}) {
   treeAnchor = maybeTreeAnchor(treeAnchor);
   treeSort = maybeTreeSort(treeSort);
-  if (treeFilter != null)
-    treeFilter = maybeLinkValue(treeFilter);
+  if (treeFilter != null) treeFilter = maybeLinkValue(treeFilter);
   options = { curve, stroke, strokeWidth, strokeOpacity, ...options };
   const normalize4 = normalizer(delimiter);
   const outputs = treeOutputs(options, maybeLinkValue);
@@ -29728,27 +27980,21 @@ function treeLink({
       const treeFacets = [];
       const rootof = stratify_default().path((i) => P[i]);
       const layout = treeLayout();
-      if (layout.nodeSize)
-        layout.nodeSize([1, 1]);
-      if (layout.separation && treeSeparation !== void 0)
-        layout.separation(treeSeparation ?? one2);
-      for (const o of outputs)
-        o[output_values] = o[output_setValues]([]);
+      if (layout.nodeSize) layout.nodeSize([1, 1]);
+      if (layout.separation && treeSeparation !== void 0) layout.separation(treeSeparation ?? one2);
+      for (const o of outputs) o[output_values] = o[output_setValues]([]);
       for (const facet of facets) {
         const treeFacet = [];
         const root3 = rootof(facet.filter((i) => P[i] != null)).each((node) => node.data = data[node.data]);
-        if (treeSort != null)
-          root3.sort(treeSort);
+        if (treeSort != null) root3.sort(treeSort);
         layout(root3);
         for (const { source, target } of root3.links()) {
-          if (treeFilter != null && !treeFilter(target, source))
-            continue;
+          if (treeFilter != null && !treeFilter(target, source)) continue;
           treeFacet.push(++treeIndex);
           treeData[treeIndex] = target.data;
           treeAnchor.position(source, treeIndex, X14, Y14);
           treeAnchor.position(target, treeIndex, X24, Y24);
-          for (const o of outputs)
-            o[output_values][treeIndex] = o[output_evaluate](target, source);
+          for (const o of outputs) o[output_values][treeIndex] = o[output_evaluate](target, source);
         }
         treeFacets.push(treeFacet);
       }
@@ -29793,18 +28039,15 @@ function nodeData(field2) {
 }
 function normalizer(delimiter = "/") {
   delimiter = `${delimiter}`;
-  if (delimiter === "/")
-    return (P) => P;
-  if (delimiter.length !== 1)
-    throw new Error("delimiter must be exactly one character");
+  if (delimiter === "/") return (P) => P;
+  if (delimiter.length !== 1) throw new Error("delimiter must be exactly one character");
   const delimiterCode = delimiter.charCodeAt(0);
   return (P) => P.map((p) => slashDelimiter(p, delimiterCode));
 }
 var CODE_BACKSLASH = 92;
 var CODE_SLASH = 47;
 function slashDelimiter(input, delimiterCode) {
-  if (delimiterCode === CODE_BACKSLASH)
-    throw new Error("delimiter cannot be backslash");
+  if (delimiterCode === CODE_BACKSLASH) throw new Error("delimiter cannot be backslash");
   let afterBackslash = false;
   for (let i = 0, n = input.length; i < n; ++i) {
     switch (input.charCodeAt(i)) {
@@ -29842,6 +28085,7 @@ function slashUnescape(input) {
           afterBackslash = true;
           continue;
         }
+      // eslint-disable-next-line no-fallthrough
       case CODE_SLASH:
         if (afterBackslash) {
           input = input.slice(0, i - 1) + input.slice(i), --i, --n;
@@ -29859,11 +28103,9 @@ function isLinkValue(option) {
   return isObject(option) && typeof option.link === "function";
 }
 function maybeNodeValue(value) {
-  if (isNodeValue(value))
-    return value.node;
+  if (isNodeValue(value)) return value.node;
   value = `${value}`.trim().toLowerCase();
-  if (!value.startsWith("node:"))
-    return;
+  if (!value.startsWith("node:")) return;
   switch (value) {
     case "node:name":
       return nodeName;
@@ -29881,13 +28123,10 @@ function maybeNodeValue(value) {
   throw new Error(`invalid node value: ${value}`);
 }
 function maybeLinkValue(value) {
-  if (isNodeValue(value))
-    return value.node;
-  if (isLinkValue(value))
-    return value.link;
+  if (isNodeValue(value)) return value.node;
+  if (isLinkValue(value)) return value.link;
   value = `${value}`.trim().toLowerCase();
-  if (!value.startsWith("node:") && !value.startsWith("parent:"))
-    return;
+  if (!value.startsWith("node:") && !value.startsWith("parent:")) return;
   switch (value) {
     case "parent:name":
       return parentValue(nodeName);
@@ -29935,18 +28174,14 @@ function parentValue(evaluate) {
 }
 function nameof(path2) {
   let i = path2.length;
-  while (--i > 0)
-    if (slash2(path2, i))
-      break;
+  while (--i > 0) if (slash2(path2, i)) break;
   return slashUnescape(path2.slice(i + 1));
 }
 function slash2(path2, i) {
   if (path2[i] === "/") {
     let k2 = 0;
-    while (i > 0 && path2[--i] === "\\")
-      ++k2;
-    if ((k2 & 1) === 0)
-      return true;
+    while (i > 0 && path2[--i] === "\\") ++k2;
+    if ((k2 & 1) === 0) return true;
   }
   return false;
 }
@@ -29991,10 +28226,8 @@ function tree(data, {
   tip: tip2,
   ...options
 } = {}) {
-  if (dx === void 0)
-    dx = maybeTreeAnchor(options.treeAnchor).dx;
-  if (textAnchor !== void 0)
-    throw new Error("textAnchor is not a configurable tree option");
+  if (dx === void 0) dx = maybeTreeAnchor(options.treeAnchor).dx;
+  if (textAnchor !== void 0) throw new Error("textAnchor is not a configurable tree option");
   textLayout = keyword(textLayout, "textLayout", ["mirrored", "normal"]);
   function treeText(textOptions2) {
     return text(
@@ -30046,8 +28279,8 @@ var waffleDefaults = {
   ariaLabel: "waffle"
 };
 var WaffleX = class extends BarX {
-  constructor(data, { unit: unit3 = 1, gap = 1, round: round2, render: render2, multiple, ...options } = {}) {
-    super(data, { ...options, render: composeRender(render2, waffleRender("x")) }, waffleDefaults);
+  constructor(data, { unit: unit3 = 1, gap = 1, round: round2, multiple, ...options } = {}) {
+    super(data, wafflePolygon("x", options), waffleDefaults);
     this.unit = Math.max(0, unit3);
     this.gap = +gap;
     this.round = maybeRound2(round2);
@@ -30055,88 +28288,150 @@ var WaffleX = class extends BarX {
   }
 };
 var WaffleY = class extends BarY {
-  constructor(data, { unit: unit3 = 1, gap = 1, round: round2, render: render2, multiple, ...options } = {}) {
-    super(data, { ...options, render: composeRender(render2, waffleRender("y")) }, waffleDefaults);
+  constructor(data, { unit: unit3 = 1, gap = 1, round: round2, multiple, ...options } = {}) {
+    super(data, wafflePolygon("y", options), waffleDefaults);
     this.unit = Math.max(0, unit3);
     this.gap = +gap;
     this.round = maybeRound2(round2);
     this.multiple = maybeMultiple(multiple);
   }
 };
-function waffleRender(y4) {
-  return function(index3, scales, values2, dimensions, context) {
-    const { unit: unit3, gap, rx, ry, round: round2 } = this;
-    const { document: document2 } = context;
-    const Y13 = values2.channels[`${y4}1`].value;
-    const Y23 = values2.channels[`${y4}2`].value;
-    const barwidth = this[y4 === "y" ? "_width" : "_height"](scales, values2, dimensions);
-    const barx = this[y4 === "y" ? "_x" : "_y"](scales, values2, dimensions);
+function wafflePolygon(y4, options) {
+  const x4 = y4 === "y" ? "x" : "y";
+  const y12 = `${y4}1`;
+  const y22 = `${y4}2`;
+  return initializer(waffleRender(options), function(data, facets, channels, scales, dimensions) {
+    const { round: round2, unit: unit3 } = this;
+    const Y13 = channels[y12].value;
+    const Y23 = channels[y22].value;
+    const xy = valueObject({ ...x4 in channels && { [x4]: channels[x4] }, [y12]: channels[y12], [y22]: channels[y22] }, scales);
+    const barwidth = this[y4 === "y" ? "_width" : "_height"](scales, xy, dimensions);
+    const barx = this[y4 === "y" ? "_x" : "_y"](scales, xy, dimensions);
     const scale3 = unit3 * scaleof(scales.scales[y4]);
     const { multiple = Math.max(1, Math.floor(Math.sqrt(barwidth / scale3))) } = this;
     const cx = Math.min(barwidth / multiple, scale3 * multiple);
     const cy = scale3 * multiple;
-    const transform2 = y4 === "y" ? ([x4, y5]) => [x4 * cx, -y5 * cy] : ([x4, y5]) => [y5 * cy, x4 * cx];
     const tx = (barwidth - multiple * cx) / 2;
     const x06 = typeof barx === "function" ? (i) => barx(i) + tx : barx + tx;
     const y06 = scales[y4](0);
-    const patternId = getPatternId();
-    const basePattern = document2.createElementNS(namespaces_default.svg, "pattern");
-    basePattern.setAttribute("width", y4 === "y" ? cx : cy);
-    basePattern.setAttribute("height", y4 === "y" ? cy : cx);
-    basePattern.setAttribute("patternUnits", "userSpaceOnUse");
-    const basePatternRect = basePattern.appendChild(document2.createElementNS(namespaces_default.svg, "rect"));
-    basePatternRect.setAttribute("x", gap / 2);
-    basePatternRect.setAttribute("y", gap / 2);
-    basePatternRect.setAttribute("width", (y4 === "y" ? cx : cy) - gap);
-    basePatternRect.setAttribute("height", (y4 === "y" ? cy : cx) - gap);
-    if (rx != null)
-      basePatternRect.setAttribute("rx", rx);
-    if (ry != null)
-      basePatternRect.setAttribute("ry", ry);
-    return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(this._transform, this, scales).call(
-      (g) => g.selectAll().data(index3).enter().append(() => basePattern.cloneNode(true)).attr("id", (i) => `${patternId}-${i}`).select("rect").call(applyDirectStyles, this).call(applyChannelStyles, this, values2)
-    ).call(
-      (g) => g.selectAll().data(index3).enter().append("path").attr("transform", y4 === "y" ? template`translate(${x06},${y06})` : template`translate(${y06},${x06})`).attr(
-        "d",
-        (i) => `M${wafflePoints(round2(Y13[i] / unit3), round2(Y23[i] / unit3), multiple).map(transform2).join("L")}Z`
-      ).attr("fill", (i) => `url(#${patternId}-${i})`).attr("stroke", this.stroke == null ? null : (i) => `url(#${patternId}-${i})`)
-    ).node();
+    const transform2 = y4 === "y" ? ([x5, y5]) => [x5 * cx, -y5 * cy] : ([x5, y5]) => [y5 * cy, x5 * cx];
+    const mx = typeof x06 === "function" ? (i) => x06(i) - barwidth / 2 : () => x06;
+    const [ix, iy] = y4 === "y" ? [0, 1] : [1, 0];
+    const n = Y23.length;
+    const P = new Array(n);
+    const X3 = new Float64Array(n);
+    const Y3 = new Float64Array(n);
+    for (let i = 0; i < n; ++i) {
+      P[i] = wafflePoints(round2(Y13[i] / unit3), round2(Y23[i] / unit3), multiple).map(transform2);
+      const c6 = P[i].pop();
+      X3[i] = c6[ix] + mx(i);
+      Y3[i] = c6[iy] + y06;
+    }
+    return {
+      channels: {
+        polygon: { value: P, source: null, filter: null },
+        [`c${x4}`]: { value: [cx, x06], source: null, filter: null },
+        [`c${y4}`]: { value: [cy, y06], source: null, filter: null },
+        [x4]: { value: X3, scale: null, source: null },
+        [y12]: { value: Y3, scale: null, source: channels[y12] },
+        [y22]: { value: Y3, scale: null, source: channels[y22] }
+      }
+    };
+  });
+}
+function waffleRender({ render: render2, ...options }) {
+  return {
+    ...options,
+    render: composeRender(render2, function(index3, scales, values2, dimensions, context) {
+      const { gap, rx, ry } = this;
+      const { channels, ariaLabel, href, title, ...visualValues } = values2;
+      const { document: document2 } = context;
+      const polygon = channels.polygon.value;
+      const [cx, x06] = channels.cx.value;
+      const [cy, y06] = channels.cy.value;
+      const patternId = getPatternId();
+      const basePattern = document2.createElementNS(namespaces_default.svg, "pattern");
+      basePattern.setAttribute("width", cx);
+      basePattern.setAttribute("height", cy);
+      basePattern.setAttribute("patternUnits", "userSpaceOnUse");
+      const basePatternRect = basePattern.appendChild(document2.createElementNS(namespaces_default.svg, "rect"));
+      basePatternRect.setAttribute("x", gap / 2);
+      basePatternRect.setAttribute("y", gap / 2);
+      basePatternRect.setAttribute("width", cx - gap);
+      basePatternRect.setAttribute("height", cy - gap);
+      if (rx != null) basePatternRect.setAttribute("rx", rx);
+      if (ry != null) basePatternRect.setAttribute("ry", ry);
+      return create2("svg:g", context).call(applyIndirectStyles, this, dimensions, context).call(this._transform, this, scales).call(
+        (g) => g.selectAll().data(index3).enter().append(() => basePattern.cloneNode(true)).attr("id", (i) => `${patternId}-${i}`).select("rect").call(applyDirectStyles, this).call(applyChannelStyles, this, visualValues)
+      ).call(
+        (g) => g.selectAll().data(index3).enter().append("path").attr("transform", template`translate(${x06},${y06})`).attr("d", (i) => `M${polygon[i].join("L")}Z`).attr("fill", (i) => `url(#${patternId}-${i})`).attr("stroke", this.stroke == null ? null : "none").call(applyChannelStyles, this, { ariaLabel, href, title })
+      ).node();
+    })
   };
 }
 function wafflePoints(i1, i2, columns) {
-  if (i1 < 0 || i2 < 0) {
-    const k2 = Math.ceil(-Math.min(i1, i2) / columns);
-    return wafflePoints(i1 + k2 * columns, i2 + k2 * columns, columns).map(([x4, y4]) => [x4, y4 - k2]);
+  if (i2 < i1) return wafflePoints(i2, i1, columns);
+  if (i1 < 0) return wafflePointsOffset(i1, i2, columns, Math.ceil(-Math.min(i1, i2) / columns));
+  const x1f = Math.floor(i1 % columns);
+  const x1c = Math.ceil(i1 % columns);
+  const x2f = Math.floor(i2 % columns);
+  const x2c = Math.ceil(i2 % columns);
+  const y1f = Math.floor(i1 / columns);
+  const y1c = Math.ceil(i1 / columns);
+  const y2f = Math.floor(i2 / columns);
+  const y2c = Math.ceil(i2 / columns);
+  const points = [];
+  if (y2c > y1c) points.push([0, y1c]);
+  points.push([x1f, y1c], [x1f, y1f + i1 % 1], [x1c, y1f + i1 % 1]);
+  if (!(i1 % columns > columns - 1)) {
+    points.push([x1c, y1f]);
+    if (y2f > y1f) points.push([columns, y1f]);
   }
-  if (i2 < i1) {
-    return wafflePoints(i2, i1, columns);
+  if (y2f > y1f) points.push([columns, y2f]);
+  points.push([x2c, y2f], [x2c, y2f + i2 % 1], [x2f, y2f + i2 % 1]);
+  if (!(i2 % columns < 1)) {
+    points.push([x2f, y2c]);
+    if (y2c > y1c) points.push([0, y2c]);
   }
-  return [
-    [0, Math.ceil(i1 / columns)],
-    [Math.floor(i1 % columns), Math.ceil(i1 / columns)],
-    [Math.floor(i1 % columns), Math.floor(i1 / columns) + i1 % 1],
-    [Math.ceil(i1 % columns), Math.floor(i1 / columns) + i1 % 1],
-    ...i1 % columns > columns - 1 ? [] : [
-      [Math.ceil(i1 % columns), Math.floor(i1 / columns)],
-      [columns, Math.floor(i1 / columns)]
-    ],
-    [columns, Math.floor(i2 / columns)],
-    [Math.ceil(i2 % columns), Math.floor(i2 / columns)],
-    [Math.ceil(i2 % columns), Math.floor(i2 / columns) + i2 % 1],
-    [Math.floor(i2 % columns), Math.floor(i2 / columns) + i2 % 1],
-    ...i2 % columns < 1 ? [] : [
-      [Math.floor(i2 % columns), Math.ceil(i2 / columns)],
-      [0, Math.ceil(i2 / columns)]
+  points.push(waffleCentroid(i1, i2, columns));
+  return points;
+}
+function wafflePointsOffset(i1, i2, columns, k2) {
+  return wafflePoints(i1 + k2 * columns, i2 + k2 * columns, columns).map(([x4, y4]) => [x4, y4 - k2]);
+}
+function waffleCentroid(i1, i2, columns) {
+  const r = Math.floor(i2 / columns) - Math.floor(i1 / columns);
+  return r === 0 ? (
+    // Single row
+    waffleRowCentroid(i1, i2, columns)
+  ) : r === 1 ? (
+    // Two incomplete rows; use the midpoint of their overlap if any, otherwise the larger row
+    Math.floor(i2 % columns) > Math.ceil(i1 % columns) ? [(Math.floor(i2 % columns) + Math.ceil(i1 % columns)) / 2, Math.floor(i2 / columns)] : i2 % columns > columns - i1 % columns ? waffleRowCentroid(i2 - i2 % columns, i2, columns) : waffleRowCentroid(i1, columns * Math.ceil(i1 / columns), columns)
+  ) : (
+    // At least one full row; take the midpoint of all the rows that include the middle
+    [columns / 2, (Math.round(i1 / columns) + Math.round(i2 / columns)) / 2]
+  );
+}
+function waffleRowCentroid(i1, i2, columns) {
+  const c6 = Math.floor(i2) - Math.floor(i1);
+  return c6 === 0 ? (
+    // Single cell
+    [Math.floor(i1 % columns) + 0.5, Math.floor(i1 / columns) + (i1 + i2) / 2 % 1]
+  ) : c6 === 1 ? (
+    // Two incomplete cells; use the overlap if large enough, otherwise use the largest
+    i2 % 1 - i1 % 1 > 0.5 ? [Math.ceil(i1 % columns), Math.floor(i2 / columns) + (i1 % 1 + i2 % 1) / 2] : i2 % 1 > 1 - i1 % 1 ? [Math.floor(i2 % columns) + 0.5, Math.floor(i2 / columns) + i2 % 1 / 2] : [Math.floor(i1 % columns) + 0.5, Math.floor(i1 / columns) + (1 + i1 % 1) / 2]
+  ) : (
+    // At least one full cell; take the midpoint
+    [
+      Math.ceil(i1 % columns) + Math.ceil(Math.floor(i2) - Math.ceil(i1)) / 2,
+      Math.floor(i1 / columns) + (i2 >= 1 + i1 ? 0.5 : (i1 + i2) / 2 % 1)
     ]
-  ];
+  );
 }
 function maybeRound2(round2) {
-  if (round2 === void 0 || round2 === false)
-    return Number;
-  if (round2 === true)
-    return Math.round;
-  if (typeof round2 !== "function")
-    throw new Error(`invalid round: ${round2}`);
+  if (round2 === void 0 || round2 === false) return Number;
+  if (round2 === true) return Math.round;
+  if (typeof round2 !== "function") throw new Error(`invalid round: ${round2}`);
   return round2;
 }
 function maybeMultiple(multiple) {
@@ -30149,15 +28444,16 @@ function spread(domain) {
   const [min4, max5] = extent(domain);
   return max5 - min4;
 }
-function waffleX(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, y: indexOf, x2: identity6 };
-  return new WaffleX(data, maybeStackX(maybeIntervalX(maybeIdentityX(options))));
+function waffleX(data, { tip: tip2, ...options } = {}) {
+  if (!hasXY(options)) options = { ...options, y: indexOf, x2: identity6 };
+  return new WaffleX(data, { tip: waffleTip(tip2), ...maybeStackX(maybeIntervalX(maybeIdentityX(options))) });
 }
-function waffleY(data, options = {}) {
-  if (!hasXY(options))
-    options = { ...options, x: indexOf, y2: identity6 };
-  return new WaffleY(data, maybeStackY(maybeIntervalY(maybeIdentityY(options))));
+function waffleY(data, { tip: tip2, ...options } = {}) {
+  if (!hasXY(options)) options = { ...options, x: indexOf, y2: identity6 };
+  return new WaffleY(data, { tip: waffleTip(tip2), ...maybeStackY(maybeIntervalY(maybeIdentityY(options))) });
+}
+function waffleTip(tip2) {
+  return tip2 === true ? { maxRadius: Infinity } : isObject(tip2) && tip2.maxRadius === void 0 ? { ...tip2, maxRadius: Infinity } : void 0;
 }
 
 // node_modules/@observablehq/plot/src/transforms/dodge.js
@@ -30172,8 +28468,7 @@ function maybeAnchor4(anchor) {
   return typeof anchor === "string" ? { anchor } : anchor;
 }
 function dodgeX(dodgeOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [dodgeOptions, options] = mergeOptions3(dodgeOptions);
+  if (arguments.length === 1) [dodgeOptions, options] = mergeOptions3(dodgeOptions);
   let { anchor = "left", padding = 1, r = options.r } = maybeAnchor4(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "left":
@@ -30191,8 +28486,7 @@ function dodgeX(dodgeOptions = {}, options = {}) {
   return dodge("x", "y", anchor, number5(padding), r, options);
 }
 function dodgeY(dodgeOptions = {}, options = {}) {
-  if (arguments.length === 1)
-    [dodgeOptions, options] = mergeOptions3(dodgeOptions);
+  if (arguments.length === 1) [dodgeOptions, options] = mergeOptions3(dodgeOptions);
   let { anchor = "bottom", padding = 1, r = options.r } = maybeAnchor4(dodgeOptions);
   switch (`${anchor}`.toLowerCase()) {
     case "top":
@@ -30218,19 +28512,15 @@ function dodge(y4, x4, anchor, padding, r, options) {
   if (r != null && typeof r !== "number") {
     let { channels, sort: sort3, reverse: reverse3 } = options;
     channels = maybeNamed(channels);
-    if (channels?.r === void 0)
-      options = { ...options, channels: { ...channels, r: { value: r, scale: "r" } } };
-    if (sort3 === void 0 && reverse3 === void 0)
-      options.sort = { channel: "-r" };
+    if (channels?.r === void 0) options = { ...options, channels: { ...channels, r: { value: r, scale: "r" } } };
+    if (sort3 === void 0 && reverse3 === void 0) options.sort = { channel: "-r" };
   }
   return initializer(options, function(data, facets, channels, scales, dimensions, context) {
     let { [x4]: X3, r: R } = channels;
-    if (!channels[x4])
-      throw new Error(`missing channel: ${x4}`);
+    if (!channels[x4]) throw new Error(`missing channel: ${x4}`);
     ({ [x4]: X3 } = applyPosition(channels, scales, context));
     const cr = R ? void 0 : r !== void 0 ? number5(r) : this.r !== void 0 ? this.r : 3;
-    if (R)
-      R = valueof(R.value, scales[R.scale] || identity6, Float64Array);
+    if (R) R = valueof(R.value, scales[R.scale] || identity6, Float64Array);
     let [ky2, ty] = anchor(dimensions);
     const compare = ky2 ? compareAscending : compareSymmetric;
     const Y3 = new Float64Array(X3.length);
@@ -30254,23 +28544,20 @@ function dodge(y4, x4, anchor, padding, r, options) {
           intervals[k2++] = yj + dy;
         });
         let candidates = intervals.slice(0, k2);
-        if (ky2)
-          candidates = candidates.filter((y5) => y5 >= 0);
-        out:
-          for (const y5 of candidates.sort(compare)) {
-            for (let j = 0; j < k2; j += 2) {
-              if (intervals[j] + 1e-6 < y5 && y5 < intervals[j + 1] - 1e-6) {
-                continue out;
-              }
+        if (ky2) candidates = candidates.filter((y5) => y5 >= 0);
+        out: for (const y5 of candidates.sort(compare)) {
+          for (let j = 0; j < k2; j += 2) {
+            if (intervals[j] + 1e-6 < y5 && y5 < intervals[j + 1] - 1e-6) {
+              continue out;
             }
-            Y3[i] = y5 + y06;
-            break;
           }
+          Y3[i] = y5 + y06;
+          break;
+        }
         tree2.insert([l, h, i]);
       }
     }
-    if (!ky2)
-      ky2 = 1;
+    if (!ky2) ky2 = 1;
     for (const I of facets) {
       for (const i of I) {
         Y3[i] = Y3[i] * ky2 + ty;
@@ -30297,22 +28584,17 @@ function compareAscending(a4, b) {
 
 // node_modules/@observablehq/plot/src/transforms/normalize.js
 function normalizeX(basis2, options) {
-  if (arguments.length === 1)
-    ({ basis: basis2, ...options } = basis2);
+  if (arguments.length === 1) ({ basis: basis2, ...options } = basis2);
   return mapX(normalize3(basis2), options);
 }
 function normalizeY(basis2, options) {
-  if (arguments.length === 1)
-    ({ basis: basis2, ...options } = basis2);
+  if (arguments.length === 1) ({ basis: basis2, ...options } = basis2);
   return mapY(normalize3(basis2), options);
 }
 function normalize3(basis2) {
-  if (basis2 === void 0)
-    return normalizeFirst;
-  if (typeof basis2 === "function")
-    return normalizeBasis(taker(basis2));
-  if (/^p\d{2}$/i.test(basis2))
-    return normalizeAccessor(percentile(basis2));
+  if (basis2 === void 0) return normalizeFirst;
+  if (typeof basis2 === "function") return normalizeBasis(taker(basis2));
+  if (/^p\d{2}$/i.test(basis2)) return normalizeAccessor(percentile(basis2));
   switch (`${basis2}`.toLowerCase()) {
     case "deviation":
       return normalizeDeviation;
@@ -30360,15 +28642,13 @@ var normalizeExtent = {
 var normalizeFirst = normalizeBasis((I, S) => {
   for (let i = 0; i < I.length; ++i) {
     const s2 = S[I[i]];
-    if (defined(s2))
-      return s2;
+    if (defined(s2)) return s2;
   }
 });
 var normalizeLast = normalizeBasis((I, S) => {
   for (let i = I.length - 1; i >= 0; --i) {
     const s2 = S[I[i]];
-    if (defined(s2))
-      return s2;
+    if (defined(s2)) return s2;
   }
 });
 var normalizeDeviation = {
@@ -30442,17 +28722,14 @@ function select(selector, options = {}) {
   }
   let key, value;
   for (key in selector) {
-    if (value !== void 0)
-      throw new Error("ambiguous selector; multiple inputs");
+    if (value !== void 0) throw new Error("ambiguous selector; multiple inputs");
     value = maybeSelector(selector[key]);
   }
-  if (value === void 0)
-    throw new Error(`invalid selector: ${selector}`);
+  if (value === void 0) throw new Error(`invalid selector: ${selector}`);
   return selectChannel(key, value, options);
 }
 function maybeSelector(selector) {
-  if (typeof selector === "function")
-    return selector;
+  if (typeof selector === "function") return selector;
   switch (`${selector}`.toLowerCase()) {
     case "min":
       return selectorMin;
@@ -30493,8 +28770,7 @@ function* selectorMax(I, X3) {
 }
 function selectChannel(v2, selector, options) {
   if (v2 != null) {
-    if (options[v2] == null)
-      throw new Error(`missing channel: ${v2}`);
+    if (options[v2] == null) throw new Error(`missing channel: ${v2}`);
     v2 = options[v2];
   }
   const z = maybeZ(options);
@@ -30523,9 +28799,8 @@ Mark.prototype.plot = function({ marks: marks2 = [], ...options } = {}) {
 // node_modules/apache-arrow/node_modules/tslib/tslib.es6.mjs
 function __rest(s2, e) {
   var t = {};
-  for (var p in s2)
-    if (Object.prototype.hasOwnProperty.call(s2, p) && e.indexOf(p) < 0)
-      t[p] = s2[p];
+  for (var p in s2) if (Object.prototype.hasOwnProperty.call(s2, p) && e.indexOf(p) < 0)
+    t[p] = s2[p];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function")
     for (var i = 0, p = Object.getOwnPropertySymbols(s2); i < p.length; i++) {
       if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s2, p[i]))
@@ -30562,24 +28837,20 @@ function __awaiter(thisArg, _arguments, P, generator) {
 }
 function __values(o) {
   var s2 = typeof Symbol === "function" && Symbol.iterator, m3 = s2 && o[s2], i = 0;
-  if (m3)
-    return m3.call(o);
-  if (o && typeof o.length === "number")
-    return {
-      next: function() {
-        if (o && i >= o.length)
-          o = void 0;
-        return { value: o && o[i++], done: !o };
-      }
-    };
+  if (m3) return m3.call(o);
+  if (o && typeof o.length === "number") return {
+    next: function() {
+      if (o && i >= o.length) o = void 0;
+      return { value: o && o[i++], done: !o };
+    }
+  };
   throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 function __await(v2) {
   return this instanceof __await ? (this.v = v2, this) : new __await(v2);
 }
 function __asyncGenerator(thisArg, _arguments, generator) {
-  if (!Symbol.asyncIterator)
-    throw new TypeError("Symbol.asyncIterator is not defined.");
+  if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
   var g = generator.apply(thisArg, _arguments || []), i, q = [];
   return i = {}, verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function() {
     return this;
@@ -30596,8 +28867,7 @@ function __asyncGenerator(thisArg, _arguments, generator) {
           q.push([n, v2, a4, b]) > 1 || resume(n, v2);
         });
       };
-      if (f)
-        i[n] = f(i[n]);
+      if (f) i[n] = f(i[n]);
     }
   }
   function resume(n, v2) {
@@ -30617,8 +28887,7 @@ function __asyncGenerator(thisArg, _arguments, generator) {
     resume("throw", value);
   }
   function settle(f, v2) {
-    if (f(v2), q.shift(), q.length)
-      resume(q[0][0], q[0][1]);
+    if (f(v2), q.shift(), q.length) resume(q[0][0], q[0][1]);
   }
 }
 function __asyncDelegator(o) {
@@ -30635,8 +28904,7 @@ function __asyncDelegator(o) {
   }
 }
 function __asyncValues(o) {
-  if (!Symbol.asyncIterator)
-    throw new TypeError("Symbol.asyncIterator is not defined.");
+  if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
   var m3 = o[Symbol.asyncIterator], i;
   return m3 ? m3.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
     return this;
@@ -30966,7 +29234,7 @@ function* fromIterable(source) {
     [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
     return buffer;
   }
-  ({ cmd, size } = (yield (() => null)()) || { cmd: "read", size: 0 });
+  ({ cmd, size } = (yield /* @__PURE__ */ (() => null)()) || { cmd: "read", size: 0 });
   const it2 = toUint8ArrayIterator(source)[Symbol.iterator]();
   try {
     do {
@@ -31000,7 +29268,7 @@ function fromAsyncIterable(source) {
       [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
       return buffer;
     }
-    ({ cmd, size } = (yield yield __await((() => null)())) || { cmd: "read", size: 0 });
+    ({ cmd, size } = (yield yield __await(/* @__PURE__ */ (() => null)())) || { cmd: "read", size: 0 });
     const it2 = toUint8ArrayAsyncIterator(source)[Symbol.asyncIterator]();
     try {
       do {
@@ -31035,7 +29303,7 @@ function fromDOMStream(source) {
       [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
       return buffer;
     }
-    ({ cmd, size } = (yield yield __await((() => null)())) || { cmd: "read", size: 0 });
+    ({ cmd, size } = (yield yield __await(/* @__PURE__ */ (() => null)())) || { cmd: "read", size: 0 });
     const it2 = new AdaptiveByteReader(source);
     try {
       do {
@@ -31114,7 +29382,7 @@ function fromNodeStream(stream) {
       [buffer, buffers, bufferLength] = joinUint8Arrays(buffers, size);
       return buffer;
     }
-    ({ cmd, size } = (yield yield __await((() => null)())) || { cmd: "read", size: 0 });
+    ({ cmd, size } = (yield yield __await(/* @__PURE__ */ (() => null)())) || { cmd: "read", size: 0 });
     if (stream["isTTY"]) {
       yield yield __await(new Uint8Array(0));
       return yield __await(null);
@@ -31241,7 +29509,7 @@ var Encoding;
 })(Encoding || (Encoding = {}));
 
 // node_modules/flatbuffers/mjs/byte-buffer.js
-var ByteBuffer = class {
+var ByteBuffer = class _ByteBuffer {
   /**
    * Create a new ByteBuffer with a given array of bytes (`Uint8Array`)
    */
@@ -31254,7 +29522,7 @@ var ByteBuffer = class {
    * Create and allocate a new ByteBuffer with a given size.
    */
   static allocate(byte_size) {
-    return new ByteBuffer(new Uint8Array(byte_size));
+    return new _ByteBuffer(new Uint8Array(byte_size));
   }
   clear() {
     this.position_ = 0;
@@ -31485,7 +29753,7 @@ var ByteBuffer = class {
 };
 
 // node_modules/flatbuffers/mjs/builder.js
-var Builder = class {
+var Builder = class _Builder {
   /**
    * Create a FlatBufferBuilder.
    */
@@ -31563,7 +29831,7 @@ var Builder = class {
     const align_size = ~(this.bb.capacity() - this.space + additional_bytes) + 1 & size - 1;
     while (this.space < align_size + size + additional_bytes) {
       const old_buf_size = this.bb.capacity();
-      this.bb = Builder.growByteBuffer(this.bb);
+      this.bb = _Builder.growByteBuffer(this.bb);
       this.space += this.bb.capacity() - old_buf_size;
     }
     this.pad(align_size);
@@ -31795,19 +30063,18 @@ var Builder = class {
     this.addInt16(len);
     let existing_vtable = 0;
     const vt1 = this.space;
-    outer_loop:
-      for (i = 0; i < this.vtables.length; i++) {
-        const vt2 = this.bb.capacity() - this.vtables[i];
-        if (len == this.bb.readInt16(vt2)) {
-          for (let j = SIZEOF_SHORT; j < len; j += SIZEOF_SHORT) {
-            if (this.bb.readInt16(vt1 + j) != this.bb.readInt16(vt2 + j)) {
-              continue outer_loop;
-            }
+    outer_loop: for (i = 0; i < this.vtables.length; i++) {
+      const vt2 = this.bb.capacity() - this.vtables[i];
+      if (len == this.bb.readInt16(vt2)) {
+        for (let j = SIZEOF_SHORT; j < len; j += SIZEOF_SHORT) {
+          if (this.bb.readInt16(vt1 + j) != this.bb.readInt16(vt2 + j)) {
+            continue outer_loop;
           }
-          existing_vtable = this.vtables[i];
-          break;
         }
+        existing_vtable = this.vtables[i];
+        break;
       }
+    }
     if (existing_vtable) {
       this.space = this.bb.capacity() - vtableloc;
       this.bb.writeInt32(this.space, existing_vtable - vtableloc);
@@ -31996,7 +30263,7 @@ var CompressionType;
 })(CompressionType || (CompressionType = {}));
 
 // node_modules/apache-arrow/fb/body-compression.mjs
-var BodyCompression = class {
+var BodyCompression = class _BodyCompression {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32007,11 +30274,11 @@ var BodyCompression = class {
     return this;
   }
   static getRootAsBodyCompression(bb2, obj) {
-    return (obj || new BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsBodyCompression(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _BodyCompression()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Compressor library.
@@ -32042,10 +30309,10 @@ var BodyCompression = class {
     return offset2;
   }
   static createBodyCompression(builder, codec, method) {
-    BodyCompression.startBodyCompression(builder);
-    BodyCompression.addCodec(builder, codec);
-    BodyCompression.addMethod(builder, method);
-    return BodyCompression.endBodyCompression(builder);
+    _BodyCompression.startBodyCompression(builder);
+    _BodyCompression.addCodec(builder, codec);
+    _BodyCompression.addMethod(builder, method);
+    return _BodyCompression.endBodyCompression(builder);
   }
 };
 
@@ -32126,7 +30393,7 @@ var FieldNode = class {
 };
 
 // node_modules/apache-arrow/fb/record-batch.mjs
-var RecordBatch = class {
+var RecordBatch = class _RecordBatch {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32137,11 +30404,11 @@ var RecordBatch = class {
     return this;
   }
   static getRootAsRecordBatch(bb2, obj) {
-    return (obj || new RecordBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _RecordBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsRecordBatch(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new RecordBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _RecordBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * number of records / rows. The arrays in the batch should all have this
@@ -32213,7 +30480,7 @@ var RecordBatch = class {
 };
 
 // node_modules/apache-arrow/fb/dictionary-batch.mjs
-var DictionaryBatch = class {
+var DictionaryBatch = class _DictionaryBatch {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32224,11 +30491,11 @@ var DictionaryBatch = class {
     return this;
   }
   static getRootAsDictionaryBatch(bb2, obj) {
-    return (obj || new DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDictionaryBatch(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _DictionaryBatch()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   id() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32279,7 +30546,7 @@ var DictionaryKind;
 })(DictionaryKind || (DictionaryKind = {}));
 
 // node_modules/apache-arrow/fb/int.mjs
-var Int = class {
+var Int = class _Int {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32290,11 +30557,11 @@ var Int = class {
     return this;
   }
   static getRootAsInt(bb2, obj) {
-    return (obj || new Int()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Int()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsInt(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Int()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Int()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   bitWidth() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32318,15 +30585,15 @@ var Int = class {
     return offset2;
   }
   static createInt(builder, bitWidth, isSigned) {
-    Int.startInt(builder);
-    Int.addBitWidth(builder, bitWidth);
-    Int.addIsSigned(builder, isSigned);
-    return Int.endInt(builder);
+    _Int.startInt(builder);
+    _Int.addBitWidth(builder, bitWidth);
+    _Int.addIsSigned(builder, isSigned);
+    return _Int.endInt(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/dictionary-encoding.mjs
-var DictionaryEncoding = class {
+var DictionaryEncoding = class _DictionaryEncoding {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32337,11 +30604,11 @@ var DictionaryEncoding = class {
     return this;
   }
   static getRootAsDictionaryEncoding(bb2, obj) {
-    return (obj || new DictionaryEncoding()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _DictionaryEncoding()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDictionaryEncoding(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new DictionaryEncoding()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _DictionaryEncoding()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * The known dictionary id in the application where this data is used. In
@@ -32399,7 +30666,7 @@ var DictionaryEncoding = class {
 };
 
 // node_modules/apache-arrow/fb/key-value.mjs
-var KeyValue = class {
+var KeyValue = class _KeyValue {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32410,11 +30677,11 @@ var KeyValue = class {
     return this;
   }
   static getRootAsKeyValue(bb2, obj) {
-    return (obj || new KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsKeyValue(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _KeyValue()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   key(optionalEncoding) {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32438,15 +30705,15 @@ var KeyValue = class {
     return offset2;
   }
   static createKeyValue(builder, keyOffset, valueOffset) {
-    KeyValue.startKeyValue(builder);
-    KeyValue.addKey(builder, keyOffset);
-    KeyValue.addValue(builder, valueOffset);
-    return KeyValue.endKeyValue(builder);
+    _KeyValue.startKeyValue(builder);
+    _KeyValue.addKey(builder, keyOffset);
+    _KeyValue.addValue(builder, valueOffset);
+    return _KeyValue.endKeyValue(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/binary.mjs
-var Binary = class {
+var Binary = class _Binary {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32457,11 +30724,11 @@ var Binary = class {
     return this;
   }
   static getRootAsBinary(bb2, obj) {
-    return (obj || new Binary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Binary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsBinary(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Binary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Binary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startBinary(builder) {
     builder.startObject(0);
@@ -32471,13 +30738,13 @@ var Binary = class {
     return offset2;
   }
   static createBinary(builder) {
-    Binary.startBinary(builder);
-    return Binary.endBinary(builder);
+    _Binary.startBinary(builder);
+    return _Binary.endBinary(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/bool.mjs
-var Bool = class {
+var Bool = class _Bool {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32488,11 +30755,11 @@ var Bool = class {
     return this;
   }
   static getRootAsBool(bb2, obj) {
-    return (obj || new Bool()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Bool()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsBool(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Bool()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Bool()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startBool(builder) {
     builder.startObject(0);
@@ -32502,13 +30769,13 @@ var Bool = class {
     return offset2;
   }
   static createBool(builder) {
-    Bool.startBool(builder);
-    return Bool.endBool(builder);
+    _Bool.startBool(builder);
+    return _Bool.endBool(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/date.mjs
-var Date2 = class {
+var Date2 = class _Date {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32519,11 +30786,11 @@ var Date2 = class {
     return this;
   }
   static getRootAsDate(bb2, obj) {
-    return (obj || new Date2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Date()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDate(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Date2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Date()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32540,14 +30807,14 @@ var Date2 = class {
     return offset2;
   }
   static createDate(builder, unit3) {
-    Date2.startDate(builder);
-    Date2.addUnit(builder, unit3);
-    return Date2.endDate(builder);
+    _Date.startDate(builder);
+    _Date.addUnit(builder, unit3);
+    return _Date.endDate(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/decimal.mjs
-var Decimal = class {
+var Decimal = class _Decimal {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32558,11 +30825,11 @@ var Decimal = class {
     return this;
   }
   static getRootAsDecimal(bb2, obj) {
-    return (obj || new Decimal()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Decimal()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDecimal(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Decimal()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Decimal()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Total number of decimal digits
@@ -32603,16 +30870,16 @@ var Decimal = class {
     return offset2;
   }
   static createDecimal(builder, precision, scale3, bitWidth) {
-    Decimal.startDecimal(builder);
-    Decimal.addPrecision(builder, precision);
-    Decimal.addScale(builder, scale3);
-    Decimal.addBitWidth(builder, bitWidth);
-    return Decimal.endDecimal(builder);
+    _Decimal.startDecimal(builder);
+    _Decimal.addPrecision(builder, precision);
+    _Decimal.addScale(builder, scale3);
+    _Decimal.addBitWidth(builder, bitWidth);
+    return _Decimal.endDecimal(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/duration.mjs
-var Duration = class {
+var Duration = class _Duration {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32623,11 +30890,11 @@ var Duration = class {
     return this;
   }
   static getRootAsDuration(bb2, obj) {
-    return (obj || new Duration()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Duration()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsDuration(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Duration()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Duration()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32644,14 +30911,14 @@ var Duration = class {
     return offset2;
   }
   static createDuration(builder, unit3) {
-    Duration.startDuration(builder);
-    Duration.addUnit(builder, unit3);
-    return Duration.endDuration(builder);
+    _Duration.startDuration(builder);
+    _Duration.addUnit(builder, unit3);
+    return _Duration.endDuration(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/fixed-size-binary.mjs
-var FixedSizeBinary = class {
+var FixedSizeBinary = class _FixedSizeBinary {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32662,11 +30929,11 @@ var FixedSizeBinary = class {
     return this;
   }
   static getRootAsFixedSizeBinary(bb2, obj) {
-    return (obj || new FixedSizeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _FixedSizeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsFixedSizeBinary(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new FixedSizeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _FixedSizeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Number of bytes per value
@@ -32686,14 +30953,14 @@ var FixedSizeBinary = class {
     return offset2;
   }
   static createFixedSizeBinary(builder, byteWidth) {
-    FixedSizeBinary.startFixedSizeBinary(builder);
-    FixedSizeBinary.addByteWidth(builder, byteWidth);
-    return FixedSizeBinary.endFixedSizeBinary(builder);
+    _FixedSizeBinary.startFixedSizeBinary(builder);
+    _FixedSizeBinary.addByteWidth(builder, byteWidth);
+    return _FixedSizeBinary.endFixedSizeBinary(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/fixed-size-list.mjs
-var FixedSizeList = class {
+var FixedSizeList = class _FixedSizeList {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32704,11 +30971,11 @@ var FixedSizeList = class {
     return this;
   }
   static getRootAsFixedSizeList(bb2, obj) {
-    return (obj || new FixedSizeList()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _FixedSizeList()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsFixedSizeList(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new FixedSizeList()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _FixedSizeList()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Number of list items per value
@@ -32728,14 +30995,14 @@ var FixedSizeList = class {
     return offset2;
   }
   static createFixedSizeList(builder, listSize) {
-    FixedSizeList.startFixedSizeList(builder);
-    FixedSizeList.addListSize(builder, listSize);
-    return FixedSizeList.endFixedSizeList(builder);
+    _FixedSizeList.startFixedSizeList(builder);
+    _FixedSizeList.addListSize(builder, listSize);
+    return _FixedSizeList.endFixedSizeList(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/floating-point.mjs
-var FloatingPoint = class {
+var FloatingPoint = class _FloatingPoint {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32746,11 +31013,11 @@ var FloatingPoint = class {
     return this;
   }
   static getRootAsFloatingPoint(bb2, obj) {
-    return (obj || new FloatingPoint()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _FloatingPoint()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsFloatingPoint(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new FloatingPoint()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _FloatingPoint()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   precision() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32767,14 +31034,14 @@ var FloatingPoint = class {
     return offset2;
   }
   static createFloatingPoint(builder, precision) {
-    FloatingPoint.startFloatingPoint(builder);
-    FloatingPoint.addPrecision(builder, precision);
-    return FloatingPoint.endFloatingPoint(builder);
+    _FloatingPoint.startFloatingPoint(builder);
+    _FloatingPoint.addPrecision(builder, precision);
+    return _FloatingPoint.endFloatingPoint(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/interval.mjs
-var Interval = class {
+var Interval = class _Interval {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32785,11 +31052,11 @@ var Interval = class {
     return this;
   }
   static getRootAsInterval(bb2, obj) {
-    return (obj || new Interval()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Interval()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsInterval(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Interval()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Interval()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -32806,14 +31073,14 @@ var Interval = class {
     return offset2;
   }
   static createInterval(builder, unit3) {
-    Interval.startInterval(builder);
-    Interval.addUnit(builder, unit3);
-    return Interval.endInterval(builder);
+    _Interval.startInterval(builder);
+    _Interval.addUnit(builder, unit3);
+    return _Interval.endInterval(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/large-binary.mjs
-var LargeBinary = class {
+var LargeBinary = class _LargeBinary {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32824,11 +31091,11 @@ var LargeBinary = class {
     return this;
   }
   static getRootAsLargeBinary(bb2, obj) {
-    return (obj || new LargeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _LargeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsLargeBinary(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new LargeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _LargeBinary()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startLargeBinary(builder) {
     builder.startObject(0);
@@ -32838,13 +31105,13 @@ var LargeBinary = class {
     return offset2;
   }
   static createLargeBinary(builder) {
-    LargeBinary.startLargeBinary(builder);
-    return LargeBinary.endLargeBinary(builder);
+    _LargeBinary.startLargeBinary(builder);
+    return _LargeBinary.endLargeBinary(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/large-utf8.mjs
-var LargeUtf8 = class {
+var LargeUtf8 = class _LargeUtf8 {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32855,11 +31122,11 @@ var LargeUtf8 = class {
     return this;
   }
   static getRootAsLargeUtf8(bb2, obj) {
-    return (obj || new LargeUtf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _LargeUtf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsLargeUtf8(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new LargeUtf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _LargeUtf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startLargeUtf8(builder) {
     builder.startObject(0);
@@ -32869,13 +31136,13 @@ var LargeUtf8 = class {
     return offset2;
   }
   static createLargeUtf8(builder) {
-    LargeUtf8.startLargeUtf8(builder);
-    return LargeUtf8.endLargeUtf8(builder);
+    _LargeUtf8.startLargeUtf8(builder);
+    return _LargeUtf8.endLargeUtf8(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/list.mjs
-var List = class {
+var List = class _List {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32886,11 +31153,11 @@ var List = class {
     return this;
   }
   static getRootAsList(bb2, obj) {
-    return (obj || new List()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _List()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsList(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new List()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _List()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startList(builder) {
     builder.startObject(0);
@@ -32900,13 +31167,13 @@ var List = class {
     return offset2;
   }
   static createList(builder) {
-    List.startList(builder);
-    return List.endList(builder);
+    _List.startList(builder);
+    return _List.endList(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/map.mjs
-var Map2 = class {
+var Map2 = class _Map {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32917,11 +31184,11 @@ var Map2 = class {
     return this;
   }
   static getRootAsMap(bb2, obj) {
-    return (obj || new Map2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Map()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsMap(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Map2()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Map()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * Set to true if the keys within each value are sorted
@@ -32941,14 +31208,14 @@ var Map2 = class {
     return offset2;
   }
   static createMap(builder, keysSorted) {
-    Map2.startMap(builder);
-    Map2.addKeysSorted(builder, keysSorted);
-    return Map2.endMap(builder);
+    _Map.startMap(builder);
+    _Map.addKeysSorted(builder, keysSorted);
+    return _Map.endMap(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/null.mjs
-var Null = class {
+var Null = class _Null {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32959,11 +31226,11 @@ var Null = class {
     return this;
   }
   static getRootAsNull(bb2, obj) {
-    return (obj || new Null()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Null()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsNull(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Null()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Null()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startNull(builder) {
     builder.startObject(0);
@@ -32973,13 +31240,13 @@ var Null = class {
     return offset2;
   }
   static createNull(builder) {
-    Null.startNull(builder);
-    return Null.endNull(builder);
+    _Null.startNull(builder);
+    return _Null.endNull(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/struct-.mjs
-var Struct_ = class {
+var Struct_ = class _Struct_ {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -32990,11 +31257,11 @@ var Struct_ = class {
     return this;
   }
   static getRootAsStruct_(bb2, obj) {
-    return (obj || new Struct_()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Struct_()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsStruct_(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Struct_()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Struct_()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startStruct_(builder) {
     builder.startObject(0);
@@ -33004,13 +31271,13 @@ var Struct_ = class {
     return offset2;
   }
   static createStruct_(builder) {
-    Struct_.startStruct_(builder);
-    return Struct_.endStruct_(builder);
+    _Struct_.startStruct_(builder);
+    return _Struct_.endStruct_(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/time.mjs
-var Time = class {
+var Time = class _Time {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -33021,11 +31288,11 @@ var Time = class {
     return this;
   }
   static getRootAsTime(bb2, obj) {
-    return (obj || new Time()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Time()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsTime(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Time()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Time()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -33049,15 +31316,15 @@ var Time = class {
     return offset2;
   }
   static createTime(builder, unit3, bitWidth) {
-    Time.startTime(builder);
-    Time.addUnit(builder, unit3);
-    Time.addBitWidth(builder, bitWidth);
-    return Time.endTime(builder);
+    _Time.startTime(builder);
+    _Time.addUnit(builder, unit3);
+    _Time.addBitWidth(builder, bitWidth);
+    return _Time.endTime(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/timestamp.mjs
-var Timestamp = class {
+var Timestamp = class _Timestamp {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -33068,11 +31335,11 @@ var Timestamp = class {
     return this;
   }
   static getRootAsTimestamp(bb2, obj) {
-    return (obj || new Timestamp()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Timestamp()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsTimestamp(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Timestamp()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Timestamp()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   unit() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -33096,15 +31363,15 @@ var Timestamp = class {
     return offset2;
   }
   static createTimestamp(builder, unit3, timezoneOffset) {
-    Timestamp.startTimestamp(builder);
-    Timestamp.addUnit(builder, unit3);
-    Timestamp.addTimezone(builder, timezoneOffset);
-    return Timestamp.endTimestamp(builder);
+    _Timestamp.startTimestamp(builder);
+    _Timestamp.addUnit(builder, unit3);
+    _Timestamp.addTimezone(builder, timezoneOffset);
+    return _Timestamp.endTimestamp(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/union.mjs
-var Union = class {
+var Union = class _Union {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -33115,11 +31382,11 @@ var Union = class {
     return this;
   }
   static getRootAsUnion(bb2, obj) {
-    return (obj || new Union()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Union()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsUnion(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Union()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Union()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   mode() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -33161,15 +31428,15 @@ var Union = class {
     return offset2;
   }
   static createUnion(builder, mode2, typeIdsOffset) {
-    Union.startUnion(builder);
-    Union.addMode(builder, mode2);
-    Union.addTypeIds(builder, typeIdsOffset);
-    return Union.endUnion(builder);
+    _Union.startUnion(builder);
+    _Union.addMode(builder, mode2);
+    _Union.addTypeIds(builder, typeIdsOffset);
+    return _Union.endUnion(builder);
   }
 };
 
 // node_modules/apache-arrow/fb/utf8.mjs
-var Utf8 = class {
+var Utf8 = class _Utf8 {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -33180,11 +31447,11 @@ var Utf8 = class {
     return this;
   }
   static getRootAsUtf8(bb2, obj) {
-    return (obj || new Utf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Utf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsUtf8(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Utf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Utf8()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static startUtf8(builder) {
     builder.startObject(0);
@@ -33194,8 +31461,8 @@ var Utf8 = class {
     return offset2;
   }
   static createUtf8(builder) {
-    Utf8.startUtf8(builder);
-    return Utf8.endUtf8(builder);
+    _Utf8.startUtf8(builder);
+    return _Utf8.endUtf8(builder);
   }
 };
 
@@ -33228,7 +31495,7 @@ var Type;
 })(Type || (Type = {}));
 
 // node_modules/apache-arrow/fb/field.mjs
-var Field = class {
+var Field = class _Field {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -33239,11 +31506,11 @@ var Field = class {
     return this;
   }
   static getRootAsField(bb2, obj) {
-    return (obj || new Field()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Field()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsField(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Field()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Field()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   name(optionalEncoding) {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -33280,7 +31547,7 @@ var Field = class {
    */
   children(index3, obj) {
     const offset2 = this.bb.__offset(this.bb_pos, 14);
-    return offset2 ? (obj || new Field()).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset2) + index3 * 4), this.bb) : null;
+    return offset2 ? (obj || new _Field()).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset2) + index3 * 4), this.bb) : null;
   }
   childrenLength() {
     const offset2 = this.bb.__offset(this.bb_pos, 14);
@@ -33348,7 +31615,7 @@ var Field = class {
 };
 
 // node_modules/apache-arrow/fb/schema.mjs
-var Schema = class {
+var Schema = class _Schema {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -33359,11 +31626,11 @@ var Schema = class {
     return this;
   }
   static getRootAsSchema(bb2, obj) {
-    return (obj || new Schema()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Schema()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsSchema(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Schema()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Schema()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   /**
    * endianness of the buffer
@@ -33457,12 +31724,12 @@ var Schema = class {
     builder.finish(offset2, void 0, true);
   }
   static createSchema(builder, endianness, fieldsOffset, customMetadataOffset, featuresOffset) {
-    Schema.startSchema(builder);
-    Schema.addEndianness(builder, endianness);
-    Schema.addFields(builder, fieldsOffset);
-    Schema.addCustomMetadata(builder, customMetadataOffset);
-    Schema.addFeatures(builder, featuresOffset);
-    return Schema.endSchema(builder);
+    _Schema.startSchema(builder);
+    _Schema.addEndianness(builder, endianness);
+    _Schema.addFields(builder, fieldsOffset);
+    _Schema.addCustomMetadata(builder, customMetadataOffset);
+    _Schema.addFeatures(builder, featuresOffset);
+    return _Schema.endSchema(builder);
   }
 };
 
@@ -33723,7 +31990,7 @@ function unsignedBigNumToString(a4) {
   } while (checks[0] || checks[1] || checks[2] || checks[3]);
   return digits !== null && digits !== void 0 ? digits : `0`;
 }
-var BN = class {
+var BN = class _BN {
   /** @nocollapse */
   static new(num, isSigned) {
     switch (isSigned) {
@@ -33757,7 +32024,7 @@ var BN = class {
     return new DecimalBigNum(num);
   }
   constructor(num, isSigned) {
-    return BN.new(num, isSigned);
+    return _BN.new(num, isSigned);
   }
 };
 
@@ -33784,7 +32051,7 @@ var _u;
 var _v;
 var _w;
 var _x;
-var DataType = class {
+var DataType = class _DataType {
   /** @nocollapse */
   static isNull(x4) {
     return (x4 === null || x4 === void 0 ? void 0 : x4.typeId) === Type2.Null;
@@ -33871,11 +32138,11 @@ var DataType = class {
   }
   /** @nocollapse */
   static isDenseUnion(x4) {
-    return DataType.isUnion(x4) && x4.mode === UnionMode.Dense;
+    return _DataType.isUnion(x4) && x4.mode === UnionMode.Dense;
   }
   /** @nocollapse */
   static isSparseUnion(x4) {
-    return DataType.isUnion(x4) && x4.mode === UnionMode.Sparse;
+    return _DataType.isUnion(x4) && x4.mode === UnionMode.Sparse;
   }
   constructor(typeId) {
     this.typeId = typeId;
@@ -34353,7 +32620,7 @@ Map_[_w] = ((proto) => {
   proto.keysSorted = null;
   return proto[Symbol.toStringTag] = "Map_";
 })(Map_.prototype);
-var getId = ((atomicDictionaryId) => () => ++atomicDictionaryId)(-1);
+var getId = /* @__PURE__ */ ((atomicDictionaryId) => () => ++atomicDictionaryId)(-1);
 var Dictionary = class extends DataType {
   constructor(dictionary, indices, id2, isOrdered2) {
     super(Type2.Dictionary);
@@ -34390,6 +32657,8 @@ function strideForType(type2) {
       return type2.bitWidth / 32;
     case Type2.Interval:
       return 1 + t.unit;
+    // case Type.Int: return 1 + +((t as Int_).bitWidth > 32);
+    // case Type.Time: return 1 + +((t as Time_).bitWidth > 32);
     case Type2.FixedSizeList:
       return t.listSize;
     case Type2.FixedSizeBinary:
@@ -35772,7 +34041,7 @@ function popcnt_uint32(uint32) {
 
 // node_modules/apache-arrow/data.mjs
 var kUnknownNullCount = -1;
-var Data = class {
+var Data = class _Data {
   get typeId() {
     return this.type.typeId;
   }
@@ -35825,7 +34094,7 @@ var Data = class {
     this.length = Math.floor(Math.max(length4 || 0, 0));
     this._nullCount = Math.floor(Math.max(nullCount || 0, -1));
     let buffer;
-    if (buffers instanceof Data) {
+    if (buffers instanceof _Data) {
       this.stride = buffers.stride;
       this.values = buffers.values;
       this.typeIds = buffers.typeIds;
@@ -35890,7 +34159,7 @@ var Data = class {
     return value;
   }
   clone(type2 = this.type, offset2 = this.offset, length4 = this.length, nullCount = this._nullCount, buffers = this, children2 = this.children) {
-    return new Data(type2, offset2, length4, nullCount, buffers, children2, this.dictionary);
+    return new _Data(type2, offset2, length4, nullCount, buffers, children2, this.dictionary);
   }
   slice(offset2, length4) {
     const { stride, typeId, children: children2 } = this;
@@ -35934,7 +34203,7 @@ var Data = class {
   }
 };
 Data.prototype.children = Object.freeze([]);
-var MakeDataVisitor = class extends Visitor {
+var MakeDataVisitor = class _MakeDataVisitor extends Visitor {
   visit(props) {
     return this.getVisitFn(props["type"]).call(this, props);
   }
@@ -36057,7 +34326,7 @@ var MakeDataVisitor = class extends Visitor {
     const { ["type"]: type2, ["offset"]: offset2 = 0 } = props;
     const nullBitmap = toUint8Array(props["nullBitmap"]);
     const data = toArrayBufferView(type2.indices.ArrayType, props["data"]);
-    const { ["dictionary"]: dictionary = new Vector2([new MakeDataVisitor().visit({ type: type2.dictionary })]) } = props;
+    const { ["dictionary"]: dictionary = new Vector2([new _MakeDataVisitor().visit({ type: type2.dictionary })]) } = props;
     const { ["length"]: length4 = data.length, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
     return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap], [], dictionary);
   }
@@ -36076,13 +34345,13 @@ var MakeDataVisitor = class extends Visitor {
     return new Data(type2, offset2, length4, nullCount, [void 0, data, nullBitmap]);
   }
   visitFixedSizeList(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.valueType }) } = props;
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new _MakeDataVisitor().visit({ type: type2.valueType }) } = props;
     const nullBitmap = toUint8Array(props["nullBitmap"]);
     const { ["length"]: length4 = child.length / strideForType(type2), ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
     return new Data(type2, offset2, length4, nullCount, [void 0, void 0, nullBitmap], [child]);
   }
   visitMap(props) {
-    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new MakeDataVisitor().visit({ type: type2.childType }) } = props;
+    const { ["type"]: type2, ["offset"]: offset2 = 0, ["child"]: child = new _MakeDataVisitor().visit({ type: type2.childType }) } = props;
     const nullBitmap = toUint8Array(props["nullBitmap"]);
     const valueOffsets = toInt32Array(props["valueOffsets"]);
     const { ["length"]: length4 = valueOffsets.length - 1, ["nullCount"]: nullCount = props["nullBitmap"] ? -1 : 0 } = props;
@@ -36239,10 +34508,13 @@ function indexOfValue(data, searchElement, fromIndex) {
   }
   if (searchElement === null) {
     switch (data.typeId) {
+      // Unions don't have a nullBitmap of its own, so compare the `searchElement` to `get()`.
       case Type2.Union:
         break;
+      // Dictionaries do have a nullBitmap, but their dictionary could also have null elements.
       case Type2.Dictionary:
         break;
+      // All other types can iterate the null bitmap
       default:
         return indexOfNull(data, fromIndex);
     }
@@ -36413,10 +34685,10 @@ var instance4 = new IteratorVisitor();
 var _a2;
 var visitorsByTypeId = {};
 var vectorPrototypesByTypeId = {};
-var Vector2 = class {
+var Vector2 = class _Vector {
   constructor(input) {
     var _b2, _c2, _d2;
-    const data = input[0] instanceof Vector2 ? input.flatMap((x4) => x4.data) : input;
+    const data = input[0] instanceof _Vector ? input.flatMap((x4) => x4.data) : input;
     if (data.length === 0 || data.some((x4) => !(x4 instanceof Data))) {
       throw new TypeError("Vector constructor expects an Array of Data instances.");
     }
@@ -36538,7 +34810,7 @@ var Vector2 = class {
    * @param others Additional Vectors to add to the end of this Vector.
    */
   concat(...others) {
-    return new Vector2(this.data.concat(others.flatMap((x4) => x4.data).flat(Number.POSITIVE_INFINITY)));
+    return new _Vector(this.data.concat(others.flatMap((x4) => x4.data).flat(Number.POSITIVE_INFINITY)));
   }
   /**
    * Return a zero-copy sub-section of this Vector.
@@ -36546,7 +34818,7 @@ var Vector2 = class {
    * @param end The end of the specified portion of the Vector. This is exclusive of the element at the index 'end'.
    */
   slice(begin, end) {
-    return new Vector2(clampRange(this, begin, end, ({ data, _offsets }, begin2, end2) => sliceChunks(data, _offsets, begin2, end2)));
+    return new _Vector(clampRange(this, begin, end, ({ data, _offsets }, begin2, end2) => sliceChunks(data, _offsets, begin2, end2)));
   }
   toJSON() {
     return [...this];
@@ -36607,7 +34879,7 @@ var Vector2 = class {
    */
   getChildAt(index3) {
     if (index3 > -1 && index3 < this.numChildren) {
-      return new Vector2(this.data.map(({ children: children2 }) => children2[index3]));
+      return new _Vector(this.data.map(({ children: children2 }) => children2[index3]));
     }
     return null;
   }
@@ -36636,7 +34908,7 @@ var Vector2 = class {
         cloned.dictionary = dictionary;
         return cloned;
       });
-      return new Vector2(newData);
+      return new _Vector(newData);
     }
     return new MemoizedVector(this);
   }
@@ -36654,7 +34926,7 @@ var Vector2 = class {
         newData2.dictionary = dictionary;
         return newData2;
       });
-      return new Vector2(newData);
+      return new _Vector(newData);
     }
     return this;
   }
@@ -36683,7 +34955,7 @@ Vector2[_a2] = ((proto) => {
   }
   return "Vector";
 })(Vector2.prototype);
-var MemoizedVector = class extends Vector2 {
+var MemoizedVector = class _MemoizedVector extends Vector2 {
   constructor(vector2) {
     super(vector2.data);
     const get3 = this.get;
@@ -36708,7 +34980,7 @@ var MemoizedVector = class extends Vector2 {
       }
     });
     Object.defineProperty(this, "slice", {
-      value: (begin, end) => new MemoizedVector(slice6.call(this, begin, end))
+      value: (begin, end) => new _MemoizedVector(slice6.call(this, begin, end))
     });
     Object.defineProperty(this, "isMemoized", { value: true });
     Object.defineProperty(this, "unmemoize", {
@@ -37179,7 +35451,7 @@ var Block = class {
 };
 
 // node_modules/apache-arrow/fb/footer.mjs
-var Footer = class {
+var Footer = class _Footer {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -37190,11 +35462,11 @@ var Footer = class {
     return this;
   }
   static getRootAsFooter(bb2, obj) {
-    return (obj || new Footer()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Footer()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsFooter(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Footer()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Footer()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   version() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -37278,7 +35550,7 @@ var Footer = class {
 };
 
 // node_modules/apache-arrow/schema.mjs
-var Schema2 = class {
+var Schema2 = class _Schema {
   constructor(fields = [], metadata, dictionaries, metadataVersion = MetadataVersion.V5) {
     this.fields = fields || [];
     this.metadata = metadata || /* @__PURE__ */ new Map();
@@ -37306,7 +35578,7 @@ var Schema2 = class {
   select(fieldNames) {
     const names = new Set(fieldNames);
     const fields = this.fields.filter((f) => names.has(f.name));
-    return new Schema2(fields, this.metadata);
+    return new _Schema(fields, this.metadata);
   }
   /**
    * Construct a new Schema containing only fields at the specified indices.
@@ -37316,10 +35588,10 @@ var Schema2 = class {
    */
   selectAt(fieldIndices) {
     const fields = fieldIndices.map((i) => this.fields[i]).filter(Boolean);
-    return new Schema2(fields, this.metadata);
+    return new _Schema(fields, this.metadata);
   }
   assign(...args) {
-    const other = args[0] instanceof Schema2 ? args[0] : Array.isArray(args[0]) ? new Schema2(args[0]) : new Schema2(args);
+    const other = args[0] instanceof _Schema ? args[0] : Array.isArray(args[0]) ? new _Schema(args[0]) : new _Schema(args);
     const curFields = [...this.fields];
     const metadata = mergeMaps(mergeMaps(/* @__PURE__ */ new Map(), this.metadata), other.metadata);
     const newFields = other.fields.filter((f2) => {
@@ -37329,13 +35601,13 @@ var Schema2 = class {
       })) && false : true;
     });
     const newDictionaries = generateDictionaryMap(newFields, /* @__PURE__ */ new Map());
-    return new Schema2([...curFields, ...newFields], metadata, new Map([...this.dictionaries, ...newDictionaries]));
+    return new _Schema([...curFields, ...newFields], metadata, new Map([...this.dictionaries, ...newDictionaries]));
   }
 };
 Schema2.prototype.fields = null;
 Schema2.prototype.metadata = null;
 Schema2.prototype.dictionaries = null;
-var Field2 = class {
+var Field2 = class _Field {
   /** @nocollapse */
   static new(...args) {
     let [name, type2, nullable, metadata] = args;
@@ -37345,7 +35617,7 @@ var Field2 = class {
       nullable === void 0 && (nullable = args[0].nullable);
       metadata === void 0 && (metadata = args[0].metadata);
     }
-    return new Field2(`${name}`, type2, nullable, metadata);
+    return new _Field(`${name}`, type2, nullable, metadata);
   }
   constructor(name, type2, nullable = false, metadata) {
     this.name = name;
@@ -37365,7 +35637,7 @@ var Field2 = class {
   clone(...args) {
     let [name, type2, nullable, metadata] = args;
     !args[0] || typeof args[0] !== "object" ? [name = this.name, type2 = this.type, nullable = this.nullable, metadata = this.metadata] = args : { name = this.name, type: type2 = this.type, nullable = this.nullable, metadata = this.metadata } = args[0];
-    return Field2.new(name, type2, nullable, metadata);
+    return _Field.new(name, type2, nullable, metadata);
   }
 };
 Field2.prototype.type = null;
@@ -37489,10 +35761,10 @@ var OffHeapFooter = class extends Footer_ {
     return null;
   }
 };
-var FileBlock = class {
+var FileBlock = class _FileBlock {
   /** @nocollapse */
   static decode(block) {
-    return new FileBlock(block.metaDataLength(), block.bodyLength(), block.offset());
+    return new _FileBlock(block.metaDataLength(), block.bodyLength(), block.offset());
   }
   /** @nocollapse */
   static encode(b, fileBlock) {
@@ -37658,11 +35930,9 @@ var AsyncByteQueue = class extends AsyncQueue {
         e_1 = { error: e_1_1 };
       } finally {
         try {
-          if (!_d2 && !_a5 && (_b2 = _e2.return))
-            yield _b2.call(_e2);
+          if (!_d2 && !_a5 && (_b2 = _e2.return)) yield _b2.call(_e2);
         } finally {
-          if (e_1)
-            throw e_1.error;
+          if (e_1) throw e_1.error;
         }
       }
       return joinUint8Arrays(buffers, byteLength)[0];
@@ -37694,9 +35964,9 @@ var ByteStream = class {
     return this.source.read(size);
   }
 };
-var AsyncByteStream = class {
+var AsyncByteStream = class _AsyncByteStream {
   constructor(source) {
-    if (source instanceof AsyncByteStream) {
+    if (source instanceof _AsyncByteStream) {
       this.source = source.source;
     } else if (source instanceof AsyncByteQueue) {
       this.source = new AsyncByteStreamSource(adapters_default.fromAsyncIterable(source));
@@ -38016,7 +36286,7 @@ var BaseInt64 = class {
     return `${intAsHex(this.buffer[1])} ${intAsHex(this.buffer[0])}`;
   }
 };
-var Uint642 = class extends BaseInt64 {
+var Uint642 = class _Uint64 extends BaseInt64 {
   times(other) {
     this._times(other);
     return this;
@@ -38027,20 +36297,20 @@ var Uint642 = class extends BaseInt64 {
   }
   /** @nocollapse */
   static from(val, out_buffer = new Uint32Array(2)) {
-    return Uint642.fromString(typeof val === "string" ? val : val.toString(), out_buffer);
+    return _Uint64.fromString(typeof val === "string" ? val : val.toString(), out_buffer);
   }
   /** @nocollapse */
   static fromNumber(num, out_buffer = new Uint32Array(2)) {
-    return Uint642.fromString(num.toString(), out_buffer);
+    return _Uint64.fromString(num.toString(), out_buffer);
   }
   /** @nocollapse */
   static fromString(str, out_buffer = new Uint32Array(2)) {
     const length4 = str.length;
-    const out = new Uint642(out_buffer);
+    const out = new _Uint64(out_buffer);
     for (let posn = 0; posn < length4; ) {
       const group3 = kInt32DecimalDigits < length4 - posn ? kInt32DecimalDigits : length4 - posn;
-      const chunk = new Uint642(new Uint32Array([Number.parseInt(str.slice(posn, posn + group3), 10), 0]));
-      const multiple = new Uint642(new Uint32Array([kPowersOfTen[group3], 0]));
+      const chunk = new _Uint64(new Uint32Array([Number.parseInt(str.slice(posn, posn + group3), 10), 0]));
+      const multiple = new _Uint64(new Uint32Array([kPowersOfTen[group3], 0]));
       out.times(multiple);
       out.plus(chunk);
       posn += group3;
@@ -38051,22 +36321,22 @@ var Uint642 = class extends BaseInt64 {
   static convertArray(values2) {
     const data = new Uint32Array(values2.length * 2);
     for (let i = -1, n = values2.length; ++i < n; ) {
-      Uint642.from(values2[i], new Uint32Array(data.buffer, data.byteOffset + 2 * i * 4, 2));
+      _Uint64.from(values2[i], new Uint32Array(data.buffer, data.byteOffset + 2 * i * 4, 2));
     }
     return data;
   }
   /** @nocollapse */
   static multiply(left2, right2) {
-    const rtrn = new Uint642(new Uint32Array(left2.buffer));
+    const rtrn = new _Uint64(new Uint32Array(left2.buffer));
     return rtrn.times(right2);
   }
   /** @nocollapse */
   static add(left2, right2) {
-    const rtrn = new Uint642(new Uint32Array(left2.buffer));
+    const rtrn = new _Uint64(new Uint32Array(left2.buffer));
     return rtrn.plus(right2);
   }
 };
-var Int642 = class extends BaseInt64 {
+var Int642 = class _Int64 extends BaseInt64 {
   negate() {
     this.buffer[0] = ~this.buffer[0] + 1;
     this.buffer[1] = ~this.buffer[1];
@@ -38090,21 +36360,21 @@ var Int642 = class extends BaseInt64 {
   }
   /** @nocollapse */
   static from(val, out_buffer = new Uint32Array(2)) {
-    return Int642.fromString(typeof val === "string" ? val : val.toString(), out_buffer);
+    return _Int64.fromString(typeof val === "string" ? val : val.toString(), out_buffer);
   }
   /** @nocollapse */
   static fromNumber(num, out_buffer = new Uint32Array(2)) {
-    return Int642.fromString(num.toString(), out_buffer);
+    return _Int64.fromString(num.toString(), out_buffer);
   }
   /** @nocollapse */
   static fromString(str, out_buffer = new Uint32Array(2)) {
     const negate2 = str.startsWith("-");
     const length4 = str.length;
-    const out = new Int642(out_buffer);
+    const out = new _Int64(out_buffer);
     for (let posn = negate2 ? 1 : 0; posn < length4; ) {
       const group3 = kInt32DecimalDigits < length4 - posn ? kInt32DecimalDigits : length4 - posn;
-      const chunk = new Int642(new Uint32Array([Number.parseInt(str.slice(posn, posn + group3), 10), 0]));
-      const multiple = new Int642(new Uint32Array([kPowersOfTen[group3], 0]));
+      const chunk = new _Int64(new Uint32Array([Number.parseInt(str.slice(posn, posn + group3), 10), 0]));
+      const multiple = new _Int64(new Uint32Array([kPowersOfTen[group3], 0]));
       out.times(multiple);
       out.plus(chunk);
       posn += group3;
@@ -38115,22 +36385,22 @@ var Int642 = class extends BaseInt64 {
   static convertArray(values2) {
     const data = new Uint32Array(values2.length * 2);
     for (let i = -1, n = values2.length; ++i < n; ) {
-      Int642.from(values2[i], new Uint32Array(data.buffer, data.byteOffset + 2 * i * 4, 2));
+      _Int64.from(values2[i], new Uint32Array(data.buffer, data.byteOffset + 2 * i * 4, 2));
     }
     return data;
   }
   /** @nocollapse */
   static multiply(left2, right2) {
-    const rtrn = new Int642(new Uint32Array(left2.buffer));
+    const rtrn = new _Int64(new Uint32Array(left2.buffer));
     return rtrn.times(right2);
   }
   /** @nocollapse */
   static add(left2, right2) {
-    const rtrn = new Int642(new Uint32Array(left2.buffer));
+    const rtrn = new _Int64(new Uint32Array(left2.buffer));
     return rtrn.plus(right2);
   }
 };
-var Int128 = class {
+var Int128 = class _Int128 {
   constructor(buffer) {
     this.buffer = buffer;
   }
@@ -38206,31 +36476,31 @@ var Int128 = class {
   }
   /** @nocollapse */
   static multiply(left2, right2) {
-    const rtrn = new Int128(new Uint32Array(left2.buffer));
+    const rtrn = new _Int128(new Uint32Array(left2.buffer));
     return rtrn.times(right2);
   }
   /** @nocollapse */
   static add(left2, right2) {
-    const rtrn = new Int128(new Uint32Array(left2.buffer));
+    const rtrn = new _Int128(new Uint32Array(left2.buffer));
     return rtrn.plus(right2);
   }
   /** @nocollapse */
   static from(val, out_buffer = new Uint32Array(4)) {
-    return Int128.fromString(typeof val === "string" ? val : val.toString(), out_buffer);
+    return _Int128.fromString(typeof val === "string" ? val : val.toString(), out_buffer);
   }
   /** @nocollapse */
   static fromNumber(num, out_buffer = new Uint32Array(4)) {
-    return Int128.fromString(num.toString(), out_buffer);
+    return _Int128.fromString(num.toString(), out_buffer);
   }
   /** @nocollapse */
   static fromString(str, out_buffer = new Uint32Array(4)) {
     const negate2 = str.startsWith("-");
     const length4 = str.length;
-    const out = new Int128(out_buffer);
+    const out = new _Int128(out_buffer);
     for (let posn = negate2 ? 1 : 0; posn < length4; ) {
       const group3 = kInt32DecimalDigits < length4 - posn ? kInt32DecimalDigits : length4 - posn;
-      const chunk = new Int128(new Uint32Array([Number.parseInt(str.slice(posn, posn + group3), 10), 0, 0, 0]));
-      const multiple = new Int128(new Uint32Array([kPowersOfTen[group3], 0, 0, 0]));
+      const chunk = new _Int128(new Uint32Array([Number.parseInt(str.slice(posn, posn + group3), 10), 0, 0, 0]));
+      const multiple = new _Int128(new Uint32Array([kPowersOfTen[group3], 0, 0, 0]));
       out.times(multiple);
       out.plus(chunk);
       posn += group3;
@@ -38241,7 +36511,7 @@ var Int128 = class {
   static convertArray(values2) {
     const data = new Uint32Array(values2.length * 4);
     for (let i = -1, n = values2.length; ++i < n; ) {
-      Int128.from(values2[i], new Uint32Array(data.buffer, data.byteOffset + 4 * 4 * i, 4));
+      _Int128.from(values2[i], new Uint32Array(data.buffer, data.byteOffset + 4 * 4 * i, 4));
     }
     return data;
   }
@@ -39260,7 +37530,7 @@ function distributeChildren(fields, batchLength, children2, columns, memo2) {
 
 // node_modules/apache-arrow/table.mjs
 var _a3;
-var Table = class {
+var Table = class _Table {
   constructor(...args) {
     var _b2, _c2;
     if (args.length === 0) {
@@ -39281,7 +37551,7 @@ var Table = class {
       if (x4) {
         if (x4 instanceof RecordBatch2) {
           return [x4];
-        } else if (x4 instanceof Table) {
+        } else if (x4 instanceof _Table) {
           return x4.batches;
         } else if (x4 instanceof Data) {
           if (x4.type instanceof Struct) {
@@ -39426,7 +37696,7 @@ var Table = class {
   concat(...others) {
     const schema = this.schema;
     const data = this.data.concat(others.flatMap(({ data: data2 }) => data2));
-    return new Table(schema, data.map((data2) => new RecordBatch2(schema, data2)));
+    return new _Table(schema, data.map((data2) => new RecordBatch2(schema, data2)));
   }
   /**
    * Return a zero-copy sub-section of this Table.
@@ -39438,7 +37708,7 @@ var Table = class {
     const schema = this.schema;
     [begin, end] = clampRange({ length: this.numRows }, begin, end);
     const data = sliceChunks(this.data, this._offsets, begin, end);
-    return new Table(schema, data.map((chunk) => new RecordBatch2(schema, chunk)));
+    return new _Table(schema, data.map((chunk) => new RecordBatch2(schema, chunk)));
   }
   /**
    * Returns a child Vector by name, or null if this Vector has no child with the given name.
@@ -39488,7 +37758,7 @@ var Table = class {
       [fields[index3], children2[index3]] = [field2, child];
       [schema, batches] = distributeVectorsIntoRecordBatches(schema, children2);
     }
-    return new Table(schema, batches);
+    return new _Table(schema, batches);
   }
   /**
    * Construct a new Table containing only specified columns.
@@ -39509,7 +37779,7 @@ var Table = class {
   selectAt(columnIndices) {
     const schema = this.schema.selectAt(columnIndices);
     const data = this.batches.map((batch) => batch.selectAt(columnIndices));
-    return new Table(schema, data);
+    return new _Table(schema, data);
   }
   assign(other) {
     const fields = this.schema.fields;
@@ -39524,7 +37794,7 @@ var Table = class {
       ...fields.map((_, i) => [i, oldToNew[i]]).map(([i, j]) => j === void 0 ? this.getChildAt(i) : other.getChildAt(j)),
       ...indices.map((i) => other.getChildAt(i))
     ].filter(Boolean);
-    return new Table(...distributeVectorsIntoRecordBatches(schema, columns));
+    return new _Table(...distributeVectorsIntoRecordBatches(schema, columns));
   }
 };
 _a3 = Symbol.toStringTag;
@@ -39543,7 +37813,7 @@ Table[_a3] = ((proto) => {
 
 // node_modules/apache-arrow/recordbatch.mjs
 var _a4;
-var RecordBatch2 = class {
+var RecordBatch2 = class _RecordBatch {
   constructor(...args) {
     switch (args.length) {
       case 2: {
@@ -39671,7 +37941,7 @@ var RecordBatch2 = class {
    */
   slice(begin, end) {
     const [slice6] = new Vector2([this.data]).slice(begin, end).data;
-    return new RecordBatch2(this.schema, slice6);
+    return new _RecordBatch(this.schema, slice6);
   }
   /**
    * Returns a child Vector by name, or null if this Vector has no child with the given name.
@@ -39714,7 +37984,7 @@ var RecordBatch2 = class {
       schema = new Schema2(fields, new Map(this.schema.metadata));
       data = makeData({ type: new Struct(fields), children: children2 });
     }
-    return new RecordBatch2(schema, data);
+    return new _RecordBatch(schema, data);
   }
   /**
    * Construct a new RecordBatch containing only specified columns.
@@ -39732,7 +38002,7 @@ var RecordBatch2 = class {
         children2[index3] = this.data.children[index3];
       }
     }
-    return new RecordBatch2(schema, makeData({ type: type2, length: this.numRows, children: children2 }));
+    return new _RecordBatch(schema, makeData({ type: type2, length: this.numRows, children: children2 }));
   }
   /**
    * Construct a new RecordBatch containing only columns at the specified indices.
@@ -39744,7 +38014,7 @@ var RecordBatch2 = class {
     const schema = this.schema.selectAt(columnIndices);
     const children2 = columnIndices.map((i) => this.data.children[i]).filter(Boolean);
     const subset2 = makeData({ type: new Struct(schema.fields), length: this.numRows, children: children2 });
-    return new RecordBatch2(schema, subset2);
+    return new _RecordBatch(schema, subset2);
   }
 };
 _a4 = Symbol.toStringTag;
@@ -39807,7 +38077,7 @@ var _InternalEmptyPlaceholderRecordBatch = class extends RecordBatch2 {
 };
 
 // node_modules/apache-arrow/fb/message.mjs
-var Message = class {
+var Message = class _Message {
   constructor() {
     this.bb = null;
     this.bb_pos = 0;
@@ -39818,11 +38088,11 @@ var Message = class {
     return this;
   }
   static getRootAsMessage(bb2, obj) {
-    return (obj || new Message()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Message()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   static getSizePrefixedRootAsMessage(bb2, obj) {
     bb2.setPosition(bb2.position() + SIZE_PREFIX_LENGTH);
-    return (obj || new Message()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
+    return (obj || new _Message()).__init(bb2.readInt32(bb2.position()) + bb2.position(), bb2);
   }
   version() {
     const offset2 = this.bb.__offset(this.bb_pos, 4);
@@ -39887,13 +38157,13 @@ var Message = class {
     builder.finish(offset2, void 0, true);
   }
   static createMessage(builder, version, headerType, headerOffset, bodyLength, customMetadataOffset) {
-    Message.startMessage(builder);
-    Message.addVersion(builder, version);
-    Message.addHeaderType(builder, headerType);
-    Message.addHeader(builder, headerOffset);
-    Message.addBodyLength(builder, bodyLength);
-    Message.addCustomMetadata(builder, customMetadataOffset);
-    return Message.endMessage(builder);
+    _Message.startMessage(builder);
+    _Message.addVersion(builder, version);
+    _Message.addHeaderType(builder, headerType);
+    _Message.addHeader(builder, headerOffset);
+    _Message.addBodyLength(builder, bodyLength);
+    _Message.addCustomMetadata(builder, customMetadataOffset);
+    return _Message.endMessage(builder);
   }
 };
 
@@ -40165,10 +38435,10 @@ function typeFromJSON(f, children2) {
 // node_modules/apache-arrow/ipc/metadata/message.mjs
 var Builder4 = Builder;
 var ByteBuffer3 = ByteBuffer;
-var Message2 = class {
+var Message2 = class _Message {
   /** @nocollapse */
   static fromJSON(msg, headerType) {
-    const message = new Message2(0, MetadataVersion.V5, headerType);
+    const message = new _Message(0, MetadataVersion.V5, headerType);
     message._createHeader = messageHeaderFromJSON(msg, headerType);
     return message;
   }
@@ -40179,7 +38449,7 @@ var Message2 = class {
     const bodyLength = _message.bodyLength();
     const version = _message.version();
     const headerType = _message.headerType();
-    const message = new Message2(bodyLength, version, headerType);
+    const message = new _Message(bodyLength, version, headerType);
     message._createHeader = decodeMessageHeader(_message, headerType);
     return message;
   }
@@ -40205,13 +38475,13 @@ var Message2 = class {
   /** @nocollapse */
   static from(header, bodyLength = 0) {
     if (header instanceof Schema2) {
-      return new Message2(0, MetadataVersion.V5, MessageHeader.Schema, header);
+      return new _Message(0, MetadataVersion.V5, MessageHeader.Schema, header);
     }
     if (header instanceof RecordBatch3) {
-      return new Message2(bodyLength, MetadataVersion.V5, MessageHeader.RecordBatch, header);
+      return new _Message(bodyLength, MetadataVersion.V5, MessageHeader.RecordBatch, header);
     }
     if (header instanceof DictionaryBatch2) {
-      return new Message2(bodyLength, MetadataVersion.V5, MessageHeader.DictionaryBatch, header);
+      return new _Message(bodyLength, MetadataVersion.V5, MessageHeader.DictionaryBatch, header);
     }
     throw new Error(`Unrecognized Message header: ${header}`);
   }
@@ -40870,7 +39140,7 @@ var magicAndPadding = magicLength + PADDING;
 var magicX2AndPadding = magicLength * 2 + PADDING;
 
 // node_modules/apache-arrow/ipc/reader.mjs
-var RecordBatchReader = class extends ReadableInterop {
+var RecordBatchReader = class _RecordBatchReader extends ReadableInterop {
   constructor(impl) {
     super();
     this._impl = impl;
@@ -40956,7 +39226,7 @@ var RecordBatchReader = class extends ReadableInterop {
   }
   /** @nocollapse */
   static from(source) {
-    if (source instanceof RecordBatchReader) {
+    if (source instanceof _RecordBatchReader) {
       return source;
     } else if (isArrowJSON(source)) {
       return fromArrowJSON(source);
@@ -40964,7 +39234,7 @@ var RecordBatchReader = class extends ReadableInterop {
       return fromFileHandle(source);
     } else if (isPromise(source)) {
       return (() => __awaiter(this, void 0, void 0, function* () {
-        return yield RecordBatchReader.from(yield source);
+        return yield _RecordBatchReader.from(yield source);
       }))();
     } else if (isFetchResponse(source) || isReadableDOMStream(source) || isReadableNodeStream(source) || isAsyncIterable(source)) {
       return fromAsyncByteStream(new AsyncByteStream(source));
@@ -40973,7 +39243,7 @@ var RecordBatchReader = class extends ReadableInterop {
   }
   /** @nocollapse */
   static readAll(source) {
-    if (source instanceof RecordBatchReader) {
+    if (source instanceof _RecordBatchReader) {
       return source.isSync() ? readAllSync(source) : readAllAsync(source);
     } else if (isArrowJSON(source) || ArrayBuffer.isView(source) || isIterable2(source) || isIteratorResult(source)) {
       return readAllSync(source);
@@ -41018,11 +39288,9 @@ var AsyncRecordBatchStreamReader = class extends RecordBatchReader {
         e_1 = { error: e_1_1 };
       } finally {
         try {
-          if (!_d2 && !_a5 && (_b2 = _e2.return))
-            yield _b2.call(_e2);
+          if (!_d2 && !_a5 && (_b2 = _e2.return)) yield _b2.call(_e2);
         } finally {
-          if (e_1)
-            throw e_1.error;
+          if (e_1) throw e_1.error;
         }
       }
       return batches;
@@ -41504,11 +39772,11 @@ function fromFileHandle(source) {
 }
 
 // node_modules/apache-arrow/visitor/vectorassembler.mjs
-var VectorAssembler = class extends Visitor {
+var VectorAssembler = class _VectorAssembler extends Visitor {
   /** @nocollapse */
   static assemble(...args) {
     const unwrap = (nodes) => nodes.flatMap((node) => Array.isArray(node) ? unwrap(node) : node instanceof RecordBatch2 ? node.data.children : node.data);
-    const assembler = new VectorAssembler();
+    const assembler = new _VectorAssembler();
     assembler.visitMany(unwrap(args));
     return assembler;
   }
@@ -41864,10 +40132,10 @@ var RecordBatchWriter = class extends ReadableInterop {
     return this;
   }
 };
-var RecordBatchStreamWriter = class extends RecordBatchWriter {
+var RecordBatchStreamWriter = class _RecordBatchStreamWriter extends RecordBatchWriter {
   /** @nocollapse */
   static writeAll(input, options) {
-    const writer = new RecordBatchStreamWriter(options);
+    const writer = new _RecordBatchStreamWriter(options);
     if (isPromise(input)) {
       return input.then((x4) => writer.writeAll(x4));
     } else if (isAsyncIterable(input)) {
@@ -41876,10 +40144,10 @@ var RecordBatchStreamWriter = class extends RecordBatchWriter {
     return writeAll(writer, input);
   }
 };
-var RecordBatchFileWriter = class extends RecordBatchWriter {
+var RecordBatchFileWriter = class _RecordBatchFileWriter extends RecordBatchWriter {
   /** @nocollapse */
   static writeAll(input) {
-    const writer = new RecordBatchFileWriter();
+    const writer = new _RecordBatchFileWriter();
     if (isPromise(input)) {
       return input.then((x4) => writer.writeAll(x4));
     } else if (isAsyncIterable(input)) {
@@ -41932,11 +40200,9 @@ function writeAllAsync(writer, batches) {
       e_1 = { error: e_1_1 };
     } finally {
       try {
-        if (!_a5 && !_b2 && (_c2 = batches_1.return))
-          yield _c2.call(batches_1);
+        if (!_a5 && !_b2 && (_c2 = batches_1.return)) yield _c2.call(batches_1);
       } finally {
-        if (e_1)
-          throw e_1.error;
+        if (e_1) throw e_1.error;
       }
     }
     return writer.finish();

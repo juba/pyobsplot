@@ -91,563 +91,559 @@ class PlotClass:
     # STATIC PLOT METHODS START
 
     @staticmethod
-    def area(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def area(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("area", *args, **kwargs)
 
     @staticmethod
-    def areaX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def areaX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("areaX", *args, **kwargs)
 
     @staticmethod
-    def areaY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def areaY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("areaY", *args, **kwargs)
 
     @staticmethod
-    def arrow(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def arrow(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("arrow", *args, **kwargs)
 
     @staticmethod
-    def auto(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def auto(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("auto", *args, **kwargs)
 
     @staticmethod
-    def autoSpec(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def autoSpec(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("autoSpec", *args, **kwargs)
 
     @staticmethod
-    def axisFx(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def axisFx(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("axisFx", *args, **kwargs)
 
     @staticmethod
-    def axisFy(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def axisFy(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("axisFy", *args, **kwargs)
 
     @staticmethod
-    def axisX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def axisX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("axisX", *args, **kwargs)
 
     @staticmethod
-    def axisY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def axisY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("axisY", *args, **kwargs)
 
     @staticmethod
-    def barX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def barX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("barX", *args, **kwargs)
 
     @staticmethod
-    def barY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def barY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("barY", *args, **kwargs)
 
     @staticmethod
-    def bin(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def bin(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("bin", *args, **kwargs)
 
     @staticmethod
-    def binX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def binX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("binX", *args, **kwargs)
 
     @staticmethod
-    def binY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def binY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("binY", *args, **kwargs)
 
     @staticmethod
-    def bollinger(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def bollinger(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("bollinger", *args, **kwargs)
 
     @staticmethod
-    def bollingerX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def bollingerX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("bollingerX", *args, **kwargs)
 
     @staticmethod
-    def bollingerY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def bollingerY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("bollingerY", *args, **kwargs)
 
     @staticmethod
-    def boxX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def boxX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("boxX", *args, **kwargs)
 
     @staticmethod
-    def boxY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def boxY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("boxY", *args, **kwargs)
 
     @staticmethod
-    def cell(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def cell(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("cell", *args, **kwargs)
 
     @staticmethod
-    def cellX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def cellX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("cellX", *args, **kwargs)
 
     @staticmethod
-    def cellY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def cellY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("cellY", *args, **kwargs)
 
     @staticmethod
-    def centroid(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def centroid(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("centroid", *args, **kwargs)
 
     @staticmethod
-    def circle(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def circle(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("circle", *args, **kwargs)
 
     @staticmethod
-    def cluster(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def cluster(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("cluster", *args, **kwargs)
 
     @staticmethod
-    def column(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def column(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("column", *args, **kwargs)
 
     @staticmethod
-    def contour(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def contour(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("contour", *args, **kwargs)
 
     @staticmethod
-    def crosshair(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def crosshair(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("crosshair", *args, **kwargs)
 
     @staticmethod
-    def crosshairX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def crosshairX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("crosshairX", *args, **kwargs)
 
     @staticmethod
-    def crosshairY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def crosshairY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("crosshairY", *args, **kwargs)
 
     @staticmethod
-    def delaunayLink(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def delaunayLink(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("delaunayLink", *args, **kwargs)
 
     @staticmethod
-    def delaunayMesh(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def delaunayMesh(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("delaunayMesh", *args, **kwargs)
 
     @staticmethod
-    def density(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def density(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("density", *args, **kwargs)
 
     @staticmethod
-    def differenceX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def differenceX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("differenceX", *args, **kwargs)
 
     @staticmethod
-    def differenceY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def differenceY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("differenceY", *args, **kwargs)
 
     @staticmethod
-    def dodgeX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def dodgeX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("dodgeX", *args, **kwargs)
 
     @staticmethod
-    def dodgeY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def dodgeY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("dodgeY", *args, **kwargs)
 
     @staticmethod
-    def dot(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def dot(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("dot", *args, **kwargs)
 
     @staticmethod
-    def dotX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def dotX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("dotX", *args, **kwargs)
 
     @staticmethod
-    def dotY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def dotY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("dotY", *args, **kwargs)
 
     @staticmethod
-    def filter(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def filter(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("filter", *args, **kwargs)
 
     @staticmethod
-    def find(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def find(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("find", *args, **kwargs)
 
     @staticmethod
-    def formatIsoDate(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def formatIsoDate(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("formatIsoDate", *args, **kwargs)
 
     @staticmethod
-    def formatMonth(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def formatMonth(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("formatMonth", *args, **kwargs)
 
     @staticmethod
-    def formatNumber(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def formatNumber(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("formatNumber", *args, **kwargs)
 
     @staticmethod
-    def formatWeekday(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def formatWeekday(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("formatWeekday", *args, **kwargs)
 
     @staticmethod
-    def frame(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def frame(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("frame", *args, **kwargs)
 
     @staticmethod
-    def geo(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def geo(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("geo", *args, **kwargs)
 
     @staticmethod
-    def geoCentroid(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def geoCentroid(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("geoCentroid", *args, **kwargs)
 
     @staticmethod
-    def graticule(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def graticule(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("graticule", *args, **kwargs)
 
     @staticmethod
-    def gridFx(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def gridFx(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("gridFx", *args, **kwargs)
 
     @staticmethod
-    def gridFy(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def gridFy(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("gridFy", *args, **kwargs)
 
     @staticmethod
-    def gridX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def gridX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("gridX", *args, **kwargs)
 
     @staticmethod
-    def gridY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def gridY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("gridY", *args, **kwargs)
 
     @staticmethod
-    def group(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def group(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("group", *args, **kwargs)
 
     @staticmethod
-    def groupX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def groupX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("groupX", *args, **kwargs)
 
     @staticmethod
-    def groupY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def groupY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("groupY", *args, **kwargs)
 
     @staticmethod
-    def groupZ(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def groupZ(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("groupZ", *args, **kwargs)
 
     @staticmethod
-    def hexagon(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def hexagon(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("hexagon", *args, **kwargs)
 
     @staticmethod
-    def hexbin(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def hexbin(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("hexbin", *args, **kwargs)
 
     @staticmethod
-    def hexgrid(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def hexgrid(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("hexgrid", *args, **kwargs)
 
     @staticmethod
-    def hull(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def hull(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("hull", *args, **kwargs)
 
     @staticmethod
-    def identity(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def identity(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("identity", *args, **kwargs)
 
     @staticmethod
-    def image(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def image(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("image", *args, **kwargs)
 
     @staticmethod
-    def indexOf(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def indexOf(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("indexOf", *args, **kwargs)
 
     @staticmethod
-    def initializer(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def initializer(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("initializer", *args, **kwargs)
 
     @staticmethod
-    def interpolateNearest(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def interpolateNearest(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("interpolateNearest", *args, **kwargs)
 
     @staticmethod
-    def interpolateNone(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def interpolateNone(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("interpolateNone", *args, **kwargs)
 
     @staticmethod
-    def interpolatorBarycentric(
-        *args, **kwargs
-    ) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def interpolatorBarycentric(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("interpolatorBarycentric", *args, **kwargs)
 
     @staticmethod
-    def interpolatorRandomWalk(
-        *args, **kwargs
-    ) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def interpolatorRandomWalk(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("interpolatorRandomWalk", *args, **kwargs)
 
     @staticmethod
-    def legend(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def legend(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("legend", *args, **kwargs)
 
     @staticmethod
-    def line(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def line(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("line", *args, **kwargs)
 
     @staticmethod
-    def lineX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def lineX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("lineX", *args, **kwargs)
 
     @staticmethod
-    def lineY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def lineY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("lineY", *args, **kwargs)
 
     @staticmethod
-    def linearRegressionX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def linearRegressionX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("linearRegressionX", *args, **kwargs)
 
     @staticmethod
-    def linearRegressionY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def linearRegressionY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("linearRegressionY", *args, **kwargs)
 
     @staticmethod
-    def link(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def link(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("link", *args, **kwargs)
 
     @staticmethod
-    def map(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def map(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("map", *args, **kwargs)
 
     @staticmethod
-    def mapX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def mapX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("mapX", *args, **kwargs)
 
     @staticmethod
-    def mapY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def mapY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("mapY", *args, **kwargs)
 
     @staticmethod
-    def marks(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def marks(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("marks", *args, **kwargs)
 
     @staticmethod
-    def normalize(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def normalize(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("normalize", *args, **kwargs)
 
     @staticmethod
-    def normalizeX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def normalizeX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("normalizeX", *args, **kwargs)
 
     @staticmethod
-    def normalizeY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def normalizeY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("normalizeY", *args, **kwargs)
 
     @staticmethod
-    def numberInterval(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def numberInterval(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("numberInterval", *args, **kwargs)
 
     @staticmethod
-    def pointer(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def pointer(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("pointer", *args, **kwargs)
 
     @staticmethod
-    def pointerX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def pointerX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("pointerX", *args, **kwargs)
 
     @staticmethod
-    def pointerY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def pointerY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("pointerY", *args, **kwargs)
 
     @staticmethod
-    def raster(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def raster(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("raster", *args, **kwargs)
 
     @staticmethod
-    def rect(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def rect(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("rect", *args, **kwargs)
 
     @staticmethod
-    def rectX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def rectX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("rectX", *args, **kwargs)
 
     @staticmethod
-    def rectY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def rectY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("rectY", *args, **kwargs)
 
     @staticmethod
-    def reverse(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def reverse(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("reverse", *args, **kwargs)
 
     @staticmethod
-    def ruleX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def ruleX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("ruleX", *args, **kwargs)
 
     @staticmethod
-    def ruleY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def ruleY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("ruleY", *args, **kwargs)
 
     @staticmethod
-    def scale(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def scale(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("scale", *args, **kwargs)
 
     @staticmethod
-    def select(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def select(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("select", *args, **kwargs)
 
     @staticmethod
-    def selectFirst(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def selectFirst(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("selectFirst", *args, **kwargs)
 
     @staticmethod
-    def selectLast(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def selectLast(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("selectLast", *args, **kwargs)
 
     @staticmethod
-    def selectMaxX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def selectMaxX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("selectMaxX", *args, **kwargs)
 
     @staticmethod
-    def selectMaxY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def selectMaxY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("selectMaxY", *args, **kwargs)
 
     @staticmethod
-    def selectMinX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def selectMinX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("selectMinX", *args, **kwargs)
 
     @staticmethod
-    def selectMinY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def selectMinY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("selectMinY", *args, **kwargs)
 
     @staticmethod
-    def shiftX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def shiftX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("shiftX", *args, **kwargs)
 
     @staticmethod
-    def shiftY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def shiftY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("shiftY", *args, **kwargs)
 
     @staticmethod
-    def shuffle(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def shuffle(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("shuffle", *args, **kwargs)
 
     @staticmethod
-    def sort(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def sort(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("sort", *args, **kwargs)
 
     @staticmethod
-    def sphere(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def sphere(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("sphere", *args, **kwargs)
 
     @staticmethod
-    def spike(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def spike(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("spike", *args, **kwargs)
 
     @staticmethod
-    def stackX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def stackX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("stackX", *args, **kwargs)
 
     @staticmethod
-    def stackX1(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def stackX1(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("stackX1", *args, **kwargs)
 
     @staticmethod
-    def stackX2(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def stackX2(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("stackX2", *args, **kwargs)
 
     @staticmethod
-    def stackY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def stackY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("stackY", *args, **kwargs)
 
     @staticmethod
-    def stackY1(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def stackY1(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("stackY1", *args, **kwargs)
 
     @staticmethod
-    def stackY2(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def stackY2(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("stackY2", *args, **kwargs)
 
     @staticmethod
-    def text(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def text(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("text", *args, **kwargs)
 
     @staticmethod
-    def textX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def textX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("textX", *args, **kwargs)
 
     @staticmethod
-    def textY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def textY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("textY", *args, **kwargs)
 
     @staticmethod
-    def tickX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def tickX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("tickX", *args, **kwargs)
 
     @staticmethod
-    def tickY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def tickY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("tickY", *args, **kwargs)
 
     @staticmethod
-    def timeInterval(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def timeInterval(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("timeInterval", *args, **kwargs)
 
     @staticmethod
-    def tip(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def tip(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("tip", *args, **kwargs)
 
     @staticmethod
-    def transform(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def transform(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("transform", *args, **kwargs)
 
     @staticmethod
-    def tree(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def tree(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("tree", *args, **kwargs)
 
     @staticmethod
-    def treeLink(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def treeLink(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("treeLink", *args, **kwargs)
 
     @staticmethod
-    def treeNode(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def treeNode(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("treeNode", *args, **kwargs)
 
     @staticmethod
-    def utcInterval(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def utcInterval(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("utcInterval", *args, **kwargs)
 
     @staticmethod
-    def valueof(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def valueof(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("valueof", *args, **kwargs)
 
     @staticmethod
-    def vector(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def vector(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("vector", *args, **kwargs)
 
     @staticmethod
-    def vectorX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def vectorX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("vectorX", *args, **kwargs)
 
     @staticmethod
-    def vectorY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def vectorY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("vectorY", *args, **kwargs)
 
     @staticmethod
-    def voronoi(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def voronoi(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("voronoi", *args, **kwargs)
 
     @staticmethod
-    def voronoiMesh(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def voronoiMesh(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("voronoiMesh", *args, **kwargs)
 
     @staticmethod
-    def waffleX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def waffleX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("waffleX", *args, **kwargs)
 
     @staticmethod
-    def waffleY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def waffleY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("waffleY", *args, **kwargs)
 
     @staticmethod
-    def window(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def window(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("window", *args, **kwargs)
 
     @staticmethod
-    def windowX(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def windowX(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("windowX", *args, **kwargs)
 
     @staticmethod
-    def windowY(*args, **kwargs) -> PlotSpec:  # noqa: ARG001, ARG004, RUF100
+    def windowY(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("windowY", *args, **kwargs)
 
     # STATIC PLOT METHODS END
