@@ -5,7 +5,7 @@ title: "pyobsplot"
 
 ## Overview
 
-`pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in [Jupyter](https://jupyter.org) notebooks, [VSCode](https://code.visualstudio.com) notebooks, [Google Colab](https://colab.research.google.com) and [Quarto](https://quarto.org) documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.
+`pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in [Jupyter](https://jupyter.org) or [Marimo](https://marimo.io) notebooks and [Quarto](https://quarto.org) documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.
 
 
 ```{python}
@@ -83,7 +83,7 @@ If you just want to try this package without installing it on your computer, you
 - Plots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)
 - Plots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files
 - [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and better data type conversions
-- Works with Jupyter notebooks, Quarto documents (all renderers), Jupyter lite and Marimo notebooks (widget renderer only)
+- Works with Jupyter, JupyterLite and Marimo notebooks as well as in Quarto documents
 - Works offline, no iframe or dependency to Observable runtime
 - Caching mechanism of data objects if they are used several times in the same plot
 - Custom JavaScript code can be passed as strings with the `js` method
