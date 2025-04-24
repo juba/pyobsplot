@@ -33376,7 +33376,7 @@ var StructRow = class {
   constructor(parent, rowIndex) {
     this[kParent] = parent;
     this[kRowIndex] = rowIndex;
-    return new Proxy(this, new StructRowProxyHandler());
+    return new Proxy(this, structRowProxyHandler);
   }
   toArray() {
     return Object.values(this.toJSON());
@@ -33446,10 +33446,10 @@ var StructRowProxyHandler = class {
     return row[kParent].type.children.map((f) => f.name);
   }
   has(row, key) {
-    return row[kParent].type.children.findIndex((f) => f.name === key) !== -1;
+    return row[kParent].type.children.some((f) => f.name === key);
   }
   getOwnPropertyDescriptor(row, key) {
-    if (row[kParent].type.children.findIndex((f) => f.name === key) !== -1) {
+    if (row[kParent].type.children.some((f) => f.name === key)) {
       return { writable: true, enumerable: true, configurable: true };
     }
     return;
@@ -33476,6 +33476,7 @@ var StructRowProxyHandler = class {
     return false;
   }
 };
+var structRowProxyHandler = new StructRowProxyHandler();
 
 // node_modules/apache-arrow/visitor/get.mjs
 var GetVisitor = class extends Visitor {

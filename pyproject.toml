@@ -1,6 +1,6 @@
 [project]
 name = "pyobsplot"
-version = "0.5.3"
+version = "0.5.3.1"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
 authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
 license = { file = "LICENSE" }
@@ -19,7 +19,7 @@ dependencies = [
     "pandas>=2.0.0",
     "polars>=1.4.1",
     "requests",
-    "pyarrow>=19.0.1",
+    "pyarrow>=18.1.0",
 ]
 
 [optional-dependencies]
