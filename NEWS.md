@@ -1,8 +1,4 @@
-## pyobsplot 0.5.3.1
-
--   Fix pyarrow version to be compatible with pyodide.
-
-## pyobsplot 0.5.3
+## pyobsplot 0.5.3.2
 
 -   Installing the package with `pip install pyobsplot` now does not install the `typst` dependency anymore. To install typst and allow to use all the renderers, you have to install with `pip install pyobsplot[typst]`. This change has been made so that `pyobsplot` (with the widget renderer) could be used in pyodide-based environments like JupyterLite and Marimo.
 
