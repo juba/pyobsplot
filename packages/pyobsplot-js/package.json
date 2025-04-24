@@ -15,14 +15,14 @@
     "homepage": "https://juba.github.io/pyobsplot",
     "dependencies": {
         "@observablehq/plot": "^0.6.17",
-        "apache-arrow": "^17.0.0",
-        "canvas": "^2.11.2",
+        "apache-arrow": "^19.0.1",
+        "canvas": "^3.1.0",
         "d3": "^7.9.0",
-        "jsdom": "^24.1.1"
+        "jsdom": "^26.1.0"
     },
     "devDependencies": {
         "jsdom-global": "^3.0.2",
-        "mocha": "^10.2.0"
+        "mocha": "^11.1.0"
     },
     "bin": {
         "pyobsplot": "main.js"
