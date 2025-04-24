@@ -14,7 +14,13 @@ from pathlib import Path
 from subprocess import PIPE, Popen, SubprocessError
 from typing import Literal
 
-import typst
+try:
+    import typst  # type: ignore
+
+    HAS_TYPST = True
+except ImportError:
+    HAS_TYPST = False
+
 from IPython.display import HTML, SVG, Image, display
 from ipywidgets.embed import embed_minimal_html
 
@@ -35,20 +41,15 @@ AVAILABLE_EXTENSIONS = ["html", "svg", "png", "pdf"]
 
 def check_format_value(format: str | None) -> None:  # noqa: A002
     if format is not None and format not in AVAILABLE_FORMATS:
-        msg = (
-            f"Incorrect format value '{format}'."
-            f" Available formats are {AVAILABLE_FORMATS}."
-        )
+        msg = f"Incorrect format value '{format}'. Available formats are {AVAILABLE_FORMATS}."
         if format == "pdf":
             msg += (
-                "\nPDF output is only available when exporting to a file,"
-                " use path='<myfile>.pdf' instead. "
+                "\nPDF output is only available when exporting to a file, use path='<myfile>.pdf' instead. "
             )
         raise ValueError(msg)
 
 
 class Obsplot:
-
     def __init__(
         self,
         format: Literal["widget", "html", "svg", "png"] | None = None,  # noqa: A002
@@ -89,10 +90,7 @@ class Obsplot:
         # Check for renderer value
         if renderer is not None:
             if renderer == "widget":
-                msg = (
-                    "The 'renderer' argument is deprecated.\n"
-                    "Use format='widget' instead."
-                )
+                msg = "The 'renderer' argument is deprecated.\nUse format='widget' instead."
                 raise ValueError(msg)
             if renderer == "jsdom":
                 msg = (
@@ -119,14 +117,14 @@ class Obsplot:
         default = default or {}
         for k in default:
             if k not in ALLOWED_DEFAULTS:
-                msg = f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."  # noqa: E501
+                msg = f"{k} is not allowed in default.\nAllowed values: {ALLOWED_DEFAULTS}."
                 raise ValueError(msg)
 
         # Check format options
         format_options = format_options or {}
         for k in format_options:
             if k not in ALLOWED_FORMAT_OPTIONS:
-                msg = f"{k} is not allowed in format options.\nAllowed values: {ALLOWED_FORMAT_OPTIONS}."  # noqa: E501
+                msg = f"{k} is not allowed in format options.\nAllowed values: {ALLOWED_FORMAT_OPTIONS}."
                 raise ValueError(msg)
 
         self.theme = theme
@@ -213,9 +211,7 @@ class Obsplot:
                 case None, extension if extension in AVAILABLE_EXTENSIONS:
                     format_value = extension
                 case _, extension if extension not in AVAILABLE_EXTENSIONS:
-                    msg = (
-                        f"Output file extension should be one of {AVAILABLE_EXTENSIONS}"
-                    )
+                    msg = f"Output file extension should be one of {AVAILABLE_EXTENSIONS}"
                     raise ValueError(msg)
                 case "widget", extension if extension != "html":
                     msg = "File extension should be 'html' when exporting a widget."
@@ -225,8 +221,7 @@ class Obsplot:
                     extension,
                 ):
                     warnings.warn(
-                        f"Overriding '{format_value}' format,"
-                        f" saving to '{extension}' file.",
+                        f"Overriding '{format_value}' format, saving to '{extension}' file.",
                         stacklevel=1,
                     )
                     format_value = extension
@@ -234,7 +229,10 @@ class Obsplot:
         # Render widget
         if format_value == "widget":
             res = ObsplotWidget(
-                spec=spec, theme=theme, default=default, debug=debug  # type: ignore
+                spec=spec,
+                theme=theme,
+                default=default,
+                debug=debug,  # type: ignore
             )  # type: ignore
             if path is not None:
                 embed_minimal_html(path, views=[res], drop_defaults=False)
@@ -270,7 +268,6 @@ class Obsplot:
 
 
 class ObsplotJsdomCreator:
-
     def __init__(
         self,
     ) -> None:
@@ -396,10 +393,7 @@ class ObsplotJsdomCreator:
                 stacklevel=1,
             )
             if theme == "current":
-                msg = (
-                    "'current' theme is not available for 'svg' format"
-                    " with typst rendering"
-                )
+                msg = "'current' theme is not available for 'svg' format with typst rendering"
                 raise ValueError(msg)
             res = self.typst_render(res, format, format_options)  # type: ignore
 
@@ -433,6 +427,13 @@ class ObsplotJsdomCreator:
             Conversion result.
 
         """
+        if not HAS_TYPST:
+            msg = (
+                "To render plots using the typst renderer, you have to install pyobsplot"
+                " as pyobsplot[typst].\n"
+                "Note that typst renderer is not available under marimo or jupyterlite for now."
+            )
+            raise ImportError(msg)
 
         if options is None:
             options = {}
@@ -453,9 +454,7 @@ class ObsplotJsdomCreator:
             shutil.copy(bundler_output_dir / "template.typ", tmpdir / "template.typ")
             # Create the typst input file
             with open(input_file, "w") as typst_file:
-                typst_content = (
-                    '#import "template.typ": obsplot\n#show: obsplot("jsdom.html",'
-                )
+                typst_content = '#import "template.typ": obsplot\n#show: obsplot("jsdom.html",'
                 if "margin" in options:
                     value = options["margin"]
                     if value.isnumeric():
@@ -475,7 +474,7 @@ class ObsplotJsdomCreator:
                 typst_content += ")"
                 typst_file.write(typst_content)
 
-            typst.compile(input_file, output=output_file, ppi=100, format=format)
+            typst.compile(input_file, output=output_file, ppi=100, format=format)  # type: ignore
 
             mode = "rb" if format in ["png", "pdf"] else "r"
             with open(output_file, mode) as f:
