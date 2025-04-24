@@ -71,10 +71,7 @@ specs["titles_caption"] = {
     "marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})],
     "title": "This is a plot title",
     "subtitle": "This is a plot subtitle",
-    "caption": (
-        "And here is a plot caption long enough to span"
-        " over several lines in the generated output."
-    ),
+    "caption": ("And here is a plot caption long enough to span over several lines in the generated output."),
 }
 
 
@@ -127,9 +124,7 @@ d_pl = pl.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_polars_datetime_date"] = {
-    "marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]
-}
+specs["date_polars_datetime_date"] = {"marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]}
 
 d_pl = pl.DataFrame(
     {
@@ -141,9 +136,7 @@ d_pl = pl.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_polars_datetime_datetime"] = {
-    "marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]
-}
+specs["date_polars_datetime_datetime"] = {"marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]}
 
 d_pd = pd.DataFrame(
     {
@@ -155,9 +148,7 @@ d_pd = pd.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_pandas_datetime_date"] = {
-    "marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]
-}
+specs["date_pandas_datetime_date"] = {"marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]}
 
 d_pd = pd.DataFrame(
     {
@@ -169,9 +160,7 @@ d_pd = pd.DataFrame(
         "value": [1, 2, 3],
     }
 )
-specs["date_pandas_datetime_datetime"] = {
-    "marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]
-}
+specs["date_pandas_datetime_datetime"] = {"marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]}
 
 # Data sources ---
 
@@ -212,9 +201,7 @@ specs["complex_simpsons_cells"] = {
     "y": {"label": "Episode"},
     "color": {"type": "linear", "scheme": "PiYG"},
     "marks": [
-        Plot.cell(
-            simpsons, {"x": "season", "y": "number_in_season", "fill": "imdb_rating"}
-        ),
+        Plot.cell(simpsons, {"x": "season", "y": "number_in_season", "fill": "imdb_rating"}),
         Plot.text(
             simpsons,
             {
@@ -302,9 +289,7 @@ specs["complex_stocks"] = {
     },
     "marks": [
         Plot.ruleY([1]),
-        Plot.line(
-            stocks, Plot.normalizeY({"x": "Date", "y": "Close", "stroke": "Symbol"})
-        ),
+        Plot.line(stocks, Plot.normalizeY({"x": "Date", "y": "Close", "stroke": "Symbol"})),
         Plot.text(
             stocks,
             Plot.selectLast(
@@ -326,11 +311,7 @@ specs["complex_stocks"] = {
 
 ages = stateage.get_column("age").unique(maintain_order=True).to_list()
 states = (
-    stateage.with_columns(
-        (pl.col("population") / pl.col("population").sum().over("state")).alias(
-            "percent"
-        )
-    )
+    stateage.with_columns((pl.col("population") / pl.col("population").sum().over("state")).alias("percent"))
     .filter(pl.col("age") == "≥80")
     .sort(pl.col("percent"), descending=True)
     .get_column("state")
@@ -508,7 +489,7 @@ specs["bug_utf8"] = Plot.tickX([-1])
 def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
     output_folder = output_folder / format
     output_folder.mkdir(exist_ok=True)
-    for key in specs:
+    for key, spec in specs.items():
         if key in skip and format in skip[key]:
             continue
         path = output_folder / f"{key}.{format}"
@@ -523,7 +504,7 @@ def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
             else:
                 op.default = {}
             format_value = None if format == "pdf" else format
-            op(specs[key], format=format_value, path=path)  # type: ignore
+            op(spec, format=format_value, path=path)  # type: ignore
         else:
             logger.info(f"{key}.{format} already exists")
 
