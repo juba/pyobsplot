@@ -9,7 +9,7 @@ title: "Getting started"
 `pyobsplot` can be installed with `pip`:
 
 ```sh
-pip install pyobsplot
+pip install pyobsplot[typst]
 ```
 
 If you want to use output formats like PNG or SVG, you must have a working installation of [node.js](https://nodejs.org/en) and you must install the `pyobsplot` npm package globally or locally:
@@ -21,6 +21,13 @@ npm install pyobsplot
 npm install -g pyobsplot
 ```
 
+To use `pyobsplot` in [jupyter lite](https://jupyter.org/try-jupyter/lab/) or [marimo](https://marimo.io) you must install it without the `typst` dependency, which is not yet compatible with [pyodide](https://pyodide.org/en/stable/):
+
+```sh
+pip install pyobsplot
+```
+
+
 ## Creating a plot
 
 To use `pyobsplot`, you must import its `Plot` object with:
@@ -29,7 +36,7 @@ To use `pyobsplot`, you must import its `Plot` object with:
 from pyobsplot import Plot
 ```
 
-To create a plot, call the `Plot.plot` method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one. 
+To create a plot, call the `Plot.plot` method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.
 
 So, starting with a very simple DataFrame:
 
@@ -99,7 +106,7 @@ The output format is configured by passing a `format` argument to `Plot.plot()`:
 Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
 ```
 
-To save the plot to a file, you can add a `path` argument. The file extension will determine the output type, which can be HTML, PNG, SVG or PDF: 
+To save the plot to a file, you can add a `path` argument. The file extension will determine the output type, which can be HTML, PNG, SVG or PDF:
 
 ```python
 # Save plot as SVG
@@ -114,4 +121,3 @@ With the "widget" format, export can only be done to HTML files.
 ## Learn more
 
 To go further, see the [usage](usage.qmd) page.
-

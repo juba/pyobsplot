@@ -39,8 +39,15 @@ Plot.plot({
 `pyobsplot` can be installed with `pip`:
 
 ```sh
+pip install pyobsplot[typst]
+```
+
+To use `pyobsplot` in [jupyter lite](https://jupyter.org/try-jupyter/lab/) or [marimo](https://marimo.io) you must install it without the `typst` dependency, which is not yet compatible with [pyodide](https://pyodide.org/en/stable/):
+
+```sh
 pip install pyobsplot
 ```
+
 
 For usage instructions, see the [documentation website](https://juba.github.io/pyobsplot):
 
@@ -59,7 +66,7 @@ If you just want to try this package without installing it on your computer, you
 -   Plots can be generated as Jupyter widgets, or as SVG, HTML or PNG outputs (via typst)
 -   Plots can be saved to Widget HTML, static HTML, SVG, PNG or PDF files
 -   [Pandas](https://pandas.pydata.org) and [polars](https://pola.rs) DataFrame and Series objects are serialized using [Arrow](https://arrow.apache.org) IPC format for improved speed and better data type conversions
--   Works with Jupyter notebooks and Quarto documents
+-   Works with Jupyter notebooks, Quarto documents (all renderers), Jupyter lite and Marimo notebooks (widget renderer only)
 -   Works offline, no iframe or dependency to Observable runtime
 -   Caching mechanism of data objects if they are used several times in the same plot
 -   Custom JavaScript code can be passed as strings with the `js` method
