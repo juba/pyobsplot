@@ -1,13 +1,9 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "pyobsplot"
 version = "0.5.3"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
 authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -19,13 +15,39 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-    "anywidget>=0.9.13",
+    "anywidget>=0.9.18",
     "pandas>=2.0.0",
     "polars>=1.4.1",
     "requests",
-    "typst>=0.11.1",
-    "pyarrow>=17.0.0",
+    "pyarrow>=19.0.1",
 ]
+
+[optional-dependencies]
+typst = [
+    "typst>=0.13.2"
+]
+
+[dependency-groups]
+dev = [
+    "anywidget[dev]>=0.9.18",
+    "pytest>=8.2.1",
+    "geopandas>=0.14.4",
+    "jupyterlab>=4.4.1",
+    "ipykernel>=6.29.5",
+    "playwright>=1.44.0",
+]
+typst = [
+    "typst>=0.13.2"
+]
+
+
+[tool.uv]
+default-groups = "all"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 
 [project.urls]
 homepage = "https://github.com/juba/pyobsplot"
@@ -33,37 +55,19 @@ documentation = "https://juba.github.io/pyobsplot"
 repository = "https://github.com/juba/pyobsplot"
 changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
-[tool.uv]
-dev-dependencies = [
-    "anywidget[dev]>=0.9.13",    
-    "pytest>=8.2.1",
-    "geopandas>=0.14.4",
-    "jupyterlab>=4.2.1",
-    "ipykernel>=6.29.4",
-    "playwright>=1.44.0",
-]
-
-#[tool.hatch.metadata]
-#allow-direct-references = true
-
 [tool.hatch.build.targets.sdist]
 exclude = [".github", "doc", ".vscode", "examples", "tests", "utils"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pyobsplot"]
 
-[tool.black]
-target-version = ["py310"]
-line-length = 88
-skip-string-normalization = true
-
 [tool.pytest.ini_options]
 testpaths = "tests"
 pythonpath = "src"
 filterwarnings = "ignore::DeprecationWarning"
 
-
 [tool.ruff]
+target-version = "py310"
 exclude = ["__pycache__", "__pypackages__", ".git"]
 line-length = 88
 
@@ -115,7 +119,7 @@ ignore = [
     # Ignore datetime timezone
     "DTZ001",
     # Ignore Uppercase in method names
-    "N802"
+    "N802",
 ]
 unfixable = [
     # Don't touch unused imports
@@ -140,4 +144,3 @@ ban-relative-imports = "all"
 [tool.ruff.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
-
