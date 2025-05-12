@@ -13,7 +13,6 @@ from pyobsplot.data import serialize
 
 
 class SpecParser:
-
     def __init__(
         self,
         renderer: Literal["widget", "jsdom"] = "widget",
@@ -41,11 +40,7 @@ class SpecParser:
         return self._spec
 
     def set_spec(self, value: dict, *, force_figure: bool = False):
-        if (
-            "pyobsplot-type" in value
-            and value["pyobsplot-type"] == "function"
-            and value["module"] == "Plot"
-        ):
+        if "pyobsplot-type" in value and value["pyobsplot-type"] == "function" and value["module"] == "Plot":
             value = {"marks": [value]}
         if force_figure:
             value["figure"] = True
@@ -134,11 +129,7 @@ class SpecParser:
         if isinstance(spec, str) and spec[0:28] == '{"type": "FeatureCollection"':
             spec = json.loads(spec)
         # If Geojson as dict, handle caching, don't parse, add type and returns as is
-        if (
-            isinstance(spec, dict)
-            and "type" in spec
-            and spec["type"] == "FeatureCollection"
-        ):
+        if isinstance(spec, dict) and "type" in spec and spec["type"] == "FeatureCollection":
             index = self.cache_index(spec)
             if index is None:
                 self.data.append(spec)
@@ -184,13 +175,10 @@ class SpecParser:
             return {"pyobsplot-type": "datetime", "value": spec.isoformat()}
         # Handling of JavaScript methods as objects, such as "Math.sin"
         # Manually call the parsed result and add a special "function-object" type
-        if (
-            callable(spec)
-            and isinstance(spec(), dict)
-            and spec()["pyobsplot-type"] == "function"
-        ):
+        if callable(spec):
             out = spec()
-            out["pyobsplot-type"] = "function-object"
+            if isinstance(out, dict) and out["pyobsplot-type"] == "function":
+                out["pyobsplot-type"] = "function-object"
             return out
         return spec
 
