@@ -22,10 +22,8 @@ dependencies = [
     "pyarrow==18.1.0",
 ]
 
-[optional-dependencies]
-typst = [
-    "typst>=0.13.2"
-]
+[project.optional-dependencies]
+typst = ["typst>=0.13.2"]
 
 [dependency-groups]
 dev = [
@@ -36,9 +34,7 @@ dev = [
     "ipykernel>=6.29.5",
     "playwright>=1.44.0",
 ]
-typst = [
-    "typst>=0.13.2"
-]
+typst = ["typst>=0.13.2"]
 
 
 [tool.uv]
