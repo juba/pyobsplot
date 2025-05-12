@@ -93,7 +93,7 @@ v = [random.gauss(0,1) for i in range(1000)]
 
 Plot.plot(
     Plot.tickX(
-        v, 
+        v,
         {"stroke": "steelblue", "opacity": 0.2}
     )
 )
@@ -103,7 +103,7 @@ You can call also call the `plot()` method directly on a Plot mark method:
 
 ```{python}
 Plot.tickX(
-        v, 
+        v,
         {"stroke": "steelblue", "opacity": 0.2}
     ).plot()
 ```
@@ -215,7 +215,7 @@ Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), format="png")
 
 ## Saving plots to file
 
-Plots can be saved to a file. To do this, just add a `path` argument to your generator or `Plot.plot` call:
+Plots can be saved to a file. To do this, just add a `path` argument to your `Plot.plot` call:
 
 ```{python}
 #| eval: false
@@ -225,7 +225,7 @@ Plot.plot(Plot.lineY([1,2,3,2]), path="path_to/file.svg")
 
 ### Widget format
 
-When using the `widget` format, plots can only be saved to HTML files. These files retain interactive features such as tooltips. 
+When using the `widget` format, plots can only be saved to HTML files. These files retain interactive features such as tooltips.
 
 
 ```{python}
@@ -259,6 +259,7 @@ When saving a plot to an HTML file, the result will depend on the `format` value
 Plot generates charts as SVG, but if a legend, title, subtitle or caption is present, the SVG is wrapped in a `<figure>` HTML tag. In this case, when saving to an SVG file, the plot will be converted using `typst`.
 :::
 
+It is also possible to pass an `io.StringIO` object as `path` argument if you want to get the generated plot file as a Python object.
 
 
 ## Themes
@@ -360,7 +361,7 @@ op_colors = Obsplot(
     format = "html",
     theme = "dark",
     default={
-        "width": 400, 
+        "width": 400,
         "margin": 50,
         "style": {"color": "#54A4C4"}
     }
@@ -437,7 +438,7 @@ Plot.plot({
 })
 ```
 
-In this case, caching ensures that the `penguins` DataFrame is only serialized and transmitted once instead of twice. 
+In this case, caching ensures that the `penguins` DataFrame is only serialized and transmitted once instead of twice.
 
 ### datetime objects
 
@@ -447,7 +448,7 @@ That makes the following two specifications equivalent:
 
 ```{python}
 Plot.plot({
-    "x": {"domain": [js("new Date('2021-01-01')"), js("new Date('2022-01-01')")]}, 
+    "x": {"domain": [js("new Date('2021-01-01')"), js("new Date('2022-01-01')")]},
     "grid": True
 })
 ```
@@ -455,7 +456,7 @@ Plot.plot({
 ```{python}
 from datetime import date
 Plot.plot({
-    "x": {"domain": [date(2021,1,1), date(2022,1,1)]}, 
+    "x": {"domain": [date(2021,1,1), date(2022,1,1)]},
     "grid": True
 })
 ```
@@ -464,7 +465,7 @@ As well as the two following ones, using `datetime`:
 
 ```{python}
 Plot.plot({
-    "x": {"domain": [js("new Date('2021-01-01T07:00:00')"), js("new Date('2021-01-01T08:00:00')")]}, 
+    "x": {"domain": [js("new Date('2021-01-01T07:00:00')"), js("new Date('2021-01-01T08:00:00')")]},
     "grid": True
 })
 ```
@@ -472,7 +473,7 @@ Plot.plot({
 ```{python}
 from datetime import datetime
 Plot.plot({
-    "x": {"domain": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]}, 
+    "x": {"domain": [datetime(2021,1,1,7,0,0), datetime(2021,1,1,8,0,0)]},
     "grid": True
 })
 ```
@@ -522,5 +523,3 @@ display(plot)
 ```
 
 You can see a live version of this example in the following Colab notebook: [![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/interactivity.ipynb)
-
-
