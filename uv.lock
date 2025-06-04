@@ -1426,9 +1426,6 @@ dev = [
     { name = "playwright" },
     { name = "pytest" },
 ]
-typst = [
-    { name = "typst" },
-]
 
 [package.metadata]
 requires-dist = [
@@ -1450,7 +1447,6 @@ dev = [
     { name = "playwright", specifier = ">=1.44.0" },
     { name = "pytest", specifier = ">=8.2.1" },
 ]
-typst = [{ name = "typst", specifier = ">=0.13.2" }]
 
 [[package]]
 name = "pyogrio"
