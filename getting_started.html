@@ -294,12 +294,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="creating-a-plot" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-plot">Creating a plot</h2>
 <p>To use <code>pyobsplot</code>, you must import its <code>Plot</code> object with:</p>
-<div id="410e2729" class="cell" data-execution_count="2">
+<div id="3c723196" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyobsplot <span class="im">import</span> Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To create a plot, call the <code>Plot.plot</code> method with a plot specification: a Python dictionary with a syntax nearly identical as the JavaScript one.</p>
 <p>So, starting with a very simple DataFrame:</p>
-<div id="4a7a3a9d" class="cell" data-execution_count="3">
+<div id="2a66847c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pl.DataFrame(</span>
@@ -318,7 +318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then you can reproduce the plot with:</p>
-<div id="c9fe8223" class="cell" data-execution_count="4">
+<div id="cdcb75c7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"grid"</span>: <span class="va">True</span>,</span>
@@ -341,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The syntax here is almost identical, except that dictionary keys must be quoted, and JavaScript <code>true</code> is be replaced by Python <code>True</code>.</p>
 <p>You can use <a href="https://pandas.pydata.org">pandas</a> and <a href="https://pola.rs">polars</a> DataFrames as data sources, they are automatically serialized and passed to JavaScript via Arrow IPC format:</p>
-<div id="ee9c4331" class="cell" data-execution_count="5">
+<div id="24118307" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>Plot.plot(</span>
