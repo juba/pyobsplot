@@ -1,3 +1,5 @@
+## pyobsplot 0.5.5 (dev)
+
 ## pyobsplot 0.5.4
 
 - Upgrade pyarrow dependency
