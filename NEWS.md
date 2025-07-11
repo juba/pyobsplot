@@ -1,3 +1,7 @@
+## pyobsplot 0.5.4
+
+- Upgrade pyarrow dependency
+
 ## pyobsplot 0.5.3.3
 
 - Fix wrong optional-dependencies in pyproject.toml
