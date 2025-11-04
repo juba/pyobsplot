@@ -2,52 +2,48 @@
 name = "pyobsplot"
 version = "0.5.5"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
-authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
-license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Framework :: Jupyter :: JupyterLab",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: JavaScript",
-    "Topic :: Scientific/Engineering :: Visualization",
+  "Development Status :: 4 - Beta",
+  "Framework :: Jupyter :: JupyterLab",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: JavaScript",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-    "anywidget>=0.9.18",
-    "pandas>=2.0.0",
-    "polars>=1.4.1",
-    "requests",
-    "pyarrow>=20.0.0",
+  "anywidget>=0.9.18",
+  "pandas>=2.0.0",
+  "polars>=1.4.1",
+  "pyarrow>=20.0.0",
+  "requests",
 ]
 
+[project.urls]
+changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
+documentation = "https://juba.github.io/pyobsplot"
+homepage = "https://github.com/juba/pyobsplot"
+repository = "https://github.com/juba/pyobsplot"
+
 [project.optional-dependencies]
-typst = ["typst>=0.13.2"]
+typst = ["typst>=0.14.1"]
 
 [dependency-groups]
 dev = [
-    "anywidget[dev]>=0.9.18",
-    "pytest>=8.2.1",
-    "geopandas>=0.14.4",
-    "jupyterlab>=4.4.1",
-    "ipykernel>=6.29.5",
-    "playwright>=1.44.0",
+  "anywidget[dev]>=0.9.18",
+  "geopandas>=0.14.4",
+  "ipykernel>=6.29.5",
+  "jupyterlab>=4.4.1",
+  "playwright>=1.44.0",
+  "pytest>=8.2.1",
 ]
-
-[tool.uv]
-default-groups = "all"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-
-[project.urls]
-homepage = "https://github.com/juba/pyobsplot"
-documentation = "https://juba.github.io/pyobsplot"
-repository = "https://github.com/juba/pyobsplot"
-changelog = "https://github.com/juba/pyobsplot/blob/main/NEWS.md"
 
 [tool.hatch.build.targets.sdist]
 exclude = [".github", "doc", ".vscode", "examples", "tests", "utils"]
@@ -56,9 +52,9 @@ exclude = [".github", "doc", ".vscode", "examples", "tests", "utils"]
 packages = ["src/pyobsplot"]
 
 [tool.pytest.ini_options]
-testpaths = "tests"
-pythonpath = "src"
 filterwarnings = "ignore::DeprecationWarning"
+pythonpath = "src"
+testpaths = "tests"
 
 [tool.ruff]
 target-version = "py310"
@@ -67,57 +63,57 @@ line-length = 88
 
 [tool.ruff.lint]
 select = [
-    "A",
-    "ARG",
-    "B",
-    "C",
-    "DTZ",
-    "E",
-    "EM",
-    "F",
-    "FBT",
-    "I",
-    "ICN",
-    "ISC",
-    "N",
-    "PLC",
-    "PLE",
-    "PLR",
-    "PLW",
-    "Q",
-    "RUF",
-    "S",
-    "T",
-    "TID",
-    "UP",
-    "W",
-    "YTT",
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
 ]
 ignore = [
-    # Allow non-abstract empty methods in abstract base classes
-    "B027",
-    # Allow boolean positional values in function calls, like `dict.get(... True)`
-    "FBT003",
-    # Ignore checks for possible passwords
-    "S105",
-    "S106",
-    "S107",
-    # Ignore complexity
-    "C901",
-    "PLR0911",
-    "PLR0912",
-    "PLR0913",
-    "PLR0915",
-    "S301",
-    "S113",
-    # Ignore datetime timezone
-    "DTZ001",
-    # Ignore Uppercase in method names
-    "N802",
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
+  # Ignore complexity
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
+  "S301",
+  "S113",
+  # Ignore datetime timezone
+  "DTZ001",
+  # Ignore Uppercase in method names
+  "N802",
 ]
 unfixable = [
-    # Don't touch unused imports
-    "F401",
+  # Don't touch unused imports
+  "F401",
 ]
 
 [tool.ruff.lint.isort]
@@ -138,3 +134,6 @@ ban-relative-imports = "all"
 [tool.ruff.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.uv]
+default-groups = "all"

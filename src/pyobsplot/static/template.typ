@@ -10,9 +10,9 @@
 
 
 #let encode-xml(elem) = {
-  if (type(elem) == "string") {
+  if (type(elem) == str) {
     decode-ampersand(elem)
-  } else if (type(elem) == "dictionary") {
+  } else if (type(elem) == dictionary) {
     "<" + elem.tag + elem.attrs.pairs().map(
         v => " " + v.at(0) + "=\"" + decode-ampersand(v.at(1)) + "\""
     ).join("") + if (elem.tag == "svg") {" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\""} + ">" + elem.children.map(encode-xml).join("") + "</" + elem.tag + ">"
@@ -37,11 +37,11 @@
     let swatch-item(elem) = {
         set align(horizon)
         stack(
-            dir: ltr, 
-            spacing: .2em, 
-            image.decode(
-                encode-xml(elem.children.first()), 
-                width: 1in * float(elem.children.first().attrs.width) / dpi, 
+            dir: ltr,
+            spacing: .2em,
+            image(
+                bytes(encode-xml(elem.children.first())),
+                width: 1in * float(elem.children.first().attrs.width) / dpi,
                 height: 1in * float(elem.children.first().attrs.width) /dpi
             ),
             text(elem.children.last(), size: 1in * 10/dpi)
@@ -50,8 +50,8 @@
 
     let swatch(elem) = {
         stack(
-            dir: ltr, 
-            spacing: .6em, 
+            dir: ltr,
+            spacing: .6em,
             ..elem.children.filter(e => e.tag == "span").map(swatch-item)
         )
     }
@@ -68,7 +68,7 @@
     let legends = figuresvgs
     .filter(svg => "ramp" in svg.attrs.class)
     .map(svg => (..svg, attrs: (..svg.attrs,
-                                 width: str(float(svg.attrs.width) + 2*legend-padding), 
+                                 width: str(float(svg.attrs.width) + 2*legend-padding),
                                  viewbox: "-"+str(legend-padding)+" 0 "+str(float(svg.attrs.width)+legend-padding)+" "+str(float(svg.attrs.height)))
                                 ))
     let mainfigure = figuresvgs.find(svg => "ramp" not in svg.attrs.class)
@@ -96,8 +96,8 @@
             v(1in * 8/dpi)
         },
         ..figure.children.filter(e => e.tag == "div").map(swatch),
-        ..legends.map(svg => image.decode(encode-xml(svg), height: 1in * float(svg.attrs.height) / dpi)),
-        image.decode(encode-xml(mainfigure), height: 1in * float(mainfigure.attrs.height) / dpi),
+        ..legends.map(svg => image(bytes(encode-xml(svg)), height: 1in * float(svg.attrs.height) / dpi)),
+        image(bytes(encode-xml(mainfigure)), height: 1in * float(mainfigure.attrs.height) / dpi),
         if (caption != none) {
             set text(size: 1in * 13/dpi, fill: rgb(caption_color), weight: 500)
             text(caption.children.first())
