@@ -167,7 +167,7 @@ class TestInit:
         assert r.status_code == 200
         assert (
             r.content.decode()
-            == '<pre style="color: rgb(221, 51, 51); padding: .5em 1em;">⚠ Error: must specify x or y</pre>'  # noqa: E501
+            == '<pre style="color: rgb(221, 51, 51); padding: .5em 1em;">⚠ Error: must specify x or y</pre>'
         )
 
         # bad /plot request
@@ -204,8 +204,7 @@ class TestInit:
 
     def test_path_html_warning(self, op):
         html_warning = (
-            "Exporting widget to HTML. If you want "
-            "to output to a static HTML file, add format='html'"
+            "Exporting widget to HTML. If you want to output to a static HTML file, add format='html'"
         )
         file_path = tempfile.NamedTemporaryFile(suffix=".html")
         with pytest.warns(match=html_warning):

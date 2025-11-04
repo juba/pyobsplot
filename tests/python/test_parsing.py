@@ -183,20 +183,20 @@ class TestParse:
             "method": "dot",
             "args": [],
         }
-        assert SpecParser().parse(js_modules.d3.bar(1, "baz")) == {
+        assert SpecParser().parse(js_modules.d3.bar(1, "baz")) == {  # type: ignore
             "pyobsplot-type": "function",
             "module": "d3",
             "method": "bar",
             "args": [1, "baz"],
         }
-        assert SpecParser().parse(js_modules.Math.random) == {
+        assert SpecParser().parse(js_modules.Math.random) == {  # type: ignore
             "pyobsplot-type": "function-object",
             "module": "Math",
             "method": "random",
             "args": (),
         }
         with pytest.raises(ValueError):
-            SpecParser().parse(js_modules.d3.bar(1, x="baz"))
+            SpecParser().parse(js_modules.d3.bar(1, x="baz"))  # type: ignore
         assert SpecParser().parse(js("d => d.foo")) == {
             "pyobsplot-type": "js",
             "value": "d => d.foo",
