@@ -444,37 +444,36 @@ class ObsplotJsdomCreator:
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmpdir = Path(tmpdirname)
+            jsdom_file = tmpdir / "jsdom.html"
             input_file = tmpdir / "input.typ"
             output_file = tmpdir / f"out.{format}"
 
             # Write HTML jsdom output to file
-            with open(tmpdir / "jsdom.html", "w") as jsdom_out:
-                jsdom_out.write(str(figure.data))
+            jsdom_file.write_text(str(figure.data))
             # Copy typst template
             shutil.copy(bundler_output_dir / "template.typ", tmpdir / "template.typ")
             # Create the typst input file
-            with open(input_file, "w") as typst_file:
-                typst_content = '#import "template.typ": obsplot\n#show: obsplot("jsdom.html",'
-                if "margin" in options:
-                    value = options["margin"]
-                    if value.isnumeric():
-                        value = value + "pt"
-                    typst_content += f"margin: {value},"
-                if "font" in options:
-                    value = options["font"]
-                    typst_content += f'font-family: "{value}",'
-                if "scale" in options:
-                    value = options["scale"]
-                    typst_content += f"scale: {value},"
-                if "legend-padding" in options:
-                    value = options["legend-padding"]
-                    if value.isnumeric():
-                        value = value + "pt"
-                    typst_content += f"legend-padding: {value},"
-                typst_content += ")"
-                typst_file.write(typst_content)
+            typst_content = '#import "template.typ": obsplot\n#show: obsplot("jsdom.html",'
+            if "margin" in options:
+                value = options["margin"]
+                if value.isnumeric():
+                    value = value + "pt"
+                typst_content += f"margin: {value},"
+            if "font" in options:
+                value = options["font"]
+                typst_content += f'font-family: "{value}",'
+            if "scale" in options:
+                value = options["scale"]
+                typst_content += f"scale: {value},"
+            if "legend-padding" in options:
+                value = options["legend-padding"]
+                if value.isnumeric():
+                    value = value + "pt"
+                typst_content += f"legend-padding: {value},"
+            typst_content += ")"
+            input_file.write_text(typst_content)
 
-            typst.compile(input_file, output=output_file, ppi=100, format=format)  # type: ignore
+            typst.compile(input=input_file, output=output_file, ppi=100, format=format)  # pyright: ignore[reportPossiblyUnboundVariable]
 
             mode = "rb" if format in ["png", "pdf"] else "r"
             with open(output_file, mode) as f:
