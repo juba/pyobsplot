@@ -1,29 +1,29 @@
 {
-    "dependencies": {
-        "@observablehq/plot": "^0.6.17",
-        "anywidget": "^0.9.0",
-        "d3": "^7.9.0",
-        "d3-scale-chromatic": "^3.1.0"
-    },
-    "scripts": {
-        "bundle": "esbuild --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] src/js/widget.js src/js/styles.css",
-        "dev": "npm run bundle -- --watch",
-        "build": "npm run bundle && uv build",
-        "test": "uv run pytest",
-        "uistart": "uv run -- jupyter lab --config tests/ui/jupyter_server_config.py",
-        "uitest": "npx playwright test --workers=1 --config tests/ui/playwright.config.cjs",
-        "uitest:debug": "PWDEBUG=1 npm run uitest",
-        "uitest:report": "http-server ./tests/ui/playwright-report -a localhost -o",
-        "uitest:update": "npm run uitest -- --update-snapshots",
-        "uitest:ui": "npm run uitest -- --ui"
-    },
-    "devDependencies": {
-        "@jupyterlab/galata": "^5.1.5",
-        "@playwright/test": "^1.38.1",
-        "esbuild": "^0.25.0"
-    },
-    "type": "module",
-    "workspaces": [
-        "packages/pyobsplot-js"
-    ]
+  "dependencies": {
+    "@observablehq/plot": "^0.6.17",
+    "anywidget": "^0.9.0",
+    "d3": "^7.9.0",
+    "d3-scale-chromatic": "^3.1.0"
+  },
+  "scripts": {
+    "bundle": "esbuild --minify --format=esm --bundle --outdir=src/pyobsplot/static --entry-names=static-[name] src/js/widget.js src/js/styles.css",
+    "dev": "npm run bundle -- --watch",
+    "build": "npm run bundle && uv build",
+    "test": "uv run pytest",
+    "uistart": "uv run -- jupyter lab --config tests/ui/jupyter_server_config.py",
+    "uitest": "npx playwright test --workers=1 --config tests/ui/playwright.config.cjs",
+    "uitest:debug": "PWDEBUG=1 npm run uitest",
+    "uitest:report": "http-server ./tests/ui/playwright-report -a localhost -o",
+    "uitest:update": "npm run uitest -- --update-snapshots",
+    "uitest:ui": "npm run uitest -- --ui"
+  },
+  "devDependencies": {
+    "@jupyterlab/galata": "^5.1.5",
+    "@playwright/test": "^1.38.1",
+    "esbuild": "^0.25.0"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/pyobsplot-js"
+  ]
 }
