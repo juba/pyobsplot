@@ -24,16 +24,16 @@ wheels = [
 
 [[package]]
 name = "anywidget"
-version = "0.9.18"
+version = "0.9.20"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ipywidgets" },
     { name = "psygnal" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ed/69/20423d6abd2a57d767d20a9dcf3f816bd4cbbe4813ac7c7158ba16e44c3f/anywidget-0.9.18.tar.gz", hash = "sha256:262cf459b517a7d044d6fbc84b953e9c83f026790b2dd3ce90f21a7f8eded00f", size = 9808509, upload-time = "2025-03-23T20:01:22.358Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ac/a4/9a48712ac01ed9e65f02a5cf869910b21137621587dd9720d75006dc0577/anywidget-0.9.20.tar.gz", hash = "sha256:b215e1af8f964326abc52e29cd21b05847d75c7f32091c5fc49cd51674a0abad", size = 359052, upload-time = "2025-11-11T20:01:42.565Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2b/f0/09a30ca0551af20c7cefa7464b7ccb6f5407a550b83c4dcb15c410814849/anywidget-0.9.18-py3-none-any.whl", hash = "sha256:944b82ef1dd17b8ff0fb6d1f199f613caf9111338e6e2857da478f6e73770cb8", size = 220671, upload-time = "2025-03-23T20:01:21.057Z" },
+    { url = "https://files.pythonhosted.org/packages/c6/6a/0c281f9254311b9d1f335b769e046a32ce89698e3b5f0c849db733dbf57a/anywidget-0.9.20-py3-none-any.whl", hash = "sha256:032c901ca39f07bf0d43df15bfaa7a3d34a4c0c8d696bc0f52292c452c5a9c53", size = 189738, upload-time = "2025-11-11T20:01:41.187Z" },
 ]
 
 [package.optional-dependencies]
@@ -1451,7 +1451,7 @@ provides-extras = ["typst"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "anywidget", extras = ["dev"], specifier = ">=0.9.18" },
+    { name = "anywidget", extras = ["dev"], specifier = ">=0.9.20" },
     { name = "geopandas", specifier = ">=0.14.4" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "jupyterlab", specifier = ">=4.4.1" },

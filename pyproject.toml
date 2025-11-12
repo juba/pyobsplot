@@ -33,7 +33,7 @@ typst = ["typst>=0.14.1"]
 
 [dependency-groups]
 dev = [
-  "anywidget[dev]>=0.9.18",
+  "anywidget[dev]>=0.9.20",
   "geopandas>=0.14.4",
   "ipykernel>=6.29.5",
   "jupyterlab>=4.4.1",
@@ -134,6 +134,15 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ty.environment]
+python-version = "3.10"
+
+[tool.ty.src]
+include = [
+  "src",
+  "tests",
+]
 
 [tool.uv]
 default-groups = "all"
