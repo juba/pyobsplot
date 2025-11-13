@@ -33,7 +33,7 @@ typst = ["typst>=0.14.1"]
 
 [dependency-groups]
 dev = [
-  "anywidget[dev]>=0.9.20",
+  "anywidget[dev]>=0.9.21",
   "geopandas>=0.14.4",
   "ipykernel>=6.29.5",
   "jupyterlab>=4.4.1",
