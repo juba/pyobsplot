@@ -47,8 +47,6 @@ The result is put into `src/pyobsplot/static`.
 
 ## Tests
 
-`pyobsplot` comes with three types of tests : Python test, JavaScript tests and Visual regression tests.
-
 To run Python tests, use:
 
 ```sh
@@ -59,26 +57,6 @@ To run JavaScript tests, use:
 
 ```sh
 npm run test --workspaces
-```
-
-Visual regression tests allow to test if generated plots stay the same. They use the [galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) framework. To run them you first have to start a specific Jupyter instance with:
-
-```sh
-npm run uistart
-```
-
-If you use visual regression tests for the first time, you have to generate reference images with:
-
-```sh
-# Create / update reference images
-npm run uitest:update
-```
-
-After that, you can test that currently generated images are the same as the reference one with:
-
-```sh
-# Compare with reference images
-npm run uitest
 ```
 
 ## Debug mode

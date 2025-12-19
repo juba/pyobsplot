@@ -11,7 +11,7 @@ import pytest
 from pyobsplot import Obsplot
 from pyobsplot.utils import DEFAULT_THEME
 
-REFERENCE_PATH = Path("tests/python/jsdom_reference")
+REFERENCE_PATH = Path("tests/jsdom_reference")
 
 
 @pytest.fixture(scope="module")
