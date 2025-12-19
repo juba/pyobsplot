@@ -39,6 +39,8 @@ dev = [
   "jupyterlab>=4.4.1",
   "playwright>=1.44.0",
   "pytest>=8.2.1",
+  "ruff>=0.14.10",
+  "ty>=0.0.4",
 ]
 
 [build-system]
@@ -128,6 +130,9 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.ty.environment]
 python-version = "3.10"
