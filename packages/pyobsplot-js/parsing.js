@@ -3,6 +3,19 @@
 import * as Plot from "@observablehq/plot"
 import * as d3 from "d3"
 import * as arrow from "apache-arrow"
+import * as lz4 from "lz4js"
+
+// Arrow IPC lz4 compression
+const lz4Codec = {
+    encode(data) {
+        return lz4.compress(data)
+    },
+    decode(data) {
+        return lz4.decompress(data)
+    },
+}
+
+arrow.compressionRegistry.set(arrow.CompressionType.LZ4_FRAME, lz4Codec)
 
 export function unserialize_data(data, renderer) {
     let result = Array()

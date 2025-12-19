@@ -18,7 +18,7 @@ dependencies = [
   "anywidget>=0.9.18",
   "pandas>=2.0.0",
   "polars>=1.4.1",
-  "pyarrow>=20.0.0",
+  "pyarrow>=22.0.0",
   "requests",
 ]
 

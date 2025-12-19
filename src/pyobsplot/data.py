@@ -73,7 +73,7 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
     df[datetime_columns] = df[datetime_columns].astype("datetime64[ms]")
 
     f = io.BytesIO()
-    df.to_feather(f, compression="uncompressed")
+    df.to_feather(f, compression="lz4")
     return f.getvalue()
 
 
@@ -99,5 +99,5 @@ def pl_to_arrow(df: pl.DataFrame) -> bytes:
 
     f = io.BytesIO()
     df_pd = df.to_pandas()
-    df_pd.to_feather(f, compression="uncompressed")
+    df_pd.to_feather(f, compression="lz4")
     return f.getvalue()
