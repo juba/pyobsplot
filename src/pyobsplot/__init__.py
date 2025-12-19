@@ -7,4 +7,4 @@ from pyobsplot.plot import Plot
 
 __version__ = importlib.metadata.version("pyobsplot")
 
-__all__ = ["Obsplot", "Plot", "d3", "Math", "js"]
+__all__ = ["Math", "Obsplot", "Plot", "d3", "js"]
