@@ -151,6 +151,8 @@ source-exclude = [
   ".github",
   ".doc",
   ".vscode",
+  ".editorconfig",
+  ".prettierrc.json",
   "examples",
   "tests",
   "utils",
