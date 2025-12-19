@@ -4,7 +4,7 @@
     line-height: 28px;
     font-size: 20px;
     font-weight: 600;
-    letter-spacing: -.01em;
+    letter-spacing: -0.01em;
     margin: 0;
 }
 
@@ -20,7 +20,6 @@
     font-size: 12px;
     font-weight: 500;
 }
-
 
 /* Themes */
 
@@ -56,7 +55,7 @@
     color: currentColor;
 }
 
-.pyobsplot-plot.current [aria-label=tip] {
+.pyobsplot-plot.current [aria-label="tip"] {
     fill: white;
     color: black;
     stroke: black;

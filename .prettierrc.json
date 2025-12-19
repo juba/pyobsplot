@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json.schemastore.org/prettierrc",
+    "semi": false,
+    "tabWidth": 4,
+    "singleQuote": false,
+    "printWidth": 90,
+    "trailingComma": "es5",
+    "arrowParens": "always",
+    "overrides": [
+        {
+            "files": ["*.qmd", "*.md"],
+            "options": {
+                "parser": "markdown"
+            }
+        }
+    ]
+}
