@@ -54,7 +54,7 @@ testpaths = "tests"
 
 [tool.ruff]
 target-version = "py310"
-exclude = ["__pycache__", "__pypackages__", ".git"]
+extend-exclude = ["packages", "doc"]
 line-length = 88
 
 [tool.ruff.lint]
