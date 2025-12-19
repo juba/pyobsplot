@@ -2,12 +2,11 @@
 title: "Development"
 ---
 
-
 ## Install from git
 
 To install `pyobsplot` from git:
 
-```sh 
+```sh
 pip install git+https://github.com/juba/pyobsplot.git
 ```
 
@@ -24,9 +23,8 @@ If you want to build `pyobsplot` from source, you'll have to follow these steps:
 - Install [node.js](https://nodejs.org/en)
 - Install [uv](https://docs.astral.sh/uv/getting-started/installation/) dependency management system
 - Clone the [pyobsplot](https://github.com/juba/pyobsplot) repository
-- Install Python and Python dependencies with : `uv sync`
-- Install `pyobsplot-js` JavaScript dependencies with : `npm install --workspaces`
-- Install `pyobsplot` dependencies with : `npm install`
+- Install Python dependencies with: `uv sync`
+- Install JavaScript dependencies with: `npm install --workspaces --include-root-workspace`
 
 The `widget` renderer uses the [anywidget](https://anywidget.dev) Jupyter widget framework. Python source code is in `src/pyobsplot/widget.py`. JavaScript and CSS source code are in `js/` and `css/`.
 
@@ -34,7 +32,7 @@ The `jsdom` renderer is provided by the `pyobsplot-js` npm package whose source 
 
 ## Widget JavaScript modification and bundling
 
-Each time the widget JavaScript or CSS code is modified in the `js/` or  `css/` directories, it must be bundled with one of the following commands in `pyobsplot`:
+Each time the widget JavaScript or CSS code is modified in the `js/` or `css/` directories, it must be bundled with one of the following commands in `pyobsplot`:
 
 ```sh
 # Bundle only once
@@ -43,7 +41,7 @@ npm run bundle
 npm run watch
 ```
 
-The result is put into `src/pyobsplot/static`. 
+The result is put into `src/pyobsplot/static`.
 
 ## Tests
 
@@ -79,7 +77,6 @@ To generate the documentation with Quarto:
 ```sh
 uv run quarto render doc/
 ```
-
 
 ## Maintenance notes
 
