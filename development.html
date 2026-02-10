@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-af17009a09fe2fb59a7bf5ed299726c9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-aa0006ec45185f41362e9cf29e779a84.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-7a3eaccc783c981f11d47746ab14e9c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -298,9 +298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Install <a href="https://nodejs.org/en">node.js</a></li>
 <li>Install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a> dependency management system</li>
 <li>Clone the <a href="https://github.com/juba/pyobsplot">pyobsplot</a> repository</li>
-<li>Install Python and Python dependencies with : <code>uv sync</code></li>
-<li>Install <code>pyobsplot-js</code> JavaScript dependencies with : <code>npm install --workspaces</code></li>
-<li>Install <code>pyobsplot</code> dependencies with : <code>npm install</code></li>
+<li>Install Python dependencies with: <code>uv sync</code></li>
+<li>Install JavaScript dependencies with: <code>npm install --workspaces --include-root-workspace</code></li>
 </ul>
 <p>The <code>widget</code> renderer uses the <a href="https://anywidget.dev">anywidget</a> Jupyter widget framework. Python source code is in <code>src/pyobsplot/widget.py</code>. JavaScript and CSS source code are in <code>js/</code> and <code>css/</code>.</p>
 <p>The <code>jsdom</code> renderer is provided by the <code>pyobsplot-js</code> npm package whose source is in <code>packages/pyobsplot-js</code>. Python source code is in <code>src/pyobsplot/jsdom.py</code>.</p>
@@ -325,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="debug-mode">Debug mode</h2>
 <p>“Debug mode” outputs the computed JavaScript plot structure (the one passed to <code>Plot.plot</code>).</p>
 <p>To activate it, add <code>debug=True</code> when using <code>Plot.plot()</code> or when creating your plot generator object:</p>
-<div id="46fa77eb" class="cell" data-execution_count="1">
+<div id="a0f6ff0c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> Obsplot(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>If using the <code>widget</code> renderer, debug output will be displayed in JavaScript console. With the <code>jsdom</code> renderer, it will be displayed directly in the notebook.</p>
