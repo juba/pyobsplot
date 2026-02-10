@@ -4,7 +4,8 @@ version = "0.5.5"
 description = "Observable Plot in Jupyter notebooks and Quarto documents"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Julien Barnier", email = "julien@nozav.org" }]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -38,7 +39,7 @@ dev = [
   "ipykernel>=6.29.5",
   "jupyterlab>=4.4.1",
   "playwright>=1.44.0",
-  "pytest>=8.2.1",
+  "pytest>=9.0.0",
   "ruff>=0.14.10",
   "ty>=0.0.4",
 ]
@@ -47,10 +48,10 @@ dev = [
 requires = ["uv_build>=0.9.10,<0.10.0"]
 build-backend = "uv_build"
 
-[tool.pytest.ini_options]
-filterwarnings = "ignore::DeprecationWarning"
-pythonpath = "src"
-testpaths = "tests"
+[tool.pytest]
+filterwarnings = ["ignore::DeprecationWarning"]
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 [tool.ruff]
 target-version = "py310"
