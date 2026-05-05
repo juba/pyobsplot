@@ -6,7 +6,6 @@ import { generate_plot } from "pyobsplot"
 
 // Make Plot and d3 available in js()
 window.d3 = d3
-window.d3_geo = d3_geo
 window.Plot = Plot
 
 // Main render function
