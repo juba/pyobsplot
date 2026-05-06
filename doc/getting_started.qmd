@@ -6,11 +6,23 @@ title: "Getting started"
 
 ## Installation
 
-`pyobsplot` can be installed with `pip`:
+`pyobsplot` can be installed with `uv` or `pip`:
+
+::: {.panel-tabset}
+
+## uv
+
+```sh
+uv add pyobsplot[typst]
+```
+
+## pip
 
 ```sh
 pip install pyobsplot[typst]
 ```
+
+:::
 
 If you want to use output formats like PNG or SVG, you must have a working installation of [node.js](https://nodejs.org/en) and you must install the `pyobsplot` npm package globally or locally:
 
@@ -26,7 +38,6 @@ To use `pyobsplot` in [jupyter lite](https://jupyter.org/try-jupyter/lab/) or [m
 ```sh
 pip install pyobsplot
 ```
-
 
 ## Creating a plot
 
@@ -55,12 +66,10 @@ data = pl.DataFrame(
 If your JavaScript plot function looks like this:
 
 ```javascript
-Plot.plot(
-    {
-        grid: true,
-        marks: [Plot.dot(data, {x: "x", y: "y", fill: "type", r: 5})]
-    }
-)
+Plot.plot({
+    grid: true,
+    marks: [Plot.dot(data, { x: "x", y: "y", fill: "type", r: 5 })],
+})
 ```
 
 Then you can reproduce the plot with:
@@ -116,7 +125,6 @@ Plot.plot(Plot.auto(penguins, {"x": "flipper_length_mm"}), path="plot.svg")
 ::: {.callout-note}
 With the "widget" format, export can only be done to HTML files.
 :::
-
 
 ## Learn more
 
