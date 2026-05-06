@@ -38,21 +38,12 @@ Plot.plot({
 
 `pyobsplot` can be installed with `uv` or `pip`:
 
-::: {.panel-tabset}
-
-## uv
-
 ```sh
+# uv
 uv add pyobsplot[typst]
-```
-
-## pip
-
-```sh
+# pip
 pip install pyobsplot[typst]
 ```
-
-:::
 
 To use `pyobsplot` in [JupyterLite](https://jupyter.org/try-jupyter/lab/) or [marimo](https://marimo.io) you must install it without the `typst` dependency, which is not yet compatible with [pyodide](https://pyodide.org/en/stable/):
 
