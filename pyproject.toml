@@ -15,7 +15,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
-  "anywidget>=0.9.18",
+  "anywidget>=0.11.0",
   "pandas>=2.0.0",
   "polars>=1.4.1",
   "pyarrow>=22.0.0",

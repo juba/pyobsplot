@@ -9,7 +9,7 @@ window.d3 = d3
 window.Plot = Plot
 
 // Main render function
-function render({ model, el }) {
+function render({ model, el, signal }) {
     // Get spec and theme values and generate plot
     let spec = () => model.get("spec")
     // Add container div

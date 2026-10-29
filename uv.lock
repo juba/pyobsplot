@@ -1505,7 +1505,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anywidget", specifier = ">=0.9.18" },
+    { name = "anywidget", specifier = ">=0.11.0" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "polars", specifier = ">=1.4.1" },
     { name = "pyarrow", specifier = ">=22.0.0" },
