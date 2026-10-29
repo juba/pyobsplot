@@ -4,6 +4,7 @@ Tests for data Arrow serialization.
 
 import io
 
+import numpy as np
 import pandas as pd
 import polars as pl
 from polars.testing import assert_frame_equal
@@ -42,3 +43,12 @@ class TestDataFrame:
             pl.Float64,
             pl.Utf8,
         ]
+
+    def test_pandas_indexing(self):
+        df = pd.DataFrame({"x": [1, 2, 3, 4, 5], "y": [2, 1, 4, 3, 5]})
+        filtered = df[df.x > 1]
+        pd_to_arrow(filtered)
+
+    def test_pandas_dropna(self):
+        df = pd.DataFrame({"x": [np.nan, np.nan, np.nan], "y": [2, 1, 4]})
+        pd_to_arrow(df)

@@ -62,7 +62,7 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
     # Convert dates to timestamps
     for colname in df.columns:
         col = df[colname].dropna()
-        if col is not None and isinstance(col[0], date):
+        if col is not None and len(col) > 0 and isinstance(col.iloc[0], date):
             try:
                 df[colname] = pd.to_datetime(df[colname])
             except ValueError:
