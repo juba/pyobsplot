@@ -1,5 +1,8 @@
 ## pyobsplot 0.5.5 (dev)
 
+- Bump required Python version to 3.11
+- Fix error in pandas DataFrame indexing (#56, @cpsievert)
+
 ## pyobsplot 0.5.4
 
 - Upgrade pyarrow dependency
