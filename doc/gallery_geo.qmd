@@ -41,7 +41,6 @@ Plot.plot(
 )
 ```
 
-
 Of course other marks can be used in conjunction with geo marks. This example represents the density of Walmarts supermarkets and is taken from the [Mapping notebook](https://observablehq.com/@observablehq/plot-mapping?collection=@observablehq/plot).
 
 ```{python}

@@ -33,7 +33,7 @@ Plot.plot(
 
 ## Crosshair mark
 
-The [crosshair mark](https://observablehq.com/plot/interactions/crosshair)  alows to display the coordinates of the nearest point.
+The [crosshair mark](https://observablehq.com/plot/interactions/crosshair) alows to display the coordinates of the nearest point.
 
 ```{python}
 penguins = pl.read_csv("data/penguins.csv")

@@ -4,8 +4,7 @@ title: "Marks"
 
 {{< include _setup.qmd >}}
 
-
-[Marks](https://observablehq.com/@observablehq/plot-marks?collection=@observablehq/plot) are the building blocks of Plot charts. 
+[Marks](https://observablehq.com/@observablehq/plot-marks?collection=@observablehq/plot) are the building blocks of Plot charts.
 
 ## Cell mark
 

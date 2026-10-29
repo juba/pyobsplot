@@ -1,6 +1,7 @@
 ## pyobsplot 0.5.5 (dev)
 
 - Bump required Python version to 3.11
+- Update anywidget to 0.11.0
 - Fix error in pandas DataFrame indexing (#56, @cpsievert)
 
 ## pyobsplot 0.5.4

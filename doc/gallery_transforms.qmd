@@ -4,9 +4,7 @@ title: "Transforms"
 
 {{< include _setup.qmd >}}
 
-
 [Transforms](https://observablehq.com/@observablehq/plot-transforms?collection=@observablehq/plot) provide methods to manipulate and compute on data while plotting them.
-
 
 ## Group transform
 
@@ -112,7 +110,6 @@ Plot.plot(
 )
 ```
 
-
 ## Map transform
 
 [Map transform](https://observablehq.com/@observablehq/plot-map?collection=@observablehq/plot) family can be used to normalize values.
@@ -154,7 +151,6 @@ Plot.plot(
     }
 )
 ```
-
 
 ## Transforms composition
 
@@ -230,4 +226,3 @@ Plot.plot(
     }
 )
 ```
-

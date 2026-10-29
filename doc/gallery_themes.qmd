@@ -4,7 +4,6 @@ title: "Themes"
 
 {{< include _setup.qmd >}}
 
-
 When using a plot generator object, it is possible to specify one of three output themes: `light`, `dark` and `current`.
 
 ## `light` theme

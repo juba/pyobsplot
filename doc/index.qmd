@@ -2,11 +2,9 @@
 title: "pyobsplot"
 ---
 
-
 ## Overview
 
 `pyobsplot` allows to use [Observable Plot](https://observablehq.com/@observablehq/plot?collection=@observablehq/plot) to create charts in [Jupyter](https://jupyter.org) or [Marimo](https://marimo.io) notebooks and [Quarto](https://quarto.org) documents. Plots are created from Python code with a syntax as close as possible to the JavaScript one.
-
 
 ```{python}
 import polars as pl
@@ -31,7 +29,6 @@ Plot.plot(
     }
 )
 ```
-
 
 Or, for [a bit more complex example](https://observablehq.com/@observablehq/plot-facets?collection=@observablehq/plot#cell-148):
 
@@ -93,7 +90,6 @@ If you just want to try this package without installing it on your computer, you
 
 - Plot interactions (tooltips, crosshair...) are only available with the "widget" format ([#16](https://github.com/juba/pyobsplot/issues/16)).
 - Very limited integration with IDE (documentation and autocompletion) for Plot methods (unlike in Observable notebooks) ([#13](https://github.com/juba/pyobsplot/issues/13)).
-
 
 ## Credits
 
