@@ -369,7 +369,7 @@ wheels = [
 
 [[package]]
 name = "geopandas"
-version = "1.0.1"
+version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
@@ -379,9 +379,9 @@ dependencies = [
     { name = "pyproj" },
     { name = "shapely" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/39/08/2cf5d85356e45b10b8d066cf4c3ba1e9e3185423c48104eed87e8afd0455/geopandas-1.0.1.tar.gz", hash = "sha256:b8bf70a5534588205b7a56646e2082fb1de9a03599651b3d80c99ea4c2ca08ab", size = 317736, upload-time = "2024-07-02T12:26:52.928Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/6b/079d42d468f6537b0e8ba04ad411d53fe6b03070801e5b85328b01d28772/geopandas-1.2.0.tar.gz", hash = "sha256:72425b0dec1b77122b1e00f72c2b3b91f320cf0331ae236d37e26865e8808628", size = 337713, upload-time = "2026-09-28T15:53:57.721Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c4/64/7d344cfcef5efddf9cf32f59af7f855828e9d74b5f862eddf5bfd9f25323/geopandas-1.0.1-py3-none-any.whl", hash = "sha256:01e147d9420cc374d26f51fc23716ac307f32b49406e4bd8462c07e82ed1d3d6", size = 323587, upload-time = "2024-07-02T12:26:50.876Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/26/10e1061c79b388621b7bae46fcd4942a8c62f960018adf4c38719e9e91ac/geopandas-1.2.0-py3-none-any.whl", hash = "sha256:948fd57df4f713697d5cce149333c0e4714965320c9f5ffa411666c577962eba", size = 368068, upload-time = "2026-09-28T15:53:55.62Z" },
 ]
 
 [[package]]
@@ -1505,7 +1505,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anywidget", specifier = ">=0.11.0" },
+    { name = "anywidget", specifier = ">=0.9.18" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "polars", specifier = ">=1.4.1" },
     { name = "pyarrow", specifier = ">=22.0.0" },
@@ -1517,13 +1517,13 @@ provides-extras = ["typst"]
 [package.metadata.requires-dev]
 dev = [
     { name = "anywidget", extras = ["dev"], specifier = ">=0.11.0" },
-    { name = "geopandas", specifier = ">=0.14.4" },
+    { name = "geopandas", specifier = ">=1.2.0" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "jupyterlab", specifier = ">=4.6.5" },
     { name = "marimo", specifier = ">=0.25.2" },
     { name = "pytest", specifier = ">=9.0.0" },
-    { name = "ruff", specifier = ">=0.14.10" },
-    { name = "ty", specifier = ">=0.0.4" },
+    { name = "ruff", specifier = ">=0.17.3" },
+    { name = "ty", specifier = ">=0.0.94" },
     { name = "typst", specifier = ">=0.14.1" },
 ]
 
