@@ -70,7 +70,7 @@ Plot.plot(
 
 If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:
 
-[![](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
+[![Colab badge](img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
 ## Features and limitations
 
