@@ -12,16 +12,16 @@ jobs:
             contents: write
         steps:
             - name: Check out repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Setup node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   cache: "npm"
 
             - name: Install node dependencies
               run: |
-                  npm install 
+                  npm install
                   npm install --workspaces
 
             - name: Set up Quarto
