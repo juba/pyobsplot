@@ -135,6 +135,11 @@ ban-relative-imports = "all"
 [tool.ruff.format]
 docstring-code-format = true
 
+[tool.rumdl]
+line-length = 120
+code_blocks = false
+reflow = true
+
 [tool.ty.environment]
 python-version = "3.11"
 
