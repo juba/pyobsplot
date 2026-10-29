@@ -12,10 +12,14 @@
         "test": "uv run pytest"
     },
     "devDependencies": {
-        "esbuild": "^0.25.0"
+        "esbuild": "^0.28.2"
     },
     "type": "module",
     "workspaces": [
         "packages/pyobsplot-js"
-    ]
+    ],
+    "allowScripts": {
+        "canvas@3.2.3": true,
+        "esbuild@0.28.2": true
+    }
 }
