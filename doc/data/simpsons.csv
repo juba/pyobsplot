@@ -1,7 +1,7 @@
 id,title,original_air_date,production_code,season,number_in_season,number_in_series,us_viewers_in_millions,views,imdb_rating,imdb_votes,image_url,video_url
 10,Homer's Night Out,1990-03-25,7G10,1,10,10,30.3,50816,7.4,1511,http://static-media.fxx.com/img/FX_Networks_-_FXX/305/815/Simpsons_01_10.jpg,http://www.simpsonsworld.com/video/275197507879
 12,Krusty Gets Busted,1990-04-29,7G12,1,12,12,30.4,62561,8.3,1716,http://static-media.fxx.com/img/FX_Networks_-_FXX/245/843/Simpsons_01_12.jpg,http://www.simpsonsworld.com/video/288019523914
-14,Bart Gets an "F",1990-10-11,7F03,2,1,14,33.6,59575,8.2,1638,http://static-media.fxx.com/img/FX_Networks_-_FXX/662/811/bart_gets_F.jpg,http://www.simpsonsworld.com/video/260539459671
+14,Bart Gets an F,1990-10-11,7F03,2,1,14,33.6,59575,8.2,1638,http://static-media.fxx.com/img/FX_Networks_-_FXX/662/811/bart_gets_F.jpg,http://www.simpsonsworld.com/video/260539459671
 17,Two Cars in Every Garage and Three Eyes on Every Fish,1990-11-01,7F01,2,4,17,26.1,64959,8.1,1457,http://static-media.fxx.com/img/FX_Networks_-_FXX/660/859/Simpsons_02_01.jpg,http://www.simpsonsworld.com/video/260537411822
 19,Dead Putting Society,1990-11-15,7F08,2,6,19,25.4,50691,8,1366,http://static-media.fxx.com/img/FX_Networks_-_FXX/662/811/Simpsons_02_08.jpg,http://www.simpsonsworld.com/video/260539459670
 21,Bart the Daredevil,1990-12-06,7F06,2,8,21,26.2,57605,8.4,1522,http://static-media.fxx.com/img/FX_Networks_-_FXX/662/811/Simpsons_02_06.jpg,http://www.simpsonsworld.com/video/260539459702
@@ -226,16 +226,16 @@ id,title,original_air_date,production_code,season,number_in_season,number_in_ser
 22,Itchy & Scratchy & Marge,1990-12-20,7F09,2,9,22,22.2,55413,8.1,1402,http://static-media.fxx.com/img/FX_Networks_-_FXX/661/835/Simpsons_02_09.jpg,http://www.simpsonsworld.com/video/260538435885
 25,The Way We Was,1991-01-31,7F11,2,12,25,26.8,51182,8.2,1392,http://static-media.fxx.com/img/FX_Networks_-_FXX/672/71/Simpsons_02_12__377251.jpg,http://www.simpsonsworld.com/video/260549187876
 27,Principal Charming,1991-02-14,7F15,2,14,27,23.9,46823,7.5,1241,http://static-media.fxx.com/img/FX_Networks_-_FXX/411/107/Simpsons_02_15.jpg,http://www.simpsonsworld.com/video/263496771968
-29,Bart's Dog Gets an "F",1991-03-07,7F14,2,16,29,23.9,47780,7.5,1264,http://static-media.fxx.com/img/FX_Networks_-_FXX/361/699/bart.jpg,http://www.simpsonsworld.com/video/272034883946
+29,Bart's Dog Gets an F,1991-03-07,7F14,2,16,29,23.9,47780,7.5,1264,http://static-media.fxx.com/img/FX_Networks_-_FXX/361/699/bart.jpg,http://www.simpsonsworld.com/video/272034883946
 33,The War of the Simpsons,1991-05-02,7F20,2,20,33,19.7,51997,7.9,1246,http://static-media.fxx.com/img/FX_Networks_-_FXX/366/579/the_war_of_simpsons.jpg,http://www.simpsonsworld.com/video/272040003661
 573,Bull-E,2015-05-10,TABF15,26,21,573,2.77,43978,6.8,335,http://static-media.fxx.com/img/FX_Networks_-_FXX/475/879/TheSimpsons_TABF15_1280x720_442878531850.jpg,http://www.simpsonsworld.com/video/442879555692
 576,Cue Detective,2015-10-04,TABF17,27,2,576,6.02,178,6.7,395,http://static-media.fxx.com/img/FX_Networks_-_FXX/690/39/TheSimpsons_TABF17_1280x720_538102339785.jpg,http://www.simpsonsworld.com/video/770595395906
 580,Friend with Benefit,2015-11-08,TABF21,27,6,580,3.48,175,6.8,335,http://static-media.fxx.com/img/FX_Networks_-_FXX/539/163/Simpsons_27_06.jpg,http://www.simpsonsworld.com/video/770437187884
 583,Barthood,2015-12-13,VABF02,27,9,583,5.97,182,8.4,698,http://static-media.fxx.com/img/FX_Networks_-_FXX/526/474/fox_TheSimpsons_VABF02_hulu.jpg,http://www.simpsonsworld.com/video/770423875541
 585,Teenage Mutant Milk-Caused Hurdles,2016-01-10,VABF04,27,11,585,8.33,172,6.8,309,http://static-media.fxx.com/img/FX_Networks_-_FXX/532/331/Simpsons_27_11.jpg,http://www.simpsonsworld.com/video/770430019813
-598,Friends and Family"[203],2016-10-02,VABF18,28,2,598,,,,,,
-599,The Town"[205],2016-10-09,VABF17,28,3,599,,,,,,
-600,Treehouse of Horror XXVII"[207],2016-10-16,VABF16,28,4,600,,,,,,
+598,Friends and Family,2016-10-02,VABF18,28,2,598,,,,,,
+599,The Town,2016-10-09,VABF17,28,3,599,,,,,,
+600,Treehouse of Horror XXVII,2016-10-16,VABF16,28,4,600,,,,,,
 588,Gal of Constant Sorrow,2016-02-21,VABF06,27,14,588,3.1,144,6.6,293,http://static-media.fxx.com/img/FX_Networks_-_FXX/552/851/simp_Gal_of_Constant_Sorrow-VABF06Sc1117_hires2.jpg,http://www.simpsonsworld.com/video/770451523845
 590,The Marge-ian Chronicles,2016-03-13,VABF09,27,16,590,3.07,201,7.3,262,http://static-media.fxx.com/img/FX_Networks_-_FXX/972/271/simp_The_Marg-ian_Chronicles_VABF09-Sc3022_hires2.jpg,http://www.simpsonsworld.com/video/770891331927
 593,Fland Canyon,2016-04-24,VABF12,27,19,593,2.77,192,7.1,229,http://static-media.fxx.com/img/FX_Networks_-_FXX/975/199/simp_Fland_Canyon_VABF12Sc2032_hires2.jpg,http://www.simpsonsworld.com/video/770894403718
@@ -343,7 +343,7 @@ id,title,original_air_date,production_code,season,number_in_season,number_in_ser
 230,Treehouse of Horror X,1999-10-31,BABF01,11,4,230,8.7,47980,7.7,876,http://static-media.fxx.com/img/FX_Networks_-_FXX/727/407/Simpsons_11_05__484493.jpg,http://www.simpsonsworld.com/video/307851843709
 246,Last Tap Dance in Springfield,2000-05-07,BABF15,11,20,246,7.3,47061,7.2,716,http://static-media.fxx.com/img/FX_Networks_-_FXX/52/410/Simpsons_11_19.jpg,http://www.simpsonsworld.com/video/302849091512
 228,Brother's Little Helper,1999-10-03,AABF22,11,2,228,7.1,44172,7.5,776,http://static-media.fxx.com/img/FX_Networks_-_FXX/37/271/Simpsons_11_03.jpg,http://www.simpsonsworld.com/video/302833219678
-223,The Old Man and the "C" Student,1999-04-25,AABF16,10,20,223,6.9,47550,7.3,779,http://static-media.fxx.com/img/FX_Networks_-_FXX/558/439/Simpsons_10_20.jpg,http://www.simpsonsworld.com/video/279757379586
+223,The Old Man and the C Student,1999-04-25,AABF16,10,20,223,6.9,47550,7.3,779,http://static-media.fxx.com/img/FX_Networks_-_FXX/558/439/Simpsons_10_20.jpg,http://www.simpsonsworld.com/video/279757379586
 243,Bart to the Future,2000-03-19,BABF13,11,17,243,8.77,75315,7,780,http://static-media.fxx.com/img/FX_Networks_-_FXX/39/223/Simpsons_11_17.jpg,http://www.simpsonsworld.com/video/302835267686
 227,Beyond Blunderdome,1999-09-26,AABF23,11,1,227,8.1,34394,7.3,917,http://static-media.fxx.com/img/FX_Networks_-_FXX/849/555/Simpsons_11_04.jpg,http://www.simpsonsworld.com/video/306906179700
 225,They Saved Lisa's Brain,1999-05-09,AABF18,10,22,225,6.8,47951,7.3,804,http://static-media.fxx.com/img/FX_Networks_-_FXX/813/919/Simpsons_10_22.jpg,http://www.simpsonsworld.com/video/306868803826
