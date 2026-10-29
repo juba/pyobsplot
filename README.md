@@ -58,7 +58,7 @@ For usage instructions, see the [documentation website](https://juba.github.io/p
 
 If you just want to try this package without installing it on your computer, you can open an introduction notebook in Google Colab:
 
-[![](https://github.com/juba/pyobsplot/raw/main/doc/img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
+[![Colab badge](https://github.com/juba/pyobsplot/raw/main/doc/img/colab-badge.svg)](https://colab.research.google.com/github/juba/pyobsplot/blob/main/examples/introduction.ipynb)
 
 ## Features and limitations
 
