@@ -33,14 +33,15 @@ typst = ["typst>=0.14.1"]
 
 [dependency-groups]
 dev = [
-  "anywidget[dev]>=0.9.21",
-  "geopandas>=0.14.4",
-  "ipykernel>=6.29.5",
-  "jupyterlab>=4.4.1",
-  "pytest>=9.0.0",
-  "ruff>=0.14.10",
-  "ty>=0.0.4",
-  "typst>=0.14.1"
+    "anywidget[dev]>=0.11.0",
+    "geopandas>=0.14.4",
+    "ipykernel>=6.29.5",
+    "jupyterlab>=4.6.5",
+    "marimo>=0.25.2",
+    "pytest>=9.0.0",
+    "ruff>=0.14.10",
+    "ty>=0.0.4",
+    "typst>=0.14.1",
 ]
 
 [build-system]
