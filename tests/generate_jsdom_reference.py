@@ -1,10 +1,11 @@
-import datetime
+import datetime as dt
 import json
 import logging
 import os
 import pickle
 import sys
 from pathlib import Path
+from typing import Literal
 
 import pandas as pd
 import polars as pl
@@ -18,10 +19,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(message)s")
 # Change working directory to script directory
 os.chdir(sys.path[0])
 
-specs = {}
-themes = {}
-defaults = {}
-skip = {}
+SPECS = {}
+THEMES: dict[str, Literal["light", "dark", "current"]] = {}
+DEFAULTS = {}
+SKIP = {}
 
 # Data ---
 
@@ -49,7 +50,7 @@ vapor_values = vapor.get_column("values").to_list()
 
 # Simple examples ---
 
-specs["simple_svg1"] = Plot.lineY([1, 2, 3, 2])
+SPECS["simple_svg1"] = Plot.lineY([1, 2, 3, 2])
 
 
 df = pd.DataFrame(
@@ -62,12 +63,12 @@ df = pd.DataFrame(
     }
 )
 
-specs["simple_svg2"] = {"marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})]}
+SPECS["simple_svg2"] = {"marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})]}
 
 
 # Titles and caption ---
 
-specs["titles_caption"] = {
+SPECS["titles_caption"] = {
     "marks": [Plot.dot(df, {"x": "full_date_time", "y": "value"})],
     "title": "This is a plot title",
     "subtitle": "This is a plot subtitle",
@@ -77,7 +78,7 @@ specs["titles_caption"] = {
 
 # Transforms ---
 
-specs["transform_groupx"] = {
+SPECS["transform_groupx"] = {
     "y": {"grid": True},
     "marks": [
         Plot.barY(penguins, Plot.groupX({"y": "count"}, {"x": "species"})),
@@ -87,27 +88,27 @@ specs["transform_groupx"] = {
 
 # Date and times ---
 
-specs["date_dates_js_array"] = {
+SPECS["date_dates_js_array"] = {
     "x": {"domain": js("[new Date('2021-01-01'), new Date('2022-01-01')]")},
     "grid": True,
 }
 
-specs["date_dates_array_js"] = {
+SPECS["date_dates_array_js"] = {
     "x": {"domain": [js("new Date('2021-01-01')"), js("new Date('2022-01-01')")]},
     "grid": True,
 }
 
-specs["date_datetime_date"] = {
-    "x": {"domain": [datetime.date(2021, 1, 1), datetime.date(2022, 1, 1)]},
+SPECS["date_datetime_date"] = {
+    "x": {"domain": [dt.date(2021, 1, 1), dt.date(2022, 1, 1)]},
     "grid": True,
 }
 
-specs["date_datetime_datetime"] = {
+SPECS["date_datetime_datetime"] = {
     "x": {
         "type": "time",
         "domain": [
-            datetime.datetime(2021, 1, 1, 8, 0, 0),
-            datetime.datetime(2021, 1, 1, 8, 1, 0),
+            dt.datetime(2021, 1, 1, 8, 0, 0),
+            dt.datetime(2021, 1, 1, 8, 1, 0),
         ],
     },
     "grid": True,
@@ -117,75 +118,75 @@ specs["date_datetime_datetime"] = {
 d_pl = pl.DataFrame(
     {
         "Date": [
-            datetime.date(2021, 1, 1),
-            datetime.date(2021, 1, 2),
-            datetime.date(2021, 1, 3),
+            dt.date(2021, 1, 1),
+            dt.date(2021, 1, 2),
+            dt.date(2021, 1, 3),
         ],
         "value": [1, 2, 3],
     }
 )
-specs["date_polars_datetime_date"] = {"marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]}
+SPECS["date_polars_datetime_date"] = {"marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]}
 
 d_pl = pl.DataFrame(
     {
         "Date": [
-            datetime.datetime(2021, 1, 1, 8, 0, 0),
-            datetime.datetime(2021, 1, 1, 8, 0, 1),
-            datetime.datetime(2021, 1, 1, 8, 0, 2),
+            dt.datetime(2021, 1, 1, 8, 0, 0),
+            dt.datetime(2021, 1, 1, 8, 0, 1),
+            dt.datetime(2021, 1, 1, 8, 0, 2),
         ],
         "value": [1, 2, 3],
     }
 )
-specs["date_polars_datetime_datetime"] = {"marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]}
+SPECS["date_polars_datetime_datetime"] = {"marks": [Plot.dot(d_pl, {"x": "Date", "y": "value"})]}
 
 d_pd = pd.DataFrame(
     {
         "Date": [
-            datetime.date(2021, 1, 1),
-            datetime.date(2021, 1, 2),
-            datetime.date(2021, 1, 3),
+            dt.date(2021, 1, 1),
+            dt.date(2021, 1, 2),
+            dt.date(2021, 1, 3),
         ],
         "value": [1, 2, 3],
     }
 )
-specs["date_pandas_datetime_date"] = {"marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]}
+SPECS["date_pandas_datetime_date"] = {"marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]}
 
 d_pd = pd.DataFrame(
     {
         "Date": [
-            datetime.datetime(2021, 1, 1, 8, 0, 0),
-            datetime.datetime(2021, 1, 1, 8, 0, 1),
-            datetime.datetime(2021, 1, 1, 8, 0, 2),
+            dt.datetime(2021, 1, 1, 8, 0, 0),
+            dt.datetime(2021, 1, 1, 8, 0, 1),
+            dt.datetime(2021, 1, 1, 8, 0, 2),
         ],
         "value": [1, 2, 3],
     }
 )
-specs["date_pandas_datetime_datetime"] = {"marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]}
+SPECS["date_pandas_datetime_datetime"] = {"marks": [Plot.dot(d_pd, {"x": "Date", "y": "value"})]}
 
 # Data sources ---
 
 simpsons_pl = simpsons
 simpsons_pd = simpsons_pl.to_pandas()
 
-specs["source_pl_df"] = {
+SPECS["source_pl_df"] = {
     "marks": [
         Plot.dot(simpsons_pl, {"x": "number_in_season", "y": "imdb_rating"}),
     ]
 }
 
-specs["source_pd_df"] = {
+SPECS["source_pd_df"] = {
     "marks": [
         Plot.dot(simpsons_pd, {"x": "number_in_season", "y": "imdb_rating"}),
     ]
 }
 
-specs["source_pl_series"] = {
+SPECS["source_pl_series"] = {
     "marks": [
         Plot.tickX(simpsons_pl.get_column("imdb_rating"), {"x": "imdb_rating"}),
     ]
 }
 
-specs["source_pd_series"] = {
+SPECS["source_pd_series"] = {
     "marks": [
         Plot.tickX(simpsons_pd["imdb_rating"], {"x": "imdb_rating"}),
     ]
@@ -193,7 +194,7 @@ specs["source_pd_series"] = {
 
 # Complex plots ---
 
-specs["complex_simpsons_cells"] = {
+SPECS["complex_simpsons_cells"] = {
     "height": 640,
     "padding": 0.05,
     "grid": True,
@@ -214,7 +215,7 @@ specs["complex_simpsons_cells"] = {
     ],
 }
 
-specs["complex_penguins_facet"] = {
+SPECS["complex_penguins_facet"] = {
     "height": 600,
     "grid": True,
     "facet": {"data": penguins, "x": "sex", "y": "species", "marginRight": 80},
@@ -238,7 +239,7 @@ specs["complex_penguins_facet"] = {
 }
 
 
-specs["complex_metros_arrow"] = {
+SPECS["complex_metros_arrow"] = {
     "height": 600,
     "grid": True,
     "inset": 10,
@@ -279,7 +280,7 @@ specs["complex_metros_arrow"] = {
     ],
 }
 
-specs["complex_stocks"] = {
+SPECS["complex_stocks"] = {
     "marginRight": 40,
     "y": {
         "type": "log",
@@ -320,7 +321,7 @@ states = (
 
 xy = {"basis": "sum", "z": "state", "x": "population", "y": "state"}
 
-specs["complex_stateage"] = {
+SPECS["complex_stateage"] = {
     "height": 660,
     "grid": True,
     "x": {"axis": "top", "label": "Percent (%) →", "transform": js("d => d * 100")},
@@ -357,7 +358,7 @@ specs["complex_stateage"] = {
 
 # Geo ---
 
-specs["geo_states"] = {
+SPECS["geo_states"] = {
     "projection": "albers-usa",
     "color": {
         "type": "quantile",
@@ -377,7 +378,7 @@ projection = {
     },
 }
 
-specs["geo_ca55"] = {
+SPECS["geo_ca55"] = {
     "data": "projection",
     "x": {"axis": None},
     "y": {"axis": None},
@@ -400,7 +401,7 @@ specs["geo_ca55"] = {
     ],
 }
 
-specs["geo_vapor"] = {
+SPECS["geo_vapor"] = {
     "projection": "equal-earth",
     "color": {
         "scheme": "blues",
@@ -436,51 +437,51 @@ specs["geo_vapor"] = {
 
 df = pl.DataFrame({"x": range(4), "col": list("AABB")})
 
-specs["themes_default"] = {
+SPECS["themes_default"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
 
-specs["themes_light"] = {
+SPECS["themes_light"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-themes["themes_light"] = "light"
+THEMES["themes_light"] = "light"
 
-specs["themes_dark"] = {
+SPECS["themes_dark"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-themes["themes_dark"] = "dark"
+THEMES["themes_dark"] = "dark"
 
-specs["themes_current"] = {
+SPECS["themes_current"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-themes["themes_current"] = "current"
-skip["themes_current"] = ["png", "pdf", "svg"]
+THEMES["themes_current"] = "current"
+SKIP["themes_current"] = ["png", "pdf", "svg"]
 
 # Defaults ---
 
 default = {"width": 200, "style": {"color": "white", "background-color": "#005"}}
 
-specs["defaults_svg_no_default"] = Plot.lineY(range(4))
-specs["defaults_svg_default"] = Plot.lineY(range(4))
-defaults["defaults_svg_default"] = default
-specs["defaults_html_no_default"] = {
+SPECS["defaults_svg_no_default"] = Plot.lineY(range(4))
+SPECS["defaults_svg_default"] = Plot.lineY(range(4))
+DEFAULTS["defaults_svg_default"] = default
+SPECS["defaults_html_no_default"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-specs["defaults_html_default"] = {
+SPECS["defaults_html_default"] = {
     "color": {"legend": True},
     "marks": [Plot.dot(df, {"x": "x", "fill": "col"})],
 }
-defaults["defaults_html_default"] = default
+DEFAULTS["defaults_html_default"] = default
 
 # utf-8 encoding ---
 
-specs["bug_utf8"] = Plot.tickX([-1])
-specs["bug_utf8"] = Plot.tickX([-1])
+SPECS["bug_utf8"] = Plot.tickX([-1])
+SPECS["bug_utf8"] = Plot.tickX([-1])
 
 
 # Main ---
@@ -489,18 +490,18 @@ specs["bug_utf8"] = Plot.tickX([-1])
 def generate_format(format: str, output_folder: Path) -> None:  # noqa: A002
     output_folder = output_folder / format
     output_folder.mkdir(exist_ok=True)
-    for key, spec in specs.items():
-        if key in skip and format in skip[key]:
+    for key, spec in SPECS.items():
+        if key in SKIP and format in SKIP[key]:
             continue
         path = output_folder / f"{key}.{format}"
         if not (path.exists()):
             logger.info(f"Generating {key}.{format}")
-            if key in themes:
-                op.theme = themes[key]
+            if key in THEMES:
+                op.theme = THEMES[key]
             else:
                 op.theme = DEFAULT_THEME
-            if key in defaults:
-                op.default = defaults[key]
+            if key in DEFAULTS:
+                op.default = DEFAULTS[key]
             else:
                 op.default = {}
             format_value = None if format == "pdf" else format
@@ -517,8 +518,8 @@ if __name__ == "__main__":
         generate_format(format, output_folder)
     # Serialize specs, themes and default
     with open(output_folder / "specs.pkl", "wb") as f:
-        pickle.dump(specs, f)
+        pickle.dump(SPECS, f)
     with open(output_folder / "themes.pkl", "wb") as f:
-        pickle.dump(themes, f)
+        pickle.dump(THEMES, f)
     with open(output_folder / "defaults.pkl", "wb") as f:
-        pickle.dump(defaults, f)
+        pickle.dump(DEFAULTS, f)

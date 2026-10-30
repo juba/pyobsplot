@@ -44,21 +44,21 @@ def ow_default():
 def oj():
     oj = Obsplot(format="html")
     yield oj
-    oj._jsdom_close()  # type: ignore
+    oj._jsdom_close()
 
 
 @pytest.fixture(scope="module")
 def oj_debug():
     oj_debug = Obsplot(format="html", debug=True)
     yield oj_debug
-    oj_debug._jsdom_close()  # type: ignore
+    oj_debug._jsdom_close()
 
 
 @pytest.fixture(scope="module")
 def oj_default():
     oj_default = Obsplot(format="html", default=default)
     yield oj_default
-    oj_default._jsdom_close()  # type: ignore
+    oj_default._jsdom_close()
 
 
 @pytest.fixture(scope="module")
@@ -79,7 +79,7 @@ class TestInit:
         with pytest.raises(ValueError):
             Obsplot(format="foobar")  # type: ignore
 
-    def test_debug(self, op, op_debug, ow, ow_debug, oj, oj_debug):
+    def test_debug(self, op, op_debug, ow, ow_debug, oj, oj_debug):  # noqa: PLR0917
         assert op.debug is False
         assert op_debug.debug
         assert ow.debug is False
@@ -105,7 +105,7 @@ class TestInit:
             oj("foo")
         with pytest.raises(TypeError):
             oj()
-        spec = Plot.lineY([1, 2])  # type: ignore
+        spec = Plot.lineY([1, 2])
         assert isinstance(op(spec), obsplot.ObsplotWidget)
         assert isinstance(ow(spec), obsplot.ObsplotWidget)
         assert oj(spec) is None
@@ -113,7 +113,7 @@ class TestInit:
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:ipywidgets")
     @pytest.mark.filterwarnings("ignore::DeprecationWarning:traitlets")
     def test_plot_plot(self, ow, oj):
-        spec = Plot.lineY([1, 2])  # type: ignore
+        spec = Plot.lineY([1, 2])
         plot = Plot.plot(spec)
         assert isinstance(plot, obsplot.ObsplotWidget)
         with pytest.raises(ValueError):

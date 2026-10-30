@@ -18,7 +18,7 @@ REFERENCE_PATH = Path("tests/jsdom_reference")
 def op():
     op = Obsplot(format="html")
     yield op
-    op._jsdom_close()  # type: ignore
+    op._jsdom_close()
 
 
 @pytest.fixture(scope="module")

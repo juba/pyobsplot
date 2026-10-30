@@ -2,7 +2,7 @@
 Tests for specification parsing.
 """
 
-import datetime
+import datetime as dt
 
 import pandas as pd
 import polars as pl
@@ -35,7 +35,7 @@ class TestSpecParser:
 
     def test_parse_plot_mark(self):
         parser = SpecParser()
-        parser.set_spec(Plot.lineY([1, 2, 3]))  # type: ignore
+        parser.set_spec(Plot.lineY([1, 2, 3]))
         assert parser.spec == {
             "marks": [
                 {
@@ -167,36 +167,36 @@ class TestParse:
         }
 
     def test_parse_datetime(self):
-        assert SpecParser().parse(datetime.date(2023, 1, 1)) == {
+        assert SpecParser().parse(dt.date(2023, 1, 1)) == {
             "pyobsplot-type": "datetime",
             "value": "2023-01-01",
         }
-        assert SpecParser().parse(datetime.datetime(2023, 1, 1, 14, 25, 12)) == {
+        assert SpecParser().parse(dt.datetime(2023, 1, 1, 14, 25, 12)) == {
             "pyobsplot-type": "datetime",
             "value": "2023-01-01T14:25:12",
         }
 
     def test_parse_js(self):
-        assert SpecParser().parse(Plot.dot()) == {  # type: ignore
+        assert SpecParser().parse(Plot.dot()) == {
             "pyobsplot-type": "function",
             "module": "Plot",
             "method": "dot",
             "args": [],
         }
-        assert SpecParser().parse(js_modules.d3.bar(1, "baz")) == {  # type: ignore
+        assert SpecParser().parse(js_modules.d3.bar(1, "baz")) == {
             "pyobsplot-type": "function",
             "module": "d3",
             "method": "bar",
             "args": [1, "baz"],
         }
-        assert SpecParser().parse(js_modules.Math.random) == {  # type: ignore
+        assert SpecParser().parse(js_modules.Math.random) == {
             "pyobsplot-type": "function-object",
             "module": "Math",
             "method": "random",
             "args": (),
         }
         with pytest.raises(ValueError):
-            SpecParser().parse(js_modules.d3.bar(1, x="baz"))  # type: ignore
+            SpecParser().parse(js_modules.d3.bar(1, x="baz"))
         assert SpecParser().parse(js("d => d.foo")) == {
             "pyobsplot-type": "js",
             "value": "d => d.foo",
