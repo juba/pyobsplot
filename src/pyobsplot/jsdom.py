@@ -16,7 +16,6 @@ HTTP_SERVER_ERROR = 500
 
 
 class ObsplotJsdom:
-
     def __init__(
         self,
         *,
@@ -83,9 +82,9 @@ class ObsplotJsdom:
             )
             warnings.warn(msg, stacklevel=1)
         # Read back result
-        if r.status_code == HTTP_SERVER_ERROR:  # type: ignore
-            raise RuntimeError(r.content.decode())  # type: ignore
-        out = r.content.decode()  # type: ignore
+        if r.status_code == HTTP_SERVER_ERROR:
+            raise RuntimeError(r.content.decode())
+        out = r.content.decode()
 
         # If output is svg, returns IPython.display.SVG
         if out[0:4] == "<svg":

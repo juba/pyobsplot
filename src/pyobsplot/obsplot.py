@@ -181,7 +181,7 @@ class Obsplot:
 
         format_value = format or self.format
         format_options = format_options or self.format_options
-        theme = theme or self.theme  # type: ignore
+        theme = theme or self.theme
         debug = debug or self.debug
         default = self.default
 
@@ -232,8 +232,8 @@ class Obsplot:
                 spec=spec,
                 theme=theme,
                 default=default,
-                debug=debug,  # type: ignore
-            )  # type: ignore
+                debug=debug,
+            )
             if path is not None:
                 embed_minimal_html(path, views=[res], drop_defaults=False)
             else:
@@ -246,7 +246,7 @@ class Obsplot:
                 spec=spec,
                 format=format_value,  # type: ignore
                 format_options=format_options,
-                theme=theme,  # type: ignore
+                theme=theme,
                 default=default,
                 debug=debug,
                 path=path,
@@ -395,7 +395,7 @@ class ObsplotJsdomCreator:
             if theme == "current":
                 msg = "'current' theme is not available for 'svg' format with typst rendering"
                 raise ValueError(msg)
-            res = self.typst_render(res, format, format_options)  # type: ignore
+            res = self.typst_render(res, format, format_options)
 
         # Save to file if path has been given
         if path is None:
@@ -505,7 +505,7 @@ class ObsplotJsdomCreator:
                 f.write(res.data)  # type: ignore
         if isinstance(res, bytes):
             with open(path, "wb") as f:
-                f.write(res)  # type: ignore
+                f.write(res)
         if isinstance(res, HTML | SVG):
             with open(path, "w", encoding="utf-8") as f:
                 f.write(str(res.data))
