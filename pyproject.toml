@@ -136,9 +136,10 @@ ban-relative-imports = "all"
 docstring-code-format = true
 
 [tool.rumdl]
-line-length = 120
+line-length = 110
 code_blocks = false
 reflow = true
+disable = ["MD041"]
 
 [tool.ty.environment]
 python-version = "3.11"
