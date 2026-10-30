@@ -17,6 +17,17 @@ function render({ model, el, signal }) {
     plot_div.classList.add("pyobsplot-plot")
     plot_div.classList.add(spec()["theme"])
     let plot = generate_plot(spec(), "widget")
+
+    // Listen to pointer events and update pointer_value
+    // and pointer_rowindex traitlets
+    plot.addEventListener("input", (event) => {
+        let value = plot.value ?? {}
+        let rowIndex = value[Symbol.for("rowIndex")] ?? -1
+        model.set("pointer_value", value)
+        model.set("pointer_rowindex", rowIndex)
+        model.save_changes()
+    })
+
     plot_div.appendChild(plot)
     el.appendChild(plot_div)
     // Add spec change callback

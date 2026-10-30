@@ -12,7 +12,6 @@ from pyobsplot.utils import DEFAULT_THEME, bundler_output_dir
 
 
 class ObsplotWidget(anywidget.AnyWidget):
-
     # Disable _esm and _css watching and live reload to avoid "exception not rethrown"
     # error with pytest.
     _esm = anywidget._file_contents.FileContents(  # type: ignore
@@ -21,8 +20,12 @@ class ObsplotWidget(anywidget.AnyWidget):
     _css = anywidget._file_contents.FileContents(  # type: ignore
         bundler_output_dir / "static-styles.css", start_thread=False
     )
-    # spec traitlet : plot specification
+    # spec traitlet: plot specification
     spec = traitlets.Dict().tag(sync=True)
+    # pointer_value traitlet: pointer event values
+    pointer_value = traitlets.Dict().tag(sync=True)
+    # pointer_rowindex traitlet: pointer event row index
+    pointer_rowindex = traitlets.Int().tag(sync=True)
 
     def __init__(
         self,
@@ -50,7 +53,7 @@ class ObsplotWidget(anywidget.AnyWidget):
         self._default = default
         self._theme = theme
         # Init widget
-        super().__init__(spec=spec)
+        super().__init__(spec=spec, pointer_value={}, pointer_rowindex=-1)
 
     @traitlets.validate("spec")
     def _validate_spec(self, proposal):
