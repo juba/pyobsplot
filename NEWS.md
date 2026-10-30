@@ -14,7 +14,10 @@
 
 ## pyobsplot 0.5.3.2
 
-- Installing the package with `pip install pyobsplot` now does not install the `typst` dependency anymore. To install typst and allow to use all the renderers, you have to install with `pip install pyobsplot[typst]`. This change has been made so that `pyobsplot` (with the widget renderer) could be used in pyodide-based environments like JupyterLite and Marimo.
+- Installing the package with `pip install pyobsplot` now does not install the `typst` dependency anymore. To
+  install typst and allow to use all the renderers, you have to install with `pip install pyobsplot[typst]`.
+  This change has been made so that `pyobsplot` (with the widget renderer) could be used in pyodide-based
+  environments like JupyterLite and Marimo.
 
 ## pyobsplot 0.5.2
 
@@ -30,8 +33,12 @@
 
 ### Breaking changes
 
-- The plot generator API has been changed. Generators are no more defined with a `renderer` argument, a `format` is specified instead. This format can either be `widget`, `html`, `svg` or `png`. So `renderer="widget"` is replaced by `format="widget"` (which is the default), whereas `renderer="jsdom"` is replaced by `format="html"` or one of the new `format="svg"` and `format="png"`.
-- The "kwargs" alternative syntax is now deprecated and will generate errors. Plots must be defined either by passing a specification dictionary, or a call to a `Plot.xxx` method.
+- The plot generator API has been changed. Generators are no more defined with a `renderer` argument, a
+  `format` is specified instead. This format can either be `widget`, `html`, `svg` or `png`. So
+  `renderer="widget"` is replaced by `format="widget"` (which is the default), whereas `renderer="jsdom"` is
+  replaced by `format="html"` or one of the new `format="svg"` and `format="png"`.
+- The "kwargs" alternative syntax is now deprecated and will generate errors. Plots must be defined either by
+  passing a specification dictionary, or a call to a `Plot.xxx` method.
 
 ### Other changes
 
@@ -91,7 +98,8 @@
 
 ## pyobsplot 0.3.3
 
-- `jsdom` renderer now uses a local http server instead of calling a script at each invocation, greatly improving rendering speed.
+- `jsdom` renderer now uses a local http server instead of calling a script at each invocation, greatly
+  improving rendering speed.
 - Autocompletion of Plot methods should now be working in IDEs.
 - Ensure that the needed version of the npm package is run if jsdom renderer is used.
 - Debug mode also works with `jsdom` renderer.
@@ -108,13 +116,15 @@
 
 ## pyobsplot 0.3.1
 
-- It is now possible to use `Plot.plot()` directly when creating a plot with default settings.Thanks to [@fil](https://github.com/fil) for the idea.
+- It is now possible to use `Plot.plot()` directly when creating a plot with default settings. Thanks to
+  [@fil](https://github.com/fil) for the idea.
 - GeoJson data passed as `string` instead of `dict` is serialized correctly.
 - Add debug mode to output.
 
 ## pyobsplot 0.3.0
 
-- Breaking change: new API, plots are now generated with a _plot generator object_ created by calling `Obsplot()`. Thanks to [@fil](https://github.com/fil) for the idea.
+- Breaking change: new API, plots are now generated with a _plot generator object_ created by calling
+  `Obsplot()`. Thanks to [@fil](https://github.com/fil) for the idea.
 - Fix: wrong `__version__` value.
 
 ## pyobsplot 0.2.2
