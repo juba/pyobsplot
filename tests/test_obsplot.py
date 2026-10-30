@@ -167,7 +167,7 @@ class TestInit:
         assert r.status_code == 200
         assert (
             r.content.decode()
-            == '<pre style="color: rgb(221, 51, 51); padding: .5em 1em;">⚠ Error: must specify x or y</pre>'
+            == '<pre style="color: rgb(221, 51, 51); padding: 0.5em 1em;">⚠ Error: must specify x or y</pre>'
         )
 
         # bad /plot request
