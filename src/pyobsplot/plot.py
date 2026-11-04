@@ -619,6 +619,10 @@ class PlotClass:
         return method_to_spec("vectorY", *args, **kwargs)
 
     @staticmethod
+    def version(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
+        return method_to_spec("version", *args, **kwargs)
+
+    @staticmethod
     def voronoi(*args, **kwargs) -> PlotSpec: # noqa: ARG001, ARG004, RUF100
         return method_to_spec("voronoi", *args, **kwargs)
 
