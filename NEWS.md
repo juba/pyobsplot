@@ -1,6 +1,6 @@
 ## pyobsplot 0.5.5 (dev)
 
-- Update Observable Plot to 0.6.17
+- Update Observable Plot to 0.6.19
 - Bump minimum required Python version to 3.11
 - Update anywidget to 0.11.0
 - Fix error in pandas DataFrame indexing (#56, @cpsievert)
